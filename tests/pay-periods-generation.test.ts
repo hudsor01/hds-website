@@ -19,7 +19,7 @@ describe('Pay period generation and overtime', () => {
 			hourlyRate: 25,
 			hoursPerPeriod: 80,
 			filingStatus: 'single' as const,
-			taxYear: 2024,
+			taxYear: 2025,
 			state: 'TX',
 			overtimeHours: 0,
 			overtimeRate: 37.5,

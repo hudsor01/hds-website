@@ -19,6 +19,7 @@ import {
 	getIncomeTaxStates,
 	getNoIncomeTaxStates
 } from '@/lib/paystub-calculator/states-utils'
+import { getSupportedTaxYears } from '@/lib/paystub-calculator/tax-data'
 import type { FormErrors } from '@/types/common'
 import type { FilingStatus, PayFrequency, PaystubData } from '@/types/paystub'
 
@@ -193,14 +194,28 @@ export function PaystubForm({
 								}))
 							}
 						>
-							<SelectTrigger id="taxYear">
+							<SelectTrigger
+								id="taxYear"
+								aria-invalid={!!formErrors.taxYear}
+								className={
+									formErrors.taxYear ? 'border-destructive border-2' : undefined
+								}
+							>
 								<SelectValue placeholder="Select year" />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="2024">2024</SelectItem>
-								<SelectItem value="2023">2023</SelectItem>
+								{getSupportedTaxYears().map(year => (
+									<SelectItem key={year} value={String(year)}>
+										{year}
+									</SelectItem>
+								))}
 							</SelectContent>
 						</Select>
+						{formErrors.taxYear && (
+							<p className="text-destructive text-xs" role="alert">
+								{formErrors.taxYear}
+							</p>
+						)}
 					</div>
 
 					<div className="space-y-tight">

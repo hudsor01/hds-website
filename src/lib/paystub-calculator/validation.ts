@@ -1,4 +1,5 @@
 import type { PaystubCalculationParams } from './calculate-paystub-totals'
+import { getSupportedTaxYears } from './tax-data'
 
 export interface ValidationResult {
 	isValid: boolean
@@ -42,10 +43,13 @@ export const validatePaystubInputs = (
 			'Overtime rate should be higher than regular hourly rate'
 	}
 
-	// Validate tax year
-	const currentYear = new Date().getFullYear()
-	if (params.taxYear < 2020 || params.taxYear > currentYear + 5) {
-		errors.taxYear = `Tax year must be between 2020 and ${currentYear + 5}`
+	// Validate tax year as a membership check against the years that actually have
+	// data (getSupportedTaxYears), not a hardcoded range. A year without backing data
+	// (e.g. a stale shared URL carrying ?year=2024) is rejected here rather than
+	// silently falling through to getTaxDataForYear's defense-in-depth fallback.
+	const supportedYears = getSupportedTaxYears()
+	if (!supportedYears.includes(params.taxYear)) {
+		errors.taxYear = `Tax year must be one of: ${supportedYears.join(', ')}`
 	}
 
 	// Validate pay frequency
