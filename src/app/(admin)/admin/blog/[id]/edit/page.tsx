@@ -17,6 +17,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { getBlogPostForAdmin } from '@/lib/admin/blog-queries'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
 import { getAuthors, getTags } from '@/lib/blog'
@@ -45,17 +46,21 @@ async function EditLoader({ params }: EditBlogPostPageProps) {
 		notFound()
 	}
 	await connection()
-	const [row, authors, tags] = await Promise.all([
+	const [postResult, authors, tags] = await Promise.all([
 		getBlogPostForAdmin(id),
 		getAuthors(),
 		getTags()
 	])
-	if (!row) {
+	if (postResult.status === 'not-found') {
 		notFound()
 	}
+	if (postResult.status === 'error') {
+		return <AdminErrorState resource="blog post" />
+	}
+	const post = postResult.data
 	return (
 		<EditBlogForm
-			row={row}
+			row={post}
 			authorOptions={authors.map(a => ({ id: a.id, name: a.name }))}
 			tagOptions={tags.map(t => ({ id: t.id, name: t.name }))}
 		/>
