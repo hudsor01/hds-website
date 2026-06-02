@@ -18,13 +18,11 @@ describe('State Tax Calculations', () => {
 		})
 
 		it('the supported income-tax set is exactly CA, IL, MA, NY, PA', () => {
-			expect(getIncomeTaxStates().map(s => s.value).sort()).toEqual([
-				'CA',
-				'IL',
-				'MA',
-				'NY',
-				'PA'
-			])
+			expect(
+				getIncomeTaxStates()
+					.map(s => s.value)
+					.sort()
+			).toEqual(['CA', 'IL', 'MA', 'NY', 'PA'])
 		})
 	})
 
@@ -146,22 +144,45 @@ describe('State Tax Calculations', () => {
 		})
 	})
 
-	describe('California State Tax (progressive)', () => {
-		it('calculates CA state tax for single filer', () => {
-			const tax = calculateStateTax(5000, 20000, 'CA', 'single')
-			expect(tax).toBeGreaterThan(0)
+	describe('California State Tax (progressive, per-status schedule)', () => {
+		it('uses the Schedule X (single) golden, not Schedule Z (gross 70000)', () => {
+			// Schedule X single: 11079/26264/41452/57542/72724 ...
+			// 0.01*11079 + 0.02*(26264-11079) + 0.04*(41452-26264)
+			//   + 0.06*(57542-41452) + 0.08*(70000-57542)
+			// = 110.79 + 303.70 + 607.52 + 965.40 + 996.64 = 2984.05
+			const tax = calculateStateTax(70000, 0, 'CA', 'single')
+			expect(tax).toBeCloseTo(2984.05, 2)
 		})
 
-		it('falls back to single brackets for headOfHousehold', () => {
-			const tax = calculateStateTax(5000, 20000, 'CA', 'headOfHousehold')
-			expect(tax).toBeGreaterThan(0)
+		it('uses the Schedule Z (HoH) golden, distinct from single (gross 70000)', () => {
+			// Schedule Z HoH: 22173/52530/67716/83805 ... distinguishes per-status from
+			// single (single at 70000 = 2984.05, HoH = 1573.35 -- not the same schedule).
+			// 0.01*22173 + 0.02*(52530-22173) + 0.04*(67716-52530)
+			//   + 0.06*(70000-67716)
+			// = 221.73 + 607.14 + 607.44 + 137.04 = 1573.35
+			const tax = calculateStateTax(70000, 0, 'CA', 'headOfHousehold')
+			expect(tax).toBeCloseTo(1573.35, 2)
 		})
 	})
 
-	describe('New York State Tax (progressive)', () => {
-		it('handles married separate using fallback brackets', () => {
-			const tax = calculateStateTax(3000, 10000, 'ny', 'marriedSeparate')
-			expect(tax).toBeGreaterThan(0)
+	describe('New York State Tax (progressive, per-status schedule)', () => {
+		it('uses the single schedule golden (gross 100000)', () => {
+			// Single: 8500/11700/13900/80650/215400 ...
+			// 0.04*8500 + 0.045*(11700-8500) + 0.0525*(13900-11700)
+			//   + 0.055*(80650-13900) + 0.06*(100000-80650)
+			// = 340.00 + 144.00 + 115.50 + 3671.25 + 1161.00 = 5431.75
+			const tax = calculateStateTax(100000, 0, 'ny', 'single')
+			expect(tax).toBeCloseTo(5431.75, 2)
+		})
+
+		it('uses the MFJ schedule golden, distinct from single (gross 100000)', () => {
+			// MFJ: 17150/23600/27900/161550 ... distinguishes per-status from single
+			// (single at 100000 = 5431.75, MFJ = 5167.50 -- wider low brackets).
+			// 0.04*17150 + 0.045*(23600-17150) + 0.0525*(27900-23600)
+			//   + 0.055*(100000-27900)
+			// = 686.00 + 290.25 + 225.75 + 3965.50 = 5167.50
+			const tax = calculateStateTax(100000, 0, 'ny', 'marriedJoint')
+			expect(tax).toBeCloseTo(5167.5, 2)
 		})
 	})
 
