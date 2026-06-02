@@ -2,7 +2,10 @@
  * Admin Scheduled-Email detail page (server component).
  *
  * Phase 05 §5.4 per-row surface. Loads the row by id via the admin query
- * layer, 404s when missing, and renders four sections:
+ * layer and renders four sections. Phase 13 (ADMINERR-04): the loader 3-way
+ * switches on the `AdminDetailResult` -- `notFound()` ONLY on a genuinely
+ * missing row, an `<AdminErrorState>` on a caught DB error (never a misleading
+ * 404), and the row render on `'found'`. The four sections are:
  *   1. Email      - sequenceId, stepId, recipient name, variables jsonb
  *   2. Delivery   - status, sent-at, retries, error (when non-null)
  *   3. Actions    - retry (when allowed) + cancel (when pending)
@@ -23,6 +26,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
@@ -72,10 +76,14 @@ async function EmailDetailLoader({ params }: EmailDetailPageProps) {
 		notFound()
 	}
 	await connection()
-	const row = await getScheduledEmailById(id)
-	if (!row) {
+	const result = await getScheduledEmailById(id)
+	if (result.status === 'not-found') {
 		notFound()
 	}
+	if (result.status === 'error') {
+		return <AdminErrorState resource="scheduled email" />
+	}
+	const row = result.data
 
 	const max = row.maxRetries ?? 3
 	const canRetry = row.retryCount < max
