@@ -30,6 +30,7 @@ import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
+import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import { getScheduledEmailById } from '@/lib/admin/emails-queries'
 import {
 	cancelScheduledEmailAction,
@@ -76,14 +77,14 @@ async function EmailDetailLoader({ params }: EmailDetailPageProps) {
 		notFound()
 	}
 	await connection()
-	const result = await getScheduledEmailById(id)
-	if (result.status === 'not-found') {
+	const routing = routeDetailResult(await getScheduledEmailById(id))
+	if (routing.kind === 'not-found') {
 		notFound()
 	}
-	if (result.status === 'error') {
+	if (routing.kind === 'error') {
 		return <AdminErrorState resource="scheduled email" />
 	}
-	const row = result.data
+	const row = routing.data
 
 	const max = row.maxRetries ?? 3
 	const canRetry = row.retryCount < max

@@ -23,6 +23,7 @@ import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
 import { getCalculatorLeadById } from '@/lib/admin/calculator-leads-queries'
+import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import {
 	deleteCalculatorLeadAction,
 	markCalculatorLeadContactedAction,
@@ -93,14 +94,14 @@ async function CalculatorLeadDetail({
 		notFound()
 	}
 	await connection()
-	const result = await getCalculatorLeadById(id)
-	if (result.status === 'not-found') {
+	const routing = routeDetailResult(await getCalculatorLeadById(id))
+	if (routing.kind === 'not-found') {
 		notFound()
 	}
-	if (result.status === 'error') {
+	if (routing.kind === 'error') {
 		return <AdminErrorState resource="calculator submission" />
 	}
-	const row = result.data
+	const row = routing.data
 
 	const leadEntries: Array<[string, React.ReactNode]> = []
 	if (row.name) {
