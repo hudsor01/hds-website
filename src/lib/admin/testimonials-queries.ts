@@ -3,9 +3,13 @@
  *
  * Read side (`listTestimonialsForAdmin`, `getTestimonialById`) returns
  * EVERY row including unpublished. The list helper is now
- * cursor-paginated + search-aware (Phase 10 Wave 2); try/catch returns
- * the empty result shape / null so the list page renders an empty state
- * rather than crashing the whole shell.
+ * cursor-paginated + search-aware (Phase 10 Wave 2). Phase 13 Wave 2:
+ * both reads return discriminated-union results so a caught DB error is
+ * distinguishable from a successful-but-empty read - the list helper
+ * returns `AdminQueryResult<ListTestimonialsResult>` (`err()` on failure)
+ * and `getTestimonialById` returns the 3-way `AdminDetailResult<TestimonialRow>`
+ * (`found` / `not-found` / `error`). Consumers render `AdminErrorState`
+ * on failure instead of a misleading empty list / 404.
  *
  * Write side (`createTestimonial`, `updateTestimonial`,
  * `toggleTestimonialPublished`) intentionally does NOT touch any
@@ -26,6 +30,15 @@ import {
 	escapeLikePattern,
 	PAGE_SIZE
 } from '@/lib/admin/list-cursor'
+import {
+	type AdminDetailResult,
+	type AdminQueryResult,
+	err,
+	errResult,
+	found,
+	notFoundResult,
+	ok
+} from '@/lib/admin/query-result'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import type {
@@ -50,13 +63,6 @@ export type ListTestimonialsResult = {
 	nextCursor: string | null
 }
 
-const EMPTY_RESULT: ListTestimonialsResult = {
-	rows: [],
-	hasMore: false,
-	prevCursor: null,
-	nextCursor: null
-}
-
 /**
  * Cursor-paginated + search-aware admin testimonials list.
  *
@@ -74,11 +80,12 @@ const EMPTY_RESULT: ListTestimonialsResult = {
  * `escapeLikePattern`).
  *
  * Malformed cursor: silently falls back to page 1. DB error: returns the
- * empty result shape; caller renders the empty state instead of crashing.
+ * `err()` failure variant so the caller can render the error state (distinct
+ * from a genuinely empty `ok` result).
  */
 export async function listTestimonialsForAdmin(
 	opts?: ListTestimonialsOptions
-): Promise<ListTestimonialsResult> {
+): Promise<AdminQueryResult<ListTestimonialsResult>> {
 	const { q: rawQ, cursor: rawCursor } = opts ?? {}
 	const cursor = decodeCursor(rawCursor)
 	const direction: Direction = cursor?.direction ?? 'after'
@@ -167,10 +174,10 @@ export async function listTestimonialsForAdmin(
 				? encodeCursor('before', cursorPartsFor(firstRow))
 				: null
 
-		return { rows: pageRows, hasMore, prevCursor, nextCursor }
+		return ok({ rows: pageRows, hasMore, prevCursor, nextCursor })
 	} catch (error) {
 		logger.error('testimonials-queries.listTestimonialsForAdmin failed', error)
-		return EMPTY_RESULT
+		return err()
 	}
 }
 
@@ -178,21 +185,29 @@ function cursorPartsFor(row: TestimonialRow): [Date, string] {
 	return [row.createdAt ?? new Date(0), row.id]
 }
 
+/**
+ * Single testimonial row by id as a 3-way detail result: `found(row)` when the
+ * row exists, `notFoundResult()` when it is genuinely missing, `errResult()`
+ * when the query fails. The edit page 404s only on `'not-found'` and renders
+ * the error state on `'error'` (never a misleading 404). The single internal
+ * write-helper caller (`toggleTestimonialPublished`) narrows this back to a
+ * row-or-null locally.
+ */
 export async function getTestimonialById(
 	id: string
-): Promise<TestimonialRow | null> {
+): Promise<AdminDetailResult<TestimonialRow>> {
 	try {
 		const [row] = await db
 			.select()
 			.from(testimonials)
 			.where(eq(testimonials.id, id))
 			.limit(1)
-		return row ?? null
+		return row ? found(row) : notFoundResult()
 	} catch (error) {
 		logger.error('testimonials-queries.getTestimonialById failed', error, {
 			metadata: { id }
 		})
-		return null
+		return errResult()
 	}
 }
 
@@ -251,7 +266,8 @@ export const deleteTestimonial = deleteTestimonialBase
 export async function toggleTestimonialPublished(
 	id: string
 ): Promise<TestimonialRow | null> {
-	const existing = await getTestimonialById(id)
+	const result = await getTestimonialById(id)
+	const existing = result.status === 'found' ? result.data : null
 	if (!existing) {
 		return null
 	}

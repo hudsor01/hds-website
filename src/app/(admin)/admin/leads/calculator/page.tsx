@@ -27,6 +27,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { SearchInput } from '@/components/admin/SearchInput'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import {
@@ -86,11 +87,15 @@ async function CalculatorLeadsList({
 		? (rawStatus as CalculatorLeadQuality)
 		: null
 	const q = (rawQ ?? '').trim()
-	const { rows, prevCursor, nextCursor } = await listCalculatorLeadsForAdmin({
+	const result = await listCalculatorLeadsForAdmin({
 		quality,
 		q: q.length > 0 ? q : undefined,
 		cursor
 	})
+	if (!result.ok) {
+		return <AdminErrorState resource="calculator submissions" />
+	}
+	const { rows, prevCursor, nextCursor } = result.data
 	const preservedForPagination: Record<string, string> = {}
 	if (quality) {
 		preservedForPagination.status = quality

@@ -8,6 +8,7 @@ import {
 	useState
 } from 'react'
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { BUSINESS_INFO } from '@/lib/constants/business'
@@ -29,11 +30,12 @@ interface ErrorBoundaryProps {
 	resetKeys?: Array<string | number>
 }
 
-function DefaultErrorFallback({
+export function DefaultErrorFallback({
 	error,
 	resetErrorBoundary
 }: ErrorFallbackProps) {
 	const [copied, setCopied] = useState(false)
+	const [sending, setSending] = useState(false)
 	const errorObj = error instanceof Error ? error : new Error(String(error))
 
 	const copyErrorDetails = async () => {
@@ -61,35 +63,44 @@ function DefaultErrorFallback({
 		}
 	}
 
-	// Function to send error report to support
+	// Transmit the error report to the server. The toast reflects the real
+	// POST result - we never claim a report was filed unless res.ok.
 	const reportError = async () => {
-		if (!error) {
+		if (!error || sending) {
 			return
 		}
 
+		setSending(true)
+		const errorReport = {
+			message: errorObj.message,
+			stack: errorObj.stack,
+			url: window.location.href,
+			userAgent: navigator.userAgent,
+			timestamp: new Date().toISOString(),
+			platform: navigator.platform,
+			language: navigator.language
+		}
+
 		try {
-			const errorReport = {
-				message: errorObj.message,
-				stack: errorObj.stack,
-				url: window.location.href,
-				userAgent: navigator.userAgent,
-				timestamp: new Date().toISOString(),
-				platform: navigator.platform,
-				language: navigator.language
+			const res = await fetch('/api/error-report', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(errorReport)
+			})
+			if (res.ok) {
+				toast.success('Error report sent. Thanks for helping us fix this.')
+			} else {
+				toast.error(
+					'Could not send the report. Copy the details below and email us.'
+				)
 			}
-
-			// In a real app, you would send this to your backend
-			// await fetch('/api/error-report', {
-			//   method: 'POST',
-			//   body: JSON.stringify(errorReport)
-			// });
-
-			logger.warn('[ErrorBoundary] Error report prepared', errorReport)
-			alert(
-				'Error report has been prepared. Please contact support with the error details.'
-			)
 		} catch (err) {
 			logger.error('[ErrorBoundary] Failed to report error', err)
+			toast.error(
+				'Could not send the report. Copy the details below and email us.'
+			)
+		} finally {
+			setSending(false)
 		}
 	}
 
@@ -149,6 +160,7 @@ function DefaultErrorFallback({
 									</button>
 									<button
 										onClick={reportError}
+										disabled={sending}
 										className="flex items-center gap-tight text-xs link-primary py-1"
 									>
 										<AlertTriangle className="w-3 h-3" />

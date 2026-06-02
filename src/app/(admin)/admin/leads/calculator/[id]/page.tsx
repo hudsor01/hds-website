@@ -18,10 +18,12 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
 import { getCalculatorLeadById } from '@/lib/admin/calculator-leads-queries'
+import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import {
 	deleteCalculatorLeadAction,
 	markCalculatorLeadContactedAction,
@@ -92,10 +94,14 @@ async function CalculatorLeadDetail({
 		notFound()
 	}
 	await connection()
-	const row = await getCalculatorLeadById(id)
-	if (!row) {
+	const routing = routeDetailResult(await getCalculatorLeadById(id))
+	if (routing.kind === 'not-found') {
 		notFound()
 	}
+	if (routing.kind === 'error') {
+		return <AdminErrorState resource="calculator submission" />
+	}
+	const row = routing.data
 
 	const leadEntries: Array<[string, React.ReactNode]> = []
 	if (row.name) {
