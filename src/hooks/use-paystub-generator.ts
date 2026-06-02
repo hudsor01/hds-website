@@ -1,6 +1,10 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import {
+	isSupportedStateCode,
+	isSupportedTaxYear
+} from '@/lib/paystub-calculator/supported-inputs'
 import { usePaystubCalculations } from './use-paystub-calculations'
 import { usePaystubForm } from './use-paystub-form'
 import { usePaystubPersistence } from './use-paystub-persistence'
@@ -67,11 +71,22 @@ export function usePaystubGenerator() {
 			hourlyRate: urlState.rate ?? prev.hourlyRate,
 			hoursPerPeriod: urlState.hours ?? prev.hoursPerPeriod,
 			filingStatus: urlState.status ?? prev.filingStatus,
-			taxYear: urlState.year ?? prev.taxYear
+			// Clamp a restored year to the supported set; a stale shared ?year=2024
+			// (HIGH/LOW asymmetry: nuqs passes it through unchanged) falls back to the
+			// form default rather than feeding an unbacked year into the calculation.
+			taxYear:
+				urlState.year != null && isSupportedTaxYear(urlState.year)
+					? urlState.year
+					: prev.taxYear
 		}))
 
 		if (urlState.state) {
-			formState.setSelectedState(urlState.state)
+			// Only restore a supported code; drop unsupported values (e.g. AL) so a
+			// stale shared URL never feeds an unsupported state into the calculation
+			// and never produces a defensive silent $0 (PAYSTUB-10).
+			if (isSupportedStateCode(urlState.state)) {
+				formState.setSelectedState(urlState.state.toUpperCase())
+			}
 		}
 
 		hasInitializedFromUrl.current = true
