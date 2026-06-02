@@ -95,9 +95,6 @@ export function calculateTTL(input: VehicleInputs): TTLResults {
 		input.vehicleWeight
 	)
 
-	// Processing fees (already included in registration calculation)
-	const processingFees = 0
-
 	// EV fee (if electric vehicle)
 	const evFee = input.isElectric ? EV_FEE_ANNUAL : 0
 
@@ -111,7 +108,6 @@ export function calculateTTL(input: VehicleInputs): TTLResults {
 		salesTax,
 		titleFee,
 		registrationFees,
-		processingFees,
 		evFee,
 		emissions,
 		totalTTL

@@ -67,13 +67,6 @@ export interface Logger {
 	// Performance timing
 	time(label: string): void
 	timeEnd(label: string): void
-
-	// Grouping (for development)
-	group(label: string): void
-	groupEnd(): void
-
-	// Table display (for development)
-	table(data: unknown): void
 }
 
 export interface ServerLogger extends Logger {

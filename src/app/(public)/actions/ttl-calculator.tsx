@@ -37,7 +37,6 @@ const calculationResultsSchema = z.object({
 		salesTax: z.number(),
 		titleFee: z.number(),
 		registrationFees: z.number(),
-		processingFees: z.number().optional(),
 		evFee: z.number().optional(),
 		emissions: z.number().optional(),
 		totalTTL: z.number()
