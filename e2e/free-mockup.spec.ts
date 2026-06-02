@@ -99,3 +99,46 @@ test.describe('Free Mockup Landing', () => {
 		await expect(page.locator('#lastName')).toBeFocused()
 	})
 })
+
+// Mobile coverage for the ad/outreach destination, which skews heavily mobile.
+// Playwright forces the viewport reliably (the Claude-in-Chrome resize tool
+// could not), closing the one gap the runtime browser pass left open.
+test.describe('Free Mockup Landing - mobile (375px)', () => {
+	test.beforeEach(async ({ page }) => {
+		await page.setViewportSize({ width: 375, height: 667 })
+		await page.goto('/free-mockup')
+		await page.locator('form').waitFor({ state: 'visible', timeout: 15000 })
+	})
+
+	test('renders without horizontal scroll', async ({ page }) => {
+		const hasHorizontalScroll = await page.evaluate(
+			() =>
+				document.documentElement.scrollWidth >
+				document.documentElement.clientWidth
+		)
+		expect(hasHorizontalScroll).toBe(false)
+	})
+
+	test('form fields stay within the viewport and submit is reachable', async ({
+		page
+	}) => {
+		for (const id of ['#firstName', '#lastName', '#email', '#businessName']) {
+			const field = page.locator(id)
+			await expect(field).toBeVisible()
+			const box = await field.boundingBox()
+			expect(box).not.toBeNull()
+			if (box) {
+				expect(box.x).toBeGreaterThanOrEqual(0)
+				expect(box.x + box.width).toBeLessThanOrEqual(375)
+			}
+		}
+		await expect(page.locator('button[type="submit"]')).toBeVisible()
+	})
+
+	test('inline validation still fires at mobile width', async ({ page }) => {
+		await page.locator('button[type="submit"]').click()
+		await expect(
+			page.getByText('Please enter a valid email address')
+		).toBeVisible({ timeout: 5000 })
+	})
+})
