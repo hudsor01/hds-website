@@ -61,6 +61,7 @@ export function CreateShowcaseForm() {
 
 	return (
 		<form
+			noValidate
 			onSubmit={e => {
 				e.preventDefault()
 				void form.handleSubmit()

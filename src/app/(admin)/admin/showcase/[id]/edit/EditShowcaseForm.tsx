@@ -76,6 +76,7 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 	return (
 		<div className="space-y-6">
 			<form
+				noValidate
 				onSubmit={e => {
 					e.preventDefault()
 					void form.handleSubmit()

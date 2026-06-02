@@ -42,10 +42,12 @@ function NewsletterSignupContent({
 		defaultValues: {
 			email: ''
 		},
-		// Reward early, punish late: first error on blur, then revalidate on
-		// change once the form has been submitted. Canonical TanStack pattern.
+		// Reward early, punish late: validate on submit (surfaces all errors at
+		// once), then revalidate on change so they clear as the user fixes them.
+		// Requires noValidate on the form so the native required-check does not
+		// block the submit event before handleSubmit runs.
 		validationLogic: revalidateLogic({
-			mode: 'blur',
+			mode: 'submit',
 			modeAfterSubmission: 'change'
 		}),
 		validators: {
@@ -83,6 +85,7 @@ function NewsletterSignupContent({
 
 				<form
 					method="post"
+					noValidate
 					onSubmit={e => {
 						e.preventDefault()
 						e.stopPropagation()
@@ -192,6 +195,7 @@ function NewsletterSignupContent({
 
 				<form
 					method="post"
+					noValidate
 					onSubmit={e => {
 						e.preventDefault()
 						e.stopPropagation()
@@ -308,6 +312,7 @@ function NewsletterSignupContent({
 
 					<form
 						method="post"
+						noValidate
 						onSubmit={e => {
 							e.preventDefault()
 							e.stopPropagation()
