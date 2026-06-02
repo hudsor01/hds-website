@@ -1,6 +1,6 @@
-# ROADMAP â Hudson Digital Solutions
+# ROADMAP — Hudson Digital Solutions
 
-## Milestone v3 â Showcase & conversion polish
+## Milestone v3 — Showcase & conversion polish
 
 > Started 2026-05-21. Site copy was repositioned in v2 (PR #206). v3 focuses on visual storytelling and conversion surfaces.
 > Phase 01 shipped as PR #208 (squashed to `59e5e70` on `main`, 2026-05-22).
@@ -19,18 +19,18 @@
 
 Plans:
 
-- [x] 01-01-PLAN.md â Populate Neon `showcase` table: UPDATE imageUrl on 3 existing rows + INSERT jirah-shop row (featured, first by displayOrder)
-- [x] 01-02-PLAN.md â Extend `Card variant="project"` with optional `imageUrl` / `imageAlt` props and a conditional Next.js Image header (4:3 featured, 16:9 support)
-- [x] 01-03-PLAN.md â Rewrite `src/app/showcase/page.tsx`: new section header, featured-first split logic, 3-col support grid, new inline CTA section, strip em/en-dash from existing hero/metadata copy
-- [x] 01-04-PLAN.md â Verification: lint + typecheck + build + em/en-dash grep + human visual smoke on local dev (automated gates green; human smoke deferred to operator pre-PR)
+- [x] 01-01-PLAN.md — Populate Neon `showcase` table: UPDATE imageUrl on 3 existing rows + INSERT jirah-shop row (featured, first by displayOrder)
+- [x] 01-02-PLAN.md — Extend `Card variant="project"` with optional `imageUrl` / `imageAlt` props and a conditional Next.js Image header (4:3 featured, 16:9 support)
+- [x] 01-03-PLAN.md — Rewrite `src/app/showcase/page.tsx`: new section header, featured-first split logic, 3-col support grid, new inline CTA section, strip em/en-dash from existing hero/metadata copy
+- [x] 01-04-PLAN.md — Verification: lint + typecheck + build + em/en-dash grep + human visual smoke on local dev (automated gates green; human smoke deferred to operator pre-PR)
 
 **Wave structure:**
 
-- Wave 1 (parallel): 01-01 (data), 01-02 (component) â no file overlap, both prerequisites for the page rewrite
+- Wave 1 (parallel): 01-01 (data), 01-02 (component) — no file overlap, both prerequisites for the page rewrite
 - Wave 2: 01-03 (page rewrite, depends on data and component)
 - Wave 3: 01-04 (verification, depends on all)
 
-## Milestone v4 â Admin Panel
+## Milestone v4 — Admin Panel
 
 > Started 2026-05-22. Built around Efferd Dashboard 5 (web analytics) shell. Auth is Better Auth (full sessions/users, users table in Neon). Scope is comprehensive admin: dashboard + content CRUD + leads/ops.
 
@@ -51,16 +51,16 @@ Plans:
 
 Plans:
 
-- [x] 03-01-PLAN.md â Install recharts; write `src/lib/admin/dashboard-queries.ts` with 5 typed Drizzle query functions (visitors-by-day, top-pages, traffic-sources, web-vitals-p75, recent-leads)
-- [x] 03-02-PLAN.md â Shell primitives: `src/components/admin/{Sidebar,Topbar,Forbidden}.tsx` (Sidebar is client for usePathname active state, others are server)
-- [x] 03-03-PLAN.md â Rewrite `src/app/admin/layout.tsx` to compose the new shell; rewrite `src/app/admin/page.tsx` as a redirect to `/admin/dashboard`
-- [x] 03-04-PLAN.md â `src/app/admin/dashboard/page.tsx` + 5 widgets under `src/components/admin/widgets/` (VisitorsChart, WebVitalsCards, TopPagesTable, TrafficSourcesPie, RecentLeadsPanel)
-- [x] 03-05-PLAN.md â 6 coming-soon stub pages under `src/app/admin/(coming-soon)/` for showcase, blog, testimonials (Phase 04) and leads, newsletter, emails (Phase 05)
-- [x] 03-06-PLAN.md â Verification: lint + typecheck + build + em/en-dash sweep + Phase-02 untouched diff + operator smoke checklist (passed automated gates; operator smoke deferred to operator pre-PR)
+- [x] 03-01-PLAN.md — Install recharts; write `src/lib/admin/dashboard-queries.ts` with 5 typed Drizzle query functions (visitors-by-day, top-pages, traffic-sources, web-vitals-p75, recent-leads)
+- [x] 03-02-PLAN.md — Shell primitives: `src/components/admin/{Sidebar,Topbar,Forbidden}.tsx` (Sidebar is client for usePathname active state, others are server)
+- [x] 03-03-PLAN.md — Rewrite `src/app/admin/layout.tsx` to compose the new shell; rewrite `src/app/admin/page.tsx` as a redirect to `/admin/dashboard`
+- [x] 03-04-PLAN.md — `src/app/admin/dashboard/page.tsx` + 5 widgets under `src/components/admin/widgets/` (VisitorsChart, WebVitalsCards, TopPagesTable, TrafficSourcesPie, RecentLeadsPanel)
+- [x] 03-05-PLAN.md — 6 coming-soon stub pages under `src/app/admin/(coming-soon)/` for showcase, blog, testimonials (Phase 04) and leads, newsletter, emails (Phase 05)
+- [x] 03-06-PLAN.md — Verification: lint + typecheck + build + em/en-dash sweep + Phase-02 untouched diff + operator smoke checklist (passed automated gates; operator smoke deferred to operator pre-PR)
 
 **Wave structure:**
 
-- Wave 1 (parallel): 03-01 (deps + query lib), 03-02 (shell primitives) â no file overlap
+- Wave 1 (parallel): 03-01 (deps + query lib), 03-02 (shell primitives) — no file overlap
 - Wave 2: 03-03 (layout + redirect, depends on 03-02 primitives)
 - Wave 3 (parallel): 03-04 (dashboard page + widgets, depends on 03-01 for queries and 03-03 for the shell), 03-05 (coming-soon stubs, depends on 03-03 for the layout)
 - Wave 4: 03-06 (verification, depends on 03-04 + 03-05)
@@ -73,17 +73,17 @@ Plans:
 
 Plans:
 
-- [x] 04-01-PLAN.md â Shared admin foundation: `src/lib/admin/{auth,slugify,form-data,db-errors}.ts` + `src/components/admin/{FormFieldSet,DeleteButton,PublishToggle,ResourceListPage}.tsx` (with 3 unit-test files)
-- [x] 04-02-PLAN.md â Showcase CRUD vertical slice: `src/lib/admin/showcase-queries.ts` + `src/lib/schemas/admin-showcase.ts` + 6 pages under `src/app/admin/showcase/`
-- [x] 04-03-PLAN.md â Blog CRUD vertical slice with author select + tag multi-select set replacement: `src/lib/admin/blog-queries.ts` + `src/lib/schemas/admin-blog.ts` + 6 pages under `src/app/admin/blog/`
-- [x] 04-04-PLAN.md â Testimonials CRUD vertical slice: `src/lib/admin/testimonials-queries.ts` + `src/lib/schemas/admin-testimonials.ts` + 6 pages under `src/app/admin/testimonials/`
-- [x] 04-05-PLAN.md â Cleanup: delete the 3 Phase-04 coming-soon stubs (`src/app/admin/(coming-soon)/{showcase,blog,testimonials}/page.tsx`); leaves leads/newsletter/emails stubs intact for Phase 05
-- [x] 04-06-PLAN.md â Verification: lint + typecheck + unit tests + build + em/en-dash sweep + Phase 02/03/n8n/public byte-equal diff + operator 20-step smoke checklist (passed automated gates; operator smoke deferred pre-PR)
+- [x] 04-01-PLAN.md — Shared admin foundation: `src/lib/admin/{auth,slugify,form-data,db-errors}.ts` + `src/components/admin/{FormFieldSet,DeleteButton,PublishToggle,ResourceListPage}.tsx` (with 3 unit-test files)
+- [x] 04-02-PLAN.md — Showcase CRUD vertical slice: `src/lib/admin/showcase-queries.ts` + `src/lib/schemas/admin-showcase.ts` + 6 pages under `src/app/admin/showcase/`
+- [x] 04-03-PLAN.md — Blog CRUD vertical slice with author select + tag multi-select set replacement: `src/lib/admin/blog-queries.ts` + `src/lib/schemas/admin-blog.ts` + 6 pages under `src/app/admin/blog/`
+- [x] 04-04-PLAN.md — Testimonials CRUD vertical slice: `src/lib/admin/testimonials-queries.ts` + `src/lib/schemas/admin-testimonials.ts` + 6 pages under `src/app/admin/testimonials/`
+- [x] 04-05-PLAN.md — Cleanup: delete the 3 Phase-04 coming-soon stubs (`src/app/admin/(coming-soon)/{showcase,blog,testimonials}/page.tsx`); leaves leads/newsletter/emails stubs intact for Phase 05
+- [x] 04-06-PLAN.md — Verification: lint + typecheck + unit tests + build + em/en-dash sweep + Phase 02/03/n8n/public byte-equal diff + operator 20-step smoke checklist (passed automated gates; operator smoke deferred pre-PR)
 
 **Wave structure:**
 
 - Wave 1: 04-01 (shared foundation; everything in Wave 2 depends on it)
-- Wave 2 (parallel, 3 independent vertical slices): 04-02 (showcase), 04-03 (blog), 04-04 (testimonials) â zero file-overlap between the three
+- Wave 2 (parallel, 3 independent vertical slices): 04-02 (showcase), 04-03 (blog), 04-04 (testimonials) — zero file-overlap between the three
 - Wave 3: 04-05 (stub cleanup, depends on all three Wave-2 routes existing)
 - Wave 4: 04-06 (verification, depends on everything)
 
@@ -95,22 +95,22 @@ Plans:
 
 Plans:
 
-- [x] 05-01-PLAN.md â Shared UI primitives: `src/components/admin/{StatusFilterBar,StatusBadge}.tsx` (server components consumed by all 4 Wave-2 list/detail surfaces)
-- [x] 05-02-PLAN.md â Leads vertical slice: `src/lib/admin/leads-queries.ts` + `src/lib/schemas/admin-leads.ts` + 3 pages under `src/app/admin/leads/` (list with status filter, detail with attribution/notes/status mutations, 4 Server Actions)
-- [x] 05-03-PLAN.md â Calculator leads vertical slice: `src/lib/admin/calculator-leads-queries.ts` + `src/lib/schemas/admin-calculator-leads.ts` + 3 pages under `src/app/admin/leads/calculator/` (list with quality filter, detail with inputs/results/conversion, 3 Server Actions)
-- [x] 05-04-PLAN.md â Newsletter vertical slice: `src/lib/admin/newsletter-queries.ts` + `src/lib/schemas/admin-newsletter.ts` + 3 pages under `src/app/admin/newsletter/` (list, detail with unsubscribe/re-subscribe state machine, 3 Server Actions)
-- [x] 05-05-PLAN.md â Emails vertical slice: `src/lib/admin/emails-queries.ts` + `src/lib/schemas/admin-emails.ts` + 3 pages under `src/app/admin/emails/` (list with 4 stat cards + status filter, detail with retry guard, 3 Server Actions; `/api/process-emails` UNTOUCHED)
-- [x] 05-06-PLAN.md â Cleanup: delete the 3 Phase-05 coming-soon stubs (`src/app/admin/(coming-soon)/{leads,newsletter,emails}/page.tsx`) + remove the empty `(coming-soon)/` directory; verify cacheComponents pattern on all 4 dynamic detail routes
-- [x] 05-07-PLAN.md â Verification: 13 automated gates (lint + typecheck + unit tests + build + em/en-dash sweep + Phase 02/03/04 + cron-endpoint + public byte-equal diff + requireAdminSession defense-in-depth count + revalidatePath count + no console.* / process.env.X / any types) + 35-step operator smoke checklist for all 4 surfaces
+- [x] 05-01-PLAN.md — Shared UI primitives: `src/components/admin/{StatusFilterBar,StatusBadge}.tsx` (server components consumed by all 4 Wave-2 list/detail surfaces)
+- [x] 05-02-PLAN.md — Leads vertical slice: `src/lib/admin/leads-queries.ts` + `src/lib/schemas/admin-leads.ts` + 3 pages under `src/app/admin/leads/` (list with status filter, detail with attribution/notes/status mutations, 4 Server Actions)
+- [x] 05-03-PLAN.md — Calculator leads vertical slice: `src/lib/admin/calculator-leads-queries.ts` + `src/lib/schemas/admin-calculator-leads.ts` + 3 pages under `src/app/admin/leads/calculator/` (list with quality filter, detail with inputs/results/conversion, 3 Server Actions)
+- [x] 05-04-PLAN.md — Newsletter vertical slice: `src/lib/admin/newsletter-queries.ts` + `src/lib/schemas/admin-newsletter.ts` + 3 pages under `src/app/admin/newsletter/` (list, detail with unsubscribe/re-subscribe state machine, 3 Server Actions)
+- [x] 05-05-PLAN.md — Emails vertical slice: `src/lib/admin/emails-queries.ts` + `src/lib/schemas/admin-emails.ts` + 3 pages under `src/app/admin/emails/` (list with 4 stat cards + status filter, detail with retry guard, 3 Server Actions; `/api/process-emails` UNTOUCHED)
+- [x] 05-06-PLAN.md — Cleanup: delete the 3 Phase-05 coming-soon stubs (`src/app/admin/(coming-soon)/{leads,newsletter,emails}/page.tsx`) + remove the empty `(coming-soon)/` directory; verify cacheComponents pattern on all 4 dynamic detail routes
+- [x] 05-07-PLAN.md — Verification: 13 automated gates (lint + typecheck + unit tests + build + em/en-dash sweep + Phase 02/03/04 + cron-endpoint + public byte-equal diff + requireAdminSession defense-in-depth count + revalidatePath count + no console.* / process.env.X / any types) + 35-step operator smoke checklist for all 4 surfaces
 
 **Wave structure:**
 
 - Wave 1: 05-01 (2 shared UI primitives; Wave 2 depends on these)
-- Wave 2 (parallel, 4 independent vertical slices): 05-02 (leads), 05-03 (calculator-leads), 05-04 (newsletter), 05-05 (emails) â zero file-overlap between the four
+- Wave 2 (parallel, 4 independent vertical slices): 05-02 (leads), 05-03 (calculator-leads), 05-04 (newsletter), 05-05 (emails) — zero file-overlap between the four
 - Wave 3: 05-06 (stub cleanup, depends on all four Wave-2 routes existing)
 - Wave 4: 05-07 (verification, depends on everything)
 
-## Milestone v5 â Admin hardening + content authoring
+## Milestone v5 — Admin hardening + content authoring
 
 > Started 2026-05-25. v4 (Admin Panel) is shipped end-to-end and audited. v5 takes the next pass: turn the post-smoke audit findings into architectural cleanup, replace the paste-URL friction with real upload UI, give the blog a proper editor, sweep the 3rd-party logger surface for PII leaks, and stage pagination for any future list growth.
 >
@@ -127,7 +127,7 @@ Plans:
 | -- | admin Loading hotfix (cross-phase) | shipped (PR #226) | 0 | Post-Phase-09 cross-phase fix. All 7 admin `[id]` edit/detail pages were stuck on the Suspense `Loading...` fallback in prod because the loader called `await connection()` before the placeholder-id check; the prerender emitted `<!--$~-->` (PPR postponed) markers React's `$RC` couldn't unhide. Bug originated in Phase 04 canonical pattern; widened with every admin `[id]` route. Fix: short-circuit the placeholder to `notFound()` before `connection()`. New `src/lib/admin/build-placeholder.ts` (shared constant + canonical docblock) + `tests/unit/admin/build-placeholder.test.ts` (23-case regression suite enumerating the admin tree). 3 rounds of independent code review. Diagnosed via Phase 09 live-verify. See `.planning/milestones/v5-AUDIT.md` for the root-cause analysis. |
 | 10 | `admin-list-pagination` | complete (PR #228) | 9 | Cursor pagination + nuqs-driven ILIKE text search + shadcn `<Table>` / `<Pagination>` primitives across all 7 admin list pages. Replaces the Phase 04/05 hard caps with paginated reads. PAGE_SIZE=25; per-table cursor keys range from 2-part `(createdAt, id)` to NULLS-LAST 3-part `(publishedAt DESC NULLS LAST, createdAt, id)`. New `src/lib/admin/list-cursor.ts` codec + `buildPaginationHref` helper. SearchInput uses `useQueryState('q', { shallow: false, throttleMs: 300, clearOnDefault: true })` and resets `?cursor=` on q change. 20 commits across 3 waves; 112 new test cases. Phase summary at `.planning/phases/10-admin-list-pagination/10-SUMMARY.md`. |
 
-## Milestone v6 â Audit Remediation
+## Milestone v6 — Audit Remediation
 
 > Started 2026-06-01. Driven by a full no-op/stub audit (8-lane parallel finder sweep across all 402 source files, each candidate adversarially verified). 87 candidates resolved to 6 genuine stubs, 50 intentional no-ops, 31 dismissed false positives. Canonical findings at `.planning/v6-AUDIT-FINDINGS.md`. Goal: the codebase contains no functionality that silently fails to do what its name, signature, or UI copy promises. Every finding gets a disposition, no matter the severity.
 >
@@ -139,7 +139,7 @@ Plans:
 
 | # | Slug | Status | Plans | Severity | Description |
 |---|---|---|---|---|---|
-| 11 | `paystub-tax-accuracy` | not started | TBD | HIGH | Stop the paystub calculator from emitting a confident, wrong financial output. Restrict the state dropdown to states with real bracket data (PAYSTUB-01), remove the dead 2023 year toggle (PAYSTUB-02), derive year validation from the data table (PAYSTUB-03), drop redundant flat-0 TX/FL/WA bracket entries (PAYSTUB-04). Findings #1, #2, #4 + the 2025-clone note. |
+| 11 | `paystub-tax-accuracy` | not started | 4 | HIGH | Stop the paystub calculator from emitting a confident, wrong financial output. Restrict the state dropdown to states with real bracket data (PAYSTUB-01), remove the dead 2023 and stale 2024 year toggles and re-key to OFFICIAL 2025 (PAYSTUB-02), derive year validation from the data table (PAYSTUB-03), drop redundant flat-0 TX/FL/WA bracket entries (PAYSTUB-04), correct federal + CA + NY + MA to official 2025 values incl. the >$1M CA/MA surtaxes (PAYSTUB-05..08), reframe copy as a 2025 estimate (PAYSTUB-09), and harden stale shared URLs (PAYSTUB-10). Findings #1, #2, #4 + the 2025-clone note + official-source data correction. |
 | 12 | `errorboundary-report-path` | not started | TBD | MEDIUM | The root-layout ErrorBoundary "Report Error" action either transmits a real report or is removed; never claims a report was filed when nothing was sent. No `alert()`; Sonner toast if feedback is shown. Finding #3 (ERR-01). |
 | 13 | `admin-error-observability` | not started | TBD | DECIDE | Admin list pages, dashboard widgets, the `/admin/emails` queue-health counts, and `get*ById` detail pages distinguish "query failed" from "no data" with a visible error state. Supersedes the v4 locked return-`[]`-on-failure decision. `get*ById` failure must NOT degrade to a 404. ADMINERR-01..04. |
 | 14 | `admin-page-title` | not started | TBD | DECIDE | Resolve the hardcoded-but-dynamic-looking `pageTitle="Admin"` prop in `(admin)/admin/layout.tsx`. Canonical approach (native Next.js 16 metadata/title template vs per-page heading) is research-required during plan-phase. ADMINUX-01. |
@@ -148,33 +148,40 @@ Plans:
 
 ### Phase 11: paystub-tax-accuracy
 
-**Goal**: The paystub calculator never tells the user a confident lie about their take-home pay. A user can only pick a state or year the calculator actually computes, and a selected unsupported value can never silently fall back to a fake $0 or to another year's brackets.
+**Goal**: The paystub calculator never tells the user a confident lie about their take-home pay. A user can only pick a state or year the calculator actually computes (official 2025 tables), a selected unsupported value can never silently fall back to a fake $0 or to another year's brackets, and the copy frames the output as an estimate.
 **Depends on**: Nothing (first v6 phase)
-**Requirements**: PAYSTUB-01, PAYSTUB-02, PAYSTUB-03, PAYSTUB-04
+**Requirements**: PAYSTUB-01, PAYSTUB-02, PAYSTUB-03, PAYSTUB-04, PAYSTUB-05, PAYSTUB-06, PAYSTUB-07, PAYSTUB-08, PAYSTUB-09, PAYSTUB-10
 **Success Criteria** (what must be TRUE):
 
-  1. The "State Income Tax" dropdown only lists states that have real bracket data; an unsupported income-tax state can no longer be selected (or, if shown, renders a visible "state withholding not available" notice rather than a $0). No path produces a confident silent $0 for a state that levies income tax.
-  2. The federal tax-year selector only offers years backed by real data; the dead "2023" option no longer silently uses 2024 brackets (it is removed, since v6 does not add new bracket data).
-  3. Year validation rejects any year not present in the tax-data table, with the valid range derived from `Object.keys(taxDataByYear)` rather than hardcoded; a `getTaxDataForYear`/year-validation unit test covers the rejected/fallback case.
+  1. The "State Income Tax" dropdown only lists states that have real bracket data (CA, NY, IL, PA, MA), derived from `stateTaxDataByYear`; no path produces a confident silent $0 for a state that levies income tax.
+  2. The federal tax-year selector only offers years backed by real data; both the dead "2023" and the stale "2024" items are removed and the data tables are keyed 2025 with official values, default `taxYear` 2025.
+  3. Year validation rejects any year not present in the tax-data table, derived from `getSupportedTaxYears()` (not hardcoded); a rejected-year (2024) + accepted-year (2025) unit test covers it.
   4. The redundant flat-0 TX/FL/WA entries are gone from the income-tax bracket table (those states remain only in the no-income-tax group).
-  5. The existing `state-tax-calculations` unit test that codified the silent-$0 as "graceful" is updated to assert the new truthful behavior.
+  5. Federal, CA, NY, MA data are the OFFICIAL 2025 values (IRS Rev. Proc. 2024-40; SS wage base $176,100; FTB 2025; NY DTF 2025; MA flat 5.0% + $1,083,150 surtax), with the CA MHS (>$1M) and MA 4% (>$1,083,150) surtaxes encoded as top brackets; golden-number tests lock them.
+  6. A stale shared `?state=AL` URL is intersected with the supported codes so it can never reach the defensive $0; the hero/metadata copy frames the output as a 2025 estimate, dash-free.
 
-**Notes**: Fix scopes selectable states to supported data (or a visible disclaimer); it does NOT add 37 states of bracket data (that is deferred PAYSTUB-F1). Touches `state-tax-data.ts`, `state-tax-calculations.ts`, `states-utils.ts`, `tax-data.ts`, `PaystubForm.tsx`, and the `state-tax-calculations.test.ts` case.
-**Plans**: 2 plans across 2 waves
+**Notes**: Target year is OFFICIAL 2025 (operator directive; supersedes the earlier 2024-based plan). Full fidelity: the >$1M CA/MA surtaxes are implemented as top brackets (no new math path). Does NOT add bracket data for the 37 unsupported states (deferred PAYSTUB-F1) or other tax years (deferred PAYSTUB-F2). Touches `tax-data.ts`, `state-tax-data.ts`, `states-utils.ts`, `validation.ts`, `state-tax-calculations.ts`, `PaystubForm.tsx`, `use-paystub-form.ts`, `use-paystub-generator.ts`, the paystub copy, and the unit tests.
+**Plans**: 4 plans across 3 waves
 
 Plans:
 **Wave 1**
 
-- [ ] 11-01-PLAN.md — Data/logic core: derive getIncomeTaxStates() + getSupportedTaxYears() from the data tables, delete TX/FL/WA flat-0 rows + the 2025 clone, tighten year validation, add the bidirectional parity test + rejected-year test, re-document the defensive cases
+- [ ] 11-01-PLAN.md — Federal tax-data 2025: re-key `tax-data.ts` to official 2025 IRS brackets (all statuses), SS wage base 176100, delete the 2024 entry + 2025 clone, move the baseline guard to 2025, export getSupportedTaxYears()
+- [ ] 11-02-PLAN.md — State tax-data 2025: re-key `state-tax-data.ts` to official 2025 CA/NY/MA (CA MHS + MA 4% surtaxes as top brackets, NY 9.65/10.3/10.9), delete TX/FL/WA flat-0, keep IL/PA, export getSupportedIncomeTaxStateCodes()
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 11-02-PLAN.md — Form + copy: render the Tax Year dropdown from getSupportedTaxYears() (remove the dead 2023 item), let the State optgroup auto-narrow to CA/NY/IL/PA/MA, soften the over-promising hero/metadata copy, run the full gate chain
+- [ ] 11-03-PLAN.md — Derivations + validation + tests: derive getIncomeTaxStates() from the data, replace the hardcoded year range with getSupportedTaxYears() membership, re-document the defensive guard, write the parity/exact-set/federal-golden/SS-cap/surtax tests and the rejected-2024/accepted-2025 tests (recompute MA to 0.05)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 11-04-PLAN.md — Form + URL + copy + gate: render the Tax Year dropdown from getSupportedTaxYears() (remove 2023 and 2024), default taxYear 2025, intersect the URL-restored ?state= with supported codes (PAYSTUB-10), reframe the hero/metadata copy as a 2025 estimate, run the full lint + typecheck + test:unit + build gate
 
 **Wave structure:**
 
-- Wave 1: 11-01 (lib modules + tests; Plan 02 imports getSupportedTaxYears from it)
-- Wave 2: 11-02 (form + UI copy + verification, depends on 11-01)
+- Wave 1: 11-01 (federal `tax-data.ts`) + 11-02 (state `state-tax-data.ts`) in parallel (different files, no overlap)
+- Wave 2: 11-03 (derivations + validation + all tests; consumes both Wave 1 exports)
+- Wave 3: 11-04 (form + default year + URL hardening + copy + full gate; depends on 11-03)
 
 **UI hint**: yes
 
@@ -256,7 +263,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 11. paystub-tax-accuracy | 0/2 | Not started | - |
+| 11. paystub-tax-accuracy | 0/4 | Not started | - |
 | 12. errorboundary-report-path | 0/0 | Not started | - |
 | 13. admin-error-observability | 0/0 | Not started | - |
 | 14. admin-page-title | 0/0 | Not started | - |
@@ -265,6 +272,6 @@ Plans:
 
 ## Earlier milestones (archived)
 
-- v1 â initial 10 phases, shipped
-- v1 (later) â 2/7 phases done, rest deferred
-- v2 â 8 phases, shipped (final phase: copy repositioning, PR #206)
+- v1 — initial 10 phases, shipped
+- v1 (later) — 2/7 phases done, rest deferred
+- v2 — 8 phases, shipped (final phase: copy repositioning, PR #206)
