@@ -60,27 +60,27 @@ Every requirement traces to an audit finding. Genuine stubs are FIX; intentional
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PAYSTUB-01 | TBD | Pending |
-| PAYSTUB-02 | TBD | Pending |
-| PAYSTUB-03 | TBD | Pending |
-| PAYSTUB-04 | TBD | Pending |
-| ERR-01 | TBD | Pending |
-| CLEAN-01 | TBD | Pending |
-| CLEAN-02 | TBD | Pending |
-| CLEAN-03 | TBD | Pending |
-| ADMINERR-01 | TBD | Pending |
-| ADMINERR-02 | TBD | Pending |
-| ADMINERR-03 | TBD | Pending |
-| ADMINERR-04 | TBD | Pending |
-| ADMINUX-01 | TBD | Pending |
-| NOOP-01 | TBD | Pending |
-| NOOP-02 | TBD | Pending |
+| PAYSTUB-01 | Phase 11 | Pending |
+| PAYSTUB-02 | Phase 11 | Pending |
+| PAYSTUB-03 | Phase 11 | Pending |
+| PAYSTUB-04 | Phase 11 | Pending |
+| ERR-01 | Phase 12 | Pending |
+| ADMINERR-01 | Phase 13 | Pending |
+| ADMINERR-02 | Phase 13 | Pending |
+| ADMINERR-03 | Phase 13 | Pending |
+| ADMINERR-04 | Phase 13 | Pending |
+| ADMINUX-01 | Phase 14 | Pending |
+| CLEAN-01 | Phase 15 | Pending |
+| CLEAN-02 | Phase 15 | Pending |
+| CLEAN-03 | Phase 15 | Pending |
+| NOOP-01 | Phase 16 | Pending |
+| NOOP-02 | Phase 16 | Pending |
 
 **Coverage:**
 - v6 requirements: 15 total
-- Mapped to phases: 0 (roadmap pending)
-- Unmapped: 15
+- Mapped to phases: 15 (Phases 11-16)
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-01*
-*Last updated: 2026-06-01 at milestone v6 start*
+*Last updated: 2026-06-01 at milestone v6 roadmap creation (Phases 11-16)*
