@@ -15,9 +15,11 @@ import {
 	ResponsiveContainer,
 	Tooltip
 } from 'recharts'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
+import type { AdminQueryResult } from '@/lib/admin/query-result'
 
 type TrafficSourcesPieProps = {
-	data: Array<{ channel: string; count: number }>
+	result: AdminQueryResult<Array<{ channel: string; count: number }>>
 }
 
 const SLICE_COLORS = [
@@ -31,7 +33,11 @@ const SLICE_COLORS = [
 
 const TOP_N = 5
 
-export function TrafficSourcesPie({ data }: TrafficSourcesPieProps) {
+export function TrafficSourcesPie({ result }: TrafficSourcesPieProps) {
+	// Hooks must run unconditionally, so derive the rows before the render
+	// branch: on the error variant this is an empty array (the chart never
+	// renders in that case - the error card does).
+	const data = result.ok ? result.data : []
 	const chartData = useMemo(() => {
 		if (data.length <= TOP_N) {
 			return data
@@ -47,7 +53,9 @@ export function TrafficSourcesPie({ data }: TrafficSourcesPieProps) {
 			<h2 className="text-sm font-semibold text-foreground mb-4">
 				Traffic sources (last 30 days)
 			</h2>
-			{chartData.length === 0 ? (
+			{!result.ok ? (
+				<AdminErrorState inline resource="traffic source data" />
+			) : chartData.length === 0 ? (
 				<p className="text-sm text-muted-foreground text-center py-8">
 					No traffic source data yet.
 				</p>

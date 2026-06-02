@@ -30,6 +30,15 @@ import {
 	escapeLikePattern,
 	PAGE_SIZE
 } from '@/lib/admin/list-cursor'
+import {
+	type AdminDetailResult,
+	type AdminQueryResult,
+	err,
+	errResult,
+	found,
+	notFoundResult,
+	ok
+} from '@/lib/admin/query-result'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import { type CalculatorLead, calculatorLeads } from '@/lib/schemas/schema'
@@ -53,13 +62,6 @@ export type ListCalculatorLeadsResult = {
 	nextCursor: string | null
 }
 
-const EMPTY_RESULT: ListCalculatorLeadsResult = {
-	rows: [],
-	hasMore: false,
-	prevCursor: null,
-	nextCursor: null
-}
-
 /**
  * Cursor-paginated + search-aware admin calculator-leads list.
  *
@@ -80,11 +82,13 @@ const EMPTY_RESULT: ListCalculatorLeadsResult = {
  *    are safely filtered out.
  *
  * Malformed cursor: silently falls back to page 1. DB error: returns the
- * empty result shape; caller renders the empty state instead of crashing.
+ * `err()` failure variant (logged via `logger.error`); the caller renders a
+ * visible error state instead of an empty list that hides the failure. A
+ * successful-but-empty read returns `ok({ rows: [], ... })`.
  */
 export async function listCalculatorLeadsForAdmin(
 	opts?: ListCalculatorLeadsOptions
-): Promise<ListCalculatorLeadsResult> {
+): Promise<AdminQueryResult<ListCalculatorLeadsResult>> {
 	const { quality, q: rawQ, cursor: rawCursor } = opts ?? {}
 	const cursor = decodeCursor(rawCursor)
 	const direction: Direction = cursor?.direction ?? 'after'
@@ -176,13 +180,13 @@ export async function listCalculatorLeadsForAdmin(
 				? encodeCursor('before', cursorPartsFor(firstRow))
 				: null
 
-		return { rows: pageRows, hasMore, prevCursor, nextCursor }
+		return ok({ rows: pageRows, hasMore, prevCursor, nextCursor })
 	} catch (error) {
 		logger.error(
 			'calculator-leads-queries.listCalculatorLeadsForAdmin failed',
 			error
 		)
-		return EMPTY_RESULT
+		return err()
 	}
 }
 
@@ -191,22 +195,25 @@ function cursorPartsFor(row: CalculatorLeadRow): [Date, string] {
 }
 
 /**
- * Single calculator lead by id, or `null` when the row is missing or the
- * query fails. The detail page lifts this and calls `notFound()` on null.
+ * Single calculator lead by id as a 3-way `AdminDetailResult`: `found(row)`
+ * when the row exists, `notFoundResult()` when no row matches the id (the
+ * detail page 404s), and `errResult()` on a DB failure (the detail page
+ * renders a visible error state instead of a misleading 404). The caught
+ * error is logged via `logger.error` and never crosses into the rendered UI.
  */
 export async function getCalculatorLeadById(
 	id: string
-): Promise<CalculatorLeadRow | null> {
+): Promise<AdminDetailResult<CalculatorLeadRow>> {
 	try {
 		const [row] = await db
 			.select()
 			.from(calculatorLeads)
 			.where(eq(calculatorLeads.id, id))
 			.limit(1)
-		return row ?? null
+		return row ? found(row) : notFoundResult()
 	} catch (error) {
 		logger.error('calculator-leads-queries.getCalculatorLeadById failed', error)
-		return null
+		return errResult()
 	}
 }
 

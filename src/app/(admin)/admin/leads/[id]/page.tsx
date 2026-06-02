@@ -24,6 +24,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
@@ -65,11 +66,14 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 		notFound()
 	}
 	await connection()
-	const detail = await getLeadById(id)
-	if (!detail) {
+	const result = await getLeadById(id)
+	if (result.status === 'not-found') {
 		notFound()
 	}
-	const { lead, attribution, notes } = detail
+	if (result.status === 'error') {
+		return <AdminErrorState resource="lead" />
+	}
+	const { lead, attribution, notes } = result.data
 
 	return (
 		<div className="space-y-6">

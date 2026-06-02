@@ -5,15 +5,19 @@
  * Uses U+00B7 MIDDLE DOT as the source/time separator (STATE.md decision),
  * never an em or en dash.
  */
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
+import type { AdminQueryResult } from '@/lib/admin/query-result'
 
 type RecentLeadsPanelProps = {
-	leads: Array<{
-		id: string
-		email: string
-		source: string | null
-		status: string | null
-		createdAt: Date
-	}>
+	result: AdminQueryResult<
+		Array<{
+			id: string
+			email: string
+			source: string | null
+			status: string | null
+			createdAt: Date
+		}>
+	>
 }
 
 const RELATIVE_FORMATTER = new Intl.RelativeTimeFormat(undefined, {
@@ -70,19 +74,21 @@ function statusClass(status: string | null): string {
 	return 'bg-muted text-muted-foreground'
 }
 
-export function RecentLeadsPanel({ leads }: RecentLeadsPanelProps) {
+export function RecentLeadsPanel({ result }: RecentLeadsPanelProps) {
 	return (
 		<div className="rounded-xl border border-border bg-surface-raised p-6">
 			<h2 className="text-sm font-semibold text-foreground mb-4">
 				Recent leads
 			</h2>
-			{leads.length === 0 ? (
+			{!result.ok ? (
+				<AdminErrorState inline resource="recent leads" />
+			) : result.data.length === 0 ? (
 				<p className="text-sm text-muted-foreground text-center py-8">
 					No leads yet.
 				</p>
 			) : (
 				<ul className="divide-y divide-border">
-					{leads.map(lead => (
+					{result.data.map(lead => (
 						<li
 							key={lead.id}
 							className="py-3 flex items-center justify-between gap-3"

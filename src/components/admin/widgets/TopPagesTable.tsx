@@ -4,22 +4,28 @@
  * 30 days in a simple HTML table with tabular-aligned numeric columns.
  * Data comes from the dashboard page; no DB access happens here.
  */
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
+import type { AdminQueryResult } from '@/lib/admin/query-result'
 
 type TopPagesTableProps = {
-	rows: Array<{
-		pathname: string
-		pageviews: number
-		uniqueVisitors: number
-	}>
+	result: AdminQueryResult<
+		Array<{
+			pathname: string
+			pageviews: number
+			uniqueVisitors: number
+		}>
+	>
 }
 
-export function TopPagesTable({ rows }: TopPagesTableProps) {
+export function TopPagesTable({ result }: TopPagesTableProps) {
 	return (
 		<div className="rounded-xl border border-border bg-surface-raised p-6">
 			<h2 className="text-sm font-semibold text-foreground mb-4">
 				Top pages (last 30 days)
 			</h2>
-			{rows.length === 0 ? (
+			{!result.ok ? (
+				<AdminErrorState inline resource="page analytics" />
+			) : result.data.length === 0 ? (
 				<p className="text-sm text-muted-foreground text-center py-8">
 					No page analytics yet.
 				</p>
@@ -48,7 +54,7 @@ export function TopPagesTable({ rows }: TopPagesTableProps) {
 						</tr>
 					</thead>
 					<tbody>
-						{rows.map(row => (
+						{result.data.map(row => (
 							<tr key={row.pathname}>
 								<td className="py-2 text-foreground truncate max-w-[20rem]">
 									{row.pathname}
