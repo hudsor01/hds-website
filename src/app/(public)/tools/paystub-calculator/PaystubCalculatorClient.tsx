@@ -165,7 +165,7 @@ export default function PaystubCalculatorClient() {
 	return (
 		<ToolPageLayout
 			title="Paystub Calculator"
-			description="Generate accurate payroll breakdowns with federal and state tax calculations for any pay period"
+			description="Estimate your 2025 federal and state income tax breakdown by pay period. State income tax is supported for CA, NY, IL, PA, and MA. This is an estimate and does not account for W-4 allowances, deductions, or credits."
 			columns="single"
 			formSlot={formSlot}
 			resultSlot={resultSlot}

@@ -56,6 +56,14 @@ test.describe('Paystub Calculator', () => {
     const inputs = page.locator('input, textarea')
     expect(await inputs.count()).toBeGreaterThan(0)
   })
+
+  test('tax year dropdown offers only 2025 (no 2023/2024)', async ({ page }) => {
+    await page.locator('#taxYear').click()
+    const options = page.locator('[role="option"]')
+    await expect(options.filter({ hasText: '2025' })).toHaveCount(1)
+    await expect(options.filter({ hasText: '2024' })).toHaveCount(0)
+    await expect(options.filter({ hasText: '2023' })).toHaveCount(0)
+  })
 })
 
 test.describe('Invoice Generator', () => {
