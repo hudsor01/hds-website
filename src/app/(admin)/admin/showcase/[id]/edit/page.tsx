@@ -17,6 +17,7 @@ import { connection } from 'next/server'
 import { Suspense } from 'react'
 import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
+import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import { getShowcaseById } from '@/lib/admin/showcase-queries'
 import { EditShowcaseForm } from './EditShowcaseForm'
 
@@ -43,14 +44,14 @@ async function EditLoader({ params }: EditShowcasePageProps) {
 		notFound()
 	}
 	await connection()
-	const result = await getShowcaseById(id)
-	if (result.status === 'not-found') {
+	const routing = routeDetailResult(await getShowcaseById(id))
+	if (routing.kind === 'not-found') {
 		notFound()
 	}
-	if (result.status === 'error') {
+	if (routing.kind === 'error') {
 		return <AdminErrorState resource="showcase entry" />
 	}
-	return <EditShowcaseForm row={result.data} />
+	return <EditShowcaseForm row={routing.data} />
 }
 
 export default function EditShowcasePage({ params }: EditShowcasePageProps) {
