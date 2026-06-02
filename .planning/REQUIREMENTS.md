@@ -11,18 +11,18 @@ Every requirement traces to an audit finding. Genuine stubs are FIX; intentional
 ### Paystub tax accuracy
 
 - [ ] **PAYSTUB-01**: A user can only select states for which the paystub calculator actually computes income tax; selecting a state never silently yields a confident $0 when that state levies income tax. (Findings #1, #2 — `state-tax-data.ts`, `state-tax-calculations.ts`, `states-utils.ts`, `PaystubForm.tsx`)
-- [ ] **PAYSTUB-02**: The federal tax year selector only offers years backed by real data; a selected year never silently falls back to a different year's figures. The "2023" dead toggle is removed (or real 2023 data added). (Finding #4 — `tax-data.ts`, `PaystubForm.tsx`)
+- [ ] **PAYSTUB-02**: The federal tax year selector only offers years backed by real data (target year 2025); a selected year never silently falls back to a different year's figures. The dead "2023" item and the stale "2024" entry are removed; the data table is keyed 2025 with official values and the default `taxYear` is 2025. (Finding #4 — `tax-data.ts`, `PaystubForm.tsx`, `use-paystub-form.ts`)
 - [ ] **PAYSTUB-03**: Year validation rejects years not present in the tax-data table (range derived from the data, not hardcoded), with a unit test covering the rejected/fallback case. (Finding #4)
 - [ ] **PAYSTUB-04**: The redundant flat-0 TX/FL/WA entries are removed from the income-tax bracket table (those states already live in the no-income-tax group). (Finding #1)
 
 ### Paystub tax data correctness
 
-> Surfaced by the official-source re-research (`11-RESEARCH.md` "Data Accuracy Verification"). The audit only caught the coverage lie (37 states -> $0); the 5 "supported" states AND federal are themselves stale. Decision: full fidelity (implement the >$1M tiers too). Official 2024 values + source URLs are in `11-RESEARCH.md`.
+> Surfaced by the official-source re-research. The audit only caught the coverage lie (37 states -> $0); the 5 "supported" states AND federal were also stale. Decision: full fidelity (implement the >$1M tiers too). **Target year is OFFICIAL 2025** (operator directive). Official 2025 values + source URLs are in `11-RESEARCH.md` "## Official 2025 Tables (TARGET YEAR)".
 
-- [ ] **PAYSTUB-05**: Federal 2024 income-tax brackets are corrected to the official IRS values for all filing statuses (code currently holds 2023 values labeled 2024). SS wage base / FICA / Medicare are already correct and must stay. (IRS Rev. Proc. 2023-34)
-- [ ] **PAYSTUB-06**: CA 2024 brackets are corrected to official FTB values for all schedules, including the 1% Mental Health Services surtax on income over $1M. (CA FTB 2024 540 schedules)
-- [ ] **PAYSTUB-07**: NY 2024 brackets are corrected to official DTF values for all schedules, including the 9.65% / 10.3% / 10.9% high-income brackets in effect since 2021. (NY DTF IT-201-I 2024)
-- [ ] **PAYSTUB-08**: MA rate is corrected from the stale `0.0535` to the flat 5.0% in effect since 2020, including the 4% surtax on income over $1,053,750. (Mass.gov DOR)
+- [ ] **PAYSTUB-05**: Federal income-tax brackets use the official 2025 IRS values for all filing statuses (replacing the mislabeled 2023 data). The Social Security wage base is updated to the 2025 figure ($176,100, up from $168,600); FICA / Medicare rates + thresholds (6.2 / 1.45 / 0.9% at $200k/$250k/$125k) unchanged. (IRS Rev. Proc. 2024-40; SSA 2025 COLA)
+- [ ] **PAYSTUB-06**: CA brackets use official 2025 FTB values for all schedules, including the 1% Mental Health Services surtax on income over $1,000,000. (CA FTB 2025 schedules)
+- [ ] **PAYSTUB-07**: NY brackets use official 2025 DTF values for all schedules, including the 9.65% / 10.3% / 10.9% high-income brackets. (NY DTF IT-201-I 2025)
+- [ ] **PAYSTUB-08**: MA rate is the flat 5.0% (replacing the stale `0.0535`), including the 4% surtax on income over $1,083,150 (2025 threshold). (Mass.gov DOR 2025)
 - [ ] **PAYSTUB-09**: The paystub UI describes its output as an "estimate", not "accurate" tax. Methodology taxes gross with no W-4 / standard deduction / pre-tax deductions / credits, so it is not real withholding (IRS Pub 15-T); copy must not over-promise and must be em/en-dash free. (Methodology finding)
 - [ ] **PAYSTUB-10**: A stale or shared URL state code (e.g. `?state=AL`, persisted via nuqs) cannot reach the defensive `$0` path. The URL-restored state is intersected with the supported state codes so an unsupported value resolves to a supported default / clear signal, never a silent $0. (nuqs passes parseable values through unchanged; validation is the only gate.)
 
@@ -57,7 +57,7 @@ Every requirement traces to an audit finding. Genuine stubs are FIX; intentional
 ## Future Requirements (deferred)
 
 - **PAYSTUB-F1**: Add real state income-tax brackets for the remaining 37 income-tax states (incremental), re-enabling them in the selector.
-- **PAYSTUB-F2**: Add 2025 (and 2026) federal + state tax tables once official tables are published, so the selectable year set can advance past 2024.
+- **PAYSTUB-F2**: Add additional tax years (2024 historical, 2026 once published) alongside the official 2025 tables, so the selectable year set spans more than one year.
 
 ## Out of Scope
 
