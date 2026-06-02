@@ -33,6 +33,15 @@ import {
 	escapeLikePattern,
 	PAGE_SIZE
 } from '@/lib/admin/list-cursor'
+import {
+	type AdminDetailResult,
+	type AdminQueryResult,
+	err,
+	errResult,
+	found,
+	notFoundResult,
+	ok
+} from '@/lib/admin/query-result'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import type { LeadStatus } from '@/lib/schemas/admin-leads'
@@ -65,13 +74,6 @@ export type ListLeadsResult = {
 	nextCursor: string | null
 }
 
-const EMPTY_RESULT: ListLeadsResult = {
-	rows: [],
-	hasMore: false,
-	prevCursor: null,
-	nextCursor: null
-}
-
 /**
  * Cursor-paginated + search-aware admin leads list.
  *
@@ -92,11 +94,13 @@ const EMPTY_RESULT: ListLeadsResult = {
  *    so those rows are safely filtered out.
  *
  * Malformed cursor: silently falls back to page 1. DB error: returns the
- * empty result shape; caller renders the empty state instead of crashing.
+ * `err()` failure variant (logged via `logger.error`); the caller renders a
+ * visible error state instead of an empty list that hides the failure. A
+ * successful-but-empty read returns `ok({ rows: [], ... })`.
  */
 export async function listLeadsForAdmin(
 	opts?: ListLeadsOptions
-): Promise<ListLeadsResult> {
+): Promise<AdminQueryResult<ListLeadsResult>> {
 	const { status, q: rawQ, cursor: rawCursor } = opts ?? {}
 	const cursor = decodeCursor(rawCursor)
 	const direction: Direction = cursor?.direction ?? 'after'
@@ -183,10 +187,10 @@ export async function listLeadsForAdmin(
 				? encodeCursor('before', cursorPartsFor(firstRow))
 				: null
 
-		return { rows: pageRows, hasMore, prevCursor, nextCursor }
+		return ok({ rows: pageRows, hasMore, prevCursor, nextCursor })
 	} catch (error) {
 		logger.error('leads-queries.listLeadsForAdmin failed', error)
-		return EMPTY_RESULT
+		return err()
 	}
 }
 
@@ -197,10 +201,15 @@ function cursorPartsFor(row: Lead): [Date, string] {
 /**
  * Full detail bundle for a single lead: the row itself, every attribution
  * touchpoint (newest first), and every operator-written note (newest first).
- * Returns `null` when the lead row is missing or when the query fails so
- * the detail page can call `notFound()` without an extra try/catch.
+ * Returns a 3-way `AdminDetailResult`: `found(detail)` when the lead row
+ * exists, `notFoundResult()` when no row matches the id (the detail page
+ * 404s), and `errResult()` on a DB failure (the detail page renders a visible
+ * error state instead of a misleading 404). The caught error is logged via
+ * `logger.error` and never crosses into the rendered UI.
  */
-export async function getLeadById(id: string): Promise<LeadDetail | null> {
+export async function getLeadById(
+	id: string
+): Promise<AdminDetailResult<LeadDetail>> {
 	try {
 		const [leadRows, attribution, notes] = await Promise.all([
 			db.select().from(leads).where(eq(leads.id, id)).limit(1),
@@ -217,14 +226,14 @@ export async function getLeadById(id: string): Promise<LeadDetail | null> {
 		])
 		const [lead] = leadRows
 		if (!lead) {
-			return null
+			return notFoundResult()
 		}
-		return { lead, attribution, notes }
+		return found({ lead, attribution, notes })
 	} catch (error) {
 		logger.error('leads-queries.getLeadById failed', error, {
 			metadata: { id }
 		})
-		return null
+		return errResult()
 	}
 }
 
