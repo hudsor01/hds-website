@@ -99,27 +99,60 @@ function setupDbMock(): void {
 	}))
 }
 
+// The admin EDIT pages statically import their client form islands, which reach
+// `src/hooks/use-blob-upload.ts` -> `import { upload } from '@vercel/blob/client'`.
+// Register a COMPLETE @vercel/blob/client surface (both `upload` and
+// `handleUpload`) so importing an edit-page graph never trips the
+// CJS-interop static-link failure ("Export named 'upload' not found"). The
+// functions are inert stubs; the routing assertions never invoke them.
+function setupBlobClientMock(): void {
+	mock.module('@vercel/blob/client', () => ({
+		upload: async () => ({ url: 'https://example.test/blob' }),
+		handleUpload: async () => ({
+			type: 'blob.generate-client-token',
+			clientToken: 'test-token'
+		})
+	}))
+}
+
 // --- next/navigation: notFound() as a throwing spy -------------------------
 
 const notFoundCalls: { count: number } = { count: 0 }
 
-// Capture the pristine surfaces once, before any override, so the afterAll
-// restore (and the per-test re-spread) anchor to the real exports rather than
-// to a previously-installed mock.
-const PRISTINE_NAV = require('next/navigation') as Record<string, unknown>
+// Capture @/lib/blog once at module-eval time (its mock surface is not shared
+// with other files, so a pristine require is safe here).
 const PRISTINE_BLOG = require('@/lib/blog') as Record<string, unknown>
 
+// Re-register a COMPLETE next/navigation surface whose `notFound` is a counting
+// throwing spy (mirroring the real NEXT_NOT_FOUND digest throw so the loader's
+// control flow halts as in production). Listing the full surface (including
+// `redirect`, which the sibling `actions.ts` import) keeps the static-import
+// link resolvable regardless of which file linked next/navigation first;
+// `tests/test-utils.ts::setupNextMocks` was hardened to the same complete
+// surface so a Navbar-rendering test no longer poisons the process-wide link.
 function setupNavMock(): void {
-	// Spread the real surface so transitive consumers (DeleteButton ->
-	// `redirect`, action modules, etc.) keep their imports. Real Next throws a
-	// NEXT_NOT_FOUND digest from notFound(); we mirror that with a throwing spy
-	// so the loader's control flow halts exactly as it does in production.
+	const redirect = (): never => {
+		throw new Error('NEXT_REDIRECT')
+	}
 	mock.module('next/navigation', () => ({
-		...PRISTINE_NAV,
 		notFound: () => {
 			notFoundCalls.count += 1
 			throw new Error('NEXT_NOT_FOUND')
-		}
+		},
+		redirect,
+		permanentRedirect: redirect,
+		forbidden: () => {
+			throw new Error('NEXT_FORBIDDEN')
+		},
+		unauthorized: () => {
+			throw new Error('NEXT_UNAUTHORIZED')
+		},
+		RedirectType: { push: 'push', replace: 'replace' },
+		useRouter: () => ({ push: () => {}, replace: () => {}, refresh: () => {} }),
+		usePathname: () => '/',
+		useSearchParams: () => new URLSearchParams(),
+		useParams: () => ({}),
+		ReadonlyURLSearchParams: URLSearchParams
 	}))
 }
 
@@ -140,7 +173,7 @@ function setupBlogSiblingMock(): void {
 interface PageCase {
 	/** Human label for the describe block. */
 	name: string
-	/** Dynamic import path of the page module (default export = the page). */
+	/** Module specifier of the page (default export = the page component). */
 	importPath: string
 	/** The `resource` label AdminErrorState renders for this page. */
 	resourceLabel: string
@@ -287,14 +320,15 @@ beforeEach(() => {
 	setupDbMock()
 	setupNavMock()
 	setupBlogSiblingMock()
+	setupBlobClientMock()
 })
 
-// Restore the surfaces we overrode (next/navigation throwing-notFound and the
-// @/lib/blog sibling stubs) to their pristine exports so a later test file does
-// not inherit our spies. (`@/lib/db` is intentionally left as-is; every admin
-// test file re-registers it in its own beforeEach.)
+// Restore @/lib/blog to its pristine exports so a later file does not inherit
+// our getAuthors/getTags stubs. (`@/lib/db` is intentionally left as-is; every
+// admin test file re-registers it in its own beforeEach. `next/navigation` is
+// left as our complete benign surface, which is a strict superset of the
+// partial mock forms.test.tsx installs, so it cannot break later files.)
 afterAll(() => {
-	mock.module('next/navigation', () => ({ ...PRISTINE_NAV }))
 	mock.module('@/lib/blog', () => ({ ...PRISTINE_BLOG }))
 })
 
@@ -340,9 +374,10 @@ function findLoaderElement(node: unknown): LoaderElement | null {
 // Invoke the page default export, find the Suspense child loader element, and
 // call its async component function directly (what the server renderer does).
 // Returns the loader's resolved React element, or rejects if the loader threw
-// (e.g. via notFound()).
-async function runLoader(importPath: string): Promise<unknown> {
-	const mod = (await import(importPath)) as {
+// (e.g. via notFound()). The next/navigation static-import link is pinned by
+// tests/setup.ts, so importing the page graph here is order-independent.
+async function runLoader(pageCase: PageCase): Promise<unknown> {
+	const mod = (await import(pageCase.importPath)) as {
 		default: (props: { params: Promise<{ id: string }> }) => unknown
 	}
 	const tree = mod.default({
@@ -350,7 +385,7 @@ async function runLoader(importPath: string): Promise<unknown> {
 	})
 	const loaderElement = findLoaderElement(tree)
 	if (!loaderElement) {
-		throw new Error(`could not locate loader element in ${importPath}`)
+		throw new Error(`could not locate loader element in ${pageCase.name}`)
 	}
 	return await loaderElement.type(loaderElement.props)
 }
@@ -361,7 +396,7 @@ describe('detail-page notFound()-vs-error routing (ADMINERR-04)', () => {
 			test("status:'error' -> renders AdminErrorState and does NOT call notFound()", async () => {
 				dbState.mode = 'error'
 
-				const out = await runLoader(pageCase.importPath)
+				const out = await runLoader(pageCase)
 
 				// The critical guard: a DB error is NOT a 404.
 				expect(notFoundCalls.count).toBe(0)
@@ -378,9 +413,7 @@ describe('detail-page notFound()-vs-error routing (ADMINERR-04)', () => {
 			test("status:'not-found' -> calls notFound()", async () => {
 				dbState.mode = 'not-found'
 
-				await expect(runLoader(pageCase.importPath)).rejects.toThrow(
-					'NEXT_NOT_FOUND'
-				)
+				await expect(runLoader(pageCase)).rejects.toThrow('NEXT_NOT_FOUND')
 				expect(notFoundCalls.count).toBe(1)
 			})
 
@@ -388,7 +421,7 @@ describe('detail-page notFound()-vs-error routing (ADMINERR-04)', () => {
 				dbState.mode = 'found'
 				dbState.activeRow = pageCase.foundRow
 
-				const out = await runLoader(pageCase.importPath)
+				const out = await runLoader(pageCase)
 
 				expect(notFoundCalls.count).toBe(0)
 				// The content path must not return the error card. AdminErrorState

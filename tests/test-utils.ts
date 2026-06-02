@@ -253,6 +253,17 @@ export function setupNextMocks() {
 	// Real next/link works perfectly in tests and uses native history API
 	// See: https://github.com/vercel/next.js/discussions/48110
 
+	// Include the FULL next/navigation surface, not just the hooks this helper's
+	// callers use. bun's `mock.module` is a process-wide registry and freezes a
+	// module's static-import link on first import; a partial mock here (missing
+	// `redirect` / `notFound`) poisons the link for any later test that imports a
+	// server module doing `import { redirect } from 'next/navigation'` (every
+	// admin `actions.ts`), surfacing as "Export named 'redirect' not found". The
+	// server control-flow signals faithfully throw their Next digest-style
+	// errors so consumers' control flow halts as in production.
+	const redirect = () => {
+		throw new Error('NEXT_REDIRECT')
+	}
 	mock.module('next/navigation', () => ({
 		useRouter: () => ({
 			push: mock(),
@@ -260,7 +271,19 @@ export function setupNextMocks() {
 			prefetch: mock()
 		}),
 		usePathname: () => '/',
-		useSearchParams: () => new URLSearchParams()
+		useSearchParams: () => new URLSearchParams(),
+		useParams: () => ({}),
+		notFound: () => {
+			throw new Error('NEXT_NOT_FOUND')
+		},
+		redirect,
+		permanentRedirect: redirect,
+		forbidden: () => {
+			throw new Error('NEXT_FORBIDDEN')
+		},
+		unauthorized: () => {
+			throw new Error('NEXT_UNAUTHORIZED')
+		}
 	}))
 
 	mock.module('next/dynamic', () => ({

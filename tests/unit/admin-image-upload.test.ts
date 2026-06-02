@@ -61,8 +61,14 @@ function makeRequest(body: unknown): Request {
 describe('POST /api/admin/images/upload', () => {
 	beforeEach(() => {
 		testEnv.BLOB_READ_WRITE_TOKEN = undefined
-		// Default handleUpload stub — individual tests can override.
+		// Default handleUpload stub — individual tests can override. Include the
+		// `upload` named export too: `@vercel/blob/client` is a CJS-interop module
+		// whose named exports bun cannot statically analyze, so a PARTIAL mock here
+		// poisons the process-wide static-import LINK for any later test whose
+		// graph reaches `import { upload }` (src/hooks/use-blob-upload.ts via the
+		// admin edit form islands), surfacing as "Export named 'upload' not found".
 		mock.module('@vercel/blob/client', () => ({
+			upload: async () => ({ url: 'https://example.test/blob' }),
 			handleUpload: async () => ({
 				type: 'blob.generate-client-token',
 				clientToken: 'fake'
@@ -118,6 +124,7 @@ describe('POST /api/admin/images/upload', () => {
 	it('delegates to handleUpload and returns its JSON when token is set and body parses', async () => {
 		testEnv.BLOB_READ_WRITE_TOKEN = 'fake-token-for-test'
 		mock.module('@vercel/blob/client', () => ({
+			upload: async () => ({ url: 'https://example.test/blob' }),
 			handleUpload: async () => ({
 				type: 'blob.generate-client-token',
 				clientToken: 'minted-test-token'
@@ -144,6 +151,7 @@ describe('POST /api/admin/images/upload', () => {
 	it('returns 500 when handleUpload throws', async () => {
 		testEnv.BLOB_READ_WRITE_TOKEN = 'fake-token-for-test'
 		mock.module('@vercel/blob/client', () => ({
+			upload: async () => ({ url: 'https://example.test/blob' }),
 			handleUpload: async () => {
 				throw new Error('Boom — simulated failure')
 			}
