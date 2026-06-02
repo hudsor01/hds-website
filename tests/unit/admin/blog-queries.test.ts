@@ -597,9 +597,7 @@ describe('write helpers keep their null-on-absent contract after the get*ById mi
 	})
 
 	test('toggleBlogPostPublished flips published + returns the updated row when it exists', async () => {
-		state.postRowsToReturn = [
-			makeRow(0, { id: 'post-00', publishedAt: null })
-		]
+		state.postRowsToReturn = [makeRow(0, { id: 'post-00', publishedAt: null })]
 		state.tagRowsToReturn = []
 		const toggled = makeRow(0, { id: 'post-00' })
 		state.updateRowsToReturn = [toggled.post]
