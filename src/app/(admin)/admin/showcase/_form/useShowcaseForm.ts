@@ -114,10 +114,12 @@ export function useShowcaseForm({
 
 	const form = useAppForm({
 		defaultValues,
-		// Reward early, punish late: errors on blur, then revalidate on change
-		// after a submit attempt. Server action still validates on submit.
+		// Reward early, punish late: validate on submit, then revalidate on
+		// change so errors clear as the user fixes them. Requires noValidate on
+		// the form (set in the create/edit showcase form components). Server
+		// action still validates on submit.
 		validationLogic: revalidateLogic({
-			mode: 'blur',
+			mode: 'submit',
 			modeAfterSubmission: 'change'
 		}),
 		validators: { onDynamic: showcaseFormClientSchema },

@@ -49,10 +49,12 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 			timeline: 'flexible',
 			message: ''
 		},
-		// Reward early, punish late: first error on blur, then revalidate on
-		// change once the form has been submitted. Canonical TanStack pattern.
+		// Reward early, punish late: validate on submit (surfaces all errors at
+		// once), then revalidate on change so they clear as the user fixes them.
+		// Requires noValidate on the form so the native required-check does not
+		// block the submit event before handleSubmit runs.
 		validationLogic: revalidateLogic({
-			mode: 'blur',
+			mode: 'submit',
 			modeAfterSubmission: 'change'
 		}),
 		validators: { onDynamic: contactFormClientSchema },
@@ -93,6 +95,7 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 			// happy path; this is a defense-in-depth fallback against the
 			// audit-reported GET behavior (#237).
 			method="post"
+			noValidate
 			onSubmit={e => {
 				e.preventDefault()
 				e.stopPropagation()

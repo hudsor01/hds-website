@@ -309,18 +309,18 @@ function SubmitButton({
 	loadingLabel = 'Submitting...'
 }: SubmitButtonProps) {
 	const form = useFormContext()
+	// Stay clickable while the form is invalid: a submit attempt then triggers
+	// validation and surfaces the errors (reward early, punish late). Gating on
+	// canSubmit would leave the button greyed out with no explanation under
+	// blur-mode validation. Only disable while a submission is in flight to
+	// prevent double-submit.
 	return (
-		<form.Subscribe
-			selector={state => [state.canSubmit, state.isSubmitting] as const}
-		>
-			{result => {
-				const [canSubmit, isSubmitting] = result
-				return (
-					<Button type="submit" disabled={!canSubmit || isSubmitting}>
-						{isSubmitting ? loadingLabel : label}
-					</Button>
-				)
-			}}
+		<form.Subscribe selector={state => state.isSubmitting}>
+			{isSubmitting => (
+				<Button type="submit" disabled={isSubmitting}>
+					{isSubmitting ? loadingLabel : label}
+				</Button>
+			)}
 		</form.Subscribe>
 	)
 }
