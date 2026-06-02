@@ -15,6 +15,17 @@ Every requirement traces to an audit finding. Genuine stubs are FIX; intentional
 - [ ] **PAYSTUB-03**: Year validation rejects years not present in the tax-data table (range derived from the data, not hardcoded), with a unit test covering the rejected/fallback case. (Finding #4)
 - [ ] **PAYSTUB-04**: The redundant flat-0 TX/FL/WA entries are removed from the income-tax bracket table (those states already live in the no-income-tax group). (Finding #1)
 
+### Paystub tax data correctness
+
+> Surfaced by the official-source re-research (`11-RESEARCH.md` "Data Accuracy Verification"). The audit only caught the coverage lie (37 states -> $0); the 5 "supported" states AND federal are themselves stale. Decision: full fidelity (implement the >$1M tiers too). Official 2024 values + source URLs are in `11-RESEARCH.md`.
+
+- [ ] **PAYSTUB-05**: Federal 2024 income-tax brackets are corrected to the official IRS values for all filing statuses (code currently holds 2023 values labeled 2024). SS wage base / FICA / Medicare are already correct and must stay. (IRS Rev. Proc. 2023-34)
+- [ ] **PAYSTUB-06**: CA 2024 brackets are corrected to official FTB values for all schedules, including the 1% Mental Health Services surtax on income over $1M. (CA FTB 2024 540 schedules)
+- [ ] **PAYSTUB-07**: NY 2024 brackets are corrected to official DTF values for all schedules, including the 9.65% / 10.3% / 10.9% high-income brackets in effect since 2021. (NY DTF IT-201-I 2024)
+- [ ] **PAYSTUB-08**: MA rate is corrected from the stale `0.0535` to the flat 5.0% in effect since 2020, including the 4% surtax on income over $1,053,750. (Mass.gov DOR)
+- [ ] **PAYSTUB-09**: The paystub UI describes its output as an "estimate", not "accurate" tax. Methodology taxes gross with no W-4 / standard deduction / pre-tax deductions / credits, so it is not real withholding (IRS Pub 15-T); copy must not over-promise and must be em/en-dash free. (Methodology finding)
+- [ ] **PAYSTUB-10**: A stale or shared URL state code (e.g. `?state=AL`, persisted via nuqs) cannot reach the defensive `$0` path. The URL-restored state is intersected with the supported state codes so an unsupported value resolves to a supported default / clear signal, never a silent $0. (nuqs passes parseable values through unchanged; validation is the only gate.)
+
 ### Error reporting
 
 - [ ] **ERR-01**: The ErrorBoundary "Report Error" action either transmits a real report or is removed; the UI never tells the user a report was filed when nothing was sent. No `alert()` is used (Sonner toast per project convention if feedback is shown). (Finding #3 — `ErrorBoundary.tsx`)
@@ -46,6 +57,7 @@ Every requirement traces to an audit finding. Genuine stubs are FIX; intentional
 ## Future Requirements (deferred)
 
 - **PAYSTUB-F1**: Add real state income-tax brackets for the remaining 37 income-tax states (incremental), re-enabling them in the selector.
+- **PAYSTUB-F2**: Add 2025 (and 2026) federal + state tax tables once official tables are published, so the selectable year set can advance past 2024.
 
 ## Out of Scope
 
@@ -64,6 +76,12 @@ Every requirement traces to an audit finding. Genuine stubs are FIX; intentional
 | PAYSTUB-02 | Phase 11 | Pending |
 | PAYSTUB-03 | Phase 11 | Pending |
 | PAYSTUB-04 | Phase 11 | Pending |
+| PAYSTUB-05 | Phase 11 | Pending |
+| PAYSTUB-06 | Phase 11 | Pending |
+| PAYSTUB-07 | Phase 11 | Pending |
+| PAYSTUB-08 | Phase 11 | Pending |
+| PAYSTUB-09 | Phase 11 | Pending |
+| PAYSTUB-10 | Phase 11 | Pending |
 | ERR-01 | Phase 12 | Pending |
 | ADMINERR-01 | Phase 13 | Pending |
 | ADMINERR-02 | Phase 13 | Pending |
@@ -77,10 +95,10 @@ Every requirement traces to an audit finding. Genuine stubs are FIX; intentional
 | NOOP-02 | Phase 16 | Pending |
 
 **Coverage:**
-- v6 requirements: 15 total
-- Mapped to phases: 15 (Phases 11-16)
+- v6 requirements: 21 total
+- Mapped to phases: 21 (Phases 11-16)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-01*
-*Last updated: 2026-06-01 at milestone v6 roadmap creation (Phases 11-16)*
+*Last updated: 2026-06-01 — Phase 11 expanded with PAYSTUB-05..10 after official-source tax-data verification (full-fidelity correction)*
