@@ -12,11 +12,11 @@ Make the paystub calculator stop lying about take-home pay. Today the calculator
 1. The state dropdown lets users pick any of 42 income-tax states, while only 5 (CA, NY, IL, PA, MA) have bracket data. The other 37 silently resolve to $0 state tax and an inflated net pay.
 2. The federal year dropdown offers "2023", but there is no 2023 data, so it silently falls back to other-year figures (a dead toggle).
 
-This phase makes the selectable inputs match the data that actually exists. It does NOT add new tax data (that is deferred PAYSTUB-F1). Scope is: state selection, year selection, year validation, redundant data cleanup, the test that codified the silent $0, and any UI copy that over-promises coverage.
+This phase makes the selectable inputs match the data that exists AND makes that data correct. Official-source verification (11-RESEARCH.md "Data Accuracy Verification") found that the audit under-counted: the 5 "supported" states (CA/NY/MA) and the FEDERAL brackets are themselves STALE (2023 values labeled 2024; MA at a pre-2020 rate). So scope now also includes correcting those tables to official 2024 values, at full fidelity (operator decision: implement the >$1M tiers too). Scope: state selection, year selection, year validation, redundant data cleanup, tax-data CORRECTION (federal + CA + NY + MA, incl. surtaxes), estimate-framing copy, URL-state hardening, and the tests that codified the silent $0 / silent fallback.
 
-**In scope:** `src/lib/paystub-calculator/{state-tax-data,state-tax-calculations,states-utils,tax-data,validation}.ts`, `src/components/paystub/PaystubForm.tsx`, `tests/state-tax-calculations.test.ts`, and paystub page/hero copy if it over-promises.
+**In scope:** `src/lib/paystub-calculator/{state-tax-data,state-tax-calculations,states-utils,tax-data,validation}.ts`, `src/components/paystub/PaystubForm.tsx`, the paystub hooks for URL-state intersect, `tests/state-tax-calculations.test.ts` + `tests/paystub-validation.test.ts`, and paystub page/hero copy.
 
-**Out of scope:** Adding bracket data for the 37 unsupported states (PAYSTUB-F1, deferred). Any other paystub feature.
+**Out of scope:** Adding bracket data for the 37 unsupported states (PAYSTUB-F1, deferred). Adding 2025/2026 tables (PAYSTUB-F2, deferred). Any other paystub feature. Methodology beyond bracket-on-gross (no W-4/deductions/credits) is NOT added — instead the copy is reframed as an estimate (PAYSTUB-09).
 </domain>
 
 <decisions>
@@ -41,23 +41,39 @@ This phase makes the selectable inputs match the data that actually exists. It d
 ### Redundant data cleanup (PAYSTUB-04)
 - Remove the `TX: flatBrackets(0)`, `FL: flatBrackets(0)`, `WA: flatBrackets(0)` entries from the income-tax bracket table in `state-tax-data.ts`. These states are already in the no-income-tax group (`NO_INCOME_TAX_CODES`), so the flat-0 entries are redundant and would pollute the data-derived selectable list from PAYSTUB-01.
 
+### Tax data correctness, full fidelity (PAYSTUB-05..08) — values from 11-RESEARCH.md "Data Accuracy Verification"
+- **Federal (PAYSTUB-05):** the brackets in `tax-data.ts` labeled 2024 are actually 2023 values. Replace all filing statuses with the official 2024 IRS brackets (Rev. Proc. 2023-34) transcribed in 11-RESEARCH.md. SS wage base $168,600 / 6.2% / Medicare 1.45% + 0.9% are CORRECT - do NOT change them. This file feeds federal/SS/Medicare via `tax-calculations.ts` (4 call sites), so gate every edit with the full unit suite.
+- **CA (PAYSTUB-06):** replace with official 2024 FTB schedules (all filing statuses) AND add the 1% Mental Health Services surtax on income over $1,000,000.
+- **NY (PAYSTUB-07):** replace with official 2024 DTF schedules (all filing statuses) AND add the 9.65% / 10.3% / 10.9% high-income brackets.
+- **MA (PAYSTUB-08):** change the flat rate from `0.0535` to `0.05` (flat 5.0% since 2020) AND add the 4% surtax on income over $1,053,750.
+- IL (`0.0495`) and PA (`0.0307`) are CORRECT - do NOT change.
+- The bracket-application math in `calculateStateTax` already supports progressive brackets terminating in `Infinity`; the surtaxes should be expressed as additional top brackets in the same data shape where possible (so no new math path), unless the data shape cannot express a surtax-over-threshold, in which case the planner specifies the minimal calc extension.
+- Add unit tests asserting representative corrected boundary values (e.g. federal single 10% ceiling is $11,600 not $11,000; MA effective rate is 5.0%; a >$1M CA/MA case applies the surtax; a NY high-income case hits the 10.9% bracket).
+
+### Estimate framing (PAYSTUB-09)
+- Even with corrected tables, the engine taxes gross from dollar one with no W-4, standard deduction, pre-tax deductions, or credits, so it is NOT real withholding (IRS Pub 15-T). The hero/metadata copy (`PaystubCalculatorClient.tsx:168`, `page.tsx:13`) must describe the output as an "estimate", not "accurate", and must not over-promise. No em-dash or en-dash in any user-facing string (project rule).
+
+### URL-state hardening (PAYSTUB-10)
+- nuqs `parseAsInteger`/`parseAsString` pass a parseable `?year=2023` / `?state=AL` through UNCHANGED (no range/allowlist). The tightened `validatePaystubInputs` is the only year gate and must run on URL-restored state. For state, the restore path (`use-paystub-generator.ts` ~62-77 / `use-paystub-url-state.ts`) must intersect the restored code with the supported state codes, so a stale shared `?state=AL` resolves to a supported default or a clear signal, never the defensive silent $0.
+
 ### Test contract
 - `tests/state-tax-calculations.test.ts` currently codifies the silent "unknown state -> 0" behavior as "graceful." Update it to match the new contract. If `calculateStateTax` keeps a defensive `return 0` for truly-unknown input (acceptable since the UI can no longer reach it), the test should document that as a defensive fallback, not as expected user-facing behavior.
 
-### UI copy (CLAUDE.md compliance)
-- If the paystub page metadata / hero (`PaystubCalculatorClient.tsx`, `paystub-calculator/page.tsx`) over-promises ("accurate ... state tax calculations for any pay period" / implied all-state coverage), adjust the copy so it does not over-promise now that state coverage is explicitly limited. No em-dash or en-dash in any user-facing string (project rule).
-
 ### Claude's Discretion
-- Exact label text / ordering of the supported-state list.
-- Whether to keep a small "more states coming" note in the UI.
+- Exact label text / ordering of the supported-state list; whether to keep a small dash-free "supported states" note.
 - Whether `calculateStateTax` retains a defensive `return 0` for unknown input.
-- Whether to delete the 2025 clone or merely make it non-selectable.
+- Whether to delete the 2025 clone or merely make it non-selectable (recommended: delete).
+- Exact wording of the "estimate" copy (must be dash-free, must not over-promise).
+- Whether surtaxes are encoded as extra brackets vs a small calc extension (prefer extra brackets / no new math path).
 </decisions>
 
 <canonical_refs>
 ## Canonical References
 
 **Downstream agents MUST read these before planning or implementing.**
+
+### Authoritative value source (READ FIRST for PAYSTUB-05..10)
+- `.planning/phases/11-paystub-tax-accuracy/11-RESEARCH.md` — "## Data Accuracy Verification (official sources)" holds the full official 2024 federal/CA/NY/MA tables + source URLs (IRS Rev. Proc. 2023-34, CA FTB, NY DTF, Mass.gov DOR), the discrepancy tables, the methodology/estimate finding, and the nuqs stale-URL semantics. Transcribe corrected values from there.
 
 ### Audit source of truth
 - `.planning/v6-AUDIT-FINDINGS.md` — findings #1, #2 (state tax), #4 (year toggle), and the 2025-clone note, with verified call-site analysis.
