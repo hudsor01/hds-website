@@ -10,7 +10,7 @@ const INITIAL_PAYSTUB: PaystubData = {
 	hourlyRate: 0,
 	hoursPerPeriod: 0,
 	filingStatus: 'single',
-	taxYear: 2024,
+	taxYear: 2025,
 	payPeriods: [],
 	totals: {
 		hours: 0,

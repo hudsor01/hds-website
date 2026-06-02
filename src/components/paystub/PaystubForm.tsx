@@ -19,6 +19,7 @@ import {
 	getIncomeTaxStates,
 	getNoIncomeTaxStates
 } from '@/lib/paystub-calculator/states-utils'
+import { getSupportedTaxYears } from '@/lib/paystub-calculator/tax-data'
 import type { FormErrors } from '@/types/common'
 import type { FilingStatus, PayFrequency, PaystubData } from '@/types/paystub'
 
@@ -197,8 +198,11 @@ export function PaystubForm({
 								<SelectValue placeholder="Select year" />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="2024">2024</SelectItem>
-								<SelectItem value="2023">2023</SelectItem>
+								{getSupportedTaxYears().map(year => (
+									<SelectItem key={year} value={String(year)}>
+										{year}
+									</SelectItem>
+								))}
 							</SelectContent>
 						</Select>
 					</div>
