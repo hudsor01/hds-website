@@ -8,10 +8,13 @@
  * Suspense boundary.
  *
  * Per-widget error isolation lives in the query layer: every function in
- * dashboard-queries.ts wraps its DB call in try/catch and returns [] on
- * failure. That means one bad query renders the affected widget's empty
- * state instead of blanking the whole page, and Promise.all itself never
- * rejects.
+ * dashboard-queries.ts wraps its DB call in try/catch and RETURNS a
+ * discriminated AdminQueryResult on failure (the error variant) rather than
+ * throwing or returning a bare []. Each widget receives its own result and
+ * renders its own inline AdminErrorState card on the error variant, so one
+ * failed query shows an error in that widget alone while the other widgets
+ * and the page still render. Because the failure is returned (not thrown),
+ * Promise.all never rejects and one bad widget cannot blank the page.
  *
  * Composition:
  *   Row 1: VisitorsChart (full width)
@@ -76,13 +79,13 @@ async function DashboardWidgets() {
 	return (
 		<div className="space-y-6">
 			<h1 className="sr-only">Admin Dashboard</h1>
-			<VisitorsChart data={visitors} />
-			<WebVitalsCards rows={vitals} />
+			<VisitorsChart result={visitors} />
+			<WebVitalsCards result={vitals} />
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-				<TopPagesTable rows={topPages} />
+				<TopPagesTable result={topPages} />
 				<div className="space-y-6">
-					<TrafficSourcesPie data={sources} />
-					<RecentLeadsPanel leads={recentLeads} />
+					<TrafficSourcesPie result={sources} />
+					<RecentLeadsPanel result={recentLeads} />
 				</div>
 			</div>
 		</div>
