@@ -1,6 +1,7 @@
 import 'server-only'
 
 import { and, count, desc, isNotNull, sql } from 'drizzle-orm'
+import { type AdminQueryResult, err, ok } from '@/lib/admin/query-result'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import {
@@ -44,7 +45,7 @@ export type RecentLeadRow = Pick<
  */
 export async function getVisitorsByDay(
 	days: number = 30
-): Promise<VisitorsByDayRow[]> {
+): Promise<AdminQueryResult<VisitorsByDayRow[]>> {
 	try {
 		const dayExpr = sql<string>`to_char(date_trunc('day', ${pageAnalytics.date}), 'YYYY-MM-DD')`
 		const pageviewsExpr = sql<number>`coalesce(sum(${pageAnalytics.pageViews}), 0)::int`
@@ -61,13 +62,15 @@ export async function getVisitorsByDay(
 			.groupBy(dayExpr)
 			.orderBy(dayExpr)
 
-		return rows.map(row => ({
-			date: row.date,
-			pageviews: Number(row.pageviews)
-		}))
+		return ok(
+			rows.map(row => ({
+				date: row.date,
+				pageviews: Number(row.pageviews)
+			}))
+		)
 	} catch (error) {
 		logger.error('dashboard-queries.getVisitorsByDay failed', error)
-		return []
+		return err()
 	}
 }
 
@@ -77,7 +80,7 @@ export async function getVisitorsByDay(
 export async function getTopPages(
 	limit: number = 10,
 	days: number = 30
-): Promise<TopPagesRow[]> {
+): Promise<AdminQueryResult<TopPagesRow[]>> {
 	try {
 		const pageviewsExpr = sql<number>`coalesce(sum(${pageAnalytics.pageViews}), 0)::int`
 		const uniqueExpr = sql<number>`coalesce(sum(${pageAnalytics.uniqueVisitors}), 0)::int`
@@ -96,14 +99,16 @@ export async function getTopPages(
 			.orderBy(desc(pageviewsExpr))
 			.limit(limit)
 
-		return rows.map(row => ({
-			pathname: row.pathname,
-			pageviews: Number(row.pageviews),
-			uniqueVisitors: Number(row.uniqueVisitors)
-		}))
+		return ok(
+			rows.map(row => ({
+				pathname: row.pathname,
+				pageviews: Number(row.pageviews),
+				uniqueVisitors: Number(row.uniqueVisitors)
+			}))
+		)
 	} catch (error) {
 		logger.error('dashboard-queries.getTopPages failed', error)
-		return []
+		return err()
 	}
 }
 
@@ -113,7 +118,7 @@ export async function getTopPages(
  */
 export async function getTrafficSources(
 	days: number = 30
-): Promise<TrafficSourceRow[]> {
+): Promise<AdminQueryResult<TrafficSourceRow[]>> {
 	try {
 		const countExpr = count()
 
@@ -132,17 +137,20 @@ export async function getTrafficSources(
 			.groupBy(leadAttribution.channel)
 			.orderBy(desc(countExpr))
 
-		return rows
-			.filter(
-				(row): row is { channel: string; count: number } => row.channel !== null
-			)
-			.map(row => ({
-				channel: row.channel,
-				count: Number(row.count)
-			}))
+		return ok(
+			rows
+				.filter(
+					(row): row is { channel: string; count: number } =>
+						row.channel !== null
+				)
+				.map(row => ({
+					channel: row.channel,
+					count: Number(row.count)
+				}))
+		)
 	} catch (error) {
 		logger.error('dashboard-queries.getTrafficSources failed', error)
-		return []
+		return err()
 	}
 }
 
@@ -154,7 +162,7 @@ export async function getTrafficSources(
  */
 export async function getWebVitalsP75(
 	days: number = 7
-): Promise<WebVitalsP75Row[]> {
+): Promise<AdminQueryResult<WebVitalsP75Row[]>> {
 	try {
 		const p75Expr = sql<number>`percentile_cont(0.75) within group (order by ${webVitals.value}::numeric)`
 		const sampleExpr = sql<number>`count(*)::int`
@@ -172,14 +180,16 @@ export async function getWebVitalsP75(
 			.groupBy(webVitals.name)
 			.orderBy(webVitals.name)
 
-		return rows.map(row => ({
-			name: row.name,
-			p75: Number(row.p75),
-			sampleCount: Number(row.sampleCount)
-		}))
+		return ok(
+			rows.map(row => ({
+				name: row.name,
+				p75: Number(row.p75),
+				sampleCount: Number(row.sampleCount)
+			}))
+		)
 	} catch (error) {
 		logger.error('dashboard-queries.getWebVitalsP75 failed', error)
-		return []
+		return err()
 	}
 }
 
@@ -188,7 +198,7 @@ export async function getWebVitalsP75(
  */
 export async function getRecentLeads(
 	limit: number = 10
-): Promise<RecentLeadRow[]> {
+): Promise<AdminQueryResult<RecentLeadRow[]>> {
 	try {
 		const rows = await db
 			.select({
@@ -202,9 +212,9 @@ export async function getRecentLeads(
 			.orderBy(desc(leads.createdAt))
 			.limit(limit)
 
-		return rows
+		return ok(rows)
 	} catch (error) {
 		logger.error('dashboard-queries.getRecentLeads failed', error)
-		return []
+		return err()
 	}
 }
