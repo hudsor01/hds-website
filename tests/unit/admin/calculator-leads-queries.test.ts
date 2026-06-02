@@ -41,6 +41,10 @@ function resetState(): void {
 }
 
 function buildSelectChain(): unknown {
+	const settle = (): Promise<unknown> =>
+		state.shouldThrow
+			? Promise.reject(new Error('db down'))
+			: Promise.resolve(state.rowsToReturn)
 	const chain = {
 		from: () => chain,
 		where: (arg: unknown) => {
@@ -53,10 +57,7 @@ function buildSelectChain(): unknown {
 		},
 		limit: (n: number) => {
 			state.limitArg = n
-			if (state.shouldThrow) {
-				return Promise.reject(new Error('db down'))
-			}
-			return Promise.resolve(state.rowsToReturn)
+			return settle()
 		}
 	}
 	return chain
@@ -76,7 +77,10 @@ setupDbMock()
 // real too -- drizzle column refs are just objects, and the helper only
 // passes them to mocked drizzle operators, which the chainable mock ignores.
 
-import { listCalculatorLeadsForAdmin } from '@/lib/admin/calculator-leads-queries'
+import {
+	getCalculatorLeadById,
+	listCalculatorLeadsForAdmin
+} from '@/lib/admin/calculator-leads-queries'
 import { decodeCursor, encodeCursor, PAGE_SIZE } from '@/lib/admin/list-cursor'
 import { logger } from '@/lib/logger'
 
@@ -142,15 +146,19 @@ describe('listCalculatorLeadsForAdmin: page-size + hasMore', () => {
 		const result = await listCalculatorLeadsForAdmin()
 
 		expect(state.limitArg).toBe(PAGE_SIZE + 1)
-		expect(result.rows.length).toBe(PAGE_SIZE)
-		expect(result.hasMore).toBe(true)
-		expect(result.prevCursor).toBeNull()
-		expect(result.nextCursor).not.toBeNull()
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data.rows.length).toBe(PAGE_SIZE)
+		expect(result.data.hasMore).toBe(true)
+		expect(result.data.prevCursor).toBeNull()
+		expect(result.data.nextCursor).not.toBeNull()
 
 		// nextCursor must encode the LAST RETURNED row (index PAGE_SIZE - 1),
 		// NOT the sentinel row that was dropped.
 		const lastReturned = allRows[PAGE_SIZE - 1] as ReturnType<typeof makeRow>
-		const decoded = decodeCursor(result.nextCursor ?? undefined)
+		const decoded = decodeCursor(result.data.nextCursor ?? undefined)
 		expect(decoded).not.toBeNull()
 		expect(decoded?.direction).toBe('after')
 		expect(decoded?.parts).toEqual([
@@ -164,18 +172,26 @@ describe('listCalculatorLeadsForAdmin: page-size + hasMore', () => {
 
 		const result = await listCalculatorLeadsForAdmin()
 
-		expect(result.rows.length).toBe(3)
-		expect(result.hasMore).toBe(false)
-		expect(result.nextCursor).toBeNull()
-		expect(result.prevCursor).toBeNull()
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data.rows.length).toBe(3)
+		expect(result.data.hasMore).toBe(false)
+		expect(result.data.nextCursor).toBeNull()
+		expect(result.data.prevCursor).toBeNull()
 	})
 
-	test('returns empty shape when DB yields zero rows', async () => {
+	test('returns ok with empty rows when DB yields zero rows (distinct from error)', async () => {
 		state.rowsToReturn = []
 
 		const result = await listCalculatorLeadsForAdmin()
 
-		expect(result).toEqual({
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data).toEqual({
 			rows: [],
 			hasMore: false,
 			prevCursor: null,
@@ -185,17 +201,12 @@ describe('listCalculatorLeadsForAdmin: page-size + hasMore', () => {
 })
 
 describe('listCalculatorLeadsForAdmin: DB error safety', () => {
-	test('returns empty result + logs error when the query throws', async () => {
+	test('returns the error variant (not an empty result) + logs once when the query throws', async () => {
 		state.shouldThrow = true
 
 		const result = await listCalculatorLeadsForAdmin()
 
-		expect(result).toEqual({
-			rows: [],
-			hasMore: false,
-			prevCursor: null,
-			nextCursor: null
-		})
+		expect(result).toEqual({ ok: false, error: true })
 		expect(logger.error).toHaveBeenCalledTimes(1)
 	})
 })
@@ -251,11 +262,15 @@ describe('listCalculatorLeadsForAdmin: cursor + direction', () => {
 
 		const result = await listCalculatorLeadsForAdmin({ cursor: 'not-a-cursor' })
 
-		expect(result.rows.length).toBe(1)
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data.rows.length).toBe(1)
 		// page 1 fall-back: WHERE is undefined (no cursor predicate)
 		expect(state.whereArg).toBeUndefined()
 		// prevCursor stays null because the malformed cursor was discarded
-		expect(result.prevCursor).toBeNull()
+		expect(result.data.prevCursor).toBeNull()
 	})
 
 	test("'before' cursor reverses ORDER BY and rows come back in display order", async () => {
@@ -273,17 +288,21 @@ describe('listCalculatorLeadsForAdmin: cursor + direction', () => {
 
 		const result = await listCalculatorLeadsForAdmin({ cursor: beforeCursor })
 
-		const ids = result.rows.map(r => (r as { id: string }).id)
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		const ids = result.data.rows.map(r => (r as { id: string }).id)
 		const expectedIds = Array.from(
 			{ length: PAGE_SIZE },
 			(_, i) => `row-${String(i + 1).padStart(2, '0')}`
 		)
 		expect(ids).toEqual(expectedIds)
 
-		expect(result.prevCursor).not.toBeNull()
-		const decodedPrev = decodeCursor(result.prevCursor ?? undefined)
+		expect(result.data.prevCursor).not.toBeNull()
+		const decodedPrev = decodeCursor(result.data.prevCursor ?? undefined)
 		expect(decodedPrev?.direction).toBe('before')
-		expect(result.nextCursor).not.toBeNull()
+		expect(result.data.nextCursor).not.toBeNull()
 	})
 
 	test('emits nextCursor + nulls prevCursor when arriving on page 1 via backward navigation (direction=before, hasMore=false)', async () => {
@@ -300,10 +319,14 @@ describe('listCalculatorLeadsForAdmin: cursor + direction', () => {
 
 		const result = await listCalculatorLeadsForAdmin({ cursor: beforeCursor })
 
-		expect(result.hasMore).toBe(false)
-		expect(result.prevCursor).toBeNull()
-		expect(result.nextCursor).not.toBeNull()
-		const decodedNext = decodeCursor(result.nextCursor ?? undefined)
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data.hasMore).toBe(false)
+		expect(result.data.prevCursor).toBeNull()
+		expect(result.data.nextCursor).not.toBeNull()
+		const decodedNext = decodeCursor(result.data.nextCursor ?? undefined)
 		expect(decodedNext?.direction).toBe('after')
 	})
 
@@ -318,9 +341,44 @@ describe('listCalculatorLeadsForAdmin: cursor + direction', () => {
 
 		const result = await listCalculatorLeadsForAdmin({ cursor: afterCursor })
 
-		expect(result.rows.length).toBe(PAGE_SIZE)
-		expect(result.hasMore).toBe(true)
-		expect(result.prevCursor).not.toBeNull()
-		expect(result.nextCursor).not.toBeNull()
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data.rows.length).toBe(PAGE_SIZE)
+		expect(result.data.hasMore).toBe(true)
+		expect(result.data.prevCursor).not.toBeNull()
+		expect(result.data.nextCursor).not.toBeNull()
+	})
+})
+
+describe('getCalculatorLeadById: 3-way detail result', () => {
+	test("returns 'found' with the row when it exists", async () => {
+		state.rowsToReturn = [makeRow(0)]
+
+		const result = await getCalculatorLeadById('row-00')
+
+		expect(result.status).toBe('found')
+		if (result.status !== 'found') {
+			throw new Error('expected found result')
+		}
+		expect((result.data as { id: string }).id).toBe('row-00')
+	})
+
+	test("returns 'not-found' when no row exists", async () => {
+		state.rowsToReturn = []
+
+		const result = await getCalculatorLeadById('missing')
+
+		expect(result.status).toBe('not-found')
+	})
+
+	test("returns 'error' + logs once when the query throws", async () => {
+		state.shouldThrow = true
+
+		const result = await getCalculatorLeadById('row-00')
+
+		expect(result.status).toBe('error')
+		expect(logger.error).toHaveBeenCalledTimes(1)
 	})
 })

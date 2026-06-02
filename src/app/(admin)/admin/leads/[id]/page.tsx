@@ -24,9 +24,11 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
+import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import { getLeadById } from '@/lib/admin/leads-queries'
 import { LEAD_STATUSES } from '@/lib/schemas/admin-leads'
 import {
@@ -65,11 +67,14 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 		notFound()
 	}
 	await connection()
-	const detail = await getLeadById(id)
-	if (!detail) {
+	const routing = routeDetailResult(await getLeadById(id))
+	if (routing.kind === 'not-found') {
 		notFound()
 	}
-	const { lead, attribution, notes } = detail
+	if (routing.kind === 'error') {
+		return <AdminErrorState resource="lead" />
+	}
+	const { lead, attribution, notes } = routing.data
 
 	return (
 		<div className="space-y-6">

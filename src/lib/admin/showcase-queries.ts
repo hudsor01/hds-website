@@ -31,6 +31,15 @@ import {
 	escapeLikePattern,
 	PAGE_SIZE
 } from '@/lib/admin/list-cursor'
+import {
+	type AdminDetailResult,
+	type AdminQueryResult,
+	err,
+	errResult,
+	found,
+	notFoundResult,
+	ok
+} from '@/lib/admin/query-result'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import type {
@@ -54,13 +63,6 @@ export type ListShowcasesResult = {
 	nextCursor: string | null
 }
 
-const EMPTY_RESULT: ListShowcasesResult = {
-	rows: [],
-	hasMore: false,
-	prevCursor: null,
-	nextCursor: null
-}
-
 /**
  * Cursor-paginated + search-aware admin showcase list.
  *
@@ -77,11 +79,12 @@ const EMPTY_RESULT: ListShowcasesResult = {
  * pattern; backslash / `%` / `_` escaped via `escapeLikePattern`).
  *
  * Malformed cursor: silently falls back to page 1. DB error: returns the
- * empty result shape; caller renders the empty state instead of crashing.
+ * `err()` failure variant so the caller can render the error state (distinct
+ * from a genuinely empty `ok` result).
  */
 export async function listShowcasesForAdmin(
 	opts?: ListShowcasesOptions
-): Promise<ListShowcasesResult> {
+): Promise<AdminQueryResult<ListShowcasesResult>> {
 	const { q: rawQ, cursor: rawCursor } = opts ?? {}
 	const cursor = decodeCursor(rawCursor)
 	const direction: Direction = cursor?.direction ?? 'after'
@@ -188,10 +191,10 @@ export async function listShowcasesForAdmin(
 				? encodeCursor('before', cursorPartsFor(firstRow))
 				: null
 
-		return { rows: pageRows, hasMore, prevCursor, nextCursor }
+		return ok({ rows: pageRows, hasMore, prevCursor, nextCursor })
 	} catch (error) {
 		logger.error('showcase-queries.listShowcasesForAdmin failed', error)
-		return EMPTY_RESULT
+		return err()
 	}
 }
 
@@ -200,22 +203,27 @@ function cursorPartsFor(row: ShowcaseRow): [number, Date, string] {
 }
 
 /**
- * Single showcase row by id, or `null` when the row is missing or the query
- * fails. The edit page lifts this and calls `notFound()` on null.
+ * Single showcase row by id as a 3-way detail result: `found(row)` when the
+ * row exists, `notFoundResult()` when it is genuinely missing, `errResult()`
+ * when the query fails. The edit page 404s only on `'not-found'` and renders
+ * the error state on `'error'` (never a misleading 404). The two internal
+ * write-helper callers narrow this back to a row-or-null locally.
  */
-export async function getShowcaseById(id: string): Promise<ShowcaseRow | null> {
+export async function getShowcaseById(
+	id: string
+): Promise<AdminDetailResult<ShowcaseRow>> {
 	try {
 		const [row] = await db
 			.select()
 			.from(showcase)
 			.where(eq(showcase.id, id))
 			.limit(1)
-		return row ?? null
+		return row ? found(row) : notFoundResult()
 	} catch (error) {
 		logger.error('showcase-queries.getShowcaseById failed', error, {
 			metadata: { id }
 		})
-		return null
+		return errResult()
 	}
 }
 
@@ -248,7 +256,8 @@ export async function updateShowcase(
 	id: string,
 	input: Omit<UpdateShowcaseInput, 'id'>
 ): Promise<ShowcaseRow | null> {
-	const existing = await getShowcaseById(id)
+	const result = await getShowcaseById(id)
+	const existing = result.status === 'found' ? result.data : null
 	if (!existing) {
 		return null
 	}
@@ -293,7 +302,8 @@ export async function deleteShowcase(id: string): Promise<boolean> {
 export async function toggleShowcasePublished(
 	id: string
 ): Promise<ShowcaseRow | null> {
-	const existing = await getShowcaseById(id)
+	const result = await getShowcaseById(id)
+	const existing = result.status === 'found' ? result.data : null
 	if (!existing) {
 		return null
 	}

@@ -15,8 +15,14 @@
  * Pattern mirrors `src/lib/admin/showcase-queries.ts` and
  * `src/lib/admin/leads-queries.ts`:
  *  - `import 'server-only'` to fail fast on accidental client imports.
- *  - Read helpers wrap their DB call in try/catch and return a safe default
- *    so a query blip renders an empty state instead of crashing the page.
+ *  - Read helpers wrap their DB call in try/catch and RETURN a discriminated
+ *    failure variant (Phase 13, ADMINERR-01..04). `getQueueCounts` /
+ *    `listScheduledEmailsForAdmin` return `AdminQueryResult` (`err()` on a
+ *    caught DB error, distinct from a successful-but-empty read), and
+ *    `getScheduledEmailById` returns `AdminDetailResult` (`'error'` vs
+ *    `'not-found'`). The caught exception stays in `logger.error` server-side;
+ *    the page renders an explicit `AdminErrorState` so a query blip is never
+ *    mistaken for a healthy zeroed queue, an empty list, or a 404.
  *  - Write helpers let exceptions propagate; the Server Action layer catches
  *    and translates them into generic form errors. `deleteScheduledEmail`
  *    swallows errors so the action can redirect to the list either way.
@@ -49,6 +55,15 @@ import {
 	escapeLikePattern,
 	PAGE_SIZE
 } from '@/lib/admin/list-cursor'
+import {
+	type AdminDetailResult,
+	type AdminQueryResult,
+	err,
+	errResult,
+	found,
+	notFoundResult,
+	ok
+} from '@/lib/admin/query-result'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import { type ScheduledEmail, scheduledEmails } from '@/lib/schemas/schema'
@@ -76,13 +91,6 @@ export type ListScheduledEmailsResult = {
 	nextCursor: string | null
 }
 
-const EMPTY_RESULT: ListScheduledEmailsResult = {
-	rows: [],
-	hasMore: false,
-	prevCursor: null,
-	nextCursor: null
-}
-
 function cursorPartsFor(row: ScheduledEmail): [Date, string] {
 	return [row.scheduledFor, row.id]
 }
@@ -99,14 +107,18 @@ export type RetryResult =
 
 /**
  * Counts of scheduled-email rows grouped by status. One aggregate query.
- * Returns a fully populated record (zeros for missing statuses) so the
- * stat-card grid in the list page never has to defensively check for
- * undefined values. Non-standard status strings in the table (defensive
- * against historical / migrated rows) are ignored. Returns the zero record
- * on query failure so the page still renders.
+ * On success returns `ok(...)` wrapping a fully populated record (zeros for
+ * missing statuses) so the stat-card grid in the list page never has to
+ * defensively check for undefined values. Non-standard status strings in the
+ * table (defensive against historical / migrated rows) are ignored.
+ *
+ * On a caught DB error returns `err()` (ADMINERR-03), NOT a falsely-healthy
+ * all-zero record: the page renders a grid-spanning `AdminErrorState` instead
+ * of four cards reading "0", so a query blip is never mistaken for an empty
+ * queue. The caught exception stays in `logger.error` server-side.
  */
-export async function getQueueCounts(): Promise<QueueCounts> {
-	const result: QueueCounts = {
+export async function getQueueCounts(): Promise<AdminQueryResult<QueueCounts>> {
+	const counts: QueueCounts = {
 		pending: 0,
 		sent: 0,
 		failed: 0,
@@ -122,13 +134,13 @@ export async function getQueueCounts(): Promise<QueueCounts> {
 				row.status &&
 				(EMAIL_STATUSES as readonly string[]).includes(row.status)
 			) {
-				result[row.status as EmailStatus] = Number(row.count)
+				counts[row.status as EmailStatus] = Number(row.count)
 			}
 		}
-		return result
+		return ok(counts)
 	} catch (error) {
 		logger.error('emails-queries.getQueueCounts failed', error)
-		return result
+		return err()
 	}
 }
 
@@ -153,16 +165,20 @@ export async function getQueueCounts(): Promise<QueueCounts> {
  *    input. `recipientName` is nullable -- ILIKE on a NULL column returns
  *    NULL (false) so those rows are safely filtered out by the OR.
  *
- * Malformed cursor: silently falls back to page 1. DB error: returns the
- * empty result shape; caller renders the empty state instead of crashing.
+ * Malformed cursor: silently falls back to page 1. DB error: returns `err()`
+ * (ADMINERR-01) so the caller renders an `AdminErrorState` instead of an
+ * empty list; a successful-but-empty read returns `ok({ rows: [], ... })`,
+ * which the caller renders as the empty state. Error and empty are distinct.
  *
- * NOTE: `getQueueCounts()` is intentionally NOT touched and is still called
- * by the page WITHOUT arguments so the 4 stat cards stay reflecting the
- * full queue regardless of status / q / cursor.
+ * NOTE: `getQueueCounts()` is called by the page WITHOUT arguments (inside the
+ * same `Promise.all`) so the 4 stat cards reflect the full queue regardless of
+ * status / q / cursor. The two reads are INDEPENDENT `AdminQueryResult`s:
+ * each is narrowed on its own, so a counts failure never blanks the list and
+ * a list failure never blanks the counts.
  */
 export async function listScheduledEmailsForAdmin(
 	opts?: ListScheduledEmailsOptions
-): Promise<ListScheduledEmailsResult> {
+): Promise<AdminQueryResult<ListScheduledEmailsResult>> {
 	const { status, q: rawQ, cursor: rawCursor } = opts ?? {}
 	const cursor = decodeCursor(rawCursor)
 	const direction: Direction = cursor?.direction ?? 'after'
@@ -255,32 +271,38 @@ export async function listScheduledEmailsForAdmin(
 				? encodeCursor('before', cursorPartsFor(firstRow))
 				: null
 
-		return { rows: pageRows, hasMore, prevCursor, nextCursor }
+		return ok({ rows: pageRows, hasMore, prevCursor, nextCursor })
 	} catch (error) {
 		logger.error('emails-queries.listScheduledEmailsForAdmin failed', error)
-		return EMPTY_RESULT
+		return err()
 	}
 }
 
 /**
- * Single scheduled-email row by id, or `null` when the row is missing or
- * the query fails. The detail page lifts this and calls `notFound()` on null.
+ * Single scheduled-email row by id as a 3-way `AdminDetailResult`:
+ *  - `found(row)`         when the row exists,
+ *  - `notFoundResult()`   when no row matches (detail page -> `notFound()`),
+ *  - `errResult()`        on a caught DB error (detail page -> error state).
+ *
+ * Distinguishing `'error'` from `'not-found'` (ADMINERR-04) means a transient
+ * DB failure never masquerades as a 404. The caught exception stays in
+ * `logger.error` server-side.
  */
 export async function getScheduledEmailById(
 	id: string
-): Promise<ScheduledEmail | null> {
+): Promise<AdminDetailResult<ScheduledEmail>> {
 	try {
 		const [row] = await db
 			.select()
 			.from(scheduledEmails)
 			.where(eq(scheduledEmails.id, id))
 			.limit(1)
-		return row ?? null
+		return row ? found(row) : notFoundResult()
 	} catch (error) {
 		logger.error('emails-queries.getScheduledEmailById failed', error, {
 			metadata: { id }
 		})
-		return null
+		return errResult()
 	}
 }
 
@@ -299,7 +321,8 @@ export async function getScheduledEmailById(
  * to a generic form error.
  */
 export async function retryScheduledEmail(id: string): Promise<RetryResult> {
-	const existing = await getScheduledEmailById(id)
+	const result = await getScheduledEmailById(id)
+	const existing = result.status === 'found' ? result.data : null
 	if (!existing) {
 		return { ok: false, reason: 'not_found' }
 	}

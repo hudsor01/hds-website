@@ -38,6 +38,15 @@ import {
 	escapeLikePattern,
 	PAGE_SIZE
 } from '@/lib/admin/list-cursor'
+import {
+	type AdminDetailResult,
+	type AdminQueryResult,
+	err,
+	errResult,
+	found,
+	notFoundResult,
+	ok
+} from '@/lib/admin/query-result'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import type {
@@ -69,13 +78,6 @@ export type ListBlogPostsResult = {
 	hasMore: boolean
 	prevCursor: string | null
 	nextCursor: string | null
-}
-
-const EMPTY_RESULT: ListBlogPostsResult = {
-	rows: [],
-	hasMore: false,
-	prevCursor: null,
-	nextCursor: null
 }
 
 // NULLS LAST sentinel: an unpublished row (publishedAt = null) sorts AFTER
@@ -121,11 +123,12 @@ function cursorPartsFor(row: {
  * sentinel row never reaches the join table query.
  *
  * Malformed cursor: silently falls back to page 1. DB error: returns the
- * empty result shape; caller renders the empty state instead of crashing.
+ * `err()` variant so the caller can render the error state instead of an
+ * empty list that masks the failure.
  */
 export async function listBlogPostsForAdmin(
 	opts?: ListBlogPostsOptions
-): Promise<ListBlogPostsResult> {
+): Promise<AdminQueryResult<ListBlogPostsResult>> {
 	const { q: rawQ, cursor: rawCursor } = opts ?? {}
 	const cursor = decodeCursor(rawCursor)
 	const direction: Direction = cursor?.direction ?? 'after'
@@ -298,16 +301,16 @@ export async function listBlogPostsForAdmin(
 				? encodeCursor('before', cursorPartsFor(firstRow))
 				: null
 
-		return { rows, hasMore, prevCursor, nextCursor }
+		return ok({ rows, hasMore, prevCursor, nextCursor })
 	} catch (error) {
 		logger.error('blog-queries.listBlogPostsForAdmin failed', error)
-		return EMPTY_RESULT
+		return err()
 	}
 }
 
 export async function getBlogPostForAdmin(
 	id: string
-): Promise<AdminBlogListRow | null> {
+): Promise<AdminDetailResult<AdminBlogListRow>> {
 	try {
 		const [row] = await db
 			.select({ post: blogPosts, author: blogAuthors })
@@ -316,15 +319,22 @@ export async function getBlogPostForAdmin(
 			.where(eq(blogPosts.id, id))
 			.limit(1)
 		if (!row) {
-			return null
+			return notFoundResult()
 		}
+		// The tag-id lookup is part of the detail read: a throw HERE (not just
+		// in the post select) is still a read failure, so it must yield the
+		// error variant, not a misleading 404.
 		const tagMap = await loadTagIdsForPosts([id])
-		return { post: row.post, author: row.author, tagIds: tagMap[id] ?? [] }
+		return found({
+			post: row.post,
+			author: row.author,
+			tagIds: tagMap[id] ?? []
+		})
 	} catch (error) {
 		logger.error('blog-queries.getBlogPostForAdmin failed', error, {
 			metadata: { id }
 		})
-		return null
+		return errResult()
 	}
 }
 
@@ -383,7 +393,11 @@ export async function updateBlogPost(
 	id: string,
 	input: Omit<UpdateAdminBlogPostInput, 'id'>
 ): Promise<DbBlogPost | null> {
-	const existing = await getBlogPostForAdmin(id)
+	// getBlogPostForAdmin now returns the 3-way detail union; narrow it locally
+	// so a DB error and a missing row both collapse to null, preserving this
+	// helper's existing null-on-absent return contract byte-for-byte.
+	const result = await getBlogPostForAdmin(id)
+	const existing = result.status === 'found' ? result.data : null
 	if (!existing) {
 		return null
 	}
@@ -446,7 +460,10 @@ export async function deleteBlogPost(id: string): Promise<boolean> {
 export async function toggleBlogPostPublished(
 	id: string
 ): Promise<DbBlogPost | null> {
-	const existing = await getBlogPostForAdmin(id)
+	// Same local narrow as updateBlogPost: error + not-found both -> null, so
+	// the existing null-on-absent contract is preserved (lockstep migration).
+	const result = await getBlogPostForAdmin(id)
+	const existing = result.status === 'found' ? result.data : null
 	if (!existing) {
 		return null
 	}

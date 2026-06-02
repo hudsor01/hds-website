@@ -42,6 +42,15 @@ import {
 	escapeLikePattern,
 	PAGE_SIZE
 } from '@/lib/admin/list-cursor'
+import {
+	type AdminDetailResult,
+	type AdminQueryResult,
+	err,
+	errResult,
+	found,
+	notFoundResult,
+	ok
+} from '@/lib/admin/query-result'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import {
@@ -70,13 +79,6 @@ export type ListSubscribersResult = {
 	hasMore: boolean
 	prevCursor: string | null
 	nextCursor: string | null
-}
-
-const EMPTY_RESULT: ListSubscribersResult = {
-	rows: [],
-	hasMore: false,
-	prevCursor: null,
-	nextCursor: null
 }
 
 // NULLS LAST sentinel: a subscriber with subscribedAt = null sorts AFTER
@@ -120,11 +122,13 @@ function cursorPartsFor(row: SubscriberRow): CursorParts {
  *    are safely filtered out when the search targets only the name column.
  *
  * Malformed cursor: silently falls back to page 1. DB error: returns the
- * empty result shape; caller renders the empty state instead of crashing.
+ * `err()` failure variant (logged via `logger.error`); the caller renders a
+ * visible error state instead of an empty list that hides the failure. A
+ * successful-but-empty read returns `ok({ rows: [], ... })`.
  */
 export async function listSubscribersForAdmin(
 	opts?: ListSubscribersOptions
-): Promise<ListSubscribersResult> {
+): Promise<AdminQueryResult<ListSubscribersResult>> {
 	const { status, q: rawQ, cursor: rawCursor } = opts ?? {}
 	const cursor = decodeCursor(rawCursor)
 	const direction: Direction = cursor?.direction ?? 'after'
@@ -255,32 +259,35 @@ export async function listSubscribersForAdmin(
 				? encodeCursor('before', cursorPartsFor(firstRow))
 				: null
 
-		return { rows: pageRows, hasMore, prevCursor, nextCursor }
+		return ok({ rows: pageRows, hasMore, prevCursor, nextCursor })
 	} catch (error) {
 		logger.error('newsletter-queries.listSubscribersForAdmin failed', error)
-		return EMPTY_RESULT
+		return err()
 	}
 }
 
 /**
- * Single subscriber by id, or `null` when the row is missing or the query
- * fails. The detail page lifts this and calls `notFound()` on null.
+ * Single subscriber by id as a 3-way `AdminDetailResult`: `found(row)` when
+ * the row exists, `notFoundResult()` when no row matches the id (the detail
+ * page 404s), and `errResult()` on a DB failure (the detail page renders a
+ * visible error state instead of a misleading 404). The caught error is
+ * logged via `logger.error` and never crosses into the rendered UI.
  */
 export async function getSubscriberById(
 	id: string
-): Promise<SubscriberRow | null> {
+): Promise<AdminDetailResult<SubscriberRow>> {
 	try {
 		const [row] = await db
 			.select()
 			.from(newsletterSubscribers)
 			.where(eq(newsletterSubscribers.id, id))
 			.limit(1)
-		return row ?? null
+		return row ? found(row) : notFoundResult()
 	} catch (error) {
 		logger.error('newsletter-queries.getSubscriberById failed', error, {
 			metadata: { id }
 		})
-		return null
+		return errResult()
 	}
 }
 

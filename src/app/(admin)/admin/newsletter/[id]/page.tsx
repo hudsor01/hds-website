@@ -20,9 +20,11 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
+import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import { getSubscriberById } from '@/lib/admin/newsletter-queries'
 import {
 	deleteSubscriberAction,
@@ -74,10 +76,14 @@ async function SubscriberLoader({ params }: SubscriberDetailPageProps) {
 		notFound()
 	}
 	await connection()
-	const row = await getSubscriberById(id)
-	if (!row) {
+	const routing = routeDetailResult(await getSubscriberById(id))
+	if (routing.kind === 'not-found') {
 		notFound()
 	}
+	if (routing.kind === 'error') {
+		return <AdminErrorState resource="subscriber" />
+	}
+	const row = routing.data
 	return (
 		<div className="space-y-8">
 			<div>
