@@ -200,7 +200,9 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
+
 - [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
+
 **UI hint**: yes
 
 ### Phase 13: admin-error-observability
@@ -219,7 +221,12 @@ Plans:
 **Plans**: 10 plans
 
 Plans:
+**Wave 1**
+
 - [ ] 13-01-PLAN.md — Shared primitives: AdminQueryResult/AdminDetailResult types + AdminErrorState component + dashboard-queries test scaffold
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 13-02-PLAN.md — leads: list error state + getLeadById 3-way detail
 - [ ] 13-03-PLAN.md — calculator-leads: list error state + getCalculatorLeadById 3-way detail
 - [ ] 13-04-PLAN.md — newsletter: list error state + getSubscriberById 3-way detail
@@ -228,7 +235,15 @@ Plans:
 - [ ] 13-07-PLAN.md — blog: list + getBlogPostForAdmin 3-way detail + 2 internal write-helper callers
 - [ ] 13-08-PLAN.md — dashboard widgets: 5 widget queries + per-widget error cards (ADMINERR-02)
 - [ ] 13-09-PLAN.md — emails: queue-counts error variant (ADMINERR-03) + list + getScheduledEmailById 3-way + retry caller
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
 - [ ] 13-10-PLAN.md — phase gate: lint + typecheck + test:unit + build + invariant grep
+
+**Cross-cutting constraints:**
+
+- When it returns zero rows, the page shows the existing empty state
+
 **UI hint**: yes
 
 ### Phase 14: admin-page-title
@@ -246,7 +261,9 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
+
 - [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
+
 **UI hint**: yes
 
 ### Phase 15: dead-code-cleanup
@@ -264,6 +281,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
+
 - [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
 
 ### Phase 16: intentional-noop-confirmation
@@ -281,6 +299,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
+
 - [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
 
 ### v6 Progress
