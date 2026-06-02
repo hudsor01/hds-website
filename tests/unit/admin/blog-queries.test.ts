@@ -41,6 +41,11 @@ interface MockState {
 	// Toggle which next select() call mode we are in (post-list vs tag-lookup).
 	selectMode: 'post-list' | 'tag-lookup'
 	shouldThrow: boolean
+	// When true, the tag-lookup chain (`loadTagIdsForPosts().where()`) REJECTS
+	// rather than resolving. Lets a case make the post select succeed while the
+	// tag await throws -- still a read failure, so the detail read must return
+	// the error variant (NOT a 404).
+	tagThrow: boolean
 	// Rows returned by the `db.update(...).set(...).where(...).returning()`
 	// chain that `toggleBlogPostPublished` runs (and the `tx.update(...)` chain
 	// inside `updateBlogPost`'s transaction).
@@ -57,6 +62,7 @@ const state: MockState = {
 	tagLookupIds: undefined,
 	selectMode: 'post-list',
 	shouldThrow: false,
+	tagThrow: false,
 	updateRowsToReturn: []
 }
 
@@ -70,6 +76,7 @@ function resetState(): void {
 	state.tagLookupIds = undefined
 	state.selectMode = 'post-list'
 	state.shouldThrow = false
+	state.tagThrow = false
 	state.updateRowsToReturn = []
 }
 
@@ -130,7 +137,10 @@ function buildPostListChain(): unknown {
 function buildTagLookupChain(): unknown {
 	const chain = {
 		from: () => chain,
-		where: () => Promise.resolve(state.tagRowsToReturn)
+		where: () =>
+			state.tagThrow
+				? Promise.reject(new Error('tag lookup down'))
+				: Promise.resolve(state.tagRowsToReturn)
 	}
 	return chain
 }
@@ -528,6 +538,21 @@ describe('getBlogPostForAdmin: 3-way detail result', () => {
 
 	test("returns 'error' + logs once when the post select throws", async () => {
 		state.shouldThrow = true
+
+		const result = await getBlogPostForAdmin('post-00')
+
+		expect(result.status).toBe('error')
+		expect(logger.error).toHaveBeenCalledTimes(1)
+	})
+
+	test("returns 'error' (NOT not-found, NOT a 404) when the post select SUCCEEDS but the tag lookup throws", async () => {
+		// The post row is present, so the row-existence check passes; the failure
+		// happens later, in the `await loadTagIdsForPosts([id])` step. The
+		// documented contract (blog-queries.ts: "a throw HERE ... is still a read
+		// failure") is that this must yield the error variant, not a misleading
+		// 'not-found' / 404.
+		state.postRowsToReturn = [makeRow(0, { id: 'post-00' })]
+		state.tagThrow = true
 
 		const result = await getBlogPostForAdmin('post-00')
 
