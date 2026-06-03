@@ -313,6 +313,56 @@ Plans:
 | 15. dead-code-cleanup | 0/0 | Not started | - |
 | 16. intentional-noop-confirmation | 0/0 | Not started | - |
 
+## Milestone v7 — Stability and Maintenance
+
+> Started 2026-06-02. After v6 closed (audit PASSED), two stability concerns remain. Goal: CI is a trustworthy signal and the project runs on current, supported dependencies. Phase numbering continues from v6 (last phase 16), so v7 runs Phase 17 through Phase 18.
+>
+> **Milestone decision (sequence):** test-isolation (Phase 17) runs BEFORE dependency-currency (Phase 18). The 5 open Dependabot PRs' CI Test job hits the same process-global `mock.module` pollution (e.g. #331's Test job is failing), so a clean, order-independent suite must land first to make the dep PRs' CI trustworthy.
+>
+> **Milestone decision (root-fix, not patch):** the ~21 homepage/navigation/Footer failures are fixed by root-causing the leaking test(s) so the full suite is order-independent — NOT by skipping, `xfail`-ing, or otherwise suppressing the failing tests.
+
+### Phases
+
+| # | Slug | Status | Plans | Severity | Description |
+|---|---|---|---|---|---|
+| 17 | `test-suite-isolation` | not started | TBD | HIGH | Make `bun test tests/` order-independent and 0-fail. Root-cause the bun process-global `mock.module` leak (oven-sh/bun#7823, un-cleared by `mock.restore()`) that freezes a shared module's exports (`@/lib/constants/business` -> `BUSINESS_INFO` undefined) for later suites, producing the ~21 `homepage.test.tsx` + `navigation.test.tsx` failures only under full-suite ordering (TEST-01). Fix the leaking `.tsx` consumer/render test(s) — prefer pure input->output units or the setup-preload `__REAL_*__` capture pattern — and add a guard against reintroduction (TEST-02). No skip/xfail of the symptom. |
+| 18 | `dependency-currency` | not started | TBD | MEDIUM | Review, verify, and merge the 5 open Dependabot PRs against a clean (post-17) suite: #327 dev-dependencies group of 5, #328 better-auth 1.6.12->1.6.13 (verify auth flows: signup, session cookie, admin-role gate), #329/#330/#331 Tiptap 3.24.0 extension-link / extension-image / starter-kit (verify the blog rich-text editor: links, images, core formatting render + persist). Each PR gets a recorded merge/hold decision; nothing merges on red or stale-base CI. DEP-01, DEP-02, DEP-03. |
+
+### Phase 17: test-suite-isolation
+
+**Goal**: The full `bun test tests/` run produces the same result as running each file in isolation: 0 failures, regardless of the order bun chooses. The ~21 homepage/navigation/Footer failures are gone because their root cause — a process-global `mock.module` registration leaking into unrelated suites — is fixed at the source, and a guard stops the same class of leak from returning.
+**Depends on**: Nothing (first v7 phase; must precede Phase 18)
+**Requirements**: TEST-01, TEST-02
+**Success Criteria** (what must be TRUE):
+
+  1. `bun test tests/` (full suite, default ordering) reports 0 failures, and re-running it repeatedly stays 0-fail; the count equals the sum of the isolated per-file runs (TEST-01).
+  2. The root cause is identified and fixed at the leaking test, not suppressed: no `.skip`, `xfail`, `test.todo`, or deletion is used to hide the homepage/navigation/Footer assertions; they still assert what they asserted before, and pass (TEST-01).
+  3. A guard prevents reintroduction — a documented + enforced convention (pure unit over `mock.module`+JSX render where feasible; setup-level reset or `__REAL_*__` preload-capture where a shared dep must be both mocked and asserted) plus a check that full-suite and isolated pass counts agree (TEST-02).
+
+**Notes**: Root cause is bun#7823: `mock.module(...)` registers process-globally and is NOT cleared by `mock.restore()`. The poisoners are `.tsx` consumer/render tests that mock a shared dep AND import a broad module graph (precedent fix: v6 Phase 13 extracted the pure `routeDetailResult()` helper instead of importing the page loader; `tests/setup.ts` already uses a `__REAL_DB__` setup-preload capture). Local full-suite has historically been unreliable here — CI is authoritative; diff the Test job pass/fail count against a known-clean baseline. Files: the failing `tests/unit/homepage.test.tsx` + `tests/unit/navigation.test.tsx` and whichever sibling `.tsx` test(s) register the leaking `mock.module`, plus `tests/setup.ts`.
+**Plans**: TBD (set during plan-phase)
+
+### Phase 18: dependency-currency
+
+**Goal**: The project is on current, supported dependency versions with no stale Dependabot PRs lingering behind a noisy suite. Each of the 5 open PRs has been reviewed, its CI re-validated on the clean post-17 suite, the behaviorally-risky ones (auth, blog editor) smoke-verified, and the safe set merged onto current `main` with a recorded decision per PR.
+**Depends on**: Phase 17 (a clean, order-independent suite makes each PR's CI Test job trustworthy)
+**Requirements**: DEP-01, DEP-02, DEP-03
+**Success Criteria** (what must be TRUE):
+
+  1. Each of #327/#328/#329/#330/#331 is reviewed (changelog/diff) and re-run against current `main` on the post-17 suite; a per-PR merge-or-hold decision is recorded with rationale, and nothing is merged on red or stale-base CI (DEP-01).
+  2. better-auth #328 (1.6.12->1.6.13, patch) is behaviorally smoke-verified — signup, session-cookie via `getAll`/`setAll`, and admin-role gating still work — before merge (DEP-02).
+  3. The three coupled Tiptap 3.24.0 bumps (#329 extension-link, #330 extension-image, #331 starter-kit) are verified together against the blog rich-text editor (links, images, core formatting render + persist); the safe set merges onto current `main`, any regressor is held with a recorded reason (DEP-03).
+
+**Notes**: All 5 PRs were opened 2026-06-02 against `main` and are currently BLOCKED (mergeable UNKNOWN); #331 shows Build/Code Quality/Test/fix-lockfile failing — Phase 18 must diagnose whether those are the Phase-17 pollution, a stale base needing rebase, or a real regression, then rebase/refresh as needed before merging. The Tiptap three are a coupled set (starter-kit pulls peer extensions) and should be evaluated together. Standard execute/ship flow; merges land on current `main`.
+**Plans**: TBD (set during plan-phase)
+
+### v7 Progress
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 17. test-suite-isolation | 0/0 | Not started | - |
+| 18. dependency-currency | 0/0 | Not started | - |
+
 ## Earlier milestones (archived)
 
 - v1 — initial 10 phases, shipped
