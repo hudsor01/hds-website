@@ -40,67 +40,18 @@ const validResults = {
  * test can control DB behaviour independently.
  */
 function setupCommonMocks(dbMock: Record<string, unknown>) {
-	mock.module('@/env', () => ({
-		env: {
-			NODE_ENV: 'test',
-			NEXT_PUBLIC_SITE_URL: 'https://hudsondigitalsolutions.com'
-		}
-	}))
-
-	mock.module('@/lib/logger', () => ({
-		logger: {
-			debug: mock(),
-			info: mock(),
-			warn: mock(),
-			error: mock(),
-			setContext: mock()
-		},
-		castError: (error: unknown) =>
-			error instanceof Error ? error : new Error(String(error))
-	}))
-
+	// Only the two REAL boundaries are mocked here. @/env and @/lib/logger are
+	// already mocked completely by tests/setup.ts (re-applied each beforeEach),
+	// so re-mocking them locally is redundant. @/lib/utils, @/lib/constants/business
+	// and @/lib/schemas/ttl are pure/deterministic — partial-mocking them here
+	// froze their exports process-globally for every later test file (bun#7823),
+	// causing "Export named 'cn' not found" and BUSINESS_INFO.links failures.
+	// The real modules work as-is for this action.
 	mock.module('@/lib/resend-client', () => ({
 		isResendConfigured: mock().mockReturnValue(false),
 		getResendClient: mock(() => ({
 			emails: { send: mock().mockResolvedValue({ data: { id: 'test-id' } }) }
 		}))
-	}))
-
-	mock.module('@/lib/constants/business', () => ({
-		BUSINESS_INFO: {
-			name: 'Hudson Digital Solutions',
-			email: 'hello@hudsondigitalsolutions.com',
-			phone: '(214) 843-0779',
-			location: {
-				streetAddress: '1301 Cherry Hill Ln',
-				city: 'Lewisville',
-				state: 'Texas',
-				stateCode: 'TX',
-				postalCode: '75067',
-				country: 'United States',
-				latitude: 33.0462,
-				longitude: -96.9942
-			}
-		}
-	}))
-
-	mock.module('@/lib/utils', () => ({
-		formatCurrency: (n: number) => `$${n.toFixed(2)}`
-	}))
-
-	mock.module('@/lib/schemas/ttl', () => ({
-		ttlCalculations: {
-			shareCode: 'shareCode',
-			inputs: 'inputs',
-			results: 'results',
-			name: 'name',
-			email: 'email',
-			county: 'county',
-			purchasePrice: 'purchasePrice',
-			viewCount: 'viewCount',
-			lastViewedAt: 'lastViewedAt',
-			createdAt: 'createdAt'
-		}
 	}))
 
 	// Do NOT mock drizzle-orm — it exports tagged template literals and many
