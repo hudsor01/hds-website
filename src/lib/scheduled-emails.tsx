@@ -6,7 +6,7 @@
 
 import 'server-only'
 
-import { and, asc, eq, lt, lte } from 'drizzle-orm'
+import { and, asc, eq, inArray, lt, lte, or } from 'drizzle-orm'
 import { ScheduledDrip } from '@/emails/scheduled-drip'
 import { env } from '@/env'
 import { db } from '@/lib/db'
@@ -24,6 +24,11 @@ import type { EmailProcessResult, EmailQueueStats } from '@/types/utils'
 import { BUSINESS_INFO } from './constants/business'
 import { getEmailSequences, replaceTemplateVariables } from './email-utils'
 import { sanitizeEmailHeader } from './utils'
+
+// A row left in `processing` longer than this (relative to its scheduledFor)
+// is treated as a crashed claim and becomes reclaimable. 15 minutes is well
+// past any legitimate send latency while keeping the recovery window tight.
+const STALE_PROCESSING_MS = 15 * 60 * 1000
 
 // Create logger instance for email operations
 const emailLogger = createServerLogger()
@@ -139,12 +144,28 @@ async function processPendingEmails(): Promise<void> {
 	const now = new Date()
 
 	try {
-		const pendingEmails = await db
+		// Gather due candidates. Besides fresh `pending` rows, reclaim any row
+		// stuck in `processing` whose scheduledFor is older than the stale
+		// threshold below: that indicates a previous run claimed the row but
+		// died before writing the terminal status (sent/failed/pending). The
+		// scheduled_emails table has no updatedAt column, so scheduledFor is the
+		// only time proxy — and it is never rewritten once set, so a row that is
+		// still `processing` long after its due time is provably a crashed claim.
+		const candidates = await db
 			.select()
 			.from(scheduledEmails)
 			.where(
 				and(
-					eq(scheduledEmails.status, 'pending'),
+					or(
+						eq(scheduledEmails.status, 'pending'),
+						and(
+							eq(scheduledEmails.status, 'processing'),
+							lt(
+								scheduledEmails.scheduledFor,
+								new Date(now.getTime() - STALE_PROCESSING_MS)
+							)
+						)
+					),
 					lte(scheduledEmails.scheduledFor, now),
 					lt(scheduledEmails.retryCount, 3)
 				)
@@ -152,13 +173,49 @@ async function processPendingEmails(): Promise<void> {
 			.orderBy(asc(scheduledEmails.scheduledFor))
 			.limit(100)
 
+		if (candidates.length === 0) {
+			emailLogger.info('Starting email queue processing', {
+				pendingCount: 0,
+				processTime: now.toISOString()
+			})
+			return
+		}
+
+		// Atomically claim the candidates before any send. The conditional
+		// UPDATE flips each row to `processing` only if it is still claimable
+		// (status pending, or a stale processing row being reclaimed) and
+		// RETURNS the rows it actually changed. Two overlapping passes race on
+		// this single statement: the loser's claim returns zero rows for an
+		// already-claimed id, so it never sends. This is the BUG-01 fix.
+		const candidateIds = candidates.map(row => row.id)
+		const claimedRows = await db
+			.update(scheduledEmails)
+			.set({ status: 'processing' })
+			.where(
+				and(
+					inArray(scheduledEmails.id, candidateIds),
+					or(
+						eq(scheduledEmails.status, 'pending'),
+						and(
+							eq(scheduledEmails.status, 'processing'),
+							lt(
+								scheduledEmails.scheduledFor,
+								new Date(now.getTime() - STALE_PROCESSING_MS)
+							)
+						)
+					)
+				)
+			)
+			.returning()
+
 		emailLogger.info('Starting email queue processing', {
-			pendingCount: pendingEmails.length,
+			pendingCount: candidates.length,
+			claimedCount: claimedRows.length,
 			processTime: now.toISOString()
 		})
 
-		// Process each email
-		for (const scheduledEmail of pendingEmails) {
+		// Process ONLY the rows this pass claimed.
+		for (const scheduledEmail of claimedRows) {
 			try {
 				await sendScheduledEmail(scheduledEmail)
 			} catch (error) {
