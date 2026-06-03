@@ -287,7 +287,7 @@ export async function updateTestimonialStatus(
 	updates: { approved?: boolean; featured?: boolean }
 ): Promise<boolean> {
 	try {
-		await db
+		const result = await db
 			.update(testimonials)
 			.set({
 				published: updates.approved,
@@ -295,7 +295,8 @@ export async function updateTestimonialStatus(
 				updatedAt: new Date()
 			})
 			.where(eq(testimonials.id, id))
-		return true
+			.returning({ id: testimonials.id })
+		return result.length > 0
 	} catch (error) {
 		logger.error('Failed to update testimonial status', error, {
 			metadata: { id }
@@ -313,8 +314,11 @@ export async function updateTestimonialStatus(
  */
 export async function deleteTestimonial(id: string): Promise<boolean> {
 	try {
-		await db.delete(testimonials).where(eq(testimonials.id, id))
-		return true
+		const result = await db
+			.delete(testimonials)
+			.where(eq(testimonials.id, id))
+			.returning({ id: testimonials.id })
+		return result.length > 0
 	} catch (error) {
 		logger.error('Failed to delete testimonial', error, {
 			metadata: { id }
@@ -332,8 +336,11 @@ export async function deleteTestimonial(id: string): Promise<boolean> {
  */
 export async function deleteTestimonialRequest(id: string): Promise<boolean> {
 	try {
-		await db.delete(testimonialRequests).where(eq(testimonialRequests.id, id))
-		return true
+		const result = await db
+			.delete(testimonialRequests)
+			.where(eq(testimonialRequests.id, id))
+			.returning({ id: testimonialRequests.id })
+		return result.length > 0
 	} catch (error) {
 		logger.error('Failed to delete testimonial request', error, {
 			metadata: { id }

@@ -6,12 +6,13 @@
 
 import 'server-only'
 
-import { and, asc, eq, lt, lte } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import { ScheduledDrip } from '@/emails/scheduled-drip'
 import { env } from '@/env'
 import { db } from '@/lib/db'
 import { createServerLogger } from '@/lib/logger'
 import { getResendClient, isResendConfigured } from '@/lib/resend-client'
+import { claimDuePendingEmails } from '@/lib/scheduled-emails-claim'
 import {
 	type EmailSequenceId,
 	type ScheduleEmailParams,
@@ -139,26 +140,21 @@ async function processPendingEmails(): Promise<void> {
 	const now = new Date()
 
 	try {
-		const pendingEmails = await db
-			.select()
-			.from(scheduledEmails)
-			.where(
-				and(
-					eq(scheduledEmails.status, 'pending'),
-					lte(scheduledEmails.scheduledFor, now),
-					lt(scheduledEmails.retryCount, 3)
-				)
-			)
-			.orderBy(asc(scheduledEmails.scheduledFor))
-			.limit(100)
+		// Gather due candidates (fresh `pending` plus reclaimable stale
+		// `processing` rows) and atomically claim them before any send. The
+		// scheduled_emails table has no updatedAt column, so scheduledFor is the
+		// stale-claim time proxy — it is never rewritten once set, so a row still
+		// `processing` long after its due time is provably a crashed claim.
+		const claimedRows = await claimDuePendingEmails(db, now)
 
 		emailLogger.info('Starting email queue processing', {
-			pendingCount: pendingEmails.length,
+			pendingCount: claimedRows.length,
+			claimedCount: claimedRows.length,
 			processTime: now.toISOString()
 		})
 
-		// Process each email
-		for (const scheduledEmail of pendingEmails) {
+		// Process ONLY the rows this pass claimed.
+		for (const scheduledEmail of claimedRows) {
 			try {
 				await sendScheduledEmail(scheduledEmail)
 			} catch (error) {
