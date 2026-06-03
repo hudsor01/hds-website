@@ -29,9 +29,16 @@ const VALID_UUID = '11111111-1111-4111-8111-111111111111'
 // @/lib/auth/admin — admin-auth.test.ts requires that NO other file
 // mock.module()s @/lib/auth/admin (the mock would leak process-globally and
 // strip the real impl for every later suite). See setup.ts preload note.
-const VALID_ADMIN_SECRET = (
-	globalThis as unknown as { __TEST_ENV: { ADMIN_SECRET: string } }
-).__TEST_ENV.ADMIN_SECRET
+// Canonical TEST_ENV secret literal (matches tests/setup.ts). We RE-SET it on
+// the shared env in beforeEach so this suite is immune to a prior suite
+// (admin-auth flips ADMIN_SECRET to undefined for its 503 case) leaving it
+// mutated under CI ordering, which made the real validateAdminAuth return 503.
+// Mirrors the documented health-route.test.ts guard. Using the literal (not a
+// read of __TEST_ENV at module load) avoids capturing an already-mutated value.
+const testEnv = (
+	globalThis as unknown as { __TEST_ENV: Record<string, unknown> }
+).__TEST_ENV
+const VALID_ADMIN_SECRET = 'test-admin-secret-that-is-32-chars!!'
 
 let updateTestimonialStatusMock: ReturnType<typeof mock>
 let deleteTestimonialMock: ReturnType<typeof mock>
@@ -74,6 +81,10 @@ function makeDelete(
 describe('BUG-03 testimonials/[id] HTTP contract', () => {
 	beforeEach(() => {
 		setupApiMocks()
+		// Re-establish ADMIN_SECRET on the shared env: a prior suite may have left
+		// it unset under CI ordering, which would make the REAL validateAdminAuth
+		// return 503 before the contract logic runs. Mirrors health-route.test.ts.
+		testEnv.ADMIN_SECRET = VALID_ADMIN_SECRET
 		updateTestimonialStatusMock = mock().mockResolvedValue(true)
 		deleteTestimonialMock = mock().mockResolvedValue(true)
 		deleteTestimonialRequestMock = mock().mockResolvedValue(true)
