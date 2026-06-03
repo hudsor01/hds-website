@@ -378,7 +378,7 @@ Plans:
 |---|---|---|---|---|---|
 | 19 | `dependency-security` | complete | 1 | HIGH | Patch the 5 known `bun audit` vulnerabilities (`fast-uri` x2 high, `postcss` + `brace-expansion` moderate; all transitive via react-email / @sentry / next / tailwind / sanitize-html) via `bun update` + targeted overrides, then a clean re-audit (or document any remaining advisory as transitive-build-only). Build + full suite stay green. SEC-01. |
 | 20 | `correctness-bugs` | complete | 1 | HIGH | Fix the real correctness bugs with regression tests: BUG-01 scheduled-email double-send race (atomic claim before send; dual GET/POST endpoint), BUG-02 rate-limiter unbounded in-memory store during a Redis outage + non-atomic Redis incr/expire, BUG-03 `testimonials/[id]` returns 200-on-missing / 500-on-malformed instead of 404/400 (rows-affected + UUID validation), BUG-04 `calculators/submit` stores unbounded public JSON. |
-| 21 | `code-hygiene` | not started | TBD | LOW | CLEAN-01 fix the `pagespeed:217` user-facing em-dash; CLEAN-02 prune the dead exports/types fallow found; CLEAN-03 dedupe `flattenZod`/`ActionResult` (x6 admin actions) + the `NewsletterSignup` self-duplication; CLEAN-04 drop the 9 unsound `error as Error` casts; CLEAN-05 fix stale `CLAUDE.md` (`src/lib/errors.ts` gone) + verify favicons serve + confirm prod `BASE_URL`. |
+| 21 | `code-hygiene` | complete | 1 | LOW | CLEAN-01 fix the `pagespeed:217` user-facing em-dash; CLEAN-02 prune the dead exports/types fallow found; CLEAN-03 dedupe `flattenZod`/`ActionResult` (x6 admin actions) + the `NewsletterSignup` self-duplication; CLEAN-04 drop the 9 unsound `error as Error` casts; CLEAN-05 fix stale `CLAUDE.md` (`src/lib/errors.ts` gone) + verify favicons serve + confirm prod `BASE_URL`. |
 
 ### Phase 19: dependency-security
 
@@ -432,7 +432,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 19. dependency-security | 1/1 | Complete | 2026-06-03 |
 | 20. correctness-bugs | 1/1 | Complete | 2026-06-03 |
-| 21. code-hygiene | 0/0 | Not started | - |
+| 21. code-hygiene | 1/1 | Complete | 2026-06-03 |
 
 ## Earlier milestones (archived)
 

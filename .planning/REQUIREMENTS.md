@@ -19,11 +19,11 @@
 
 ### Code hygiene
 
-- [ ] **CLEAN-01**: No user-facing em-dash / en-dash. Fix `pagespeed/route.ts:217` (the `"…exceed our budget — try again…"` error string shipped to the browser) and re-run the project-wide dash check clean. (VERIFIED.)
-- [ ] **CLEAN-02**: The dead exports/types `fallow` flagged are removed or justified with a rationale comment: exports `isGoogleAdsConfigured` (`ad-conversions.ts`), `getCsrfTokenFromRequest` (`csrf.ts`), `getClientIpFromHeaders` (`request.ts`); types `ContactFormData`, `ContactFormResponse` (`use-contact-form-submit.ts`), `FieldRenderProps` (`FormFieldSet.tsx`), `ErrorReport` (`schemas/error-report.ts`). (Framework-consumed `metadata`/`runtime`/`icon`/`opengraph-image` exports are NOT dead — excluded.)
-- [ ] **CLEAN-03**: Duplication reduced: extract the `flattenZod` helper + `ActionResult` type (copy-pasted across 6 admin `actions.ts`) into a shared `src/lib/admin/` module; remove the `NewsletterSignup.tsx` self-duplication (the ~65-line block repeated at 118-181 ↔ 231-295). (VERIFIED via fallow + agent.)
-- [ ] **CLEAN-04**: The 9 unsound + unnecessary `error as Error` casts feeding `logger.error` (calculator `storage.ts` modules + `use-paystub-calculator.ts` + `Calculator.tsx`) are dropped (`logger.error` already accepts `unknown` and normalizes). The 2 `any` in `ShowcaseFormFields.tsx` stay (`biome-ignore`'d for the TanStack Form generic) unless a clean type is trivial.
-- [ ] **CLEAN-05**: `CLAUDE.md` corrected — it documents two `castError` helpers but `src/lib/errors.ts` no longer exists (only `logger.ts`'s private one); update the guidance. Confirm `icon0.tsx`/`icon1.tsx` actually serve as favicons (192/512) — rename to the supported Next convention if not. Confirm `BASE_URL` is set in the prod Vercel env (else the `request.ts` same-origin check 403s all public form POSTs) — or harden the check to fall back to the request host / `NEXT_PUBLIC_BASE_URL`.
+- [x] **CLEAN-01**: No user-facing em-dash / en-dash. Fix `pagespeed/route.ts:217` (the `"…exceed our budget — try again…"` error string shipped to the browser) and re-run the project-wide dash check clean. (VERIFIED.)
+- [x] **CLEAN-02**: The dead exports/types `fallow` flagged are removed or justified with a rationale comment: exports `isGoogleAdsConfigured` (`ad-conversions.ts`), `getCsrfTokenFromRequest` (`csrf.ts`), `getClientIpFromHeaders` (`request.ts`); types `ContactFormData`, `ContactFormResponse` (`use-contact-form-submit.ts`), `FieldRenderProps` (`FormFieldSet.tsx`), `ErrorReport` (`schemas/error-report.ts`). (Framework-consumed `metadata`/`runtime`/`icon`/`opengraph-image` exports are NOT dead — excluded.)
+- [x] **CLEAN-03**: Duplication reduced: extract the `flattenZod` helper + `ActionResult` type (copy-pasted across 6 admin `actions.ts`) into a shared `src/lib/admin/` module; remove the `NewsletterSignup.tsx` self-duplication (the ~65-line block repeated at 118-181 ↔ 231-295). (VERIFIED via fallow + agent.)
+- [x] **CLEAN-04**: The 9 unsound + unnecessary `error as Error` casts feeding `logger.error` (calculator `storage.ts` modules + `use-paystub-calculator.ts` + `Calculator.tsx`) are dropped (`logger.error` already accepts `unknown` and normalizes). The 2 `any` in `ShowcaseFormFields.tsx` stay (`biome-ignore`'d for the TanStack Form generic) unless a clean type is trivial.
+- [x] **CLEAN-05**: `CLAUDE.md` corrected — it documents two `castError` helpers but `src/lib/errors.ts` no longer exists (only `logger.ts`'s private one); update the guidance. Confirm `icon0.tsx`/`icon1.tsx` actually serve as favicons (192/512) — rename to the supported Next convention if not. Confirm `BASE_URL` is set in the prod Vercel env (else the `request.ts` same-origin check 403s all public form POSTs) — or harden the check to fall back to the request host / `NEXT_PUBLIC_BASE_URL`.
 
 ## Out of Scope
 
@@ -43,11 +43,11 @@
 | BUG-02 | Phase 20 | Complete |
 | BUG-03 | Phase 20 | Complete |
 | BUG-04 | Phase 20 | Complete |
-| CLEAN-01 | Phase 21 | Pending |
-| CLEAN-02 | Phase 21 | Pending |
-| CLEAN-03 | Phase 21 | Pending |
-| CLEAN-04 | Phase 21 | Pending |
-| CLEAN-05 | Phase 21 | Pending |
+| CLEAN-01 | Phase 21 | Complete |
+| CLEAN-02 | Phase 21 | Complete |
+| CLEAN-03 | Phase 21 | Complete |
+| CLEAN-04 | Phase 21 | Complete |
+| CLEAN-05 | Phase 21 | Complete |
 
 **Coverage:**
 - v8 requirements: 10 total
