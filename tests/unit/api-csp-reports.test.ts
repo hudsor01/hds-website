@@ -53,4 +53,12 @@ describe('POST /api/csp-reports', () => {
 		const res = await POST(makeRequest({ unrelated: 'payload' }))
 		expect(res.status).toBe(400)
 	})
+
+	it('returns 400 when the csp-report value is not an object', async () => {
+		// The `csp-report` key is present (so the report-shape gate passes) but
+		// its value is a string; indexing it would throw without the guard.
+		const { POST } = await import('@/app/api/csp-reports/route')
+		const res = await POST(makeRequest({ 'csp-report': 'not-an-object' }))
+		expect(res.status).toBe(400)
+	})
 })
