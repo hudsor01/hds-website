@@ -166,13 +166,26 @@ export function setupApiMocks() {
 
 	process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test'
 
+	// Reuse the Bearer secrets defined once in tests/setup.ts (exposed on
+	// globalThis.__TEST_ENV) rather than re-declaring the literals here. The
+	// real validateAdminAuth / validateCronAuth are re-resolved when an API
+	// route is freshly imported under this @/env mock; without these the route
+	// would return 503 "authentication not configured".
+	const sharedEnv = (
+		globalThis as unknown as {
+			__TEST_ENV?: { ADMIN_SECRET?: unknown; CRON_SECRET?: unknown }
+		}
+	).__TEST_ENV
+
 	mock.module('@/env', () => ({
 		env: {
 			NODE_ENV: 'test',
 			RESEND_API_KEY: 'test-key',
 			NEXT_PUBLIC_GA_MEASUREMENT_ID: 'test-ga-id',
 			npm_package_version: '1.0.0',
-			CSRF_SECRET: 'test-csrf-secret-for-testing-only'
+			CSRF_SECRET: 'test-csrf-secret-for-testing-only',
+			ADMIN_SECRET: sharedEnv?.ADMIN_SECRET,
+			CRON_SECRET: sharedEnv?.CRON_SECRET
 		}
 	}))
 
