@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'bun:test'
+import { afterEach, beforeEach, describe, expect, it, mock, vi } from 'bun:test'
 import type { NextRequest } from 'next/server'
 import {
 	RATE_LIMIT_CONFIGS,
@@ -6,6 +6,13 @@ import {
 	UnifiedRateLimiter
 } from '@/lib/rate-limiter'
 import { getClientIp } from '@/lib/request'
+
+// Live handle to the shared TEST_ENV from tests/setup.ts. Mutating it flips
+// UPSTASH_* on/off for the rate-limiter's constructor without re-registering
+// @/env (which would unbind already-captured `import { env }` references).
+const testEnv = (
+	globalThis as unknown as { __TEST_ENV: Record<string, unknown> }
+).__TEST_ENV
 
 describe('UnifiedRateLimiter', () => {
 	let limiter: UnifiedRateLimiter
@@ -204,6 +211,108 @@ describe('UnifiedRateLimiter', () => {
 				expect(blocked).toBe(false)
 			})
 		})
+	})
+})
+
+describe('BUG-02 in-memory fallback is bounded (lazy prune)', () => {
+	afterEach(() => {
+		// Ensure UPSTASH stays unset so other suites keep in-memory mode.
+		testEnv.UPSTASH_REDIS_REST_URL = undefined
+		testEnv.UPSTASH_REDIS_REST_TOKEN = undefined
+		vi.useRealTimers()
+	})
+
+	it('evicts expired entries from the private store on every checkLimit (does not grow unbounded)', async () => {
+		// In-memory mode (no UPSTASH env). The defect: under a runtime Redis
+		// outage checkLimit falls through to _checkLimitInMemory, which never
+		// pruned entries it did not touch -> store grew unbounded. The fix
+		// prunes expired entries on every call.
+		const limiter = new UnifiedRateLimiter()
+		const store = (
+			limiter as unknown as { store: Map<string, unknown> }
+		).store
+
+		const config = RATE_LIMIT_CONFIGS.contactForm
+
+		// Seed several distinct keys (each creates a store entry).
+		for (let i = 0; i < 5; i++) {
+			await limiter.checkLimit(`stale-user-${i}`, 'contactForm')
+		}
+		expect(store.size).toBe(5)
+
+		// Advance time past the window so every seeded entry is expired.
+		vi.useFakeTimers()
+		vi.advanceTimersByTime(config.windowMs + 1000)
+
+		// A single fresh key triggers a prune of all expired entries.
+		await limiter.checkLimit('fresh-user', 'contactForm')
+
+		// Only the live key remains; the 5 expired entries were evicted.
+		expect(store.size).toBe(1)
+
+		limiter.destroy()
+	})
+})
+
+describe('BUG-02 Redis count+TTL is atomic', () => {
+	let callOrder: string[]
+
+	beforeEach(() => {
+		callOrder = []
+		// Turn on Redis mode for the constructor.
+		testEnv.UPSTASH_REDIS_REST_URL = 'https://example.upstash.io'
+		testEnv.UPSTASH_REDIS_REST_TOKEN = 'test-token'
+
+		// Stub the dynamic `@upstash/redis` import. Record the exact command
+		// sequence the limiter issues so we can prove the TTL is established
+		// atomically with the first write (SET NX EX) rather than via a
+		// separate, race-prone expire() after incr().
+		mock.module('@upstash/redis', () => ({
+			Redis: class {
+				async set(
+					_key: string,
+					_value: number,
+					opts: { nx?: boolean; ex?: number }
+				) {
+					callOrder.push(
+						`set:nx=${opts?.nx ? 1 : 0}:ex=${opts?.ex ?? 0}`
+					)
+					return 'OK'
+				}
+				async incr(_key: string) {
+					callOrder.push('incr')
+					return 1
+				}
+				async expire() {
+					callOrder.push('expire')
+					return 1
+				}
+			}
+		}))
+	})
+
+	afterEach(() => {
+		testEnv.UPSTASH_REDIS_REST_URL = undefined
+		testEnv.UPSTASH_REDIS_REST_TOKEN = undefined
+		mock.restore()
+	})
+
+	it('establishes the TTL with the first write (SET NX EX) then INCR, never bare incr+expire', async () => {
+		const limiter = new UnifiedRateLimiter()
+		const allowed = await limiter.checkLimit('redis-user', 'contactForm')
+
+		// Behavior unchanged for callers: first request under the limit -> true.
+		expect(allowed).toBe(true)
+
+		// The atomic primitive: SET key 0 NX EX window, THEN INCR.
+		expect(callOrder[0]).toBe(
+			`set:nx=1:ex=${Math.ceil(RATE_LIMIT_CONFIGS.contactForm.windowMs / 1000)}`
+		)
+		expect(callOrder[1]).toBe('incr')
+		// The non-atomic standalone expire() must NOT be used.
+		expect(callOrder).not.toContain('expire')
+
+		limiter.destroy()
 	})
 })
 
