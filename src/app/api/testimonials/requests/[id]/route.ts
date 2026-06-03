@@ -4,6 +4,7 @@
  */
 
 import type { NextRequest } from 'next/server'
+import { z } from 'zod'
 import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper'
 import { errorResponse, successResponse } from '@/lib/api/responses'
 import { validateAdminAuth } from '@/lib/auth/admin'
@@ -13,6 +14,8 @@ import { deleteTestimonialRequest } from '@/lib/testimonials'
 interface RouteParams {
 	params: Promise<{ id: string }>
 }
+
+const idSchema = z.string().uuid()
 
 async function handleTestimonialRequestDelete(
 	request: NextRequest,
@@ -25,11 +28,14 @@ async function handleTestimonialRequestDelete(
 		}
 
 		const { id } = await params
+		if (!idSchema.safeParse(id).success) {
+			return errorResponse('Invalid request id', 400)
+		}
 
 		const success = await deleteTestimonialRequest(id)
 
 		if (!success) {
-			return errorResponse('Failed to delete request', 500)
+			return errorResponse('Request not found', 404)
 		}
 
 		logger.info('Testimonial request deleted', {
