@@ -14,6 +14,29 @@ const testEnv = (
 	globalThis as unknown as { __TEST_ENV: Record<string, unknown> }
 ).__TEST_ENV
 
+// The BUG-02 tests below exercise the REAL UnifiedRateLimiter internals
+// (private store pruning, the @upstash/redis call sequence). Sibling suites
+// that call setupApiMocks() register a process-global mock.module(
+// '@/lib/rate-limiter', ...) that replaces the class with a mock lacking those
+// internals, and that registration is never unregistered (oven-sh/bun#7823).
+// A unique query-string specifier is a distinct module key in bun, so it
+// bypasses the alias mock and forces a FRESH eval of the real, lightweight
+// source (env + logger only; @upstash/redis is a dynamic import we still
+// stub via the alias). Order-independent.
+const REAL_RATE_LIMITER_SPECIFIER = new URL(
+	'../../src/lib/rate-limiter.ts',
+	import.meta.url
+).pathname
+
+async function loadRealRateLimiterClass(): Promise<
+	typeof UnifiedRateLimiter
+> {
+	const mod = (await import(
+		`${REAL_RATE_LIMITER_SPECIFIER}?fresh=${Date.now()}-${Math.random()}`
+	)) as { UnifiedRateLimiter: typeof UnifiedRateLimiter }
+	return mod.UnifiedRateLimiter
+}
+
 describe('UnifiedRateLimiter', () => {
 	let limiter: UnifiedRateLimiter
 
@@ -227,7 +250,8 @@ describe('BUG-02 in-memory fallback is bounded (lazy prune)', () => {
 		// outage checkLimit falls through to _checkLimitInMemory, which never
 		// pruned entries it did not touch -> store grew unbounded. The fix
 		// prunes expired entries on every call.
-		const limiter = new UnifiedRateLimiter()
+		const RealLimiter = await loadRealRateLimiterClass()
+		const limiter = new RealLimiter()
 		const store = (
 			limiter as unknown as { store: Map<string, unknown> }
 		).store
@@ -298,7 +322,8 @@ describe('BUG-02 Redis count+TTL is atomic', () => {
 	})
 
 	it('establishes the TTL with the first write (SET NX EX) then INCR, never bare incr+expire', async () => {
-		const limiter = new UnifiedRateLimiter()
+		const RealLimiter = await loadRealRateLimiterClass()
+		const limiter = new RealLimiter()
 		const allowed = await limiter.checkLimit('redis-user', 'contactForm')
 
 		// Behavior unchanged for callers: first request under the limit -> true.
