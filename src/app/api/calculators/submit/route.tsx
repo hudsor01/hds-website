@@ -22,18 +22,52 @@ import { getResendClient, isResendConfigured } from '@/lib/resend-client'
 import { scheduleEmail } from '@/lib/scheduled-emails'
 import { calculatorLeads } from '@/lib/schemas/leads'
 
+// Caps on the free-form JSON columns (inputs/results). These are persisted
+// verbatim, so an unbounded payload is a storage-bloat / payload-DoS vector.
+// The byte cap is the real protection: it bounds total serialized size
+// regardless of nesting depth, so a separate depth limit is unnecessary. The
+// key-count cap is a cheap early reject for wide-but-shallow objects. The
+// lead-scoring code only reads a handful of known keys, so 16KB / 100 keys is
+// generous for any legitimate calculator submission.
+const MAX_JSON_BYTES = 16 * 1024
+const MAX_JSON_KEYS = 100
+
+function isWithinJsonCaps(value: Record<string, unknown>): boolean {
+	if (Object.keys(value).length > MAX_JSON_KEYS) {
+		return false
+	}
+	return JSON.stringify(value).length <= MAX_JSON_BYTES
+}
+
 // Schema for calculator submission
-const calculatorSubmitSchema = z.object({
-	calculator_type: z.enum([
-		'roi-calculator',
-		'cost-estimator',
-		'performance-calculator',
-		'texas-ttl-calculator'
-	]),
-	email: z.string().email('Invalid email address').toLowerCase().trim(),
-	inputs: z.record(z.string(), z.unknown()),
-	results: z.record(z.string(), z.unknown()).optional().default({})
-})
+const calculatorSubmitSchema = z
+	.object({
+		calculator_type: z.enum([
+			'roi-calculator',
+			'cost-estimator',
+			'performance-calculator',
+			'texas-ttl-calculator'
+		]),
+		email: z.string().email('Invalid email address').toLowerCase().trim(),
+		inputs: z.record(z.string(), z.unknown()),
+		results: z.record(z.string(), z.unknown()).optional().default({})
+	})
+	.superRefine((data, ctx) => {
+		if (!isWithinJsonCaps(data.inputs)) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				path: ['inputs'],
+				message: 'Calculator inputs payload too large'
+			})
+		}
+		if (!isWithinJsonCaps(data.results)) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				path: ['results'],
+				message: 'Calculator results payload too large'
+			})
+		}
+	})
 
 const logger = createServerLogger('calculator-api')
 

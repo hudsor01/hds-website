@@ -16,6 +16,8 @@ interface RouteParams {
 	params: Promise<{ id: string }>
 }
 
+const idSchema = z.string().uuid()
+
 const updateSchema = z.object({
 	approved: z.boolean().optional(),
 	featured: z.boolean().optional()
@@ -32,6 +34,10 @@ async function handlePatchTestimonial(
 		}
 
 		const { id } = await params
+		if (!idSchema.safeParse(id).success) {
+			return errorResponse('Invalid testimonial id', 400)
+		}
+
 		const rawBody = await request.json()
 		const parsed = updateSchema.safeParse(rawBody)
 		if (!parsed.success) {
@@ -46,7 +52,7 @@ async function handlePatchTestimonial(
 		})
 
 		if (!success) {
-			return errorResponse('Failed to update testimonial', 500)
+			return errorResponse('Testimonial not found', 404)
 		}
 
 		logger.info('Testimonial updated', {
@@ -79,11 +85,14 @@ async function handleDeleteTestimonial(
 		}
 
 		const { id } = await params
+		if (!idSchema.safeParse(id).success) {
+			return errorResponse('Invalid testimonial id', 400)
+		}
 
 		const success = await deleteTestimonial(id)
 
 		if (!success) {
-			return errorResponse('Failed to delete testimonial', 500)
+			return errorResponse('Testimonial not found', 404)
 		}
 
 		logger.info('Testimonial deleted', {
