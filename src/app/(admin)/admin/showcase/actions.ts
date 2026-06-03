@@ -23,7 +23,6 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import type { ZodError } from 'zod'
 import { requireAdminSession } from '@/lib/admin/auth'
 import { isUniqueViolation } from '@/lib/admin/db-errors'
 import { formDataToObject } from '@/lib/admin/form-data'
@@ -33,6 +32,7 @@ import {
 	toggleShowcasePublished,
 	updateShowcase
 } from '@/lib/admin/showcase-queries'
+import { flattenZod } from '@/lib/admin/zod-errors'
 import { logger } from '@/lib/logger'
 import {
 	createShowcaseSchema,
@@ -42,17 +42,6 @@ import {
 export type ActionResult =
 	| { ok: true; id?: string }
 	| { ok: false; errors: Record<string, string> }
-
-function flattenZod(error: ZodError): Record<string, string> {
-	const out: Record<string, string> = {}
-	for (const issue of error.issues) {
-		const path = issue.path.join('.') || '_form'
-		if (!(path in out)) {
-			out[path] = issue.message
-		}
-	}
-	return out
-}
 
 /**
  * Translate the raw FormData (everything-is-a-string) into a shape Zod can

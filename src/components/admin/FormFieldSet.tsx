@@ -24,7 +24,7 @@
  */
 import type { ReactNode } from 'react'
 
-export type FieldRenderProps = {
+type FieldRenderProps = {
 	id: string
 	'aria-describedby'?: string
 	'aria-invalid'?: 'true'
