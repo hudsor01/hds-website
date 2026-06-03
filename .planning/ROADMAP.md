@@ -364,6 +364,75 @@ Plans:
 | 17. test-suite-isolation | 1/1 | Complete | 2026-06-02 |
 | 18. dependency-currency | 1/1 | Complete | 2026-06-02 |
 
+## Milestone v8 — Hardening
+
+> Started 2026-06-03. Driven by a post-v7 repo review (two reviewer agents + `bun audit` + `fallow` code-intelligence). Goal: patch known dependency vulnerabilities, fix the real correctness bugs, and clean up conventions / dead code / duplication. Phase numbering continues from v7 (last phase 18), so v8 runs Phase 19 through Phase 21.
+>
+> **Milestone decision (verified-findings-only):** fix the VERIFIED findings; re-verify the REPORTED ones at plan time. Excludes two fallow false-positives — `icon0`/`icon1` are Next icon routes (not dead), and the duplicate `deleteTestimonial` export is an intentional documented re-export. Defers the complexity hotspots (7 admin `list*ForAdmin`, `card.tsx`) — they work, are tested, and maintainability is 92.9.
+>
+> **Sequence:** 19 dependency-security -> 20 correctness-bugs -> 21 code-hygiene. Each ships as its own code-only PR.
+
+### Phases
+
+| # | Slug | Status | Plans | Severity | Description |
+|---|---|---|---|---|---|
+| 19 | `dependency-security` | not started | TBD | HIGH | Patch the 5 known `bun audit` vulnerabilities (`fast-uri` x2 high, `postcss` + `brace-expansion` moderate; all transitive via react-email / @sentry / next / tailwind / sanitize-html) via `bun update` + targeted overrides, then a clean re-audit (or document any remaining advisory as transitive-build-only). Build + full suite stay green. SEC-01. |
+| 20 | `correctness-bugs` | not started | TBD | HIGH | Fix the real correctness bugs with regression tests: BUG-01 scheduled-email double-send race (atomic claim before send; dual GET/POST endpoint), BUG-02 rate-limiter unbounded in-memory store during a Redis outage + non-atomic Redis incr/expire, BUG-03 `testimonials/[id]` returns 200-on-missing / 500-on-malformed instead of 404/400 (rows-affected + UUID validation), BUG-04 `calculators/submit` stores unbounded public JSON. |
+| 21 | `code-hygiene` | not started | TBD | LOW | CLEAN-01 fix the `pagespeed:217` user-facing em-dash; CLEAN-02 prune the dead exports/types fallow found; CLEAN-03 dedupe `flattenZod`/`ActionResult` (x6 admin actions) + the `NewsletterSignup` self-duplication; CLEAN-04 drop the 9 unsound `error as Error` casts; CLEAN-05 fix stale `CLAUDE.md` (`src/lib/errors.ts` gone) + verify favicons serve + confirm prod `BASE_URL`. |
+
+### Phase 19: dependency-security
+
+**Goal**: No known-vulnerable dependencies ship. `bun audit` is clean, or every remaining advisory is a documented transitive-build-only path with no runtime exposure; the app builds and the full suite passes on the patched tree.
+**Depends on**: Nothing (first v8 phase)
+**Requirements**: SEC-01
+**Success Criteria** (what must be TRUE):
+
+  1. The 2 HIGH `fast-uri` advisories (host confusion, path traversal) are resolved (patched transitive version) or documented as unreachable build-only.
+  2. The `postcss` (XSS) + `brace-expansion` (DoS) moderate advisories are resolved or documented; the `postcss`-via-`sanitize-html` runtime path is specifically addressed.
+  3. `bun audit` reports 0 actionable vulnerabilities (or a recorded risk-acceptance for any that cannot be patched without a breaking major bump); `bun run build` + full `bun test tests/` stay green.
+
+**Notes**: All 5 are transitive. Prefer `bun update` (compatible) first; use a `package.json` resolution/override only where the direct dep won't pull the patched transitive. Do NOT take breaking major bumps. Code-only PR.
+**Plans**: TBD (set during plan-phase)
+
+### Phase 20: correctness-bugs
+
+**Goal**: The verified correctness defects are fixed with regression tests so they cannot silently recur: no double-sent emails, no rate-limiter memory leak / zombie keys, correct testimonials HTTP contracts, and no unbounded public JSON.
+**Depends on**: Nothing functionally; ordered after Phase 19.
+**Requirements**: BUG-01, BUG-02, BUG-03, BUG-04
+**Success Criteria** (what must be TRUE):
+
+  1. BUG-01: `processPendingEmails` atomically claims rows before sending; a test proves two overlapping runs send each email at most once.
+  2. BUG-02: the rate-limiter's in-memory store is bounded even when Redis is configured-but-failing; the Redis counter sets count+TTL atomically; tests cover both.
+  3. BUG-03: `testimonials/[id]` returns 404 for a missing id and 400 for a malformed (non-UUID) id, never 200/500; tests cover both.
+  4. BUG-04: `calculators/submit` rejects or caps oversized/arbitrary `inputs`/`results` JSON before insert; a test covers the cap.
+
+**Notes**: BUG-01/BUG-03 are VERIFIED; BUG-02 cleanup-gating is VERIFIED, its non-atomic incr/expire is REPORTED (confirm at plan time); BUG-04 is VERIFIED. Touches `scheduled-emails.tsx`, `rate-limiter.ts`, `testimonials.ts` + `api/testimonials/[id]/route.ts`, `api/calculators/submit/route.tsx`. Code-only PR + unit tests.
+**Plans**: TBD (set during plan-phase)
+
+### Phase 21: code-hygiene
+
+**Goal**: The codebase carries no user-facing dash violations, no dead exports/types, no avoidable duplication of shared helpers, and no unsound error casts; the project docs match reality.
+**Depends on**: Nothing functionally; ordered last.
+**Requirements**: CLEAN-01, CLEAN-02, CLEAN-03, CLEAN-04, CLEAN-05
+**Success Criteria** (what must be TRUE):
+
+  1. No user-facing em/en-dash (pagespeed:217 fixed; project-wide check clean).
+  2. The dead exports/types fallow flagged are removed or justified; `fallow dead-code` no longer reports them (excluding the framework-consumed false-positives).
+  3. `flattenZod` + `ActionResult` live in one shared admin module (not x6); the `NewsletterSignup` self-duplication is gone.
+  4. The 9 `error as Error` casts into `logger.error` are dropped; lint + typecheck stay clean.
+  5. `CLAUDE.md` no longer references the deleted `src/lib/errors.ts`; favicons (`icon0`/`icon1`) are confirmed serving (or renamed); prod `BASE_URL` is confirmed set (or the same-origin check hardened).
+
+**Notes**: Lowest-risk phase, all mechanical. Re-run `fallow dead-code`/`dupes` to confirm. Code-only PR.
+**Plans**: TBD (set during plan-phase)
+
+### v8 Progress
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 19. dependency-security | 0/0 | Not started | - |
+| 20. correctness-bugs | 0/0 | Not started | - |
+| 21. code-hygiene | 0/0 | Not started | - |
+
 ## Earlier milestones (archived)
 
 - v1 — initial 10 phases, shipped
