@@ -80,11 +80,13 @@ function makeDelete(
 
 describe('BUG-03 testimonials/[id] HTTP contract', () => {
 	beforeEach(() => {
-		setupApiMocks()
-		// Re-establish ADMIN_SECRET on the shared env: a prior suite may have left
-		// it unset under CI ordering, which would make the REAL validateAdminAuth
-		// return 503 before the contract logic runs. Mirrors health-route.test.ts.
+		// Re-establish ADMIN_SECRET on the shared env BEFORE setupApiMocks(): a
+		// prior suite (admin-auth) may have left it unset under CI ordering, and
+		// setupApiMocks bakes __TEST_ENV.ADMIN_SECRET's current value into its
+		// @/env mock — so setting it afterwards is too late and the REAL
+		// validateAdminAuth returns 503. Mirrors health-route.test.ts.
 		testEnv.ADMIN_SECRET = VALID_ADMIN_SECRET
+		setupApiMocks()
 		updateTestimonialStatusMock = mock().mockResolvedValue(true)
 		deleteTestimonialMock = mock().mockResolvedValue(true)
 		deleteTestimonialRequestMock = mock().mockResolvedValue(true)
