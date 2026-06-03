@@ -53,8 +53,14 @@ async function checkWithRedis(
 	try {
 		const { Redis } = await import('@upstash/redis')
 		const redis = new Redis({ url, token })
+		// Atomic count+TTL: SET key 0 with NX (only if the key is new) and EX
+		// (TTL) in a single command, then INCR. The TTL is therefore always
+		// established by the SAME write that creates the counter, so a crash
+		// can never leave a TTL-less zombie key (the prior non-atomic
+		// incr-then-expire could). On an existing key the NX SET is a no-op
+		// and INCR bumps the live count without resetting its window.
+		await redis.set(key, 0, { nx: true, ex: windowSeconds })
 		const current = await redis.incr(key)
-		await redis.expire(key, windowSeconds) // Always refresh TTL — idempotent
 		return current <= maxRequests
 	} catch {
 		// Redis not configured at runtime — caller falls through to in-memory store
@@ -145,6 +151,13 @@ export class UnifiedRateLimiter {
 		maxRequests: number,
 		windowMs: number
 	): boolean {
+		// Lazy prune on every call so the store stays bounded even when Redis
+		// is configured but failing at runtime (the constructor only starts the
+		// cleanup interval in pure in-memory mode; under a Redis outage that
+		// interval never runs, so this is the always-on bound). Serverless-safe:
+		// no timer to leak across invocations.
+		this.cleanup()
+
 		const now = Date.now()
 		const entry = this.store.get(identifier)
 
