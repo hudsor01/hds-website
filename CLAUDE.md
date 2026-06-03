@@ -74,7 +74,7 @@
 - Call `toast.success(...)`, `toast.error(...)` directly — no custom provider
 
 **Error Handling:**
-- Two independent `castError` helpers exist: `src/lib/errors.ts` returns `Error`, `src/lib/logger.ts` returns `ErrorLogData`. Pick the one whose return type matches the call site.
+- `src/lib/logger.ts` has a private `castError` that normalizes `unknown` to `ErrorLogData`. `logger.error(message, error?)` already accepts `Error | unknown` and normalizes internally, so pass the caught `error` directly. Do NOT cast (`error as Error`) before logging, and do NOT add a separate `instanceof Error ? ... : new Error(...)` re-cast for the logger.
 - Wrap async ops in try/catch
 - Log via `logger.error` — never `console.*`
 - Return user-friendly messages; never expose internals

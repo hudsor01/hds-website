@@ -8,7 +8,7 @@ import type { ContactFormData } from '@/lib/schemas/contact'
 
 export type { ContactFormData } from '@/lib/schemas/contact'
 
-export interface ContactFormResponse {
+interface ContactFormResponse {
 	success: boolean
 	message?: string
 	error?: string
