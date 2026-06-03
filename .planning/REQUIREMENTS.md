@@ -8,7 +8,7 @@
 
 ### Dependency security
 
-- [ ] **SEC-01**: The 5 known vulnerabilities from `bun audit` are resolved or risk-accepted with rationale: `fast-uri ≤3.1.1` (2 HIGH — host confusion + path traversal, transitive via `react-email` + `@sentry/nextjs`), `postcss <8.5.10` (moderate XSS via unescaped `</style>`, via `next` + `@tailwindcss/postcss` + `sanitize-html`), `brace-expansion` (moderate DoS). Achieved via `bun update` (+ targeted overrides if needed) then a clean `bun audit`, OR every remaining advisory documented as transitive-build-only with no runtime exposure. Build + full suite stay green.
+- [x] **SEC-01**: The 5 known vulnerabilities from `bun audit` are resolved or risk-accepted with rationale: `fast-uri ≤3.1.1` (2 HIGH — host confusion + path traversal, transitive via `react-email` + `@sentry/nextjs`), `postcss <8.5.10` (moderate XSS via unescaped `</style>`, via `next` + `@tailwindcss/postcss` + `sanitize-html`), `brace-expansion` (moderate DoS). Achieved via `bun update` (+ targeted overrides if needed) then a clean `bun audit`, OR every remaining advisory documented as transitive-build-only with no runtime exposure. Build + full suite stay green.
 
 ### Correctness bugs
 
@@ -38,7 +38,7 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SEC-01 | Phase 19 | Pending |
+| SEC-01 | Phase 19 | Complete |
 | BUG-01 | Phase 20 | Pending |
 | BUG-02 | Phase 20 | Pending |
 | BUG-03 | Phase 20 | Pending |
