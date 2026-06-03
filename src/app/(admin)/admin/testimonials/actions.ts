@@ -25,7 +25,6 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import type { ZodError } from 'zod'
 import { requireAdminSession } from '@/lib/admin/auth'
 import { formDataToObject } from '@/lib/admin/form-data'
 import {
@@ -34,6 +33,7 @@ import {
 	toggleTestimonialPublished,
 	updateTestimonial
 } from '@/lib/admin/testimonials-queries'
+import { flattenZod } from '@/lib/admin/zod-errors'
 import { logger } from '@/lib/logger'
 import {
 	createAdminTestimonialSchema,
@@ -43,17 +43,6 @@ import {
 export type ActionResult =
 	| { ok: true; id?: string }
 	| { ok: false; errors: Record<string, string> }
-
-function flattenZod(error: ZodError): Record<string, string> {
-	const out: Record<string, string> = {}
-	for (const issue of error.issues) {
-		const path = issue.path.join('.') || '_form'
-		if (!(path in out)) {
-			out[path] = issue.message
-		}
-	}
-	return out
-}
 
 export async function createTestimonialAction(
 	formData: FormData
