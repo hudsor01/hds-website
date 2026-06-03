@@ -1,46 +1,59 @@
-# Requirements: Hudson Digital Solutions — Milestone v7 (Stability and Maintenance)
+# Requirements: Hudson Digital Solutions — Milestone v8 (Hardening)
 
-**Defined:** 2026-06-02
-**Core Value:** CI is a trustworthy signal and the project runs on current, supported dependencies. The test suite passes the same whether a test runs in isolation or in the full suite, and there are no stale dependency PRs hiding behind a noisy suite.
-**Source of truth:** project memory `feedback_bun_mock_module_global_pollution.md` (the bun `mock.module` global-leak lesson) + the v6 deferred-items log (`.planning/phases/11-paystub-tax-accuracy/deferred-items.md`).
+**Defined:** 2026-06-03
+**Core Value:** The production code is secure (no known-vulnerable deps), contract-correct (no double-sends, no wrong HTTP statuses, no unbounded public input), and lean (no dead code, no user-facing dash violations, no unsound casts).
+**Source of truth:** the verified post-v7 repo review (this session) — two reviewer agents + `bun audit` + `fallow` code-intelligence. Findings tagged VERIFIED (confirmed in code) vs REPORTED (re-verify at plan time).
 
-## v7 Requirements
+## v8 Requirements
 
-### Test-suite isolation
+### Dependency security
 
-- [x] **TEST-01**: The full `bun test tests/` run is order-independent and produces 0 failures, matching the isolated per-file results. The ~21 `homepage.test.tsx` + `navigation.test.tsx` (Footer / HomePage / Navbar / Navigation) failures — caused by bun's process-global `mock.module` registering and never being cleared by `mock.restore()` (oven-sh/bun#7823), which freezes a shared module's exports (`@/lib/constants/business` -> `BUSINESS_INFO` undefined) for later suites — are eliminated by root-causing the leaking test(s), not by skipping/xfail/suppressing them. Root cause: a `.tsx` consumer/render test that `mock.module(...)` a shared dep AND imports a broad module graph poisons unrelated suites.
-- [x] **TEST-02**: A guard prevents reintroduction of the same class of leak — e.g. a documented + enforced convention (pure input->output unit tests over `mock.module` + JSX render where feasible; a setup-level reset or the `__REAL_*__` preload-capture pattern where a shared dep must be both mocked and asserted) plus a CI-level check that the full-suite pass count equals the sum of isolated runs. The fix is durable: re-running the suite repeatedly, and in any order bun chooses, stays 0-fail.
+- [ ] **SEC-01**: The 5 known vulnerabilities from `bun audit` are resolved or risk-accepted with rationale: `fast-uri ≤3.1.1` (2 HIGH — host confusion + path traversal, transitive via `react-email` + `@sentry/nextjs`), `postcss <8.5.10` (moderate XSS via unescaped `</style>`, via `next` + `@tailwindcss/postcss` + `sanitize-html`), `brace-expansion` (moderate DoS). Achieved via `bun update` (+ targeted overrides if needed) then a clean `bun audit`, OR every remaining advisory documented as transitive-build-only with no runtime exposure. Build + full suite stay green.
 
-### Dependency currency
+### Correctness bugs
 
-- [x] **DEP-01**: The 5 open Dependabot PRs (#327 dev-deps group of 5, #328 better-auth 1.6.12->1.6.13, #329 @tiptap/extension-link 3.24.0, #330 @tiptap/extension-image 3.24.0, #331 @tiptap/starter-kit 3.24.0) are each reviewed against current `main`: changelog/diff inspected, CI re-run on a clean (post-Phase-17) suite, and a per-PR merge/hold decision recorded with rationale. No PR is merged on a red or stale-base CI. (Resolved via consolidated PRs #341/#342/#343 merged CI-green; #327-331 closed-as-superseded with rationale — the Tiptap three omitted @tiptap/pm+react, and #327/#328 failed the frozen-lockfile CI.)
-- [x] **DEP-02**: The better-auth bump (#328) is verified behaviorally before merge — the auth flows that matter in this app (signup, session cookie via `@supabase/ssr`-style `getAll`/`setAll`, admin-role gating) still work; the bump is patch-level (1.6.12->1.6.13) so the check is a targeted smoke, not a re-architecture. (Merged 1.6.13 in #342, then 1.6.14 in #343 — both: typecheck + build incl. `/api/auth/[...all]` + suite green; patch, no breaking changes.)
-- [x] **DEP-03**: The three Tiptap 3.24.0 bumps (#329/#330/#331 — extension-link, extension-image, starter-kit) are verified together against the blog rich-text editor (links, images, core formatting render + persist) before merge, since they are a coupled set and starter-kit pulls peer extensions; the safe set is merged onto current `main` and any that regress the editor are held with a recorded reason. (Merged as one atomic bump of ALL FIVE @tiptap/* — incl. the pm+react the Dependabot PRs omitted — in #341; verified via build + tag-contract test + single-deduped prosemirror.)
+- [ ] **BUG-01**: The scheduled-email queue cannot double-send. `processPendingEmails` (`scheduled-emails.tsx`) atomically claims rows (`UPDATE … SET status='processing' … RETURNING`, or `FOR UPDATE SKIP LOCKED`) BEFORE the Resend call, so overlapping GET (Vercel cron) / POST (n8n) invocations or an overrunning run never send the same email twice. Regression test covers the claim semantics. (VERIFIED: select-then-send with no claim; dual-verb endpoint.)
+- [ ] **BUG-02**: The rate-limiter is safe under a Redis outage and atomic on the Redis path. The in-memory fallback store is bounded regardless of `useRedis` (cleanup runs even when Redis is configured), and the Redis counter sets count+TTL atomically (no TTL-less zombie keys). Test covers the fallback-cleanup path. (VERIFIED: cleanup only starts in the `!useRedis` branch. REPORTED: non-atomic `incr`+`expire`.)
+- [ ] **BUG-03**: The `testimonials/[id]` PATCH/DELETE endpoints return correct HTTP status: 404 for a non-existent id (the query layer reports rows-affected via `.returning()`), 400 for a malformed non-UUID id (route validates with `z.string().uuid()`), never a misleading 200 (success on missing) or 500 (Postgres `22P02` on garbage). Test covers missing + malformed ids. (VERIFIED: `updateTestimonialStatus`/`deleteTestimonial` return `true` unconditionally; no UUID validation.)
+- [ ] **BUG-04**: Public calculator submissions (`calculators/submit`) cannot persist unbounded/arbitrary JSON. `inputs`/`results` are shape-validated (per-calculator) or size/key-depth capped before insert, so a same-origin client cannot bloat the `calculator_leads` JSON columns. (VERIFIED: `z.record(z.string(), z.unknown())` stored verbatim, no cap.)
+
+### Code hygiene
+
+- [ ] **CLEAN-01**: No user-facing em-dash / en-dash. Fix `pagespeed/route.ts:217` (the `"…exceed our budget — try again…"` error string shipped to the browser) and re-run the project-wide dash check clean. (VERIFIED.)
+- [ ] **CLEAN-02**: The dead exports/types `fallow` flagged are removed or justified with a rationale comment: exports `isGoogleAdsConfigured` (`ad-conversions.ts`), `getCsrfTokenFromRequest` (`csrf.ts`), `getClientIpFromHeaders` (`request.ts`); types `ContactFormData`, `ContactFormResponse` (`use-contact-form-submit.ts`), `FieldRenderProps` (`FormFieldSet.tsx`), `ErrorReport` (`schemas/error-report.ts`). (Framework-consumed `metadata`/`runtime`/`icon`/`opengraph-image` exports are NOT dead — excluded.)
+- [ ] **CLEAN-03**: Duplication reduced: extract the `flattenZod` helper + `ActionResult` type (copy-pasted across 6 admin `actions.ts`) into a shared `src/lib/admin/` module; remove the `NewsletterSignup.tsx` self-duplication (the ~65-line block repeated at 118-181 ↔ 231-295). (VERIFIED via fallow + agent.)
+- [ ] **CLEAN-04**: The 9 unsound + unnecessary `error as Error` casts feeding `logger.error` (calculator `storage.ts` modules + `use-paystub-calculator.ts` + `Calculator.tsx`) are dropped (`logger.error` already accepts `unknown` and normalizes). The 2 `any` in `ShowcaseFormFields.tsx` stay (`biome-ignore`'d for the TanStack Form generic) unless a clean type is trivial.
+- [ ] **CLEAN-05**: `CLAUDE.md` corrected — it documents two `castError` helpers but `src/lib/errors.ts` no longer exists (only `logger.ts`'s private one); update the guidance. Confirm `icon0.tsx`/`icon1.tsx` actually serve as favicons (192/512) — rename to the supported Next convention if not. Confirm `BASE_URL` is set in the prod Vercel env (else the `request.ts` same-origin check 403s all public form POSTs) — or harden the check to fall back to the request host / `NEXT_PUBLIC_BASE_URL`.
 
 ## Out of Scope
 
 | Item | Reason |
 |------|--------|
-| Major-version dependency upgrades beyond what Dependabot opened | v7 is currency + stability, not a framework migration. Only the 5 open PRs are in scope. |
-| Rewriting the homepage/navigation tests from RTL to a different framework | The failures are a mock-leak side effect, not a test-framework problem; fix the leak, keep RTL. |
-| Adding new test coverage for untested surfaces | v7 makes the existing suite trustworthy; net-new coverage is a separate concern. |
-| Changing the env-gated no-op integrations confirmed in v6 (NOOP-01) | Verified correct-by-design; untouched. |
+| Removing `icon0.tsx`/`icon1.tsx` as "dead code" | fallow false-positive — they are Next.js dynamic icon routes (framework-consumed). Only verify/rename if they don't serve. |
+| "Fixing" the duplicate `deleteTestimonial` export | Intentional, documented re-export of one impl — not a duplicate implementation. |
+| Refactoring the 7 admin `list*ForAdmin` complexity hotspots + `card.tsx` union casts | fallow flagged them (cognitive 30-42) but they work and are well-tested; maintainability is 92.9 (good). Deferred — not a v8 defect. |
+| Deduping the e2e-spec clone families (most of the 11.8% duplication) | Test boilerplate; low risk, separate cleanup. CLEAN-03 covers only the runtime dupes. |
 
 ## Traceability
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TEST-01 | Phase 17 | Complete |
-| TEST-02 | Phase 17 | Complete |
-| DEP-01 | Phase 18 | Complete |
-| DEP-02 | Phase 18 | Complete |
-| DEP-03 | Phase 18 | Complete |
+| SEC-01 | Phase 19 | Pending |
+| BUG-01 | Phase 20 | Pending |
+| BUG-02 | Phase 20 | Pending |
+| BUG-03 | Phase 20 | Pending |
+| BUG-04 | Phase 20 | Pending |
+| CLEAN-01 | Phase 21 | Pending |
+| CLEAN-02 | Phase 21 | Pending |
+| CLEAN-03 | Phase 21 | Pending |
+| CLEAN-04 | Phase 21 | Pending |
+| CLEAN-05 | Phase 21 | Pending |
 
 **Coverage:**
-- v7 requirements: 5 total
-- Mapped to phases: 5 (Phases 17-18)
+- v8 requirements: 10 total
+- Mapped to phases: 10 (Phases 19-21)
 - Unmapped: 0
 
 ---
-*Requirements defined: 2026-06-02 (v7 Stability and Maintenance milestone start)*
-*v6 requirements archived to `.planning/milestones/v6-REQUIREMENTS.md`*
+*Requirements defined: 2026-06-03 (v8 Hardening milestone start)*
+*v7 requirements archived to `.planning/milestones/v7-REQUIREMENTS.md`*

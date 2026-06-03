@@ -23,21 +23,20 @@ The marketing site for Hudson Digital Solutions: a one-developer web design & bu
 - Site-wide CTA: `Get My Free Website Plan`
 - Banned in copy: em-dash (—), en-dash (–). Replace with comma, period, hyphen, or `to` for ranges. Codified in `CLAUDE.md`.
 
-## Current Milestone: v7 Stability & Maintenance
+## Current Milestone: v8 Hardening
 
-**Goal:** Make the test suite trustworthy and the dependencies current, so CI is a reliable signal and the project stays on supported library versions.
+**Goal:** Close the issues surfaced by the post-v7 repo review (two reviewer agents + `bun audit` + `fallow` code-intelligence): patch known dependency vulnerabilities, fix the real correctness bugs, and clean up conventions / dead code / duplication — so the production code is secure, contract-correct, and lean.
 
 **Target features:**
-- The full `bun test tests/` run is order-independent and matches isolated runs (0 fail). The ~21 homepage/navigation/Footer RTL failures are eliminated by root-causing and fixing bun's process-global `mock.module` leak, not by patching the symptom; a guard prevents reintroduction.
-- The 5 open Dependabot PRs are reviewed, verified (auth flows for better-auth; the blog rich-text editor for the Tiptap bumps), and the safe ones merged onto current `main`.
+- **Dependency security:** the 5 known vulnerabilities (`fast-uri` x2 high, `postcss`, `brace-expansion` moderate) are patched or risk-accepted with rationale; `bun audit` is clean or every remaining advisory is documented transitive-build-only.
+- **Correctness:** the scheduled-email queue cannot double-send (atomic claim before send); the rate-limiter's in-memory fallback is bounded during a Redis outage and its Redis path is atomic; the `testimonials/[id]` endpoints return correct 404/400 (not 200/500); public calculator submissions cannot store unbounded JSON.
+- **Hygiene:** no user-facing em/en-dash (fix `pagespeed:217`); dead exports/types pruned; `flattenZod`/`ActionResult` and the `NewsletterSignup` self-duplication deduped; unsound `error as Error` casts dropped; stale `CLAUDE.md` (`src/lib/errors.ts`) corrected; favicons (`icon0`/`icon1`) confirmed serving.
 
 **Milestone decisions:**
-- **Fix the root cause, not the symptom:** the test-pollution is a bun `mock.module` global-registry leak (un-cleared by `mock.restore()`) — fix the leaking tests so the suite is order-independent; do not suppress/skip the failing tests.
-- **Sequence:** test-isolation first, then dependency currency — the dep PRs' CI Test job hits the same pollution (e.g. #331 is failing), so a clean suite makes their CI trustworthy.
+- **Source of truth = the verified review findings** (this session). Each finding was marked VERIFIED (confirmed in code) or REPORTED; fix the verified ones, re-verify the REPORTED ones at plan time. Two fallow false-positives are excluded: `icon0`/`icon1` are Next icon routes (not dead), and the duplicate `deleteTestimonial` is an intentional documented re-export.
+- **Sequence:** Phase 19 dependency-security (isolated, fast) -> Phase 20 correctness-bugs (tested fixes) -> Phase 21 code-hygiene. Each ships as its own code-only PR.
 
-**Source of truth:** the bun mock.module lesson in project memory (`feedback_bun_mock_module_global_pollution.md`) + the v6 deferred-items log.
-
-> **Prior milestones:** v6 Audit Remediation closed (audit PASSED, `.planning/milestones/v6-AUDIT.md`). v3 / v4 / v5 shipped earlier. See `.planning/ROADMAP.md` + `.planning/STATE.md` for full history.
+> **Prior milestones:** v7 Stability and Maintenance closed (audit PASSED, `.planning/milestones/v7-AUDIT.md`); v6 Audit Remediation closed (`v6-AUDIT.md`). v3 / v4 / v5 shipped earlier. See `.planning/ROADMAP.md` + `.planning/STATE.md` for full history.
 
 ## What's in scope for GSD work
 

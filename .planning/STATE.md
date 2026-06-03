@@ -1,30 +1,29 @@
 ---
 gsd_state_version: 1.0
-milestone: v7
-milestone_name: Stability and Maintenance
-current_phase: none (milestone closed)
-current_plan: none
-status: closed
-last_updated: "2026-06-03T02:00:00.000Z"
-last_activity: 2026-06-02 — v7 Stability and Maintenance CLOSED (audit PASSED)
+milestone: v8
+milestone_name: Hardening
+status: planning
+last_updated: "2026-06-03T01:43:57.338Z"
+last_activity: 2026-06-03
 progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 2
-  completed_plans: 2
-  percent: 100
+  total_phases: 3
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # STATE — Current GSD Position
 
-**Last updated:** 2026-06-02
+**Last updated:** 2026-06-03
 **Branch:** `main`
-**Current milestone:** v7 Stability and Maintenance — CLOSED (audit PASSED)
-**Current phase:** none (milestone closed)
+**Current milestone:** v8 Hardening — PLANNING
+**Current phase:** none yet (roadmap pending: phases 19 dependency-security, 20 correctness-bugs, 21 code-hygiene)
 **Current plan:** none
 
 ## What just happened
 
+- **v8 milestone STARTED — Hardening.** Driven by a post-v7 repo review (2 reviewer agents + `bun audit` + `fallow` code-intelligence). Three phases: **19 dependency-security** (SEC-01: patch the 5 known vulns — `fast-uri` x2 high, `postcss`/`brace-expansion` moderate — via `bun update` + re-audit), **20 correctness-bugs** (BUG-01 email-queue double-send race -> atomic claim; BUG-02 rate-limiter unbounded in-memory store during Redis outage + non-atomic incr/expire; BUG-03 `testimonials/[id]` 200-on-missing / 500-on-malformed -> 404/400 with rows-affected + UUID validation; BUG-04 calculators/submit unbounded JSON cap), **21 code-hygiene** (CLEAN-01 pagespeed:217 user-facing em-dash; CLEAN-02 prune dead exports/types fallow found; CLEAN-03 dedupe flattenZod/ActionResult x6 + NewsletterSignup self-dupe; CLEAN-04 drop 9x unsound `error as Error` casts; CLEAN-05 fix stale CLAUDE.md `src/lib/errors.ts` ref + verify favicons icon0/icon1 serve + BASE_URL prod check). **Excluded fallow false-positives:** icon0/icon1 are Next icon routes (not dead), duplicate `deleteTestimonial` is an intentional re-export. Sequence 19 -> 20 -> 21, each its own code-only PR. v7 REQUIREMENTS already archived; fresh v8 REQUIREMENTS written. Roadmapper to APPEND phases 19-21 to the ROADMAP (do NOT truncate v3-v7 history, currently 371 lines).
 - **v7 milestone CLOSED — Stability and Maintenance complete.** Both phases shipped to `origin/main` and merged CI-green: Phase 17 test-suite-isolation (PR #340) and Phase 18 dependency-currency (PRs #341/#342/#343; Dependabot #327-331 closed-as-superseded). Milestone audit verdict **PASSED, 5/5 requirements satisfied** — canonical record at `.planning/milestones/v7-AUDIT.md`. Original intent fully delivered: the test suite is order-independent and 0-fail (1052/21 -> 1073/0) with the `mock.module` leak root-fixed + a CI-enforced guard (`scripts/check-test-mock-leaks.sh`), and every target dependency is on its latest published version (better-auth 1.6.14, next 16.2.7, react/react-dom 19.2.7, @types/react 19.2.16, knip 6.15.0, all @tiptap/* 3.24.0) with zero open Dependabot PRs. Closed lightly per the v5/v6 convention (AUDIT doc is the record; no skill-archival / no ROADMAP collapse / no tag). v7 REQUIREMENTS archived to `.planning/milestones/v7-REQUIREMENTS.md`. **Open follow-up (not a v7 gap):** local `main` reconcile (`git merge origin/main`) is gated for the agent; reported done by the operator but this working copy still shows local `main` 10 behind origin with pre-bump deps — re-run if needed. `origin/main` is complete and is the source of truth.
 - **Phase 18 (`dependency-currency`) complete — DEP-01 + DEP-02 + DEP-03.** Reviewed all 5 open Dependabot PRs against official changelogs and resolved them via 3 verified, CI-green, code-only PRs (merged to `origin/main`): **#341** all five `@tiptap/*` 3.23.6->3.24.0 (extension-image/link/pm/react/starter-kit, one atomic bump + regenerated lockfile), **#342** next 16.2.7 + react/react-dom 19.2.7 + @types/react 19.2.16 + knip 6.15.0 + better-auth 1.6.13, **#343** better-auth 1.6.13->1.6.14 (latest; published mid-flight). **Closed-as-superseded:** #327, #328, #329, #330, #331 (each with a comment). **Why consolidation, not direct Dependabot merges:** (1) the 3 Tiptap PRs each bumped ONE package and omitted `@tiptap/pm` + `@tiptap/react` (also 3.23.6) — merging any subset installs two ProseMirror copies and crashes `RichTextEditor.tsx` (`keyed plugin` RangeError); (2) #327/#328 failed CI with `lockfile had changes, but lockfile is frozen` (the repo's fix-lockfile job doesn't produce a frozen-compatible bun.lock; rebase/recreate didn't fix it). Both resolved by regenerating a consistent lockfile on controlled branches and confirming the frozen install passes in CI (bun 1.3.8). **Final dep state on main = all latest:** better-auth 1.6.14, next 16.2.7, react/react-dom 19.2.7, @types/react 19.2.16, knip 6.15.0, @tiptap/* 3.24.0. **Verification:** all bumps non-breaking per official changelogs; DEP-02 = typecheck+build (incl. `/api/auth/[...all]`)+suite on 1.6.13 and 1.6.14; DEP-03 = build (incl. `/admin/blog` RichTextEditor)+suite+rich-text-editor tag-contract test 4/0+single-deduped prosemirror/core/pm; full `bun test tests/` 1073 pass / 0 fail held across every branch (Phase-17 guard intact); zero open Dependabot PRs remain. SUMMARY at `.planning/phases/18-dependency-currency/18-01-SUMMARY.md`; VERIFICATION passed. **v7 phases now 2/2 complete (100%)** — ready for milestone audit/close. **Operator action:** reconcile local `main` (`git merge origin/main` — gated for the agent; #340/#341/#342/#343 are all on origin/main).
 - **Phase 17 Plan 01 (`test-suite-isolation`) complete — TEST-01 + TEST-02 (3 commits: `e6ff4d7a`, `02d74b2c`, `922a7558`).** Root-fixed the process-global `mock.module` leak that produced the ~21 homepage/navigation/Footer failures only under full-suite ordering. **TEST-01:** `tests/unit/ttl-calculator-actions.test.ts::setupCommonMocks()` reduced from 7 `mock.module` calls to exactly 2 — only the real boundaries `@/lib/db` + `@/lib/resend-client` stay mocked. Deleted the redundant `@/env` + `@/lib/logger` overrides (already mocked completely by `tests/setup.ts`) and the partial `@/lib/utils` (was dropping `cn` -> `SyntaxError: Export named 'cn' not found` suite-wide), `@/lib/constants/business` (was dropping `links.facebook`), and `@/lib/schemas/ttl` (stub; real Drizzle table now used, the db mock still intercepts execution). No `.skip`/`xfail`/deletion of any assertion; no `src/**` change. **TEST-02:** new `scripts/check-test-mock-leaks.sh` — a deterministic denylist grep (`command grep` + `--exclude` so it's correct even where `grep` is aliased to ripgrep) that fails if any per-file test partial-mocks `@/lib/utils` or `@/lib/constants/*` outside `tests/setup.ts`; wired into the local `test:unit` script and the CI Code Quality job; plus a bun#7823 convention note at the top of `tests/setup.ts`. **Verify-then-revert proof:** reintroduced the `@/lib/utils` partial mock -> guard exit 1 naming the offender; reverted -> exit 0 (leak never committed; final `grep -c mock.module` == 2). **Test counts observed:** baseline 1052 pass / 21 fail -> after fix **1073 pass / 0 fail**, stable across two consecutive full runs; worst-case ordering (ttl, homepage, navigation) 45 pass / 0 fail; ttl-calculator-actions 10 pass / 0 fail in isolation. **Gate:** `bun run lint` clean (413 files), `bun run typecheck` clean. **Deviation (Rule 1):** the guard's original two-grep pipeline silently passed on a leak in the dev shell (grep aliased to ripgrep changed the invert-filter semantics); fixed to single-pass `command grep` + `--exclude` (commit `922a7558`). **Env note (non-blocking):** `bun run test:unit` aborts under this machine's safe-chain `bun` shell-function wrapper (nested `bun` mis-resolves); the real `bun` binary (1.3.14) runs the chain cleanly (guard OK -> 1073/0), and CI uses a clean shell, so this does not affect CI. **Phase 18 (dependency-currency) is now unblocked** — the Dependabot PRs' CI Test job no longer hits the pollution. SUMMARY at `.planning/phases/17-test-suite-isolation/17-01-SUMMARY.md`. ROADMAP line count preserved (371).
@@ -117,4 +116,4 @@ Operator follow-up still outstanding (independent of v6):
 Phase: Not started (defining requirements)
 Plan: —
 Status: Defining requirements
-Last activity: 2026-06-02 — Milestone v7 started
+Last activity: 2026-06-03 — Milestone v8 started
