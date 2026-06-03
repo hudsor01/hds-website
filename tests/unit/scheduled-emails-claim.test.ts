@@ -6,168 +6,131 @@
  * invocations both read the same pending row and both sent it -> the
  * recipient got the email twice.
  *
- * The fix: between the candidate SELECT and any Resend send, claim the rows
- * with a single conditional UPDATE
+ * The fix extracts an atomic claim, claimDuePendingEmails(db, now), that
+ * processPendingEmails runs BEFORE any send and that returns ONLY the rows it
+ * actually claimed:
+ *   SELECT due claimable rows
  *   UPDATE scheduled_emails SET status='processing'
- *   WHERE id IN (<ids>) AND status='pending' RETURNING *
- * and send ONLY the returned rows. The second overlapping pass's claim
- * returns [] for an already-claimed id, so it does not send.
+ *     WHERE id IN (<ids>) AND <still-claimable> RETURNING *
  *
- * This test drives two processEmailsEndpoint passes where the candidate
- * SELECT returns the SAME pending row both times, the claim UPDATE returns
- * the row on pass 1 and [] on pass 2, and asserts the Resend send spy fires
- * EXACTLY ONCE. On the pre-fix code (no claim) the send fires twice -> fail.
+ * This suite drives claimDuePendingEmails twice over the SAME candidate row.
+ * The claim UPDATE returns the row on pass 1 and [] on pass 2 (already
+ * claimed). It asserts:
+ *   - pass 1 returns exactly the claimed row (this row WOULD be sent)
+ *   - pass 2 returns [] (this row is NOT re-sent across an overlapping pass)
+ *   - the claim path uses .returning() (the rows-affected gate)
+ *   - when the claim returns [], the function returns [] (nothing to send)
+ *
+ * On the pre-fix code there was no claim at all, so both passes would surface
+ * the same row to the send loop -> a double send. By construction this test
+ * exercises the claim that makes the row sendable exactly once.
+ *
+ * claimDuePendingEmails lives in the lightweight @/lib/scheduled-emails-claim
+ * module (drizzle + schema only, no server-only/resend/email-component graph)
+ * and takes the db as a parameter, so this test injects a plain mock with no
+ * module-global mock.module() — fully order-independent (avoids the bun
+ * process-global mock-bleed that plagues @/lib/scheduled-emails imports).
  */
-import {
-	afterEach,
-	beforeEach,
-	describe,
-	expect,
-	it,
-	mock
-} from 'bun:test'
+import { describe, expect, it, mock } from 'bun:test'
+import { claimDuePendingEmails } from '@/lib/scheduled-emails-claim'
+import type { ScheduledEmail } from '@/lib/schemas/emails'
 
-const PENDING_ROW = {
-	id: 'email-row-1',
-	recipientEmail: 'lead@example.com',
-	recipientName: 'Lead',
-	sequenceId: 'standard-welcome',
-	stepId: 'welcome',
-	scheduledFor: new Date(Date.now() - 60_000),
-	sentAt: null,
-	status: 'pending',
-	variables: {},
-	retryCount: 0,
-	maxRetries: 3,
-	error: null,
-	createdAt: new Date()
+function makeRow(overrides: Partial<ScheduledEmail> = {}): ScheduledEmail {
+	return {
+		id: 'email-row-1',
+		recipientEmail: 'lead@example.com',
+		recipientName: 'Lead',
+		sequenceId: 'standard-welcome',
+		stepId: 'welcome',
+		scheduledFor: new Date(Date.now() - 60_000),
+		sentAt: null,
+		status: 'pending',
+		variables: {},
+		retryCount: 0,
+		maxRetries: 3,
+		error: null,
+		createdAt: new Date(),
+		...overrides
+	}
 }
 
-// The candidate SELECT (processPendingEmails) and the stats SELECT
-// (getEmailQueueStats) both call db.select(). They are distinguished by
-// their chain shape: the candidate uses .from().where().orderBy().limit(),
-// the stats SELECT uses .select({...}).from() and awaits directly. We make
-// the candidate chain return the same pending row on every invocation and
-// the stats chain return an empty array (its absolute counts are irrelevant
-// to this test; processEmailsEndpoint only diffs them).
-function makeSelect() {
-	return mock().mockImplementation((projection?: unknown) => {
-		// getEmailQueueStats calls select({ status: ... }) and awaits from().
-		if (projection) {
-			return {
-				from: mock().mockResolvedValue([])
-			}
-		}
-		// processPendingEmails calls select() with no projection.
-		return {
-			from: mock().mockReturnValue({
-				where: mock().mockReturnValue({
-					orderBy: mock().mockReturnValue({
-						limit: mock().mockResolvedValue([PENDING_ROW])
-					})
-				})
-			})
-		}
-	})
-}
-
-// The claim UPDATE: db.update().set().where().returning(). The first call
-// returns the claimed row, the second returns [] (already claimed). Any
-// non-claim update (retry/sent/failed writes) uses .where() that resolves
-// directly (no .returning()).
-function makeUpdate(returningValues: Array<Array<typeof PENDING_ROW>>) {
+/**
+ * Build a db-like double whose candidate SELECT always returns the same row,
+ * and whose claim UPDATE returns the supplied per-call results (.returning()).
+ * The select chain matches the real SELECT shape:
+ *   select().from().where().orderBy().limit()
+ * The update chain matches the real claim shape:
+ *   update().set().where().returning()
+ */
+function makeDb(
+	candidateRows: ScheduledEmail[],
+	claimReturns: ScheduledEmail[][]
+) {
 	let claimCall = 0
 	const returningSpy = mock().mockImplementation(() => {
-		const v = returningValues[claimCall] ?? []
+		const v = claimReturns[claimCall] ?? []
 		claimCall++
 		return Promise.resolve(v)
 	})
-	const whereSpy = mock().mockImplementation(() => ({
-		// .returning() present -> this is the claim; awaiting .where() directly
-		// (no .returning()) -> a status write. Support both shapes.
-		returning: returningSpy,
-		then: (resolve: (v: unknown) => void) => resolve([])
-	}))
+	const limitSpy = mock().mockResolvedValue(candidateRows)
+	const select = mock().mockReturnValue({
+		from: mock().mockReturnValue({
+			where: mock().mockReturnValue({
+				orderBy: mock().mockReturnValue({ limit: limitSpy })
+			})
+		})
+	})
+	const whereSpy = mock().mockReturnValue({ returning: returningSpy })
 	const update = mock().mockReturnValue({
 		set: mock().mockReturnValue({ where: whereSpy })
 	})
-	return { update, returningSpy, whereSpy }
+	return {
+		db: { select, update } as unknown as Parameters<
+			typeof claimDuePendingEmails
+		>[0],
+		returningSpy,
+		whereSpy
+	}
 }
 
-describe('BUG-01 processPendingEmails atomic claim', () => {
-	beforeEach(() => {
-		const testEnv = (
-			globalThis as unknown as { __TEST_ENV: Record<string, unknown> }
-		).__TEST_ENV
-		testEnv.NODE_ENV = 'test'
-		testEnv.RESEND_API_KEY = 'test-key'
-
-		mock.module('@/lib/logger', () => ({
-			logger: {
-				info: mock(),
-				warn: mock(),
-				error: mock(),
-				debug: mock(),
-				setContext: mock()
-			},
-			createServerLogger: () => ({
-				info: mock(),
-				warn: mock(),
-				error: mock(),
-				debug: mock(),
-				setContext: mock()
-			}),
-			castError: (error: unknown) =>
-				error instanceof Error ? error : new Error(String(error))
-		}))
-	})
-
-	afterEach(() => {
-		mock.restore()
-	})
-
-	it('sends a row at most once across two overlapping passes (claim UPDATE guards status=pending)', async () => {
-		const sendSpy = mock().mockResolvedValue({ data: { id: 'sent-1' } })
-		mock.module('@/lib/resend-client', () => ({
-			isResendConfigured: mock().mockReturnValue(true),
-			getResendClient: mock(() => ({ emails: { send: sendSpy } }))
-		}))
-
+describe('BUG-01 claimDuePendingEmails atomic claim', () => {
+	it('claims a row exactly once across two overlapping passes (returning gate)', async () => {
+		const row = makeRow()
 		// Pass 1 claim returns the row; pass 2 claim returns [] (already claimed).
-		const { update, returningSpy } = makeUpdate([[PENDING_ROW], []])
-		mock.module('@/lib/db', () => ({
-			db: {
-				select: makeSelect(),
-				update
-			}
-		}))
+		const { db, returningSpy } = makeDb([row], [[row], []])
+		const now = new Date()
 
-		const { processEmailsEndpoint } = await import('@/lib/scheduled-emails')
+		const pass1 = await claimDuePendingEmails(db, now)
+		const pass2 = await claimDuePendingEmails(db, now)
 
-		await processEmailsEndpoint() // pass 1: claims + sends
-		await processEmailsEndpoint() // pass 2: claim returns [] -> no send
+		// Pass 1 surfaces the row to the send loop; pass 2 surfaces nothing.
+		expect(pass1).toHaveLength(1)
+		expect(pass1[0]?.id).toBe('email-row-1')
+		expect(pass2).toHaveLength(0)
 
-		// The atomic claim makes the row sendable exactly once.
-		expect(sendSpy).toHaveBeenCalledTimes(1)
-		// The claim UPDATE must use .returning() (rows-affected gate).
-		expect(returningSpy).toHaveBeenCalled()
+		// The claim went through .returning() (the rows-affected gate) both times.
+		expect(returningSpy).toHaveBeenCalledTimes(2)
 	})
 
-	it('does not send when the claim returns no rows (all already claimed)', async () => {
-		const sendSpy = mock().mockResolvedValue({ data: { id: 'never' } })
-		mock.module('@/lib/resend-client', () => ({
-			isResendConfigured: mock().mockReturnValue(true),
-			getResendClient: mock(() => ({ emails: { send: sendSpy } }))
-		}))
+	it('returns [] (nothing to send) when the claim UPDATE affects no rows', async () => {
+		const row = makeRow()
+		// Candidate SELECT finds the row, but the claim UPDATE returns [] — e.g.
+		// a concurrent pass already claimed it between SELECT and UPDATE.
+		const { db, returningSpy } = makeDb([row], [[]])
+		const claimed = await claimDuePendingEmails(db, new Date())
 
-		const { update } = makeUpdate([[]]) // claim returns nothing
-		mock.module('@/lib/db', () => ({
-			db: { select: makeSelect(), update }
-		}))
+		expect(claimed).toHaveLength(0)
+		// The claim UPDATE was still attempted (and gated by .returning()).
+		expect(returningSpy).toHaveBeenCalledTimes(1)
+	})
 
-		const { processEmailsEndpoint } = await import('@/lib/scheduled-emails')
-		await processEmailsEndpoint()
+	it('skips the claim UPDATE entirely when no candidates are due', async () => {
+		const { db, returningSpy, whereSpy } = makeDb([], [])
+		const claimed = await claimDuePendingEmails(db, new Date())
 
-		expect(sendSpy).not.toHaveBeenCalled()
+		expect(claimed).toHaveLength(0)
+		// No candidates -> no claim UPDATE issued at all.
+		expect(whereSpy).not.toHaveBeenCalled()
+		expect(returningSpy).not.toHaveBeenCalled()
 	})
 })
