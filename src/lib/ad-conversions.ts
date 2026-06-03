@@ -35,6 +35,21 @@ const INGEST_ENDPOINT = 'https://datamanager.googleapis.com/v1/events:ingest'
 const OAUTH_TOKEN_URL = 'https://oauth2.googleapis.com/token'
 const DATA_MANAGER_SCOPE = 'https://www.googleapis.com/auth/datamanager'
 
+/**
+ * Which conversion action the event targets:
+ *  - `lead`: the form-fill conversion (count-based), fired at submit.
+ *  - `sale`: the closed-deal conversion (value-based), fired when a lead is
+ *    marked won. Uses a SEPARATE Google Ads conversion action so the campaign
+ *    can bid leads on volume and sales on revenue.
+ */
+export type ConversionKind = 'lead' | 'sale'
+
+/** Result of an offline-conversion upload (used by the sale path for idempotency). */
+export type ConversionUploadResult =
+	| { status: 'uploaded'; requestId?: string }
+	| { status: 'skipped' } // no creds, or the lead carries no Google click id
+	| { status: 'error' }
+
 // ---------------------------------------------------------------------------
 // Types (mirrors the Data Manager API IngestEventsRequest shape)
 // ---------------------------------------------------------------------------
@@ -124,9 +139,12 @@ export function isGoogleAdsConfigured(): boolean {
 	)
 }
 
-function getConfig(): GoogleAdsConfig | null {
+function getConfig(kind: ConversionKind = 'lead'): GoogleAdsConfig | null {
 	const customerId = env.GOOGLE_ADS_CUSTOMER_ID
-	const conversionActionId = env.GOOGLE_ADS_CONVERSION_ACTION_ID
+	const conversionActionId =
+		kind === 'sale'
+			? env.GOOGLE_ADS_SALE_CONVERSION_ACTION_ID
+			: env.GOOGLE_ADS_CONVERSION_ACTION_ID
 	const saJson = env.GOOGLE_ADS_SA_JSON
 
 	if (!customerId || !conversionActionId || !saJson) {
@@ -248,7 +266,8 @@ function extractClickIds(
  */
 export function buildIngestPayload(
 	params: AdConversionParams,
-	config: GoogleAdsConfig
+	config: GoogleAdsConfig,
+	reference: ConversionKind = 'lead'
 ): IngestPayload | null {
 	const adIdentifiers = extractClickIds(params.attribution)
 	if (!adIdentifiers.gclid && !adIdentifiers.wbraid && !adIdentifiers.gbraid) {
@@ -267,7 +286,7 @@ export function buildIngestPayload(
 	}
 
 	const event: IngestEvent = {
-		destinationReferences: ['lead'],
+		destinationReferences: [reference],
 		transactionId: params.leadId ?? randomUUID(),
 		eventTimestamp: (params.occurredAt ?? new Date()).toISOString(),
 		eventSource: 'WEB',
@@ -282,7 +301,7 @@ export function buildIngestPayload(
 	}
 
 	const destination: Destination = {
-		reference: 'lead',
+		reference,
 		operatingAccount: { product: 'GOOGLE_ADS', accountId: config.customerId },
 		productDestinationId: config.conversionActionId
 	}
@@ -363,23 +382,24 @@ async function mintAccessToken(sa: ServiceAccount): Promise<string> {
 // ---------------------------------------------------------------------------
 
 /**
- * Upload a lead conversion to Google Ads. No-op (and never throws) when creds
- * are unset or the lead has no Google click ID. Safe to call unconditionally
- * from the contact route's `after()` block.
+ * Core upload: mint a token, POST the events:ingest payload, classify the
+ * outcome. No-op (`skipped`) when creds for `kind` are unset or the lead has
+ * no Google click id; never throws (returns `error` instead).
  */
-export async function sendAdConversion(
-	params: AdConversionParams
-): Promise<void> {
+async function uploadConversion(
+	params: AdConversionParams,
+	kind: ConversionKind
+): Promise<ConversionUploadResult> {
 	try {
-		const config = getConfig()
+		const config = getConfig(kind)
 		if (!config) {
-			return
+			return { status: 'skipped' }
 		}
 
-		const payload = buildIngestPayload(params, config)
+		const payload = buildIngestPayload(params, config, kind)
 		if (!payload) {
 			// No Google click ID -> not a Google Ads lead; nothing to report.
-			return
+			return { status: 'skipped' }
 		}
 
 		const token = await mintAccessToken(config.serviceAccount)
@@ -394,21 +414,48 @@ export async function sendAdConversion(
 
 		if (!res.ok) {
 			logger.error(
-				'Google Ads conversion upload failed',
+				`Google Ads ${kind} conversion upload failed`,
 				new Error(`Data Manager API ${res.status}: ${await res.text()}`),
 				{ metadata: { leadId: params.leadId } }
 			)
-			return
+			return { status: 'error' }
 		}
 
 		const body = (await res.json().catch(() => ({}))) as { requestId?: string }
-		logger.info('Google Ads conversion uploaded', {
+		logger.info(`Google Ads ${kind} conversion uploaded`, {
 			leadId: params.leadId,
 			requestId: body.requestId
 		})
+		return { status: 'uploaded', requestId: body.requestId }
 	} catch (error) {
-		logger.error('Google Ads conversion upload threw', error, {
+		logger.error(`Google Ads ${kind} conversion upload threw`, error, {
 			metadata: { leadId: params.leadId }
 		})
+		return { status: 'error' }
 	}
+}
+
+/**
+ * Upload a lead (form-fill) conversion to Google Ads. No-op (and never throws)
+ * when creds are unset or the lead has no Google click ID. Safe to call
+ * unconditionally from the contact route's `after()` block.
+ */
+export async function sendAdConversion(
+	params: AdConversionParams
+): Promise<void> {
+	await uploadConversion(params, 'lead')
+}
+
+/**
+ * Upload a closed-deal (sale) conversion VALUE to the Google Ads "Sale"
+ * conversion action (`GOOGLE_ADS_SALE_CONVERSION_ACTION_ID`), keyed on the
+ * gclid captured at click time. Returns the upload outcome so the caller can
+ * record idempotency (only `uploaded` should be persisted as "sent"). No-op
+ * (`skipped`) when the sale action / creds are unset or the lead carries no
+ * Google click ID; never throws.
+ */
+export async function sendSaleConversion(
+	params: AdConversionParams & { value: number }
+): Promise<ConversionUploadResult> {
+	return uploadConversion(params, 'sale')
 }
