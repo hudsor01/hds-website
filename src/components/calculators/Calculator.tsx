@@ -53,7 +53,7 @@ export function Calculator() {
 			setSaveSuccess(true)
 			setTimeout(() => setSaveSuccess(false), TIMEOUTS.SAVE_SUCCESS)
 		} catch (error) {
-			logger.error('Failed to save calculation', error as Error)
+			logger.error('Failed to save calculation', error)
 		}
 	}
 

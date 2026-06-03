@@ -214,7 +214,7 @@ async function handlePageSpeed(request: NextRequest) {
 		// tool honest when the upstream is simply slow (audit #236).
 		if (err.name === 'TimeoutError' || err.name === 'AbortError') {
 			return errorResponse(
-				'PageSpeed took too long to analyze that URL. Slow sites can exceed our budget — try again, or run a Lighthouse audit in your browser DevTools instead.',
+				'PageSpeed took too long to analyze that URL. Slow sites can exceed our budget. Try again, or run a Lighthouse audit in your browser DevTools instead.',
 				504
 			)
 		}
