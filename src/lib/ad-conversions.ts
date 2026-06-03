@@ -114,6 +114,8 @@ const serviceAccountSchema = z.object({
 })
 
 /** Cheap presence check - does not parse the SA JSON. */
+// Part of the deferred ad-conversions surface (wired when paid-ad budget exists);
+// intentionally exported as public API even though no caller exists yet.
 export function isGoogleAdsConfigured(): boolean {
 	return Boolean(
 		env.GOOGLE_ADS_CUSTOMER_ID &&

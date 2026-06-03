@@ -30,7 +30,7 @@ export function saveFormData(data: PaystubFormData): void {
 		}
 		localStorage.setItem(PAYSTUB_STORAGE_KEY, JSON.stringify(payload))
 	} catch (error) {
-		logger.error('Error saving paystub form data:', error as Error)
+		logger.error('Error saving paystub form data:', error)
 	}
 }
 
@@ -54,7 +54,7 @@ export function loadFormData(): PaystubFormData | null {
 
 		return parsed
 	} catch (error) {
-		logger.error('Error loading paystub form data:', error as Error)
+		logger.error('Error loading paystub form data:', error)
 		return null
 	}
 }
@@ -68,6 +68,6 @@ export function clearFormData(): void {
 	try {
 		localStorage.removeItem(PAYSTUB_STORAGE_KEY)
 	} catch (error) {
-		logger.error('Error clearing paystub form data:', error as Error)
+		logger.error('Error clearing paystub form data:', error)
 	}
 }

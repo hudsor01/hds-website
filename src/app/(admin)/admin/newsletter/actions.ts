@@ -27,13 +27,13 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import type { ZodError } from 'zod'
 import { requireAdminSession } from '@/lib/admin/auth'
 import { formDataToObject } from '@/lib/admin/form-data'
 import {
 	deleteSubscriber,
 	setSubscriberStatus
 } from '@/lib/admin/newsletter-queries'
+import { flattenZod } from '@/lib/admin/zod-errors'
 import { logger } from '@/lib/logger'
 import {
 	deleteSubscriberSchema,
@@ -41,17 +41,6 @@ import {
 } from '@/lib/schemas/admin-newsletter'
 
 type ActionResult = { ok: true } | { ok: false; errors: Record<string, string> }
-
-function flattenZod(error: ZodError): Record<string, string> {
-	const out: Record<string, string> = {}
-	for (const issue of error.issues) {
-		const path = issue.path.join('.') || '_form'
-		if (!(path in out)) {
-			out[path] = issue.message
-		}
-	}
-	return out
-}
 
 export async function unsubscribeSubscriberAction(
 	formData: FormData

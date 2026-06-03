@@ -25,7 +25,7 @@ export function getSavedCalculations(): SavedCalculation[] {
 		const saved = localStorage.getItem(STORAGE_KEY)
 		return saved ? JSON.parse(saved) : []
 	} catch (error) {
-		logger.error('Error loading saved calculations:', error as Error)
+		logger.error('Error loading saved calculations:', error)
 		return []
 	}
 }
@@ -88,7 +88,7 @@ export function saveCalculation(
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed))
 		return id
 	} catch (error) {
-		logger.error('Error saving calculation:', error as Error)
+		logger.error('Error saving calculation:', error)
 		throw new Error('Failed to save calculation')
 	}
 }
@@ -108,7 +108,7 @@ export function deleteCalculation(id: string): void {
 		const filtered = calculations.filter(calc => calc.id !== id)
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered))
 	} catch (error) {
-		logger.error('Error deleting calculation:', error as Error)
+		logger.error('Error deleting calculation:', error)
 	}
 }
 
@@ -125,6 +125,6 @@ export function clearAllCalculations(): void {
 	try {
 		localStorage.removeItem(STORAGE_KEY)
 	} catch (error) {
-		logger.error('Error clearing calculations:', error as Error)
+		logger.error('Error clearing calculations:', error)
 	}
 }
