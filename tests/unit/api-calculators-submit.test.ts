@@ -161,4 +161,70 @@ describe('POST /api/calculators/submit', () => {
 		const res = await POST(makeRequest(VALID_BODY))
 		expect(res.status).toBe(500)
 	})
+
+	// BUG-04: inputs/results are persisted verbatim into JSON columns with no
+	// size or key-count cap. A CSRF/rate-limit-passing client could write
+	// arbitrarily large/nested JSON -> storage bloat / payload DoS. The fix
+	// rejects oversized payloads with 400 BEFORE the DB insert. On the pre-fix
+	// schema these payloads passed validation and inserted -> 200 (test fails).
+
+	it('returns 400 for oversized inputs JSON and does NOT insert', async () => {
+		const insertSpy = mock().mockReturnValue({
+			values: mock().mockReturnValue({
+				returning: mock().mockResolvedValue([{ id: 'never' }])
+			})
+		})
+		mock.module('@/lib/db', () => ({ db: { insert: insertSpy } }))
+
+		// > 16KB serialized: a single string value well past the byte cap.
+		const huge = 'x'.repeat(20 * 1024)
+		const { POST } = await import('@/app/api/calculators/submit/route')
+		const res = await POST(
+			makeRequest({ ...VALID_BODY, inputs: { blob: huge } })
+		)
+
+		expect(res.status).toBe(400)
+		expect(insertSpy).not.toHaveBeenCalled()
+	})
+
+	it('returns 400 when inputs exceed the key-count cap and does NOT insert', async () => {
+		const insertSpy = mock().mockReturnValue({
+			values: mock().mockReturnValue({
+				returning: mock().mockResolvedValue([{ id: 'never' }])
+			})
+		})
+		mock.module('@/lib/db', () => ({ db: { insert: insertSpy } }))
+
+		// 150 keys > MAX_JSON_KEYS (100), but small total bytes so this
+		// specifically exercises the key-count cap, not the byte cap.
+		const manyKeys: Record<string, number> = {}
+		for (let i = 0; i < 150; i++) {
+			manyKeys[`k${i}`] = i
+		}
+		const { POST } = await import('@/app/api/calculators/submit/route')
+		const res = await POST(
+			makeRequest({ ...VALID_BODY, inputs: manyKeys })
+		)
+
+		expect(res.status).toBe(400)
+		expect(insertSpy).not.toHaveBeenCalled()
+	})
+
+	it('returns 400 for oversized results JSON and does NOT insert', async () => {
+		const insertSpy = mock().mockReturnValue({
+			values: mock().mockReturnValue({
+				returning: mock().mockResolvedValue([{ id: 'never' }])
+			})
+		})
+		mock.module('@/lib/db', () => ({ db: { insert: insertSpy } }))
+
+		const huge = 'y'.repeat(20 * 1024)
+		const { POST } = await import('@/app/api/calculators/submit/route')
+		const res = await POST(
+			makeRequest({ ...VALID_BODY, results: { blob: huge } })
+		)
+
+		expect(res.status).toBe(400)
+		expect(insertSpy).not.toHaveBeenCalled()
+	})
 })
