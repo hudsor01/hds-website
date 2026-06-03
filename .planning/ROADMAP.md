@@ -325,7 +325,7 @@ Plans:
 
 | # | Slug | Status | Plans | Severity | Description |
 |---|---|---|---|---|---|
-| 17 | `test-suite-isolation` | not started | TBD | HIGH | Make `bun test tests/` order-independent and 0-fail. Root-cause the bun process-global `mock.module` leak (oven-sh/bun#7823, un-cleared by `mock.restore()`) that freezes a shared module's exports (`@/lib/constants/business` -> `BUSINESS_INFO` undefined) for later suites, producing the ~21 `homepage.test.tsx` + `navigation.test.tsx` failures only under full-suite ordering (TEST-01). Fix the leaking `.tsx` consumer/render test(s) — prefer pure input->output units or the setup-preload `__REAL_*__` capture pattern — and add a guard against reintroduction (TEST-02). No skip/xfail of the symptom. |
+| 17 | `test-suite-isolation` | planned | 1 | HIGH | Make `bun test tests/` order-independent and 0-fail. Root-cause the bun process-global `mock.module` leak (oven-sh/bun#7823, un-cleared by `mock.restore()`) that freezes a shared module's exports (`@/lib/constants/business` -> `BUSINESS_INFO` undefined) for later suites, producing the ~21 `homepage.test.tsx` + `navigation.test.tsx` failures only under full-suite ordering (TEST-01). Fix the leaking `.tsx` consumer/render test(s) — prefer pure input->output units or the setup-preload `__REAL_*__` capture pattern — and add a guard against reintroduction (TEST-02). No skip/xfail of the symptom. |
 | 18 | `dependency-currency` | not started | TBD | MEDIUM | Review, verify, and merge the 5 open Dependabot PRs against a clean (post-17) suite: #327 dev-dependencies group of 5, #328 better-auth 1.6.12->1.6.13 (verify auth flows: signup, session cookie, admin-role gate), #329/#330/#331 Tiptap 3.24.0 extension-link / extension-image / starter-kit (verify the blog rich-text editor: links, images, core formatting render + persist). Each PR gets a recorded merge/hold decision; nothing merges on red or stale-base CI. DEP-01, DEP-02, DEP-03. |
 
 ### Phase 17: test-suite-isolation
@@ -340,7 +340,8 @@ Plans:
   3. A guard prevents reintroduction — a documented + enforced convention (pure unit over `mock.module`+JSX render where feasible; setup-level reset or `__REAL_*__` preload-capture where a shared dep must be both mocked and asserted) plus a check that full-suite and isolated pass counts agree (TEST-02).
 
 **Notes**: Root cause is bun#7823: `mock.module(...)` registers process-globally and is NOT cleared by `mock.restore()`. The poisoners are `.tsx` consumer/render tests that mock a shared dep AND import a broad module graph (precedent fix: v6 Phase 13 extracted the pure `routeDetailResult()` helper instead of importing the page loader; `tests/setup.ts` already uses a `__REAL_DB__` setup-preload capture). Local full-suite has historically been unreliable here — CI is authoritative; diff the Test job pass/fail count against a known-clean baseline. Files: the failing `tests/unit/homepage.test.tsx` + `tests/unit/navigation.test.tsx` and whichever sibling `.tsx` test(s) register the leaking `mock.module`, plus `tests/setup.ts`.
-**Plans**: TBD (set during plan-phase)
+**Plans**: 1 plan
+- [ ] 17-01-PLAN.md - reduce ttl-calculator-actions setupCommonMocks() to @/lib/db + @/lib/resend-client only (TEST-01); add scripts/check-test-mock-leaks.sh denylist guard wired into CI + test:unit, plus a TESTING convention note (TEST-02)
 
 ### Phase 18: dependency-currency
 
