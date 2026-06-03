@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 // runtime form could render a UTC date one day ahead of the user's
 // local date and made "Last updated" appear in the future (audit #273).
 // Update this constant when the policy is actually reviewed.
-const lastUpdated = formatDate(new Date('2026-05-28T00:00:00Z'))
+const lastUpdated = formatDate(new Date('2026-06-03T00:00:00Z'))
 
 export default function PrivacyPage() {
 	return (
@@ -96,8 +96,12 @@ export default function PrivacyPage() {
 									For marketing attribution we store the source of your visit
 									(such as the campaign, referrer, or ad click ID) in your
 									browser's local storage for up to 90 days and attach it to a
-									contact form submission. We do not sell or share it with third
-									parties.
+									contact form submission. When a submission can be matched to a
+									Google Ads click, we share that click ID and a securely
+									hashed, non-reversible form of your email and phone number
+									with Google Ads to measure which ads led to inquiries and
+									projects. We never sell your information; we share it with
+									Google Ads only for this advertising-measurement purpose.
 								</p>
 								<p>
 									You can clear or block this data at any time through your
@@ -141,6 +145,12 @@ export default function PrivacyPage() {
 										With trusted service providers who assist in our operations
 										(under strict confidentiality agreements)
 									</li>
+									<li>
+										With Google Ads, to measure advertising effectiveness (a
+										securely hashed, non-reversible form of your email and phone
+										number, plus the ad click ID, only when your inquiry can be
+										matched to a Google Ads click)
+									</li>
 									<li>To protect our rights, property, or safety</li>
 								</ul>
 							</div>
@@ -173,6 +183,11 @@ export default function PrivacyPage() {
 									<li>
 										<strong className="text-foreground">Google Maps:</strong>{' '}
 										Location services
+									</li>
+									<li>
+										<strong className="text-foreground">Google Ads:</strong>{' '}
+										Advertising conversion measurement (hashed contact details
+										and ad click IDs)
 									</li>
 								</ul>
 								<p>
