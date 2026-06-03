@@ -47,23 +47,6 @@ export function getClientIp(request: NextRequest): string {
 }
 
 /**
- * Extract client IP from a raw Headers object (Server Actions).
- *
- * @example
- * 'use server'
- * import { headers } from 'next/headers'
- * import { getClientIpFromHeaders } from '@/lib/request'
- *
- * export async function submitForm() {
- *   const headersList = await headers()
- *   const ip = getClientIpFromHeaders(headersList)
- * }
- */
-export function getClientIpFromHeaders(headers: Headers): string {
-	return readClientIp(headers)
-}
-
-/**
  * Verify the request originated from this site (or an explicitly allowed
  * origin). Defends against cross-origin form-encoded POSTs that bypass
  * SameSite cookies and CORS preflight.
