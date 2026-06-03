@@ -8,8 +8,8 @@
 
 ### Test-suite isolation
 
-- [ ] **TEST-01**: The full `bun test tests/` run is order-independent and produces 0 failures, matching the isolated per-file results. The ~21 `homepage.test.tsx` + `navigation.test.tsx` (Footer / HomePage / Navbar / Navigation) failures — caused by bun's process-global `mock.module` registering and never being cleared by `mock.restore()` (oven-sh/bun#7823), which freezes a shared module's exports (`@/lib/constants/business` -> `BUSINESS_INFO` undefined) for later suites — are eliminated by root-causing the leaking test(s), not by skipping/xfail/suppressing them. Root cause: a `.tsx` consumer/render test that `mock.module(...)` a shared dep AND imports a broad module graph poisons unrelated suites.
-- [ ] **TEST-02**: A guard prevents reintroduction of the same class of leak — e.g. a documented + enforced convention (pure input->output unit tests over `mock.module` + JSX render where feasible; a setup-level reset or the `__REAL_*__` preload-capture pattern where a shared dep must be both mocked and asserted) plus a CI-level check that the full-suite pass count equals the sum of isolated runs. The fix is durable: re-running the suite repeatedly, and in any order bun chooses, stays 0-fail.
+- [x] **TEST-01**: The full `bun test tests/` run is order-independent and produces 0 failures, matching the isolated per-file results. The ~21 `homepage.test.tsx` + `navigation.test.tsx` (Footer / HomePage / Navbar / Navigation) failures — caused by bun's process-global `mock.module` registering and never being cleared by `mock.restore()` (oven-sh/bun#7823), which freezes a shared module's exports (`@/lib/constants/business` -> `BUSINESS_INFO` undefined) for later suites — are eliminated by root-causing the leaking test(s), not by skipping/xfail/suppressing them. Root cause: a `.tsx` consumer/render test that `mock.module(...)` a shared dep AND imports a broad module graph poisons unrelated suites.
+- [x] **TEST-02**: A guard prevents reintroduction of the same class of leak — e.g. a documented + enforced convention (pure input->output unit tests over `mock.module` + JSX render where feasible; a setup-level reset or the `__REAL_*__` preload-capture pattern where a shared dep must be both mocked and asserted) plus a CI-level check that the full-suite pass count equals the sum of isolated runs. The fix is durable: re-running the suite repeatedly, and in any order bun chooses, stays 0-fail.
 
 ### Dependency currency
 
@@ -30,8 +30,8 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TEST-01 | Phase 17 | Pending |
-| TEST-02 | Phase 17 | Pending |
+| TEST-01 | Phase 17 | Complete |
+| TEST-02 | Phase 17 | Complete |
 | DEP-01 | Phase 18 | Pending |
 | DEP-02 | Phase 18 | Pending |
 | DEP-03 | Phase 18 | Pending |
