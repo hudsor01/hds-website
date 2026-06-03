@@ -13,9 +13,9 @@
 
 ### Dependency currency
 
-- [ ] **DEP-01**: The 5 open Dependabot PRs (#327 dev-deps group of 5, #328 better-auth 1.6.12->1.6.13, #329 @tiptap/extension-link 3.24.0, #330 @tiptap/extension-image 3.24.0, #331 @tiptap/starter-kit 3.24.0) are each reviewed against current `main`: changelog/diff inspected, CI re-run on a clean (post-Phase-17) suite, and a per-PR merge/hold decision recorded with rationale. No PR is merged on a red or stale-base CI.
-- [ ] **DEP-02**: The better-auth bump (#328) is verified behaviorally before merge — the auth flows that matter in this app (signup, session cookie via `@supabase/ssr`-style `getAll`/`setAll`, admin-role gating) still work; the bump is patch-level (1.6.12->1.6.13) so the check is a targeted smoke, not a re-architecture.
-- [ ] **DEP-03**: The three Tiptap 3.24.0 bumps (#329/#330/#331 — extension-link, extension-image, starter-kit) are verified together against the blog rich-text editor (links, images, core formatting render + persist) before merge, since they are a coupled set and starter-kit pulls peer extensions; the safe set is merged onto current `main` and any that regress the editor are held with a recorded reason.
+- [x] **DEP-01**: The 5 open Dependabot PRs (#327 dev-deps group of 5, #328 better-auth 1.6.12->1.6.13, #329 @tiptap/extension-link 3.24.0, #330 @tiptap/extension-image 3.24.0, #331 @tiptap/starter-kit 3.24.0) are each reviewed against current `main`: changelog/diff inspected, CI re-run on a clean (post-Phase-17) suite, and a per-PR merge/hold decision recorded with rationale. No PR is merged on a red or stale-base CI. (Resolved via consolidated PRs #341/#342/#343 merged CI-green; #327-331 closed-as-superseded with rationale — the Tiptap three omitted @tiptap/pm+react, and #327/#328 failed the frozen-lockfile CI.)
+- [x] **DEP-02**: The better-auth bump (#328) is verified behaviorally before merge — the auth flows that matter in this app (signup, session cookie via `@supabase/ssr`-style `getAll`/`setAll`, admin-role gating) still work; the bump is patch-level (1.6.12->1.6.13) so the check is a targeted smoke, not a re-architecture. (Merged 1.6.13 in #342, then 1.6.14 in #343 — both: typecheck + build incl. `/api/auth/[...all]` + suite green; patch, no breaking changes.)
+- [x] **DEP-03**: The three Tiptap 3.24.0 bumps (#329/#330/#331 — extension-link, extension-image, starter-kit) are verified together against the blog rich-text editor (links, images, core formatting render + persist) before merge, since they are a coupled set and starter-kit pulls peer extensions; the safe set is merged onto current `main` and any that regress the editor are held with a recorded reason. (Merged as one atomic bump of ALL FIVE @tiptap/* — incl. the pm+react the Dependabot PRs omitted — in #341; verified via build + tag-contract test + single-deduped prosemirror.)
 
 ## Out of Scope
 
@@ -32,9 +32,9 @@
 |-------------|-------|--------|
 | TEST-01 | Phase 17 | Complete |
 | TEST-02 | Phase 17 | Complete |
-| DEP-01 | Phase 18 | Pending |
-| DEP-02 | Phase 18 | Pending |
-| DEP-03 | Phase 18 | Pending |
+| DEP-01 | Phase 18 | Complete |
+| DEP-02 | Phase 18 | Complete |
+| DEP-03 | Phase 18 | Complete |
 
 **Coverage:**
 - v7 requirements: 5 total

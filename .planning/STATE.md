@@ -2,29 +2,30 @@
 gsd_state_version: 1.0
 milestone: v7
 milestone_name: Stability and Maintenance
-current_phase: "17 test-suite-isolation (complete)"
+current_phase: "18 dependency-currency (complete)"
 current_plan: none
-status: Phase 17 complete
-last_updated: "2026-06-03T00:21:11.141Z"
-last_activity: 2026-06-02 — Phase 17 test-suite-isolation complete
+status: v7 phases complete (2/2) — ready for milestone audit/close
+last_updated: "2026-06-03T01:30:00.000Z"
+last_activity: 2026-06-02 — Phase 18 dependency-currency complete
 progress:
   total_phases: 2
-  completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
-  percent: 50
+  completed_phases: 2
+  total_plans: 2
+  completed_plans: 2
+  percent: 100
 ---
 
 # STATE — Current GSD Position
 
 **Last updated:** 2026-06-02
 **Branch:** `main`
-**Current milestone:** v7 Stability and Maintenance — IN PROGRESS
-**Current phase:** 17 test-suite-isolation — COMPLETE (1/1 plan)
-**Current plan:** none (Phase 18 dependency-currency is next, now unblocked)
+**Current milestone:** v7 Stability and Maintenance — PHASES COMPLETE (2/2)
+**Current phase:** 18 dependency-currency — COMPLETE
+**Current plan:** none (v7 phases done; ready for milestone audit/close)
 
 ## What just happened
 
+- **Phase 18 (`dependency-currency`) complete — DEP-01 + DEP-02 + DEP-03.** Reviewed all 5 open Dependabot PRs against official changelogs and resolved them via 3 verified, CI-green, code-only PRs (merged to `origin/main`): **#341** all five `@tiptap/*` 3.23.6->3.24.0 (extension-image/link/pm/react/starter-kit, one atomic bump + regenerated lockfile), **#342** next 16.2.7 + react/react-dom 19.2.7 + @types/react 19.2.16 + knip 6.15.0 + better-auth 1.6.13, **#343** better-auth 1.6.13->1.6.14 (latest; published mid-flight). **Closed-as-superseded:** #327, #328, #329, #330, #331 (each with a comment). **Why consolidation, not direct Dependabot merges:** (1) the 3 Tiptap PRs each bumped ONE package and omitted `@tiptap/pm` + `@tiptap/react` (also 3.23.6) — merging any subset installs two ProseMirror copies and crashes `RichTextEditor.tsx` (`keyed plugin` RangeError); (2) #327/#328 failed CI with `lockfile had changes, but lockfile is frozen` (the repo's fix-lockfile job doesn't produce a frozen-compatible bun.lock; rebase/recreate didn't fix it). Both resolved by regenerating a consistent lockfile on controlled branches and confirming the frozen install passes in CI (bun 1.3.8). **Final dep state on main = all latest:** better-auth 1.6.14, next 16.2.7, react/react-dom 19.2.7, @types/react 19.2.16, knip 6.15.0, @tiptap/* 3.24.0. **Verification:** all bumps non-breaking per official changelogs; DEP-02 = typecheck+build (incl. `/api/auth/[...all]`)+suite on 1.6.13 and 1.6.14; DEP-03 = build (incl. `/admin/blog` RichTextEditor)+suite+rich-text-editor tag-contract test 4/0+single-deduped prosemirror/core/pm; full `bun test tests/` 1073 pass / 0 fail held across every branch (Phase-17 guard intact); zero open Dependabot PRs remain. SUMMARY at `.planning/phases/18-dependency-currency/18-01-SUMMARY.md`; VERIFICATION passed. **v7 phases now 2/2 complete (100%)** — ready for milestone audit/close. **Operator action:** reconcile local `main` (`git merge origin/main` — gated for the agent; #340/#341/#342/#343 are all on origin/main).
 - **Phase 17 Plan 01 (`test-suite-isolation`) complete — TEST-01 + TEST-02 (3 commits: `e6ff4d7a`, `02d74b2c`, `922a7558`).** Root-fixed the process-global `mock.module` leak that produced the ~21 homepage/navigation/Footer failures only under full-suite ordering. **TEST-01:** `tests/unit/ttl-calculator-actions.test.ts::setupCommonMocks()` reduced from 7 `mock.module` calls to exactly 2 — only the real boundaries `@/lib/db` + `@/lib/resend-client` stay mocked. Deleted the redundant `@/env` + `@/lib/logger` overrides (already mocked completely by `tests/setup.ts`) and the partial `@/lib/utils` (was dropping `cn` -> `SyntaxError: Export named 'cn' not found` suite-wide), `@/lib/constants/business` (was dropping `links.facebook`), and `@/lib/schemas/ttl` (stub; real Drizzle table now used, the db mock still intercepts execution). No `.skip`/`xfail`/deletion of any assertion; no `src/**` change. **TEST-02:** new `scripts/check-test-mock-leaks.sh` — a deterministic denylist grep (`command grep` + `--exclude` so it's correct even where `grep` is aliased to ripgrep) that fails if any per-file test partial-mocks `@/lib/utils` or `@/lib/constants/*` outside `tests/setup.ts`; wired into the local `test:unit` script and the CI Code Quality job; plus a bun#7823 convention note at the top of `tests/setup.ts`. **Verify-then-revert proof:** reintroduced the `@/lib/utils` partial mock -> guard exit 1 naming the offender; reverted -> exit 0 (leak never committed; final `grep -c mock.module` == 2). **Test counts observed:** baseline 1052 pass / 21 fail -> after fix **1073 pass / 0 fail**, stable across two consecutive full runs; worst-case ordering (ttl, homepage, navigation) 45 pass / 0 fail; ttl-calculator-actions 10 pass / 0 fail in isolation. **Gate:** `bun run lint` clean (413 files), `bun run typecheck` clean. **Deviation (Rule 1):** the guard's original two-grep pipeline silently passed on a leak in the dev shell (grep aliased to ripgrep changed the invert-filter semantics); fixed to single-pass `command grep` + `--exclude` (commit `922a7558`). **Env note (non-blocking):** `bun run test:unit` aborts under this machine's safe-chain `bun` shell-function wrapper (nested `bun` mis-resolves); the real `bun` binary (1.3.14) runs the chain cleanly (guard OK -> 1073/0), and CI uses a clean shell, so this does not affect CI. **Phase 18 (dependency-currency) is now unblocked** — the Dependabot PRs' CI Test job no longer hits the pollution. SUMMARY at `.planning/phases/17-test-suite-isolation/17-01-SUMMARY.md`. ROADMAP line count preserved (371).
 - **v7 milestone STARTED — Stability and Maintenance.** Two concerns to resolve canonically: (1) the ~21 homepage/navigation/Footer RTL test failures that only appear under full-suite ordering — root-cause + fix bun's process-global `mock.module` leak so `bun test tests/` is order-independent and 0-fail (not patch/skip the symptom); add a guard against reintroduction. (2) the 5 open Dependabot PRs (#327 dev-deps group of 5, #328 better-auth 1.6.12->1.6.13, #329 tiptap extension-link 3.24.0, #330 tiptap extension-image 3.24.0, #331 tiptap starter-kit 3.24.0) — review, verify (auth flows for better-auth; blog rich-text editor for the Tiptap bumps), merge the safe ones. **Sequence locked: test-isolation (Phase 17) BEFORE dependency-currency (Phase 18)** — the dep PRs' CI Test job hits the same pollution (#331 is failing with 4 Test-job failures), so a clean suite makes their CI trustworthy. v6 REQUIREMENTS archived to `.planning/milestones/v6-REQUIREMENTS.md`; fresh v7 REQUIREMENTS written (TEST-01/02, DEP-01/02/03). PROJECT.md "Current Milestone" -> v7. Roadmapper to APPEND phases 17-18 to the 320-line ROADMAP (do NOT truncate v3-v6 history). Backed by project memory `feedback_bun_mock_module_global_pollution.md`.
 - **v6 milestone CLOSED — Audit Remediation complete.** All 6 phases shipped to `origin/main` and merged CI-green: Phase 11 paystub-tax-accuracy (PR #332 + test-hardening #336), 12 errorboundary-report-path (#333), 13 admin-error-observability (#334 + #336), 14 admin-page-title (#337), 15 dead-code-cleanup (#338), 16 intentional-noop-confirmation (#339). Milestone audit verdict **PASSED, 21/21 requirements satisfied** — canonical record at `.planning/milestones/v6-AUDIT.md`. Original audit intent fully delivered: 6 genuine stubs fixed (incl. the official-2025 tax-table correction surfaced by research), both DECIDE items resolved (full admin error states; pageTitle removed), CLEANUP done, 50 intentional no-ops confirmed + key ones test-locked, 31 false positives dismissed. Closed lightly per the v5 convention (no skill-archival / no ROADMAP collapse / no tag — v5 wasn't tagged either; the AUDIT doc is the record). **Open follow-ups (not v6 gaps):** local `main` code reconcile is pending (`git merge origin/main` is gated in this env — operator runs it; the v6 .planning doc-trail was reconciled onto main); ~21 pre-existing homepage/navigation RTL test-pollution failures (latent bun mock.module issue, logged); 5 open Dependabot PRs (#327-331).
