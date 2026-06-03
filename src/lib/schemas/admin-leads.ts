@@ -25,6 +25,7 @@ export const LEAD_STATUSES = [
 	'new',
 	'contacted',
 	'qualified',
+	'won',
 	'closed'
 ] as const
 export type LeadStatus = (typeof LEAD_STATUSES)[number]
@@ -32,6 +33,16 @@ export type LeadStatus = (typeof LEAD_STATUSES)[number]
 export const updateLeadStatusSchema = z.object({
 	id: z.string().uuid({ message: 'Invalid lead id.' }),
 	status: z.enum(LEAD_STATUSES, { message: 'Pick a valid status.' })
+})
+
+// Mark a lead as won with the closed-deal value. The value feeds both internal
+// revenue reporting and the Google Ads "Sale" offline-conversion upload.
+export const markLeadWonSchema = z.object({
+	id: z.string().uuid({ message: 'Invalid lead id.' }),
+	dealValue: z.coerce
+		.number({ message: 'Enter the deal value.' })
+		.positive('Deal value must be greater than 0.')
+		.max(100_000_000, 'Deal value is unreasonably large.')
 })
 
 export const addLeadNoteSchema = z.object({
