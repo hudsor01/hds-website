@@ -12,10 +12,10 @@
 
 ### Correctness bugs
 
-- [ ] **BUG-01**: The scheduled-email queue cannot double-send. `processPendingEmails` (`scheduled-emails.tsx`) atomically claims rows (`UPDATE … SET status='processing' … RETURNING`, or `FOR UPDATE SKIP LOCKED`) BEFORE the Resend call, so overlapping GET (Vercel cron) / POST (n8n) invocations or an overrunning run never send the same email twice. Regression test covers the claim semantics. (VERIFIED: select-then-send with no claim; dual-verb endpoint.)
-- [ ] **BUG-02**: The rate-limiter is safe under a Redis outage and atomic on the Redis path. The in-memory fallback store is bounded regardless of `useRedis` (cleanup runs even when Redis is configured), and the Redis counter sets count+TTL atomically (no TTL-less zombie keys). Test covers the fallback-cleanup path. (VERIFIED: cleanup only starts in the `!useRedis` branch. REPORTED: non-atomic `incr`+`expire`.)
-- [ ] **BUG-03**: The `testimonials/[id]` PATCH/DELETE endpoints return correct HTTP status: 404 for a non-existent id (the query layer reports rows-affected via `.returning()`), 400 for a malformed non-UUID id (route validates with `z.string().uuid()`), never a misleading 200 (success on missing) or 500 (Postgres `22P02` on garbage). Test covers missing + malformed ids. (VERIFIED: `updateTestimonialStatus`/`deleteTestimonial` return `true` unconditionally; no UUID validation.)
-- [ ] **BUG-04**: Public calculator submissions (`calculators/submit`) cannot persist unbounded/arbitrary JSON. `inputs`/`results` are shape-validated (per-calculator) or size/key-depth capped before insert, so a same-origin client cannot bloat the `calculator_leads` JSON columns. (VERIFIED: `z.record(z.string(), z.unknown())` stored verbatim, no cap.)
+- [x] **BUG-01**: The scheduled-email queue cannot double-send. `processPendingEmails` (`scheduled-emails.tsx`) atomically claims rows (`UPDATE … SET status='processing' … RETURNING`, or `FOR UPDATE SKIP LOCKED`) BEFORE the Resend call, so overlapping GET (Vercel cron) / POST (n8n) invocations or an overrunning run never send the same email twice. Regression test covers the claim semantics. (VERIFIED: select-then-send with no claim; dual-verb endpoint.)
+- [x] **BUG-02**: The rate-limiter is safe under a Redis outage and atomic on the Redis path. The in-memory fallback store is bounded regardless of `useRedis` (cleanup runs even when Redis is configured), and the Redis counter sets count+TTL atomically (no TTL-less zombie keys). Test covers the fallback-cleanup path. (VERIFIED: cleanup only starts in the `!useRedis` branch. REPORTED: non-atomic `incr`+`expire`.)
+- [x] **BUG-03**: The `testimonials/[id]` PATCH/DELETE endpoints return correct HTTP status: 404 for a non-existent id (the query layer reports rows-affected via `.returning()`), 400 for a malformed non-UUID id (route validates with `z.string().uuid()`), never a misleading 200 (success on missing) or 500 (Postgres `22P02` on garbage). Test covers missing + malformed ids. (VERIFIED: `updateTestimonialStatus`/`deleteTestimonial` return `true` unconditionally; no UUID validation.)
+- [x] **BUG-04**: Public calculator submissions (`calculators/submit`) cannot persist unbounded/arbitrary JSON. `inputs`/`results` are shape-validated (per-calculator) or size/key-depth capped before insert, so a same-origin client cannot bloat the `calculator_leads` JSON columns. (VERIFIED: `z.record(z.string(), z.unknown())` stored verbatim, no cap.)
 
 ### Code hygiene
 
@@ -39,10 +39,10 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | SEC-01 | Phase 19 | Complete |
-| BUG-01 | Phase 20 | Pending |
-| BUG-02 | Phase 20 | Pending |
-| BUG-03 | Phase 20 | Pending |
-| BUG-04 | Phase 20 | Pending |
+| BUG-01 | Phase 20 | Complete |
+| BUG-02 | Phase 20 | Complete |
+| BUG-03 | Phase 20 | Complete |
+| BUG-04 | Phase 20 | Complete |
 | CLEAN-01 | Phase 21 | Pending |
 | CLEAN-02 | Phase 21 | Pending |
 | CLEAN-03 | Phase 21 | Pending |

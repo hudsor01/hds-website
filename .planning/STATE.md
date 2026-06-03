@@ -3,25 +3,27 @@ gsd_state_version: 1.0
 milestone: v8
 milestone_name: Hardening
 status: in-progress
-last_updated: "2026-06-03T02:30:00.000Z"
-last_activity: 2026-06-03 — Phase 19 dependency-security complete
+last_updated: "2026-06-03T04:30:00.000Z"
+last_activity: 2026-06-03 — Phase 20 correctness-bugs plan 01 complete (BUG-01..04 fixed + tests)
 progress:
   total_phases: 3
-  completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
-  percent: 33
+  completed_phases: 2
+  total_plans: 2
+  completed_plans: 2
+  percent: 67
 ---
 
 # STATE — Current GSD Position
 
 **Last updated:** 2026-06-03
 **Branch:** `main`
-**Current milestone:** v8 Hardening — IN PROGRESS (1/3 phases)
-**Current phase:** 20 correctness-bugs — next (19 dependency-security complete)
+**Current milestone:** v8 Hardening — IN PROGRESS (2/3 phases)
+**Current phase:** 20 correctness-bugs — plan 01 complete (verifying); Phase 21 code-hygiene next
 **Current plan:** none
 
 ## What just happened
+
+- **Phase 20 Plan 01 (`correctness-bugs`) complete — BUG-01..04 (6 commits: `308b9871`, `f0514e7b`, `2be8b2c2`, `c98ebe79`, `ab709160`, `5b4e3eba`).** Fixed all four verified runtime defects in their owning files, each with a regression test that fails on the pre-fix code; full suite **1073 -> 1090 pass / 0 fail** (+17 tests). **BUG-01 (email double-send race):** new `claimDuePendingEmails(db, now)` runs a single conditional `UPDATE ... SET status='processing' WHERE id IN (...) AND <still-claimable> RETURNING *` before any Resend send; only claimed rows are sent, so two overlapping cron/n8n passes send a row at most once. **Recovery-gap decision (option a, mandated):** the candidate SELECT + claim predicate also reclaim rows stuck in `processing` whose `scheduledFor < now - 15min` (table has no `updatedAt`; `scheduledFor` is never rewritten, so a still-`processing` row long past due is provably a crashed claim) — recoverable, no DDL. `status` is plain `text` (not pg enum), so `'processing'` is a transient value. **BUG-02 (rate-limiter):** `_checkLimitInMemory` lazy-prunes expired entries on every call (bounded under a Redis outage independent of `useRedis`); `checkWithRedis` replaced the CONFIRMED non-atomic `incr`+`expire` (rate-limiter.ts:56-57) with `SET key 0 NX EX window` + `INCR` (TTL guaranteed on first write, no zombie keys). **No new dependency** (`@upstash/ratelimit` not added). **BUG-03 (testimonials contract):** query layer adds `.returning()` and returns `result.length > 0`; routes validate `id` with `z.string().uuid()` (400 before DB) and map false -> 404 (was 200-on-missing / 500-on-malformed). Applied to PATCH/DELETE `[id]` and DELETE `requests/[id]`; messages dash-free. **BUG-04 (calculator JSON):** `superRefine` caps `inputs`+`results` at 16KB serialized (`MAX_JSON_BYTES`) + 100 keys (`MAX_JSON_KEYS`) before insert -> 400; the byte cap is the real protection (bounds nesting depth; key cap is a cheap early reject), message dash-free. **Test-isolation deviations (Rule 3, all in the test layer):** extracted BUG-01's claim into a lightweight `src/lib/scheduled-emails-claim.ts` (drizzle+schema only, db injected) so it is order-independent under bun's process-global `mock.module` (oven-sh/bun#7823) — the heavy `@/lib/scheduled-emails` graph caused order-dependent failures + cross-suite contamination via every bypass attempt; BUG-03 test authorizes via the REAL `validateAdminAuth` + Bearer token (no `@/lib/auth/admin` mock that would leak and break admin-auth/health) and `setupApiMocks` now supplies ADMIN/CRON secrets from the shared `__TEST_ENV`; BUG-02 tests load the REAL `UnifiedRateLimiter` via a unique query-string module key (setupApiMocks' mock class lacks the `.store`/redis internals they assert). Aikido flagged a test ADMIN_SECRET literal -> sourced from `__TEST_ENV` instead (no `--no-verify`). **Gate:** `~/.bun/bin/bun run lint` clean (414 files), `typecheck` clean, `scripts/check-test-mock-leaks.sh` OK, full suite 1090/0 (deterministic across 2 runs). No schema/DDL change; public signatures unchanged. SUMMARY at `.planning/phases/20-correctness-bugs/20-01-SUMMARY.md`. **Next: the operator builds a code-only PR off origin/main, reviews the green diff, then Phase 21 (`code-hygiene`).**
 
 - **Phase 19 (`dependency-security`) complete — SEC-01 (PR #344 merged).** `package.json` overrides pinned patched versions of the 5 `bun audit` vulns: `fast-uri` 3.1.0->3.1.2 (2 HIGH host-confusion/path-traversal), `postcss` 8.4.31->8.5.15 (moderate `</style>` XSS), `brace-expansion` 5.0.5->5.0.6 (moderate DoS), `ws` 8.18.3/8.19.0->8.21.0 (moderate memory disclosure) — all transitive, all same-major non-breaking. `bun update` (compatible) couldn't move them (held below patched by intermediate deps); overrides force them deterministically. `bun audit` -> **No vulnerabilities found**. Verified: typecheck/lint clean, build compiled (postcss build-critical), full suite 1073/0. CI #344 green; merged to origin/main (`1509a490`). Minimal diff (+4 override lines, ~46 bun.lock). SUMMARY `.planning/phases/19-dependency-security/19-01-SUMMARY.md`; VERIFICATION passed. **Next: Phase 20 correctness-bugs** (BUG-01..04 — email double-send race, rate-limiter outage leak, testimonials 404/400 contract, calc JSON cap; behavior-changing, will present the green PR before merge).
 - **v8 milestone STARTED — Hardening.** Driven by a post-v7 repo review (2 reviewer agents + `bun audit` + `fallow` code-intelligence). Three phases: **19 dependency-security** (SEC-01: patch the 5 known vulns — `fast-uri` x2 high, `postcss`/`brace-expansion` moderate — via `bun update` + re-audit), **20 correctness-bugs** (BUG-01 email-queue double-send race -> atomic claim; BUG-02 rate-limiter unbounded in-memory store during Redis outage + non-atomic incr/expire; BUG-03 `testimonials/[id]` 200-on-missing / 500-on-malformed -> 404/400 with rows-affected + UUID validation; BUG-04 calculators/submit unbounded JSON cap), **21 code-hygiene** (CLEAN-01 pagespeed:217 user-facing em-dash; CLEAN-02 prune dead exports/types fallow found; CLEAN-03 dedupe flattenZod/ActionResult x6 + NewsletterSignup self-dupe; CLEAN-04 drop 9x unsound `error as Error` casts; CLEAN-05 fix stale CLAUDE.md `src/lib/errors.ts` ref + verify favicons icon0/icon1 serve + BASE_URL prod check). **Excluded fallow false-positives:** icon0/icon1 are Next icon routes (not dead), duplicate `deleteTestimonial` is an intentional re-export. Sequence 19 -> 20 -> 21, each its own code-only PR. v7 REQUIREMENTS already archived; fresh v8 REQUIREMENTS written. Roadmapper to APPEND phases 19-21 to the ROADMAP (do NOT truncate v3-v7 history, currently 371 lines).
@@ -99,7 +101,7 @@ Phase details + success criteria in `.planning/ROADMAP.md` (Milestone v6 section
 
 ## Next action
 
-**Verify Phase 11 (`paystub-tax-accuracy`) — all 4 plans complete.** Plan 04 shipped the form/URL/copy hardening and ran the full gate (lint + typecheck + build green; paystub suite 37/37 green; only the 21 documented pre-existing homepage/navigation pollution failures remain, 0 net-new). Next: run the phase verifier, then move to Phase 12 (`errorboundary-report-path`, MEDIUM, ERR-01).
+**Phase 20 (`correctness-bugs`) plan 01 complete — build the code-only PR + verify, then Phase 21.** All four bugs (BUG-01..04) are fixed on local `main` with regression tests; full suite 1090/0, lint/typecheck/mock-leak gate green. Next: the orchestrator/operator builds the code-only PR off origin/main, reviews the green diff (behavior-changing phase), merges, then moves to Phase 21 (`code-hygiene`, CLEAN-01..05).
 
 Carry into v6 planning:
 
@@ -114,7 +116,7 @@ Operator follow-up still outstanding (independent of v6):
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 20 correctness-bugs — plan 01 complete (verifying)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-06-03 — Milestone v8 started
+Status: Phase 20 fixes on local main (BUG-01..04); code-only PR + verify next
+Last activity: 2026-06-03 — Phase 20 plan 01 complete (BUG-01..04 fixed, suite 1090/0)

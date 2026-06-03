@@ -407,7 +407,8 @@ Plans:
   4. BUG-04: `calculators/submit` rejects or caps oversized/arbitrary `inputs`/`results` JSON before insert; a test covers the cap.
 
 **Notes**: BUG-01/BUG-03 are VERIFIED; BUG-02 cleanup-gating is VERIFIED, its non-atomic incr/expire is REPORTED (confirm at plan time); BUG-04 is VERIFIED. Touches `scheduled-emails.tsx`, `rate-limiter.ts`, `testimonials.ts` + `api/testimonials/[id]/route.ts`, `api/calculators/submit/route.tsx`. Code-only PR + unit tests.
-**Plans**: TBD (set during plan-phase)
+**Plans**: 1 plan (complete)
+- [x] 20-01-PLAN.md - fix BUG-01..04 (atomic email claim, bounded+atomic rate-limiter, testimonials 404/400 contract, calculator JSON cap) + regression tests + phase gate
 
 ### Phase 21: code-hygiene
 
