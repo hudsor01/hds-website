@@ -2,27 +2,28 @@
 gsd_state_version: 1.0
 milestone: v8
 milestone_name: Hardening
-status: planning
-last_updated: "2026-06-03T01:43:57.338Z"
-last_activity: 2026-06-03
+status: in-progress
+last_updated: "2026-06-03T02:30:00.000Z"
+last_activity: 2026-06-03 — Phase 19 dependency-security complete
 progress:
   total_phases: 3
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
+  percent: 33
 ---
 
 # STATE — Current GSD Position
 
 **Last updated:** 2026-06-03
 **Branch:** `main`
-**Current milestone:** v8 Hardening — PLANNING
-**Current phase:** none yet (roadmap pending: phases 19 dependency-security, 20 correctness-bugs, 21 code-hygiene)
+**Current milestone:** v8 Hardening — IN PROGRESS (1/3 phases)
+**Current phase:** 20 correctness-bugs — next (19 dependency-security complete)
 **Current plan:** none
 
 ## What just happened
 
+- **Phase 19 (`dependency-security`) complete — SEC-01 (PR #344 merged).** `package.json` overrides pinned patched versions of the 5 `bun audit` vulns: `fast-uri` 3.1.0->3.1.2 (2 HIGH host-confusion/path-traversal), `postcss` 8.4.31->8.5.15 (moderate `</style>` XSS), `brace-expansion` 5.0.5->5.0.6 (moderate DoS), `ws` 8.18.3/8.19.0->8.21.0 (moderate memory disclosure) — all transitive, all same-major non-breaking. `bun update` (compatible) couldn't move them (held below patched by intermediate deps); overrides force them deterministically. `bun audit` -> **No vulnerabilities found**. Verified: typecheck/lint clean, build compiled (postcss build-critical), full suite 1073/0. CI #344 green; merged to origin/main (`1509a490`). Minimal diff (+4 override lines, ~46 bun.lock). SUMMARY `.planning/phases/19-dependency-security/19-01-SUMMARY.md`; VERIFICATION passed. **Next: Phase 20 correctness-bugs** (BUG-01..04 — email double-send race, rate-limiter outage leak, testimonials 404/400 contract, calc JSON cap; behavior-changing, will present the green PR before merge).
 - **v8 milestone STARTED — Hardening.** Driven by a post-v7 repo review (2 reviewer agents + `bun audit` + `fallow` code-intelligence). Three phases: **19 dependency-security** (SEC-01: patch the 5 known vulns — `fast-uri` x2 high, `postcss`/`brace-expansion` moderate — via `bun update` + re-audit), **20 correctness-bugs** (BUG-01 email-queue double-send race -> atomic claim; BUG-02 rate-limiter unbounded in-memory store during Redis outage + non-atomic incr/expire; BUG-03 `testimonials/[id]` 200-on-missing / 500-on-malformed -> 404/400 with rows-affected + UUID validation; BUG-04 calculators/submit unbounded JSON cap), **21 code-hygiene** (CLEAN-01 pagespeed:217 user-facing em-dash; CLEAN-02 prune dead exports/types fallow found; CLEAN-03 dedupe flattenZod/ActionResult x6 + NewsletterSignup self-dupe; CLEAN-04 drop 9x unsound `error as Error` casts; CLEAN-05 fix stale CLAUDE.md `src/lib/errors.ts` ref + verify favicons icon0/icon1 serve + BASE_URL prod check). **Excluded fallow false-positives:** icon0/icon1 are Next icon routes (not dead), duplicate `deleteTestimonial` is an intentional re-export. Sequence 19 -> 20 -> 21, each its own code-only PR. v7 REQUIREMENTS already archived; fresh v8 REQUIREMENTS written. Roadmapper to APPEND phases 19-21 to the ROADMAP (do NOT truncate v3-v7 history, currently 371 lines).
 - **v7 milestone CLOSED — Stability and Maintenance complete.** Both phases shipped to `origin/main` and merged CI-green: Phase 17 test-suite-isolation (PR #340) and Phase 18 dependency-currency (PRs #341/#342/#343; Dependabot #327-331 closed-as-superseded). Milestone audit verdict **PASSED, 5/5 requirements satisfied** — canonical record at `.planning/milestones/v7-AUDIT.md`. Original intent fully delivered: the test suite is order-independent and 0-fail (1052/21 -> 1073/0) with the `mock.module` leak root-fixed + a CI-enforced guard (`scripts/check-test-mock-leaks.sh`), and every target dependency is on its latest published version (better-auth 1.6.14, next 16.2.7, react/react-dom 19.2.7, @types/react 19.2.16, knip 6.15.0, all @tiptap/* 3.24.0) with zero open Dependabot PRs. Closed lightly per the v5/v6 convention (AUDIT doc is the record; no skill-archival / no ROADMAP collapse / no tag). v7 REQUIREMENTS archived to `.planning/milestones/v7-REQUIREMENTS.md`. **Open follow-up (not a v7 gap):** local `main` reconcile (`git merge origin/main`) is gated for the agent; reported done by the operator but this working copy still shows local `main` 10 behind origin with pre-bump deps — re-run if needed. `origin/main` is complete and is the source of truth.
 - **Phase 18 (`dependency-currency`) complete — DEP-01 + DEP-02 + DEP-03.** Reviewed all 5 open Dependabot PRs against official changelogs and resolved them via 3 verified, CI-green, code-only PRs (merged to `origin/main`): **#341** all five `@tiptap/*` 3.23.6->3.24.0 (extension-image/link/pm/react/starter-kit, one atomic bump + regenerated lockfile), **#342** next 16.2.7 + react/react-dom 19.2.7 + @types/react 19.2.16 + knip 6.15.0 + better-auth 1.6.13, **#343** better-auth 1.6.13->1.6.14 (latest; published mid-flight). **Closed-as-superseded:** #327, #328, #329, #330, #331 (each with a comment). **Why consolidation, not direct Dependabot merges:** (1) the 3 Tiptap PRs each bumped ONE package and omitted `@tiptap/pm` + `@tiptap/react` (also 3.23.6) — merging any subset installs two ProseMirror copies and crashes `RichTextEditor.tsx` (`keyed plugin` RangeError); (2) #327/#328 failed CI with `lockfile had changes, but lockfile is frozen` (the repo's fix-lockfile job doesn't produce a frozen-compatible bun.lock; rebase/recreate didn't fix it). Both resolved by regenerating a consistent lockfile on controlled branches and confirming the frozen install passes in CI (bun 1.3.8). **Final dep state on main = all latest:** better-auth 1.6.14, next 16.2.7, react/react-dom 19.2.7, @types/react 19.2.16, knip 6.15.0, @tiptap/* 3.24.0. **Verification:** all bumps non-breaking per official changelogs; DEP-02 = typecheck+build (incl. `/api/auth/[...all]`)+suite on 1.6.13 and 1.6.14; DEP-03 = build (incl. `/admin/blog` RichTextEditor)+suite+rich-text-editor tag-contract test 4/0+single-deduped prosemirror/core/pm; full `bun test tests/` 1073 pass / 0 fail held across every branch (Phase-17 guard intact); zero open Dependabot PRs remain. SUMMARY at `.planning/phases/18-dependency-currency/18-01-SUMMARY.md`; VERIFICATION passed. **v7 phases now 2/2 complete (100%)** — ready for milestone audit/close. **Operator action:** reconcile local `main` (`git merge origin/main` — gated for the agent; #340/#341/#342/#343 are all on origin/main).
