@@ -27,7 +27,6 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import type { ZodError } from 'zod'
 import { requireAdminSession } from '@/lib/admin/auth'
 import {
 	deleteCalculatorLead,
@@ -35,6 +34,7 @@ import {
 	markCalculatorLeadConverted
 } from '@/lib/admin/calculator-leads-queries'
 import { formDataToObject } from '@/lib/admin/form-data'
+import { flattenZod } from '@/lib/admin/zod-errors'
 import { logger } from '@/lib/logger'
 import {
 	deleteCalculatorLeadSchema,
@@ -43,17 +43,6 @@ import {
 } from '@/lib/schemas/admin-calculator-leads'
 
 type ActionResult = { ok: true } | { ok: false; errors: Record<string, string> }
-
-function flattenZod(error: ZodError): Record<string, string> {
-	const out: Record<string, string> = {}
-	for (const issue of error.issues) {
-		const path = issue.path.join('.') || '_form'
-		if (!(path in out)) {
-			out[path] = issue.message
-		}
-	}
-	return out
-}
 
 export async function markCalculatorLeadContactedAction(
 	formData: FormData

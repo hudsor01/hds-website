@@ -75,7 +75,7 @@ export function usePaystubCalculator(params: PaystubCalculationParams) {
 
 			return calculatePaystubTotals(stableParams)
 		} catch (error) {
-			logger.error('Paystub calculation error:', error as Error)
+			logger.error('Paystub calculation error:', error)
 			return null
 		}
 	}, [stableParams])

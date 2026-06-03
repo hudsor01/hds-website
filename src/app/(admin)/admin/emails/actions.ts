@@ -24,7 +24,6 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import type { ZodError } from 'zod'
 import { requireAdminSession } from '@/lib/admin/auth'
 import {
 	cancelScheduledEmail,
@@ -32,6 +31,7 @@ import {
 	retryScheduledEmail
 } from '@/lib/admin/emails-queries'
 import { formDataToObject } from '@/lib/admin/form-data'
+import { flattenZod } from '@/lib/admin/zod-errors'
 import { logger } from '@/lib/logger'
 import {
 	cancelEmailSchema,
@@ -40,17 +40,6 @@ import {
 } from '@/lib/schemas/admin-emails'
 
 type ActionResult = { ok: true } | { ok: false; errors: Record<string, string> }
-
-function flattenZod(error: ZodError): Record<string, string> {
-	const out: Record<string, string> = {}
-	for (const issue of error.issues) {
-		const path = issue.path.join('.') || '_form'
-		if (!(path in out)) {
-			out[path] = issue.message
-		}
-	}
-	return out
-}
 
 /**
  * Reset a scheduled email so the cron picks it up again. Refuses when
