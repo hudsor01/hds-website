@@ -63,6 +63,14 @@ export const leads = pgTable('leads', {
 	status: text('status').default('new'),
 	score: integer('score'),
 	metadata: jsonb('metadata'),
+	// Revenue reporting: set when a lead is marked won (status='won').
+	dealValue: numeric('deal_value'),
+	wonAt: timestamp('won_at', { withTimezone: true }),
+	// Idempotency for the Google Ads "Sale" offline-conversion value upload.
+	adConversionSentAt: timestamp('ad_conversion_sent_at', {
+		withTimezone: true
+	}),
+	adConversionRequestId: text('ad_conversion_request_id'),
 	createdAt: timestamp('created_at', { withTimezone: true })
 		.defaultNow()
 		.notNull(),

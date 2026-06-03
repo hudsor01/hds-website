@@ -138,6 +138,10 @@ export const env = createEnv({
 		// is only needed when calling through a manager (MCC) account.
 		GOOGLE_ADS_CUSTOMER_ID: z.string().optional(),
 		GOOGLE_ADS_CONVERSION_ACTION_ID: z.string().optional(),
+		// Separate conversion action for closed-deal (sale) value uploads, so
+		// leads bid on volume and sales on revenue. Optional;
+		// sendSaleConversion() no-ops until it is set.
+		GOOGLE_ADS_SALE_CONVERSION_ACTION_ID: z.string().optional(),
 		GOOGLE_ADS_LOGIN_CUSTOMER_ID: z.string().optional(),
 		GOOGLE_ADS_SA_JSON: z.string().optional()
 	},
@@ -191,6 +195,8 @@ export const env = createEnv({
 		GOOGLE_ADS_CUSTOMER_ID: process.env.GOOGLE_ADS_CUSTOMER_ID,
 		GOOGLE_ADS_CONVERSION_ACTION_ID:
 			process.env.GOOGLE_ADS_CONVERSION_ACTION_ID,
+		GOOGLE_ADS_SALE_CONVERSION_ACTION_ID:
+			process.env.GOOGLE_ADS_SALE_CONVERSION_ACTION_ID,
 		GOOGLE_ADS_LOGIN_CUSTOMER_ID: process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID,
 		GOOGLE_ADS_SA_JSON: process.env.GOOGLE_ADS_SA_JSON,
 
