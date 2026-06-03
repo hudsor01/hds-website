@@ -53,7 +53,6 @@ async function handleTestimonialSubmit(request: NextRequest) {
 		}
 
 		const testimonial = await submitTestimonial({
-			request_id: testimonialRequest.id,
 			client_name: body.client_name,
 			company: body.company,
 			role: body.role,
@@ -69,7 +68,9 @@ async function handleTestimonialSubmit(request: NextRequest) {
 		}
 
 		// Hard-purge cache so subsequent requests see `submitted: true`.
-		const marked = await markRequestSubmitted(body.token)
+		// Pass the new testimonial id so the request -> testimonial back-link
+		// (testimonial_requests.testimonial_id) is recorded.
+		const marked = await markRequestSubmitted(body.token, testimonial.id)
 		if (!marked) {
 			logger.error(
 				'Failed to mark testimonial request as submitted; cache not invalidated',
