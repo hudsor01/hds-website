@@ -27,10 +27,13 @@ set -euo pipefail
 # Single or double quotes accepted. tests/setup.ts is the sanctioned exception.
 PATTERN="mock\.module\((['\"])@/lib/(utils|constants/)"
 
-# -R recursive, -E extended regex, -n line numbers. Restrict to TS/TSX test files.
-# grep exits 1 when no match -> that is the success case here, so guard with `|| true`.
-matches="$(grep -REn "$PATTERN" tests/ --include='*.ts' --include='*.tsx' 2>/dev/null \
-	| grep -v '^tests/setup\.ts:' || true)"
+# Use `command grep` to bypass any interactive alias (some dev shells alias grep
+# to ripgrep, which would silently change pipe/flag semantics). --exclude drops
+# the one sanctioned file in a single pass so no second filter stage is needed.
+# -R recursive, -E extended regex, -n line numbers. grep exits 1 when no match ->
+# that is the success case here, so guard with `|| true`.
+matches="$(command grep -REn "$PATTERN" tests/ \
+	--include='*.ts' --include='*.tsx' --exclude='setup.ts' 2>/dev/null || true)"
 
 if [ -n "$matches" ]; then
 	echo "ERROR: partial mock of a shared pure module detected in a per-file test:" >&2
