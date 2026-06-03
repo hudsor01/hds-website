@@ -7,7 +7,7 @@
  */
 
 import { describe, expect, test } from 'bun:test'
-import { escapeCdata } from '@/lib/xml-escape'
+import { escapeCdata, escapeXml } from '@/lib/xml-escape'
 
 describe('escapeCdata', () => {
 	test('passes plain text through unchanged', () => {
@@ -50,5 +50,24 @@ describe('escapeCdata', () => {
 		const wrapped = `<![CDATA[${escapeCdata('a ]]> b ]]> c')}]]>`
 		const stripped = wrapped.replace(/<!\[CDATA\[[\s\S]*?\]\]>/g, '')
 		expect(stripped).toBe('')
+	})
+})
+
+describe('escapeXml', () => {
+	test('passes a normal blog slug through unchanged', () => {
+		expect(escapeXml('my-first-post')).toBe('my-first-post')
+		expect(escapeXml('')).toBe('')
+	})
+
+	test('escapes the five XML predefined entities', () => {
+		expect(escapeXml('a & b')).toBe('a &amp; b')
+		expect(escapeXml('a < b > c')).toBe('a &lt; b &gt; c')
+		expect(escapeXml(`"quote" 'apos'`)).toBe('&quot;quote&quot; &apos;apos&apos;')
+	})
+
+	test('escapes & before producing entities (no double-escape)', () => {
+		// & must be escaped first so the < it precedes does not yield &amp;lt;
+		expect(escapeXml('<tag>')).toBe('&lt;tag&gt;')
+		expect(escapeXml('&amp;')).toBe('&amp;amp;')
 	})
 })

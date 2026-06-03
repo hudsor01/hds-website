@@ -164,15 +164,22 @@ export async function getTestimonialRequests(): Promise<TestimonialRequest[]> {
 }
 
 /**
- * Mark a testimonial request as submitted
+ * Mark a testimonial request as submitted, linking it to the testimonial it
+ * produced. Passing `testimonialId` populates `testimonial_requests.testimonial_id`
+ * so the request -> testimonial back-link (read by `mapTestimonialRequest`) is
+ * recorded; omit it to only flip the status.
  */
-export async function markRequestSubmitted(token: string): Promise<boolean> {
+export async function markRequestSubmitted(
+	token: string,
+	testimonialId?: string
+): Promise<boolean> {
 	try {
 		await db
 			.update(testimonialRequests)
 			.set({
 				status: 'submitted',
-				submittedAt: new Date()
+				submittedAt: new Date(),
+				...(testimonialId ? { testimonialId } : {})
 			})
 			.where(eq(testimonialRequests.token, token))
 		return true
@@ -192,7 +199,6 @@ export async function markRequestSubmitted(token: string): Promise<boolean> {
  * Submit a testimonial
  */
 export async function submitTestimonial(testimonial: {
-	request_id?: string
 	client_name: string
 	company?: string
 	role?: string
