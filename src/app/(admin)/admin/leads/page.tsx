@@ -55,9 +55,13 @@ import {
 	TableHeader,
 	TableRow
 } from '@/components/ui/table'
-import { listLeadsForAdmin } from '@/lib/admin/leads-queries'
+import {
+	getLeadsRevenueSummary,
+	listLeadsForAdmin
+} from '@/lib/admin/leads-queries'
 import { buildPaginationHref } from '@/lib/admin/list-cursor'
 import { LEAD_STATUSES, type LeadStatus } from '@/lib/schemas/admin-leads'
+import { formatCurrency } from '@/lib/utils'
 
 export const metadata: Metadata = {
 	title: 'Admin: Leads',
@@ -74,6 +78,45 @@ const FILTER_OPTIONS: StatusFilterOption[] = [
 
 interface AdminLeadsPageProps {
 	searchParams: Promise<{ status?: string; q?: string; cursor?: string }>
+}
+
+/**
+ * Revenue rollup of won leads: total closed value + the ad-attributed subset
+ * (won leads carrying a Google click id) -- the "did the ad generate revenue"
+ * number. Renders nothing until at least one lead is marked won.
+ */
+async function RevenueSummary() {
+	await connection()
+	const s = await getLeadsRevenueSummary()
+	if (s.wonCount === 0) {
+		return null
+	}
+	const cards: { label: string; value: string }[] = [
+		{ label: 'Won leads', value: String(s.wonCount) },
+		{ label: 'Total revenue', value: formatCurrency(s.totalValue) },
+		{ label: 'Ad-attributed leads', value: String(s.adAttributedCount) },
+		{
+			label: 'Ad-attributed revenue',
+			value: formatCurrency(s.adAttributedValue)
+		}
+	]
+	return (
+		<dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+			{cards.map(c => (
+				<div
+					key={c.label}
+					className="rounded-xl border border-border bg-surface-raised p-4"
+				>
+					<dt className="text-xs uppercase tracking-wider text-muted-foreground">
+						{c.label}
+					</dt>
+					<dd className="mt-1 text-xl font-semibold text-foreground">
+						{c.value}
+					</dd>
+				</div>
+			))}
+		</dl>
+	)
 }
 
 async function LeadsList({ searchParams }: AdminLeadsPageProps) {
@@ -228,6 +271,9 @@ export default function AdminLeadsPage({ searchParams }: AdminLeadsPageProps) {
 					Calculator leads
 				</Link>
 			</div>
+			<Suspense fallback={null}>
+				<RevenueSummary />
+			</Suspense>
 			<Suspense
 				fallback={
 					<div className="text-sm text-muted-foreground">Loading leads...</div>

@@ -26,6 +26,7 @@ const STATUS_CLASSES: Record<string, string> = {
 	new: 'text-info-text bg-info-light border-border',
 	contacted: 'text-accent-text bg-surface-base border-border',
 	qualified: 'text-success-text bg-success-light border-border',
+	won: 'text-success-text bg-success-light border-success-text',
 	closed: 'text-muted-foreground bg-surface-raised border-border',
 	// newsletter
 	active: 'text-success-text bg-success-light border-border',
