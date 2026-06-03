@@ -22,6 +22,16 @@ import { NextRequest } from 'next/server'
 import { cleanupMocks, setupApiMocks } from '../test-utils'
 
 const VALID_UUID = '11111111-1111-4111-8111-111111111111'
+// Sourced from the shared TEST_ENV (tests/setup.ts) so there is no duplicated
+// secret literal. setupApiMocks() feeds this same value into its @/env mock,
+// so it matches what the real validateAdminAuth compares against. We authorize
+// via the REAL validateAdminAuth (a valid Bearer token) rather than mocking
+// @/lib/auth/admin — admin-auth.test.ts requires that NO other file
+// mock.module()s @/lib/auth/admin (the mock would leak process-globally and
+// strip the real impl for every later suite). See setup.ts preload note.
+const VALID_ADMIN_SECRET = (
+	globalThis as unknown as { __TEST_ENV: { ADMIN_SECRET: string } }
+).__TEST_ENV.ADMIN_SECRET
 
 let updateTestimonialStatusMock: ReturnType<typeof mock>
 let deleteTestimonialMock: ReturnType<typeof mock>
@@ -37,18 +47,15 @@ function mockTestimonialsLib() {
 	}))
 }
 
-function mockAdminAuthorized() {
-	// validateAdminAuth returns null (no error) on an authorized request.
-	mock.module('@/lib/auth/admin', () => ({
-		validateAdminAuth: mock().mockReturnValue(null)
-	}))
+function authHeaders(): Record<string, string> {
+	return { authorization: `Bearer ${VALID_ADMIN_SECRET}` }
 }
 
 function makePatch(id: string, body: unknown): [NextRequest, { params: Promise<{ id: string }> }] {
 	const req = new NextRequest(`http://localhost/api/testimonials/${id}`, {
 		method: 'PATCH',
 		body: JSON.stringify(body),
-		headers: { 'Content-Type': 'application/json' }
+		headers: { 'Content-Type': 'application/json', ...authHeaders() }
 	})
 	return [req, { params: Promise.resolve({ id }) }]
 }
@@ -58,7 +65,8 @@ function makeDelete(
 	id: string
 ): [NextRequest, { params: Promise<{ id: string }> }] {
 	const req = new NextRequest(`http://localhost${path}/${id}`, {
-		method: 'DELETE'
+		method: 'DELETE',
+		headers: authHeaders()
 	})
 	return [req, { params: Promise.resolve({ id }) }]
 }
@@ -70,7 +78,6 @@ describe('BUG-03 testimonials/[id] HTTP contract', () => {
 		deleteTestimonialMock = mock().mockResolvedValue(true)
 		deleteTestimonialRequestMock = mock().mockResolvedValue(true)
 		mockTestimonialsLib()
-		mockAdminAuthorized()
 	})
 
 	afterEach(() => {
