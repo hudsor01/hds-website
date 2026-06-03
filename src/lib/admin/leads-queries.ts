@@ -25,7 +25,18 @@
  */
 import 'server-only'
 
-import { and, asc, desc, eq, gt, ilike, lt, or, type SQL } from 'drizzle-orm'
+import {
+	and,
+	asc,
+	desc,
+	eq,
+	gt,
+	ilike,
+	lt,
+	or,
+	type SQL,
+	sql
+} from 'drizzle-orm'
 import {
 	type Direction,
 	decodeCursor,
@@ -252,6 +263,93 @@ export async function updateLeadStatus(
 		.where(eq(leads.id, id))
 		.returning()
 	return row ?? null
+}
+
+/**
+ * Mark a lead as won with the closed-deal value: sets `status='won'`,
+ * `deal_value`, `won_at`, bumps `updated_at`. Returns the updated row (incl.
+ * `metadata` for the sale-conversion gclid and the `adConversionSentAt`
+ * idempotency stamp), or null when the lead does not exist. `numeric` maps to
+ * a string in Drizzle, so the value is stored as its string form.
+ */
+export async function markLeadWon(
+	id: string,
+	dealValue: number
+): Promise<Lead | null> {
+	const [row] = await db
+		.update(leads)
+		.set({
+			status: 'won',
+			dealValue: dealValue.toString(),
+			wonAt: new Date(),
+			updatedAt: new Date()
+		})
+		.where(eq(leads.id, id))
+		.returning()
+	return row ?? null
+}
+
+/**
+ * Stamp that the Google Ads "Sale" conversion-value upload succeeded so it is
+ * never sent twice. Best-effort: a failure is logged, not thrown (the sale is
+ * already recorded; the action also guards on the stamp before re-uploading).
+ */
+export async function recordSaleConversionSent(
+	id: string,
+	requestId?: string
+): Promise<void> {
+	try {
+		await db
+			.update(leads)
+			.set({
+				adConversionSentAt: new Date(),
+				adConversionRequestId: requestId ?? null
+			})
+			.where(eq(leads.id, id))
+	} catch (error) {
+		logger.error('leads-queries.recordSaleConversionSent failed', error, {
+			metadata: { id }
+		})
+	}
+}
+
+export interface LeadsRevenueSummary {
+	wonCount: number
+	totalValue: number
+	adAttributedCount: number
+	adAttributedValue: number
+}
+
+/**
+ * Revenue rollup for the `/admin/leads` header: count + summed `deal_value` of
+ * won leads, plus the ad-attributed subset (won leads whose stored attribution
+ * carries a Google click id at `metadata->attribution->gclid`). The
+ * ad-attributed value is the real "revenue this campaign generated" number.
+ * Returns zeros on a query blip rather than crashing the list page.
+ */
+export async function getLeadsRevenueSummary(): Promise<LeadsRevenueSummary> {
+	const zero: LeadsRevenueSummary = {
+		wonCount: 0,
+		totalValue: 0,
+		adAttributedCount: 0,
+		adAttributedValue: 0
+	}
+	try {
+		const gclidPresent = sql`${leads.metadata} #>> '{attribution,gclid}' is not null`
+		const [row] = await db
+			.select({
+				wonCount: sql<number>`count(*)::int`,
+				totalValue: sql<number>`coalesce(sum(${leads.dealValue}), 0)::float8`,
+				adAttributedCount: sql<number>`count(*) filter (where ${gclidPresent})::int`,
+				adAttributedValue: sql<number>`coalesce(sum(${leads.dealValue}) filter (where ${gclidPresent}), 0)::float8`
+			})
+			.from(leads)
+			.where(eq(leads.status, 'won'))
+		return row ?? zero
+	} catch (error) {
+		logger.error('leads-queries.getLeadsRevenueSummary failed', error)
+		return zero
+	}
 }
 
 /**
