@@ -53,6 +53,23 @@ require('@/lib/auth/admin')
 // assert the genuine no-op contract regardless of suite ordering.
 ;(globalThis as { __REAL_DB__?: unknown }).__REAL_DB__ = require('@/lib/db').db
 
+// ===================================================================
+// TESTING CONVENTION: shared-module mocks (read before adding a mock)
+// ===================================================================
+// bun's mock.module(specifier, factory) is PROCESS-GLOBAL and is NEVER
+// cleared by mock.restore() (oven-sh/bun#7823). A per-file PARTIAL mock of
+// a shared pure module therefore freezes that module's exports for every
+// later test file in the run, breaking unrelated suites (e.g. a partial
+// @/lib/utils mock that drops `cn` produces "Export named 'cn' not found"
+// in homepage/navigation/Footer tests — the Phase 17 root cause).
+//
+// RULE: NEVER partial-mock a shared pure module (@/lib/utils,
+// @/lib/constants/*) in a per-file test. Use the REAL module (these are
+// pure/deterministic), or place a COMPLETE shared mock HERE in tests/setup.ts
+// (the one sanctioned place). scripts/check-test-mock-leaks.sh enforces this
+// in CI and in the local `test:unit` script.
+// ===================================================================
+
 // `server-only` throws on any import — that's its whole purpose, to fail
 // fast if a server module is reached from a client bundle. In tests we
 // run server modules under bun:test (a Node-like context) so the package
