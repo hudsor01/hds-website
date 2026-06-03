@@ -44,6 +44,12 @@ async function handleCspReport(request: NextRequest) {
 
 		// Sanitize and log only the needed fields
 		const cspReport = isCspReport ? body['csp-report'] : body
+		// `body['csp-report']` may be a string/number/null even when the key is
+		// present; guard before indexing so a malformed payload is a clean 400
+		// instead of a thrown read on a non-object.
+		if (!cspReport || typeof cspReport !== 'object') {
+			return new NextResponse(null, { status: 400 })
+		}
 		const sanitizedReport = {
 			blockedUri: cspReport['blocked-uri'],
 			violatedDirective: cspReport['violated-directive'],
