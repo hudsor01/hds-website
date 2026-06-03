@@ -2,27 +2,29 @@
 gsd_state_version: 1.0
 milestone: v8
 milestone_name: Hardening
-status: in-progress
+status: closed
 last_updated: "2026-06-03T04:30:00.000Z"
-last_activity: 2026-06-03 — Phase 20 correctness-bugs plan 01 complete (BUG-01..04 fixed + tests)
+last_activity: 2026-06-03 — v8 Hardening CLOSED (audit PASSED 10/10)
 progress:
   total_phases: 3
-  completed_phases: 2
-  total_plans: 2
-  completed_plans: 2
-  percent: 67
+  completed_phases: 3
+  total_plans: 3
+  completed_plans: 3
+  percent: 100
 ---
 
 # STATE — Current GSD Position
 
 **Last updated:** 2026-06-03
 **Branch:** `main`
-**Current milestone:** v8 Hardening — IN PROGRESS (2/3 phases)
-**Current phase:** 21 code-hygiene — next (20 correctness-bugs merged via PR #345)
+**Current milestone:** v8 Hardening — CLOSED (audit PASSED 10/10)
+**Current phase:** none (milestone closed)
 **Current plan:** none
 
 ## What just happened
 
+- **v8 milestone CLOSED — Hardening complete.** All 3 phases shipped to `origin/main` + merged CI-green: Phase 19 dependency-security (PR #344), 20 correctness-bugs (#345), 21 code-hygiene (#346). Milestone audit **PASSED, 10/10 requirements** — canonical record `.planning/milestones/v8-AUDIT.md`. Delivered: 5 known dependency vulns patched (`bun audit` -> 0), 4 verified correctness bugs fixed with regression tests (email double-send race, rate-limiter outage leak, testimonials 404/400 contract, calculator JSON cap; suite 1073 -> 1090), and hygiene (user-facing em-dash, dead-export prune, `flattenZod` x6 dedup, 9 unsound casts, stale-doc fix). Driven by the post-v7 repo review (2 reviewer agents + `bun audit` + `fallow`); 2 fallow false-positives correctly excluded (`icon0`/`icon1` Next routes — build-confirmed serving; `deleteTestimonial` re-export). Closed lightly per v5-v7 convention (AUDIT doc is the record; no tag). v8 REQUIREMENTS archived to `.planning/milestones/v8-REQUIREMENTS.md`. **Operator follow-ups (not v8 gaps):** reconcile local `main` (`git merge origin/main` — gated for the agent; #344/#345/#346 on origin/main); confirm `BASE_URL` set in prod Vercel env (same-origin guard depends on it). **Deferred (logged):** e2e-spec clone families, admin `list*ForAdmin` complexity hotspots, `card.tsx` union casts, NewsletterSignup variant-branch dedup.
+- **Phase 21 (`code-hygiene`) complete — CLEAN-01..05 (PR #346 merged `e755cbbc`).** CLEAN-01 pagespeed em-dash -> period; CLEAN-02 deleted dead `getClientIpFromHeaders` + un-exported 2 internal-only types + justified `isGoogleAdsConfigured`/`getCsrfTokenFromRequest`; CLEAN-03 extracted `flattenZod` to `src/lib/admin/zod-errors.ts` (6 admin actions), `ActionResult` left per-file (blog's id is required), NewsletterSignup variant-branch dup kept-by-decision (visual-regression risk, no visual test); CLEAN-04 dropped 9 `error as Error` casts; CLEAN-05 fixed CLAUDE.md `errors.ts` ref, favicons build-confirmed serving, BASE_URL flagged. Net -60 lines, no behavior change. Gate green; suite 1090/0. SUMMARY + VERIFICATION passed.
 - **Phase 20 MERGED — PR #345 green (`fed62f2e`).** All 4 correctness fixes on origin/main; BUG-01..04 marked complete; VERIFICATION passed. **CI escape caught + fixed before merge:** first run had 9 Test fails (all BUG-03 route tests, `Received: 503`) — the route tests authorize via the REAL `validateAdminAuth`, and `setupApiMocks` snapshots `__TEST_ENV.ADMIN_SECRET` into its `@/env` mock at call time; under CI bun-1.3.8 ordering a prior suite (`admin-auth`, flips ADMIN_SECRET to undefined) left it unset. Fixed in two steps (9->1->0): re-establish `testEnv.ADMIN_SECRET` in `beforeEach`, BEFORE `setupApiMocks()` reads it (3 test-only commits: `b3cc9b2e`-area + `5bfade22`). Product code always correct; local (bun 1.3.14) couldn't reproduce, CI authoritative — same bun#7823 class as Phase 17 but on `@/env`/auth. **Next: Phase 21 code-hygiene** (CLEAN-01..05). Operator: reconcile local `main` (`git merge origin/main`).
 - **Phase 20 Plan 01 (`correctness-bugs`) complete — BUG-01..04 (6 commits: `308b9871`, `f0514e7b`, `2be8b2c2`, `c98ebe79`, `ab709160`, `5b4e3eba`).** Fixed all four verified runtime defects in their owning files, each with a regression test that fails on the pre-fix code; full suite **1073 -> 1090 pass / 0 fail** (+17 tests). **BUG-01 (email double-send race):** new `claimDuePendingEmails(db, now)` runs a single conditional `UPDATE ... SET status='processing' WHERE id IN (...) AND <still-claimable> RETURNING *` before any Resend send; only claimed rows are sent, so two overlapping cron/n8n passes send a row at most once. **Recovery-gap decision (option a, mandated):** the candidate SELECT + claim predicate also reclaim rows stuck in `processing` whose `scheduledFor < now - 15min` (table has no `updatedAt`; `scheduledFor` is never rewritten, so a still-`processing` row long past due is provably a crashed claim) — recoverable, no DDL. `status` is plain `text` (not pg enum), so `'processing'` is a transient value. **BUG-02 (rate-limiter):** `_checkLimitInMemory` lazy-prunes expired entries on every call (bounded under a Redis outage independent of `useRedis`); `checkWithRedis` replaced the CONFIRMED non-atomic `incr`+`expire` (rate-limiter.ts:56-57) with `SET key 0 NX EX window` + `INCR` (TTL guaranteed on first write, no zombie keys). **No new dependency** (`@upstash/ratelimit` not added). **BUG-03 (testimonials contract):** query layer adds `.returning()` and returns `result.length > 0`; routes validate `id` with `z.string().uuid()` (400 before DB) and map false -> 404 (was 200-on-missing / 500-on-malformed). Applied to PATCH/DELETE `[id]` and DELETE `requests/[id]`; messages dash-free. **BUG-04 (calculator JSON):** `superRefine` caps `inputs`+`results` at 16KB serialized (`MAX_JSON_BYTES`) + 100 keys (`MAX_JSON_KEYS`) before insert -> 400; the byte cap is the real protection (bounds nesting depth; key cap is a cheap early reject), message dash-free. **Test-isolation deviations (Rule 3, all in the test layer):** extracted BUG-01's claim into a lightweight `src/lib/scheduled-emails-claim.ts` (drizzle+schema only, db injected) so it is order-independent under bun's process-global `mock.module` (oven-sh/bun#7823) — the heavy `@/lib/scheduled-emails` graph caused order-dependent failures + cross-suite contamination via every bypass attempt; BUG-03 test authorizes via the REAL `validateAdminAuth` + Bearer token (no `@/lib/auth/admin` mock that would leak and break admin-auth/health) and `setupApiMocks` now supplies ADMIN/CRON secrets from the shared `__TEST_ENV`; BUG-02 tests load the REAL `UnifiedRateLimiter` via a unique query-string module key (setupApiMocks' mock class lacks the `.store`/redis internals they assert). Aikido flagged a test ADMIN_SECRET literal -> sourced from `__TEST_ENV` instead (no `--no-verify`). **Gate:** `~/.bun/bin/bun run lint` clean (414 files), `typecheck` clean, `scripts/check-test-mock-leaks.sh` OK, full suite 1090/0 (deterministic across 2 runs). No schema/DDL change; public signatures unchanged. SUMMARY at `.planning/phases/20-correctness-bugs/20-01-SUMMARY.md`. **Next: the operator builds a code-only PR off origin/main, reviews the green diff, then Phase 21 (`code-hygiene`).**
 
