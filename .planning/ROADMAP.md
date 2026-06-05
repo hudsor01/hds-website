@@ -134,17 +134,19 @@ Plans:
 > Phase numbering continues from v5 (last phase 10), so v6 runs Phase 11 through Phase 16. These are bugfix/cleanup phases against production code with full test + lint + typecheck + build gates; no new external integrations.
 >
 > **Milestone decision (admin error states):** ADMINERR-01..04 implement "full error states everywhere," which **supersedes** the v4 locked decision "each admin query wraps in try/catch and returns [] on failure." The single shared data seam is `src/lib/admin/*-queries.ts`; pages and widgets consume it and never import `db` directly.
+>
+> **Closed 2026-06-02.** Audit at `.planning/milestones/v6-AUDIT.md` — PASSED, 21/21 requirements. All 6 phases (11-16) shipped CI-green: PRs #332 (11), #333 (12), #334 (13), #337 (14), #338 (15), #339 (16). Each phase dir carries its SUMMARY + VERIFICATION (status: passed). Local ROADMAP status was backfilled 2026-06-05 — phases 12-16 had shipped to origin/main but were still marked "not started" here because the local planning trail was not regenerated after the merges.
 
 ### Phases
 
 | # | Slug | Status | Plans | Severity | Description |
 |---|---|---|---|---|---|
 | 11 | `paystub-tax-accuracy` | complete (4/4 plans) | 4 | HIGH | Stop the paystub calculator from emitting a confident, wrong financial output. Restrict the state dropdown to states with real bracket data (PAYSTUB-01), remove the dead 2023 and stale 2024 year toggles and re-key to OFFICIAL 2025 (PAYSTUB-02), derive year validation from the data table (PAYSTUB-03), drop redundant flat-0 TX/FL/WA bracket entries (PAYSTUB-04), correct federal + CA + NY + MA to official 2025 values incl. the >$1M CA/MA surtaxes (PAYSTUB-05..08), reframe copy as a 2025 estimate (PAYSTUB-09), and harden stale shared URLs (PAYSTUB-10). Findings #1, #2, #4 + the 2025-clone note + official-source data correction. |
-| 12 | `errorboundary-report-path` | not started | TBD | MEDIUM | The root-layout ErrorBoundary "Report Error" action either transmits a real report or is removed; never claims a report was filed when nothing was sent. No `alert()`; Sonner toast if feedback is shown. Finding #3 (ERR-01). |
-| 13 | `admin-error-observability` | not started | TBD | DECIDE | Admin list pages, dashboard widgets, the `/admin/emails` queue-health counts, and `get*ById` detail pages distinguish "query failed" from "no data" with a visible error state. Supersedes the v4 locked return-`[]`-on-failure decision. `get*ById` failure must NOT degrade to a 404. ADMINERR-01..04. |
-| 14 | `admin-page-title` | not started | TBD | DECIDE | Resolve the hardcoded-but-dynamic-looking `pageTitle="Admin"` prop in `(admin)/admin/layout.tsx`. Canonical approach (native Next.js 16 metadata/title template vs per-page heading) is research-required during plan-phase. ADMINUX-01. |
-| 15 | `dead-code-cleanup` | not started | TBD | LOW | Remove dead/dangling code: the `notifications.ts` "Test notification endpoints" JSDoc stub (CLEAN-01), the phantom `HelpArticle.order_index` field with no backing column (CLEAN-02), and the call-site-verified cleanup-bucket no-ops (logger `group`/`groupEnd`/`table`, `contact-welcome` `PARAGRAPH_STYLE.whiteSpace`, `ttl-calculator` always-0 `processingFees`) (CLEAN-03). Findings #5, #6 + CLEANUP bucket. |
-| 16 | `intentional-noop-confirmation` | not started | TBD | DOC | Record every verified-intentional no-op (env-gated integrations, mock DB, prod log-level drops, rate-limiter fallback, attribution quota catch, blob-probe fallback, upload audit-log) as verified-intentional in `.planning/v6-AUDIT-FINDINGS.md` with rationale (NOOP-01), and add cheap regression tests asserting the documented behavior so it is intentional-by-contract (NOOP-02). 50 intentional findings. |
+| 12 | `errorboundary-report-path` | complete (1/1) PR #333 | 1 | MEDIUM | The root-layout ErrorBoundary "Report Error" action either transmits a real report or is removed; never claims a report was filed when nothing was sent. No `alert()`; Sonner toast if feedback is shown. Finding #3 (ERR-01). |
+| 13 | `admin-error-observability` | complete (10/10) PR #334 | 10 | DECIDE | Admin list pages, dashboard widgets, the `/admin/emails` queue-health counts, and `get*ById` detail pages distinguish "query failed" from "no data" with a visible error state. Supersedes the v4 locked return-`[]`-on-failure decision. `get*ById` failure must NOT degrade to a 404. ADMINERR-01..04. |
+| 14 | `admin-page-title` | complete (1/1) PR #337 | 1 | DECIDE | Resolve the hardcoded-but-dynamic-looking `pageTitle="Admin"` prop in `(admin)/admin/layout.tsx`. Canonical approach (native Next.js 16 metadata/title template vs per-page heading) is research-required during plan-phase. ADMINUX-01. |
+| 15 | `dead-code-cleanup` | complete (1/1) PR #338 | 1 | LOW | Remove dead/dangling code: the `notifications.ts` "Test notification endpoints" JSDoc stub (CLEAN-01), the phantom `HelpArticle.order_index` field with no backing column (CLEAN-02), and the call-site-verified cleanup-bucket no-ops (logger `group`/`groupEnd`/`table`, `contact-welcome` `PARAGRAPH_STYLE.whiteSpace`, `ttl-calculator` always-0 `processingFees`) (CLEAN-03). Findings #5, #6 + CLEANUP bucket. |
+| 16 | `intentional-noop-confirmation` | complete (1/1) PR #339 | 1 | DOC | Record every verified-intentional no-op (env-gated integrations, mock DB, prod log-level drops, rate-limiter fallback, attribution quota catch, blob-probe fallback, upload audit-log) as verified-intentional in `.planning/v6-AUDIT-FINDINGS.md` with rationale (NOOP-01), and add cheap regression tests asserting the documented behavior so it is intentional-by-contract (NOOP-02). 50 intentional findings. |
 
 ### Phase 11: paystub-tax-accuracy
 
@@ -201,7 +203,7 @@ Plans:
 
 Plans:
 
-- [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
+- [x] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
 
 **UI hint**: yes
 
@@ -223,22 +225,22 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 13-01-PLAN.md — Shared primitives: AdminQueryResult/AdminDetailResult types + AdminErrorState component + dashboard-queries test scaffold
+- [x] 13-01-PLAN.md — Shared primitives: AdminQueryResult/AdminDetailResult types + AdminErrorState component + dashboard-queries test scaffold
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 13-02-PLAN.md — leads: list error state + getLeadById 3-way detail
-- [ ] 13-03-PLAN.md — calculator-leads: list error state + getCalculatorLeadById 3-way detail
-- [ ] 13-04-PLAN.md — newsletter: list error state + getSubscriberById 3-way detail
-- [ ] 13-05-PLAN.md — showcase: list + getShowcaseById 3-way detail + 2 internal write-helper callers
-- [ ] 13-06-PLAN.md — testimonials: list + getTestimonialById 3-way detail + 1 internal write-helper caller
-- [ ] 13-07-PLAN.md — blog: list + getBlogPostForAdmin 3-way detail + 2 internal write-helper callers
-- [ ] 13-08-PLAN.md — dashboard widgets: 5 widget queries + per-widget error cards (ADMINERR-02)
-- [ ] 13-09-PLAN.md — emails: queue-counts error variant (ADMINERR-03) + list + getScheduledEmailById 3-way + retry caller
+- [x] 13-02-PLAN.md — leads: list error state + getLeadById 3-way detail
+- [x] 13-03-PLAN.md — calculator-leads: list error state + getCalculatorLeadById 3-way detail
+- [x] 13-04-PLAN.md — newsletter: list error state + getSubscriberById 3-way detail
+- [x] 13-05-PLAN.md — showcase: list + getShowcaseById 3-way detail + 2 internal write-helper callers
+- [x] 13-06-PLAN.md — testimonials: list + getTestimonialById 3-way detail + 1 internal write-helper caller
+- [x] 13-07-PLAN.md — blog: list + getBlogPostForAdmin 3-way detail + 2 internal write-helper callers
+- [x] 13-08-PLAN.md — dashboard widgets: 5 widget queries + per-widget error cards (ADMINERR-02)
+- [x] 13-09-PLAN.md — emails: queue-counts error variant (ADMINERR-03) + list + getScheduledEmailById 3-way + retry caller
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 13-10-PLAN.md — phase gate: lint + typecheck + test:unit + build + invariant grep
+- [x] 13-10-PLAN.md — phase gate: lint + typecheck + test:unit + build + invariant grep
 
 **Cross-cutting constraints:**
 
@@ -262,7 +264,7 @@ Plans:
 
 Plans:
 
-- [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
+- [x] 14-01-PLAN.md — Remove the misleading pageTitle="Admin" prop: Topbar drops the prop (stays a server component, wordmark + AccountMenu only); each admin page's own <h1>/metadata.title remains the sole title source (native Next.js 16, no new client JS)
 
 **UI hint**: yes
 
@@ -282,7 +284,7 @@ Plans:
 
 Plans:
 
-- [ ] 15-01-PLAN.md — Delete dangling JSDoc, phantom order_index, logger no-ops (two files); keep+document whiteSpace; remove vestigial processingFees (5 sites incl. test); full gate
+- [x] 15-01-PLAN.md — Delete dangling JSDoc, phantom order_index, logger no-ops (two files); keep+document whiteSpace; remove vestigial processingFees (5 sites incl. test); full gate
 
 ### Phase 16: intentional-noop-confirmation
 
@@ -300,18 +302,18 @@ Plans:
 
 Plans:
 
-- [ ] 16-01-PLAN.md — NOOP-02 regression tests (db mock proxy, reportError Sentry gate, Slack/Discord via notifyHighValueLead public seam; verify existing sendAdConversion no-op block) + NOOP-01 reconcile v6-AUDIT-FINDINGS.md Section 2 to origin/main + full gate
+- [x] 16-01-PLAN.md — NOOP-02 regression tests (db mock proxy, reportError Sentry gate, Slack/Discord via notifyHighValueLead public seam; verify existing sendAdConversion no-op block) + NOOP-01 reconcile v6-AUDIT-FINDINGS.md Section 2 to origin/main + full gate
 
 ### v6 Progress
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 11. paystub-tax-accuracy | 4/4 | Complete | 2026-06-02 |
-| 12. errorboundary-report-path | 0/0 | Not started | - |
-| 13. admin-error-observability | 0/0 | Not started | - |
-| 14. admin-page-title | 0/0 | Not started | - |
-| 15. dead-code-cleanup | 0/0 | Not started | - |
-| 16. intentional-noop-confirmation | 0/0 | Not started | - |
+| 12. errorboundary-report-path | 1/1 | Complete (PR #333) | 2026-06-02 |
+| 13. admin-error-observability | 10/10 | Complete (PR #334) | 2026-06-02 |
+| 14. admin-page-title | 1/1 | Complete (PR #337) | 2026-06-02 |
+| 15. dead-code-cleanup | 1/1 | Complete (PR #338) | 2026-06-02 |
+| 16. intentional-noop-confirmation | 1/1 | Complete (PR #339) | 2026-06-02 |
 
 ## Milestone v7 — Stability and Maintenance
 
