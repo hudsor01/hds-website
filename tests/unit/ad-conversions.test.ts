@@ -15,7 +15,8 @@ import {
 	hashPhone,
 	normalizeEmail,
 	normalizePhone,
-	sendAdConversion
+	sendAdConversion,
+	sendSaleConversion
 } from '@/lib/ad-conversions'
 
 // Pinned SHA-256 hex vectors (computed independently) to lock the algorithm.
@@ -162,6 +163,22 @@ describe('buildIngestPayload', () => {
 		)
 		expect(withValue?.events[0]?.conversionValue).toBe(1500)
 		expect(withValue?.events[0]?.currency).toBe('USD')
+	})
+
+	it("targets the 'sale' conversion action + value when reference is 'sale'", () => {
+		const payload = buildIngestPayload(
+			{
+				leadId: 'lead-9',
+				attribution: { gclid: 'G' } as Attribution,
+				value: 5000
+			},
+			TEST_CONFIG,
+			'sale'
+		)
+		expect(payload?.destinations[0]?.reference).toBe('sale')
+		expect(payload?.events[0]?.destinationReferences).toEqual(['sale'])
+		expect(payload?.events[0]?.conversionValue).toBe(5000)
+		expect(payload?.events[0]?.currency).toBe('USD')
 	})
 
 	it('includes loginAccount when a manager (MCC) id is configured', () => {
@@ -396,5 +413,69 @@ describe('sendAdConversion (live upload path)', () => {
 				attribution: { gclid: 'GCLID_LIVE' } as Attribution
 			})
 		).resolves.toBeUndefined()
+	})
+})
+
+describe('sendSaleConversion (separate Sale conversion action)', () => {
+	const env = (globalThis as { __TEST_ENV?: Record<string, unknown> }).__TEST_ENV
+	let originalFetch: typeof globalThis.fetch
+	let fetchSpy: ReturnType<typeof mock>
+
+	beforeEach(() => {
+		originalFetch = globalThis.fetch
+		fetchSpy = mock(() =>
+			Promise.resolve(
+				new Response(JSON.stringify({ requestId: 'r1' }), { status: 200 })
+			)
+		)
+		globalThis.fetch = fetchSpy as unknown as typeof globalThis.fetch
+	})
+
+	afterEach(() => {
+		globalThis.fetch = originalFetch
+		if (env) {
+			delete env.GOOGLE_ADS_CUSTOMER_ID
+			delete env.GOOGLE_ADS_CONVERSION_ACTION_ID
+			delete env.GOOGLE_ADS_SALE_CONVERSION_ACTION_ID
+			delete env.GOOGLE_ADS_SA_JSON
+		}
+	})
+
+	it('is skipped (no upload) when the Sale action is unset, even with the Lead action configured', async () => {
+		if (env) {
+			env.GOOGLE_ADS_CUSTOMER_ID = '1234567890'
+			env.GOOGLE_ADS_CONVERSION_ACTION_ID = '987654321' // lead action only
+			env.GOOGLE_ADS_SA_JSON = JSON.stringify({
+				client_email: 'svc@example.iam.gserviceaccount.com',
+				private_key: 'pk'
+			})
+		}
+		const result = await sendSaleConversion({
+			leadId: 'l1',
+			email: 'test@example.com',
+			attribution: { gclid: 'G' } as Attribution,
+			value: 5000
+		})
+		expect(result.status).toBe('skipped')
+		expect(fetchSpy).not.toHaveBeenCalled()
+	})
+
+	it('is skipped when the Sale action is set but the lead carries no Google click id', async () => {
+		if (env) {
+			env.GOOGLE_ADS_CUSTOMER_ID = '1234567890'
+			env.GOOGLE_ADS_SALE_CONVERSION_ACTION_ID = '555000'
+			env.GOOGLE_ADS_SA_JSON = JSON.stringify({
+				client_email: 'svc@example.iam.gserviceaccount.com',
+				private_key: 'pk'
+			})
+		}
+		const result = await sendSaleConversion({
+			leadId: 'l1',
+			email: 'test@example.com',
+			attribution: { fbclid: 'FB' } as Attribution,
+			value: 5000
+		})
+		expect(result.status).toBe('skipped')
+		expect(fetchSpy).not.toHaveBeenCalled()
 	})
 })
