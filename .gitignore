@@ -10,6 +10,7 @@
 !.yarn/releases
 !.yarn/versions
 
+
 # testing
 /coverage
 
@@ -43,6 +44,15 @@ yarn-error.log*
 
 # direnv
 .envrc
+
+# Google Cloud service-account key files (private keys - NEVER commit).
+# GCP downloads them as <project-id>-<hex>.json; cover the projects in play
+# plus generic service-account naming.
+hds-website-*.json
+hudson-*-*.json
+*.gserviceaccount.json
+*service-account*.json
+*-sa-key.json
 
 # vercel
 .vercel
