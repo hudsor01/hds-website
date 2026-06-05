@@ -42,19 +42,25 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { after } from 'next/server'
+import { sendSaleConversion } from '@/lib/ad-conversions'
 import { requireAdminSession } from '@/lib/admin/auth'
 import { formDataToObject } from '@/lib/admin/form-data'
 import {
 	addLeadNote,
 	deleteLead,
 	deleteLeadNote,
+	markLeadWon,
+	recordSaleConversionSent,
 	updateLeadStatus
 } from '@/lib/admin/leads-queries'
+import type { Attribution } from '@/lib/attribution'
 import { logger } from '@/lib/logger'
 import {
 	addLeadNoteSchema,
 	deleteLeadNoteSchema,
 	deleteLeadSchema,
+	markLeadWonSchema,
 	updateLeadStatusSchema
 } from '@/lib/schemas/admin-leads'
 
@@ -79,6 +85,58 @@ export async function updateLeadStatusAction(
 		logger.error('updateLeadStatusAction failed', e)
 		return
 	}
+	revalidatePath('/admin/leads')
+	revalidatePath(`/admin/leads/${parsed.data.id}`)
+}
+
+/**
+ * Mark a lead as won with the closed-deal value, and (after the response, once,
+ * if the lead carries a Google click id and the creds are set) upload that value
+ * to the Google Ads "Sale" conversion action so the campaign optimizes toward
+ * revenue. The upload is idempotent: it only fires when `adConversionSentAt` is
+ * still null, and only stamps "sent" on a confirmed upload.
+ */
+export async function markLeadWonAction(formData: FormData): Promise<void> {
+	await requireAdminSession()
+	const parsed = markLeadWonSchema.safeParse(formDataToObject(formData))
+	if (!parsed.success) {
+		logger.error('markLeadWonAction invalid input', parsed.error)
+		return
+	}
+
+	let lead: Awaited<ReturnType<typeof markLeadWon>>
+	try {
+		lead = await markLeadWon(parsed.data.id, parsed.data.dealValue)
+	} catch (e) {
+		logger.error('markLeadWonAction failed', e)
+		return
+	}
+	if (!lead) {
+		logger.error('markLeadWonAction lead not found', { id: parsed.data.id })
+		return
+	}
+
+	const attribution =
+		(lead.metadata as { attribution?: Attribution } | null)?.attribution ?? null
+	if (!lead.adConversionSentAt && attribution?.gclid) {
+		const leadId = lead.id
+		const email = lead.email
+		const phone = lead.phone
+		const value = parsed.data.dealValue
+		after(async () => {
+			const result = await sendSaleConversion({
+				leadId,
+				email,
+				phone,
+				attribution,
+				value
+			})
+			if (result.status === 'uploaded') {
+				await recordSaleConversionSent(leadId, result.requestId)
+			}
+		})
+	}
+
 	revalidatePath('/admin/leads')
 	revalidatePath(`/admin/leads/${parsed.data.id}`)
 }

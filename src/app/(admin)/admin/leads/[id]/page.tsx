@@ -31,10 +31,12 @@ import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
 import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import { getLeadById } from '@/lib/admin/leads-queries'
 import { LEAD_STATUSES } from '@/lib/schemas/admin-leads'
+import { formatCurrency } from '@/lib/utils'
 import {
 	addLeadNoteAction,
 	deleteLeadAction,
 	deleteLeadNoteAction,
+	markLeadWonAction,
 	updateLeadStatusAction
 } from '../actions'
 
@@ -75,6 +77,10 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 		return <AdminErrorState resource="lead" />
 	}
 	const { lead, attribution, notes } = routing.data
+	const adAttributed = Boolean(
+		(lead.metadata as { attribution?: { gclid?: string } } | null)?.attribution
+			?.gclid
+	)
 
 	return (
 		<div className="space-y-6">
@@ -168,6 +174,71 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 							)
 						})}
 					</div>
+				</div>
+			</section>
+
+			<section>
+				<h2 className="text-lg font-semibold text-foreground">Revenue</h2>
+				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2 space-y-3">
+					{lead.dealValue ? (
+						<dl className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 text-sm">
+							<div>
+								<dt className="text-xs uppercase tracking-wider text-muted-foreground">
+									Deal value
+								</dt>
+								<dd className="text-foreground font-semibold">
+									{formatCurrency(Number(lead.dealValue))}
+								</dd>
+							</div>
+							{lead.wonAt && (
+								<div>
+									<dt className="text-xs uppercase tracking-wider text-muted-foreground">
+										Won
+									</dt>
+									<dd className="text-foreground">
+										{new Date(lead.wonAt).toLocaleDateString()}
+									</dd>
+								</div>
+							)}
+						</dl>
+					) : (
+						<p className="text-sm text-muted-foreground">
+							Not marked as won yet.
+						</p>
+					)}
+
+					<form
+						action={markLeadWonAction}
+						className="flex flex-wrap items-end gap-2"
+					>
+						<input type="hidden" name="id" value={lead.id} />
+						<label className="flex flex-col gap-1 text-xs uppercase tracking-wider text-muted-foreground">
+							Deal value (USD)
+							<input
+								type="number"
+								name="dealValue"
+								step="0.01"
+								min="0"
+								required
+								defaultValue={lead.dealValue ?? ''}
+								className="rounded-md border border-border bg-surface-base px-3 py-1.5 text-sm text-foreground"
+							/>
+						</label>
+						<button
+							type="submit"
+							className={`${STATUS_BTN_BASE} ${STATUS_BTN_ACTIVE}`}
+						>
+							{lead.dealValue ? 'Update deal value' : 'Mark as won'}
+						</button>
+					</form>
+
+					<p className="text-xs text-muted-foreground">
+						{adAttributed
+							? lead.adConversionSentAt
+								? 'Ad-attributed (Google click id). Sale value reported to Google Ads.'
+								: 'Ad-attributed (Google click id). Sale value uploads to Google Ads on mark-won once the Sale conversion action is configured.'
+							: 'No Google click id on this lead (organic, direct, or other source); nothing is sent to Google Ads.'}
+					</p>
 				</div>
 			</section>
 
