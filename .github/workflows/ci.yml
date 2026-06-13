@@ -122,3 +122,67 @@ jobs:
           CSRF_SECRET: ci-build-dummy-secret-32-chars-long
           NEON_AUTH_BASE_URL: https://ci-build-placeholder.neon.tech
           NEON_AUTH_COOKIE_SECRET: ci-build-dummy-cookie-secret-32chars
+
+  e2e:
+    name: E2E
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.8'
+
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/bun.lockb') }}
+
+      - name: Install Playwright (chromium)
+        run: bunx playwright install --with-deps chromium
+
+      # Generate throwaway secrets at runtime so no secret-shaped values are
+      # committed to the workflow. The functional suite does not exercise
+      # CSRF/auth/DB-write paths (those live in the skipped E2E_LIVE_BACKEND
+      # tests); these only satisfy module-load access.
+      - name: Generate throwaway test secrets
+        run: |
+          {
+            echo "CSRF_SECRET=$(openssl rand -hex 24)"
+            echo "NEON_AUTH_COOKIE_SECRET=$(openssl rand -hex 24)"
+          } >> "$GITHUB_ENV"
+
+      # Runs the portable functional suite. Excludes @visual (macOS-only
+      # screenshot baselines that would not match Linux runners) and the
+      # E2E_LIVE_BACKEND integration tests (no provisioned DB/Resend in CI
+      # - they self-skip). Playwright's webServer config boots the dev server;
+      # SKIP_ENV_VALIDATION lets it boot without provisioned secrets.
+      - name: Run E2E tests
+        run: bun run test:e2e:ci
+        env:
+          SKIP_ENV_VALIDATION: true
+          NEON_AUTH_BASE_URL: https://ci-e2e-placeholder.neon.tech
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

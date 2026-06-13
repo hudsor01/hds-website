@@ -17,6 +17,10 @@ import { createTestLogger } from './test-logger'
  * 1. Run with --update-snapshots to create baselines
  * 2. Subsequent runs will compare against baselines
  * 3. Any visual changes will cause test failures
+ *
+ * Tagged `@visual`: excluded from the CI lane (`test:e2e:ci`) because the
+ * committed baselines are macOS (`-darwin.png`) and would not match Linux
+ * CI runners. Run locally, or regenerate Linux baselines to enable in CI.
  */
 
 const PAGES_TO_TEST = [
@@ -33,7 +37,7 @@ const VIEWPORTS = {
 	desktop: { width: 1920, height: 1080 }
 } as const
 
-test.describe('Visual Regression - Light Mode', () => {
+test.describe('Visual Regression - Light Mode', { tag: '@visual' }, () => {
 	test.beforeEach(async ({ page }) => {
 		// Force light mode
 		await page.emulateMedia({ colorScheme: 'light' })
@@ -94,7 +98,7 @@ test.describe('Visual Regression - Light Mode', () => {
 	}
 })
 
-test.describe('Visual Regression - Dark Mode', () => {
+test.describe('Visual Regression - Dark Mode', { tag: '@visual' }, () => {
 	test.beforeEach(async ({ page }) => {
 		// Force dark mode
 		await page.emulateMedia({ colorScheme: 'dark' })
@@ -153,7 +157,7 @@ test.describe('Visual Regression - Dark Mode', () => {
 	}
 })
 
-test.describe('Specific Component Visual Tests', () => {
+test.describe('Specific Component Visual Tests', { tag: '@visual' }, () => {
 	test('should render hero section consistently', async ({
 		page
 	}, testInfo) => {
@@ -213,7 +217,7 @@ test.describe('Specific Component Visual Tests', () => {
 	})
 })
 
-test.describe('Error Page Visual Regression', () => {
+test.describe('Error Page Visual Regression', { tag: '@visual' }, () => {
 	test('should match baseline for 404 page', async ({ page }, testInfo) => {
 		const logger = createTestLogger(testInfo.title)
 
@@ -253,7 +257,7 @@ test.describe('Error Page Visual Regression', () => {
 	})
 })
 
-test.describe('Animation State Tests', () => {
+test.describe('Animation State Tests', { tag: '@visual' }, () => {
 	test('should capture animations in disabled state', async ({
 		page
 	}, testInfo) => {
