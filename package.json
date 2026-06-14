@@ -89,7 +89,6 @@
 		"@types/sanitize-html": "2.16.1",
 		"cross-env": "10.1.0",
 		"drizzle-kit": "0.31.10",
-		"knip": "6.15.0",
 		"lefthook": "2.1.9",
 		"next": "16.2.7",
 		"playwright": "1.60.0",
