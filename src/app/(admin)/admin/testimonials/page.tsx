@@ -21,16 +21,11 @@ import Link from 'next/link'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
 import { AdminErrorState } from '@/components/admin/AdminErrorState'
+import { AdminListPagination } from '@/components/admin/AdminListPagination'
+import { AdminSearchEmptyState } from '@/components/admin/AdminSearchEmptyState'
 import { PublishToggle } from '@/components/admin/PublishToggle'
 import { ResourceListPage } from '@/components/admin/ResourceListPage'
 import { SearchInput } from '@/components/admin/SearchInput'
-import {
-	Pagination,
-	PaginationContent,
-	PaginationItem,
-	PaginationNext,
-	PaginationPrevious
-} from '@/components/ui/pagination'
 import {
 	Table,
 	TableBody,
@@ -40,7 +35,6 @@ import {
 	TableHeader,
 	TableRow
 } from '@/components/ui/table'
-import { buildPaginationHref } from '@/lib/admin/list-cursor'
 import { listTestimonialsForAdmin } from '@/lib/admin/testimonials-queries'
 import { toggleTestimonialPublishedAction } from './actions'
 
@@ -85,17 +79,11 @@ async function TestimonialsList({ searchParams }: AdminTestimonialsPageProps) {
 			<div className="space-y-4">
 				<SearchInput placeholder="Search testimonials" />
 				{rows.length === 0 ? (
-					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
-						<p className="text-sm text-muted-foreground">
-							No testimonials matching <span className="font-mono">{q}</span>.
-						</p>
-						<Link
-							href="/admin/testimonials"
-							className="inline-block mt-3 text-sm font-medium text-accent-text hover:underline"
-						>
-							Clear search
-						</Link>
-					</div>
+					<AdminSearchEmptyState
+						query={q}
+						label="testimonials"
+						clearHref="/admin/testimonials"
+					/>
 				) : (
 					<>
 						<Table>
@@ -163,42 +151,12 @@ async function TestimonialsList({ searchParams }: AdminTestimonialsPageProps) {
 								))}
 							</TableBody>
 						</Table>
-						<Pagination className="mt-4 justify-between">
-							<PaginationContent>
-								<PaginationItem>
-									{prevCursor === null ? (
-										<PaginationPrevious
-											aria-disabled="true"
-											className="pointer-events-none opacity-50"
-										/>
-									) : (
-										<PaginationPrevious
-											href={buildPaginationHref(
-												'/admin/testimonials',
-												prevCursor,
-												preservedForPagination
-											)}
-										/>
-									)}
-								</PaginationItem>
-								<PaginationItem>
-									{nextCursor === null ? (
-										<PaginationNext
-											aria-disabled="true"
-											className="pointer-events-none opacity-50"
-										/>
-									) : (
-										<PaginationNext
-											href={buildPaginationHref(
-												'/admin/testimonials',
-												nextCursor,
-												preservedForPagination
-											)}
-										/>
-									)}
-								</PaginationItem>
-							</PaginationContent>
-						</Pagination>
+						<AdminListPagination
+							basePath="/admin/testimonials"
+							prevCursor={prevCursor}
+							nextCursor={nextCursor}
+							preservedParams={preservedForPagination}
+						/>
 					</>
 				)}
 			</div>
