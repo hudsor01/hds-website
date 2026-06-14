@@ -194,6 +194,8 @@
 - `bun run test:all` — lint + typecheck + unit + e2e:fast
 - `bun run db:push` — Drizzle schema sync (Neon)
 
+The aggregate scripts (`test:all`, `test:ci`, `test:unit`) invoke nested bun via `command bun` so they bypass shell-function wrappers (e.g. Aikido safe-chain) that some shells inject through `BASH_ENV`. Without it, doubly-nested `bun run` chains crash with a pkg re-entry error (`Cannot find module 'bun'`). `command bun` is a no-op where no wrapper exists (clean shells, CI).
+
 ## GIT WORKFLOW
 
 **Before commit:**
