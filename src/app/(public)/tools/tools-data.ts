@@ -21,7 +21,7 @@ import {
 import { TOOL_ROUTES } from '@/lib/constants/routes'
 
 // Not exported: only referenced internally by ToolCategory/ToolEntry below.
-// No external module imports it, so keeping it unexported satisfies knip.
+// No external module imports it, so it stays unexported (no unused-export noise).
 type ToolCategoryId = 'website' | 'business' | 'developers'
 
 export interface ToolCategory {
