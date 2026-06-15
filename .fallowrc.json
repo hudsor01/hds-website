@@ -1,0 +1,48 @@
+{
+	"$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+	"entry": [
+		"src/app/**/page.{ts,tsx}",
+		"src/app/**/layout.{ts,tsx}",
+		"src/app/**/error.{ts,tsx}",
+		"src/app/**/global-error.{ts,tsx}",
+		"src/app/**/loading.{ts,tsx}",
+		"src/app/**/not-found.{ts,tsx}",
+		"src/app/**/route.{ts,tsx}",
+		"src/app/**/template.{ts,tsx}",
+		"src/app/**/default.{ts,tsx}",
+		"src/app/**/icon{,0,1,2,3,4,5,6,7,8,9}.{ts,tsx}",
+		"src/app/**/apple-icon{,0,1,2}.{ts,tsx}",
+		"src/app/**/opengraph-image{,0,1,2}.{ts,tsx}",
+		"src/app/**/twitter-image{,0,1,2}.{ts,tsx}",
+		"src/app/**/sitemap.{ts,tsx}",
+		"src/app/**/robots.{ts,tsx}",
+		"src/app/**/manifest.{ts,tsx}",
+		"proxy.ts",
+		"next.config.ts",
+		"drizzle.config.ts",
+		"playwright.config.ts",
+		"scripts/**/*.ts",
+		"tests/**/*.{test,spec}.ts",
+		"e2e/**/*.spec.ts"
+	],
+	"ignorePatterns": ["src/lib/_generated/**"],
+	"ignoreDependencies": ["tailwindcss"],
+	"ignoreExports": [
+		{
+			"file": "src/lib/schemas/content.ts",
+			"exports": ["Testimonial", "TestimonialRequest"]
+		},
+		{ "file": "src/lib/admin/testimonials-queries.ts", "exports": ["deleteTestimonial"] }
+	],
+	"rules": {
+		"unused-files": "error",
+		"unresolved-imports": "error",
+		"unlisted-dependencies": "error",
+		"unused-dependencies": "error",
+		"circular-dependencies": "error",
+		"unused-exports": "warn",
+		"unused-types": "warn",
+		"duplicate-exports": "warn",
+		"unused-class-members": "off"
+	}
+}

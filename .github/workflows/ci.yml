@@ -50,6 +50,14 @@ jobs:
       - name: Run TypeScript type checking
         run: bun run typecheck
 
+      # Code-health gate (fallow). Errors on structural rot (dead files,
+      # unresolved/unlisted imports, unused deps, circular deps); unused
+      # exports/types are warn-only because Next.js framework exports
+      # (metadata/runtime) and intentional API surface trip them. Config:
+      # .fallowrc.json. Exit 1 only on error-severity findings.
+      - name: Run fallow (code health)
+        run: bunx fallow@2.94.0 dead-code --quiet
+
   test:
     name: Test
     # macOS runner: bun's native test-runner ESM loader on Linux fails to
