@@ -50,21 +50,10 @@ test.describe('Services page', () => {
 		await expect(servicesSection).toBeVisible()
 	})
 
-	test('has testimonials section with "What Our Clients Say" heading', async ({
-		page
-	}) => {
-		// The testimonials section renders only when seeded DB rows exist
-		// (hardcoded testimonials were dropped per audit #256). Skipped unless
-		// E2E_LIVE_BACKEND is set so the default suite/CI stays green.
-		test.skip(
-			!process.env.E2E_LIVE_BACKEND,
-			'Requires seeded testimonials in the DB. Set E2E_LIVE_BACKEND=1 to run.'
-		)
-		const testimonialsHeading = page.getByRole('heading', {
-			name: /what our clients say/i
-		})
-		await expect(testimonialsHeading).toBeVisible()
-	})
+	// Note: the Services page no longer has a "What Our Clients Say"
+	// testimonials section (hardcoded ones dropped per audit #256; never
+	// re-added). That heading now lives only on /testimonials, so the old
+	// Services-page testimonials assertion was removed as stale.
 
 	test('has process section', async ({ page }) => {
 		const processSection = page.locator('#process')
