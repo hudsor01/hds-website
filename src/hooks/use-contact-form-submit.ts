@@ -6,8 +6,6 @@ import { csrfFetch } from '@/lib/api/csrf-fetch'
 import { logger } from '@/lib/logger'
 import type { ContactFormData } from '@/lib/schemas/contact'
 
-export type { ContactFormData } from '@/lib/schemas/contact'
-
 interface ContactFormResponse {
 	success: boolean
 	message?: string

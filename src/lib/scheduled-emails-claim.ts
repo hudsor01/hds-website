@@ -17,7 +17,7 @@ import { type ScheduledEmail, scheduledEmails } from '@/lib/schemas/emails'
 // A row left in `processing` longer than this (relative to its scheduledFor)
 // is treated as a crashed claim and becomes reclaimable. 15 minutes is well
 // past any legitimate send latency while keeping the recovery window tight.
-export const STALE_PROCESSING_MS = 15 * 60 * 1000
+const STALE_PROCESSING_MS = 15 * 60 * 1000
 
 // The Drizzle client type the claim uses. Aliased to the real db type so the
 // production call site passes without a cast; tests inject a structurally
