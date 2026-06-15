@@ -193,7 +193,8 @@ test.describe('Newsletter Signup - Homepage', () => {
 		await page.goto('/')
 		await page.waitForLoadState('networkidle')
 
-		const emailInput = page.locator('#newsletter-email')
+		// Homepage renders NewsletterSignup variant="compact" -> #newsletter-email-compact
+		const emailInput = page.locator('#newsletter-email-compact')
 		await emailInput.scrollIntoViewIfNeeded()
 		await expect(emailInput).toBeVisible()
 
