@@ -21,6 +21,17 @@ const PLACEHOLDER_SLUGS = [
 ]
 
 test.describe('Blog Journey', () => {
+	// Every assertion here depends on seeded DB posts at /blog. Without a
+	// live backend (E2E_LIVE_BACKEND) the page renders its empty state, so
+	// skip - consistent with the other data-dependent specs (contact,
+	// newsletter, testimonials).
+	test.beforeEach(() => {
+		test.skip(
+			!process.env.E2E_LIVE_BACKEND,
+			'Requires seeded blog posts in the DB. Set E2E_LIVE_BACKEND=1 to run.'
+		)
+	})
+
 	test('should show at least one post card on /blog', async ({
 		page
 	}, testInfo: TestInfo) => {
