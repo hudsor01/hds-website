@@ -26,16 +26,11 @@ import Link from 'next/link'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
 import { AdminErrorState } from '@/components/admin/AdminErrorState'
+import { AdminListPagination } from '@/components/admin/AdminListPagination'
+import { AdminSearchEmptyState } from '@/components/admin/AdminSearchEmptyState'
 import { PublishToggle } from '@/components/admin/PublishToggle'
 import { ResourceListPage } from '@/components/admin/ResourceListPage'
 import { SearchInput } from '@/components/admin/SearchInput'
-import {
-	Pagination,
-	PaginationContent,
-	PaginationItem,
-	PaginationNext,
-	PaginationPrevious
-} from '@/components/ui/pagination'
 import {
 	Table,
 	TableBody,
@@ -46,7 +41,6 @@ import {
 	TableRow
 } from '@/components/ui/table'
 import { listBlogPostsForAdmin } from '@/lib/admin/blog-queries'
-import { buildPaginationHref } from '@/lib/admin/list-cursor'
 import { toggleBlogPostPublishedAction } from './actions'
 
 export const metadata: Metadata = {
@@ -97,17 +91,11 @@ async function BlogList({ searchParams }: AdminBlogPageProps) {
 			<div className="space-y-4">
 				<SearchInput placeholder="Search posts" />
 				{rows.length === 0 ? (
-					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
-						<p className="text-sm text-muted-foreground">
-							No posts matching <span className="font-mono">{q}</span>.
-						</p>
-						<Link
-							href="/admin/blog"
-							className="inline-block mt-3 text-sm font-medium text-accent-text hover:underline"
-						>
-							Clear search
-						</Link>
-					</div>
+					<AdminSearchEmptyState
+						query={q}
+						label="posts"
+						clearHref="/admin/blog"
+					/>
 				) : (
 					<>
 						<Table>
@@ -169,42 +157,12 @@ async function BlogList({ searchParams }: AdminBlogPageProps) {
 								))}
 							</TableBody>
 						</Table>
-						<Pagination className="mt-4 justify-between">
-							<PaginationContent>
-								<PaginationItem>
-									{prevCursor === null ? (
-										<PaginationPrevious
-											aria-disabled="true"
-											className="pointer-events-none opacity-50"
-										/>
-									) : (
-										<PaginationPrevious
-											href={buildPaginationHref(
-												'/admin/blog',
-												prevCursor,
-												preservedForPagination
-											)}
-										/>
-									)}
-								</PaginationItem>
-								<PaginationItem>
-									{nextCursor === null ? (
-										<PaginationNext
-											aria-disabled="true"
-											className="pointer-events-none opacity-50"
-										/>
-									) : (
-										<PaginationNext
-											href={buildPaginationHref(
-												'/admin/blog',
-												nextCursor,
-												preservedForPagination
-											)}
-										/>
-									)}
-								</PaginationItem>
-							</PaginationContent>
-						</Pagination>
+						<AdminListPagination
+							basePath="/admin/blog"
+							prevCursor={prevCursor}
+							nextCursor={nextCursor}
+							preservedParams={preservedForPagination}
+						/>
 					</>
 				)}
 			</div>

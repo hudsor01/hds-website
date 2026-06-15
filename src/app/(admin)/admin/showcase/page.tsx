@@ -22,16 +22,11 @@ import Link from 'next/link'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
 import { AdminErrorState } from '@/components/admin/AdminErrorState'
+import { AdminListPagination } from '@/components/admin/AdminListPagination'
+import { AdminSearchEmptyState } from '@/components/admin/AdminSearchEmptyState'
 import { PublishToggle } from '@/components/admin/PublishToggle'
 import { ResourceListPage } from '@/components/admin/ResourceListPage'
 import { SearchInput } from '@/components/admin/SearchInput'
-import {
-	Pagination,
-	PaginationContent,
-	PaginationItem,
-	PaginationNext,
-	PaginationPrevious
-} from '@/components/ui/pagination'
 import {
 	Table,
 	TableBody,
@@ -41,7 +36,6 @@ import {
 	TableHeader,
 	TableRow
 } from '@/components/ui/table'
-import { buildPaginationHref } from '@/lib/admin/list-cursor'
 import { listShowcasesForAdmin } from '@/lib/admin/showcase-queries'
 import { toggleShowcasePublishedAction } from './actions'
 
@@ -80,18 +74,11 @@ async function ShowcaseList({ searchParams }: AdminShowcasePageProps) {
 			<div className="space-y-4">
 				<SearchInput placeholder="Search showcase" />
 				{rows.length === 0 ? (
-					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
-						<p className="text-sm text-muted-foreground">
-							No showcase entries matching{' '}
-							<span className="font-mono">{q}</span>.
-						</p>
-						<Link
-							href="/admin/showcase"
-							className="inline-block mt-3 text-sm font-medium text-accent-text hover:underline"
-						>
-							Clear search
-						</Link>
-					</div>
+					<AdminSearchEmptyState
+						query={q}
+						label="showcase entries"
+						clearHref="/admin/showcase"
+					/>
 				) : (
 					<>
 						<Table>
@@ -153,42 +140,12 @@ async function ShowcaseList({ searchParams }: AdminShowcasePageProps) {
 								))}
 							</TableBody>
 						</Table>
-						<Pagination className="mt-4 justify-between">
-							<PaginationContent>
-								<PaginationItem>
-									{prevCursor === null ? (
-										<PaginationPrevious
-											aria-disabled="true"
-											className="pointer-events-none opacity-50"
-										/>
-									) : (
-										<PaginationPrevious
-											href={buildPaginationHref(
-												'/admin/showcase',
-												prevCursor,
-												preservedForPagination
-											)}
-										/>
-									)}
-								</PaginationItem>
-								<PaginationItem>
-									{nextCursor === null ? (
-										<PaginationNext
-											aria-disabled="true"
-											className="pointer-events-none opacity-50"
-										/>
-									) : (
-										<PaginationNext
-											href={buildPaginationHref(
-												'/admin/showcase',
-												nextCursor,
-												preservedForPagination
-											)}
-										/>
-									)}
-								</PaginationItem>
-							</PaginationContent>
-						</Pagination>
+						<AdminListPagination
+							basePath="/admin/showcase"
+							prevCursor={prevCursor}
+							nextCursor={nextCursor}
+							preservedParams={preservedForPagination}
+						/>
 					</>
 				)}
 			</div>
