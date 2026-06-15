@@ -94,8 +94,11 @@ test.describe('Mobile Responsiveness - Viewport Tests', () => {
 						expect(bodyFontSize).toBeGreaterThanOrEqual(16)
 					}
 
-					// Check paragraph text readability
-					const paragraphs = page.locator('p')
+					// Check body paragraph readability. Exclude `.text-xs`
+					// eyebrow/label text (12px decorative kickers like
+					// "Professional Services") - those are not body copy and
+					// 12px uppercase labels are an accepted pattern.
+					const paragraphs = page.locator('p:not(.text-xs)')
 					const count = await paragraphs.count()
 
 					if (count > 0) {
@@ -111,7 +114,7 @@ test.describe('Mobile Responsiveness - Viewport Tests', () => {
 							`${firstParagraphFontSize}px`
 						)
 
-						// Paragraphs should be at least 14px
+						// Body paragraphs should be at least 14px
 						expect(firstParagraphFontSize).toBeGreaterThanOrEqual(14)
 					}
 				})

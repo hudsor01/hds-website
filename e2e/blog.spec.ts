@@ -9,84 +9,105 @@
  * 5 n8n auto-generated. Placeholder slugs are stable (not regenerated).
  */
 
-import { test, expect, type TestInfo } from '@playwright/test'
+import { expect, type TestInfo, test } from '@playwright/test'
 import { createTestLogger } from './test-logger'
 
 // Phase 42 placeholder slugs — seeded during blog data strategy phase.
 // Test must confirm at least 1 NON-placeholder post is visible.
 const PLACEHOLDER_SLUGS = [
-  'small-business-website-cost-2025',
-  'how-to-increase-website-conversion-rates-2025-guide',
-  'beyond-just-works-why-businesses-need-websites-that-dominate',
+	'small-business-website-cost-2025',
+	'how-to-increase-website-conversion-rates-2025-guide',
+	'beyond-just-works-why-businesses-need-websites-that-dominate'
 ]
 
 test.describe('Blog Journey', () => {
-  test('should show at least one post card on /blog', async ({ page }, testInfo: TestInfo) => {
-    const logger = createTestLogger(testInfo.title)
+	// Every assertion here depends on seeded DB posts at /blog. Without a
+	// live backend (E2E_LIVE_BACKEND) the page renders its empty state, so
+	// skip - consistent with the other data-dependent specs (contact,
+	// newsletter, testimonials).
+	test.beforeEach(() => {
+		test.skip(
+			!process.env.E2E_LIVE_BACKEND,
+			'Requires seeded blog posts in the DB. Set E2E_LIVE_BACKEND=1 to run.'
+		)
+	})
 
-    await page.goto('/blog')
-    await page.waitForLoadState('networkidle')
-    logger.step('Navigated to /blog')
+	test('should show at least one post card on /blog', async ({
+		page
+	}, testInfo: TestInfo) => {
+		const logger = createTestLogger(testInfo.title)
 
-    // At least one post card must be visible (not the empty state)
-    const postLinks = page.locator('article a[href^="/blog/"]')
-    await expect(postLinks.first()).toBeVisible({ timeout: 10000 })
+		await page.goto('/blog')
+		await page.waitForLoadState('networkidle')
+		logger.step('Navigated to /blog')
 
-    const count = await postLinks.count()
-    expect(count).toBeGreaterThanOrEqual(1)
-    logger.complete(`${count} post card(s) visible on /blog`)
-  })
+		// At least one post card must be visible (not the empty state)
+		const postLinks = page.locator('article a[href^="/blog/"]')
+		await expect(postLinks.first()).toBeVisible({ timeout: 10000 })
 
-  test('should show at least one real (non-placeholder) post on /blog', async ({ page }, testInfo: TestInfo) => {
-    const logger = createTestLogger(testInfo.title)
+		const count = await postLinks.count()
+		expect(count).toBeGreaterThanOrEqual(1)
+		logger.complete(`${count} post card(s) visible on /blog`)
+	})
 
-    await page.goto('/blog')
-    await page.waitForLoadState('networkidle')
+	test('should show at least one real (non-placeholder) post on /blog', async ({
+		page
+	}, testInfo: TestInfo) => {
+		const logger = createTestLogger(testInfo.title)
 
-    const postLinks = page.locator('article a[href^="/blog/"]')
-    await expect(postLinks.first()).toBeVisible({ timeout: 10000 })
+		await page.goto('/blog')
+		await page.waitForLoadState('networkidle')
 
-    // Collect all post slugs from card links
-    const hrefs = await postLinks.evaluateAll((els: Element[]) =>
-      els.map(el => el.getAttribute('href') ?? '')
-    )
-    const slugs = hrefs.map(href => href.replace('/blog/', ''))
-    logger.step(`Found slugs: ${slugs.join(', ')}`)
+		const postLinks = page.locator('article a[href^="/blog/"]')
+		await expect(postLinks.first()).toBeVisible({ timeout: 10000 })
 
-    // At least one slug must be from the n8n pipeline (not a Phase 42 placeholder)
-    const realPostCount = slugs.filter(slug => !PLACEHOLDER_SLUGS.includes(slug)).length
-    expect(realPostCount).toBeGreaterThanOrEqual(1)
-    logger.complete(`${realPostCount} real (non-placeholder) post(s) confirmed`)
-  })
+		// Collect all post slugs from card links
+		const hrefs = await postLinks.evaluateAll((els: Element[]) =>
+			els.map(el => el.getAttribute('href') ?? '')
+		)
+		const slugs = hrefs.map(href => href.replace('/blog/', ''))
+		logger.step(`Found slugs: ${slugs.join(', ')}`)
 
-  test('should navigate to a blog post and render content', async ({ page }, testInfo: TestInfo) => {
-    const logger = createTestLogger(testInfo.title)
+		// At least one slug must be from the n8n pipeline (not a Phase 42 placeholder)
+		const realPostCount = slugs.filter(
+			slug => !PLACEHOLDER_SLUGS.includes(slug)
+		).length
+		expect(realPostCount).toBeGreaterThanOrEqual(1)
+		logger.complete(`${realPostCount} real (non-placeholder) post(s) confirmed`)
+	})
 
-    await page.goto('/blog')
-    await page.waitForLoadState('networkidle')
+	test('should navigate to a blog post and render content', async ({
+		page
+	}, testInfo: TestInfo) => {
+		const logger = createTestLogger(testInfo.title)
 
-    const firstCard = page.locator('article a[href^="/blog/"]').first()
-    await expect(firstCard).toBeVisible({ timeout: 10000 })
+		await page.goto('/blog')
+		await page.waitForLoadState('networkidle')
 
-    const href = await firstCard.getAttribute('href')
-    logger.step(`Clicking through to: ${href}`)
+		const firstCard = page.locator('article a[href^="/blog/"]').first()
+		await expect(firstCard).toBeVisible({ timeout: 10000 })
 
-    await firstCard.click()
-    await page.waitForLoadState('networkidle')
+		const href = await firstCard.getAttribute('href')
+		logger.step(`Clicking through to: ${href}`)
 
-    // Post detail page must render
-    await expect(page.locator('h1')).toBeVisible({ timeout: 15000 })
-    await expect(page.locator('article')).toBeVisible()
-    await expect(page.locator('body')).not.toContainText(/not found/i)
-    logger.complete(`Post page rendered at ${page.url()}`)
-  })
+		await firstCard.click()
+		await page.waitForLoadState('networkidle')
 
-  test('should not show empty state on /blog', async ({ page }) => {
-    await page.goto('/blog')
-    await page.waitForLoadState('networkidle')
+		// Post detail page must render
+		await expect(page.locator('h1').first()).toBeVisible({ timeout: 15000 })
+		await expect(page.locator('article').first()).toBeVisible()
+		await expect(page.locator('body')).not.toContainText(/not found/i)
+		logger.complete(`Post page rendered at ${page.url()}`)
+	})
 
-    // Empty state text must NOT appear
-    const emptyState = page.locator('text=No articles found. Check back soon for new content!')
-    await expect(emptyState).not.toBeVisible()
-  })
+	test('should not show empty state on /blog', async ({ page }) => {
+		await page.goto('/blog')
+		await page.waitForLoadState('networkidle')
+
+		// Empty state text must NOT appear
+		const emptyState = page.locator(
+			'text=No articles found. Check back soon for new content!'
+		)
+		await expect(emptyState).not.toBeVisible()
+	})
 })
