@@ -213,6 +213,11 @@ jobs:
           NEON_AUTH_BASE_URL: https://ci-e2e-placeholder.neon.tech
           POSTGRES_URL: ${{ steps.neon.outputs.db_url }}
           E2E_LIVE_BACKEND: '1'
+          # The dev server runs on :3001; BASE_URL must match it so the
+          # same-origin mutation guard (isSameOriginRequest) accepts the
+          # contact/newsletter POSTs. Default is :3000 -> "Forbidden".
+          BASE_URL: http://localhost:3001
+          NEXT_PUBLIC_BASE_URL: http://localhost:3001
 
       - name: Upload Playwright report on failure
         if: failure()
