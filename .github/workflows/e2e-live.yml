@@ -1,0 +1,123 @@
+name: E2E (live backend)
+
+# Nightly live-backend e2e. Provisions an ephemeral Neon branch (a
+# copy-on-write fork of the project's default branch where prod data lives),
+# seeds deterministic fixtures, runs the data-dependent specs (blog,
+# testimonials, contact, newsletter) against it, then deletes the branch.
+#
+# Decoupled from the per-push/PR CI lane on purpose: the normal `E2E` job in
+# ci.yml is functional-only and never spends a Neon branch, so regular
+# development costs nothing. This runs on a schedule (1 ephemeral branch/day)
+# as a smoke check, plus on demand via workflow_dispatch.
+#
+# No RESEND_API_KEY is set, so the contact route returns success in "test
+# mode" and newsletter email is isResendConfigured()-guarded: zero emails.
+#
+# NOTE: scheduled workflows only fire from the default branch (main), so this
+# starts running nightly once merged.
+
+on:
+  schedule:
+    # 07:00 UTC daily (~02:00 US Central)
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+
+# Cancel an in-progress nightly if a new one is triggered
+concurrency:
+  group: e2e-live
+  cancel-in-progress: true
+
+jobs:
+  e2e-live:
+    name: E2E (live backend)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.14'
+
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/bun.lock') }}
+
+      - name: Install Playwright (chromium)
+        run: bunx playwright install --with-deps chromium
+
+      - name: Branch expiry (2h)
+        run: echo "NEON_EXPIRES_AT=$(date -u --date '+2 hours' +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_ENV"
+
+      - name: Create Neon branch
+        id: neon
+        uses: neondatabase/create-branch-action@v6
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch_name: e2e-nightly-${{ github.run_id }}-${{ github.run_attempt }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+          expires_at: ${{ env.NEON_EXPIRES_AT }}
+
+      - name: Seed the Neon branch
+        env:
+          SKIP_ENV_VALIDATION: true
+          POSTGRES_URL: ${{ steps.neon.outputs.db_url }}
+        run: bun run scripts/seed-e2e.ts
+
+      # Generate throwaway secrets at runtime so no secret-shaped values are
+      # committed to the workflow.
+      - name: Generate throwaway test secrets
+        run: |
+          {
+            echo "CSRF_SECRET=$(openssl rand -hex 24)"
+            echo "NEON_AUTH_COOKIE_SECRET=$(openssl rand -hex 24)"
+          } >> "$GITHUB_ENV"
+
+      # E2E_LIVE_BACKEND=1 so the data-dependent specs run against the seeded
+      # branch. BASE_URL must match the dev server's :3001 so the same-origin
+      # mutation guard accepts contact/newsletter POSTs (default :3000 ->
+      # "Forbidden"). @visual stays excluded (separate Linux-baseline track).
+      - name: Run E2E tests
+        run: bun run test:e2e:ci
+        env:
+          SKIP_ENV_VALIDATION: true
+          NEON_AUTH_BASE_URL: https://ci-e2e-placeholder.neon.tech
+          POSTGRES_URL: ${{ steps.neon.outputs.db_url }}
+          E2E_LIVE_BACKEND: '1'
+          BASE_URL: http://localhost:3001
+          NEXT_PUBLIC_BASE_URL: http://localhost:3001
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-live
+          path: playwright-report/
+          retention-days: 7
+
+      # Always clean up the ephemeral branch so failed runs don't orphan it
+      # (the 2h expiry is a backstop). Best-effort: never fail the job here.
+      - name: Delete Neon branch
+        if: always() && steps.neon.outcome == 'success'
+        continue-on-error: true
+        uses: neondatabase/delete-branch-action@v3
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: e2e-nightly-${{ github.run_id }}-${{ github.run_attempt }}
+          api_key: ${{ secrets.NEON_API_KEY }}
