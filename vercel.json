@@ -36,6 +36,11 @@
 			"source": "/portfolio",
 			"destination": "/services",
 			"permanent": true
+		},
+		{
+			"source": "/blog/why-your-business-needs-a-custom-crm-integration-to-unlock-true-efficiency",
+			"destination": "/blog/why-your-business-needs-a-custom-crm-integration",
+			"permanent": true
 		}
 	],
 
