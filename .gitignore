@@ -54,6 +54,10 @@ hudson-*-*.json
 *service-account*.json
 *-sa-key.json
 
+# Marketing assets (Pomelli/FB creatives etc.) - kept with the project for
+# convenience but NOT part of the app; do not commit to this public repo.
+marketing-assets/
+
 # vercel
 .vercel
 

@@ -50,6 +50,15 @@ jobs:
       - name: Run TypeScript type checking
         run: bun run typecheck
 
+      # The brand-tokens regen runs in the pre-commit hook, but hooks are
+      # bypassable (--no-verify, web edits, contributors without the hook),
+      # so re-derive from globals.css here and fail on drift. Keeps the
+      # committed src/lib/_generated/brand.ts authoritative.
+      - name: Verify brand tokens are up to date
+        run: |
+          bun run brand:generate
+          git diff --exit-code src/lib/_generated/brand.ts
+
       # Code-health gate (fallow). Errors on structural rot (dead files,
       # unresolved/unlisted imports, unused deps, circular deps); unused
       # exports/types are warn-only because Next.js framework exports
