@@ -171,10 +171,31 @@ jobs:
       - name: Install Playwright (chromium)
         run: bunx playwright install --with-deps chromium
 
+      # Provision an ephemeral Neon branch (inherits the parent's schema +
+      # data) so the E2E_LIVE_BACKEND data-dependent specs (blog,
+      # testimonials) run instead of skipping. No RESEND_API_KEY is set, so
+      # the contact route returns success in "test mode" and newsletter's
+      # email is isResendConfigured()-guarded: zero emails sent.
+      - name: Branch expiry (2h)
+        run: echo "NEON_EXPIRES_AT=$(date -u --date '+2 hours' +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_ENV"
+
+      - name: Create Neon branch
+        id: neon
+        uses: neondatabase/create-branch-action@v6
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch_name: e2e-ci-${{ github.run_id }}-${{ github.run_attempt }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+          expires_at: ${{ env.NEON_EXPIRES_AT }}
+
+      - name: Seed the Neon branch
+        env:
+          SKIP_ENV_VALIDATION: true
+          POSTGRES_URL: ${{ steps.neon.outputs.db_url }}
+        run: bun run scripts/seed-e2e.ts
+
       # Generate throwaway secrets at runtime so no secret-shaped values are
-      # committed to the workflow. The functional suite does not exercise
-      # CSRF/auth/DB-write paths (those live in the skipped E2E_LIVE_BACKEND
-      # tests); these only satisfy module-load access.
+      # committed to the workflow.
       - name: Generate throwaway test secrets
         run: |
           {
@@ -182,16 +203,21 @@ jobs:
             echo "NEON_AUTH_COOKIE_SECRET=$(openssl rand -hex 24)"
           } >> "$GITHUB_ENV"
 
-      # Runs the portable functional suite. Excludes @visual (macOS-only
-      # screenshot baselines that would not match Linux runners) and the
-      # E2E_LIVE_BACKEND integration tests (no provisioned DB/Resend in CI
-      # - they self-skip). Playwright's webServer config boots the dev server;
-      # SKIP_ENV_VALIDATION lets it boot without provisioned secrets.
+      # Runs the portable functional suite against the seeded Neon branch with
+      # E2E_LIVE_BACKEND=1 (data-dependent specs run) but no RESEND_API_KEY
+      # (no emails). @visual stays excluded (separate Linux-baseline track).
       - name: Run E2E tests
         run: bun run test:e2e:ci
         env:
           SKIP_ENV_VALIDATION: true
           NEON_AUTH_BASE_URL: https://ci-e2e-placeholder.neon.tech
+          POSTGRES_URL: ${{ steps.neon.outputs.db_url }}
+          E2E_LIVE_BACKEND: '1'
+          # The dev server runs on :3001; BASE_URL must match it so the
+          # same-origin mutation guard (isSameOriginRequest) accepts the
+          # contact/newsletter POSTs. Default is :3000 -> "Forbidden".
+          BASE_URL: http://localhost:3001
+          NEXT_PUBLIC_BASE_URL: http://localhost:3001
 
       - name: Upload Playwright report on failure
         if: failure()
@@ -200,3 +226,14 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+      # Always clean up the ephemeral branch so failed runs don't orphan it
+      # (the 2h expiry is a backstop). Best-effort: never fail the job here.
+      - name: Delete Neon branch
+        if: always() && steps.neon.outcome == 'success'
+        continue-on-error: true
+        uses: neondatabase/delete-branch-action@v3
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: e2e-ci-${{ github.run_id }}-${{ github.run_attempt }}
+          api_key: ${{ secrets.NEON_API_KEY }}
