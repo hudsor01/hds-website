@@ -3,28 +3,33 @@ name: Update Visual Baselines
 # Manually-triggered bootstrap for the @visual Playwright suite. The
 # committed baselines are macOS (`-darwin.png`); CI runs on Linux, so the
 # `@visual` tests are excluded from the normal CI lane (see ci.yml e2e job /
-# `test:e2e:ci`). Run this workflow once on a branch to generate and commit
-# Linux (`-linux.png`) baselines on the SAME runner image CI uses, then drop
-# the `@visual` exclusion so visual regression runs on every push.
+# `test:e2e:ci`). Run this workflow once on a branch to generate Linux
+# (`-linux.png`) baselines on the SAME runner image CI uses; it uploads them
+# as an artifact (the repo's workflow token is read-only, so it cannot push).
+# Then download the artifact, commit the baselines, and drop the `@visual`
+# exclusion so visual regression runs on every push:
 #
-# Generating baselines on the runner (not locally / not in a mismatched
-# container) is deliberate: it guarantees the baselines match the pixels CI
-# will compare against, avoiding font/AA-driven flakiness.
+#   gh run download <run-id> -n linux-visual-baselines -D .
+#   git add e2e && git commit -m "test: add Linux visual baselines" && git push
+#
+# Generating on the runner (not locally / a mismatched container) is
+# deliberate: it guarantees the baselines match the pixels CI compares
+# against, avoiding font/AA-driven flakiness.
 
 on:
   workflow_dispatch:
     inputs:
       ref:
-        description: Branch to generate and commit baselines onto
+        description: Branch to generate baselines from
         required: true
         default: main
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   update-baselines:
-    name: Update Linux visual baselines
+    name: Generate Linux visual baselines
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -50,18 +55,10 @@ jobs:
           SKIP_ENV_VALIDATION: true
           NEON_AUTH_BASE_URL: https://ci-e2e-placeholder.neon.tech
 
-      - name: Commit updated baselines
-        env:
-          TARGET_REF: ${{ inputs.ref }}
-        run: |
-          if git diff --quiet -- 'e2e/**/*-snapshots/**'; then
-            echo "No baseline changes to commit."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add 'e2e/**/*-snapshots/**'
-          git commit -m "test: add Linux visual-regression baselines [skip ci]
-
-          [hudsor01]"
-          git push origin "HEAD:$TARGET_REF"
+      - name: Upload generated baselines
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-visual-baselines
+          path: e2e/**/*-snapshots/**
+          if-no-files-found: error
+          retention-days: 7
