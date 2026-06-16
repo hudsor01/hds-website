@@ -18,9 +18,10 @@ import { createTestLogger } from './test-logger'
  * 2. Subsequent runs will compare against baselines
  * 3. Any visual changes will cause test failures
  *
- * Tagged `@visual`: excluded from the CI lane (`test:e2e:ci`) because the
- * committed baselines are macOS (`-darwin.png`) and would not match Linux
- * CI runners. Run locally, or regenerate Linux baselines to enable in CI.
+ * Tagged `@visual`: runs in CI against committed Linux (`-linux.png`)
+ * baselines generated on the runner image (the macOS `-darwin.png` set is
+ * kept for local runs). Regenerate Linux baselines after intentional UI
+ * changes via the "Update Visual Baselines" workflow.
  */
 
 const PAGES_TO_TEST = [
