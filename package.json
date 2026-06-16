@@ -15,7 +15,7 @@
 		"test:e2e": "playwright test",
 		"test:e2e:ui": "playwright test --ui",
 		"test:e2e:fast": "playwright test --project=chromium --workers=1",
-		"test:e2e:ci": "playwright test --project=chromium --workers=1 --grep-invert=@visual",
+		"test:e2e:ci": "playwright test --project=chromium --workers=1",
 		"test:e2e:a11y": "playwright test --grep '@accessibility'",
 		"test:e2e:animations": "playwright test --project=animations",
 		"test:e2e:animations:quick": "playwright test animations-quick.spec.ts --grep '@critical'",
