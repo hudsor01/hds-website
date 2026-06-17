@@ -1,27 +1,29 @@
 ---
 gsd_state_version: 1.0
-milestone: v8
-milestone_name: Hardening
-status: closed
-last_updated: "2026-06-03T04:30:00.000Z"
-last_activity: 2026-06-03 — v8 Hardening CLOSED (audit PASSED 10/10)
+milestone: v9
+milestone_name: Content Engine
+status: in-progress
+last_updated: "2026-06-17T00:00:00.000Z"
+last_activity: 2026-06-17 - v9 Content Engine opened (87-post Facebook campaign; Phase 22 pipeline foundation next)
 progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 3
-  completed_plans: 3
-  percent: 100
+  total_phases: 11
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # STATE — Current GSD Position
 
-**Last updated:** 2026-06-03
+**Last updated:** 2026-06-17
 **Branch:** `main`
-**Current milestone:** v8 Hardening — CLOSED (audit PASSED 10/10)
-**Current phase:** none (milestone closed)
+**Current milestone:** v9 Content Engine — in progress
+**Current phase:** 22 content-pipeline-foundation (next)
 **Current plan:** none
 
 ## What just happened
+
+- **v9 Content Engine opened (2026-06-17).** Milestone to fill a 29-day Facebook window at 3/day = 87 blog posts (9 exist, 78 to write), evenly across the 10 content pillars. Architecture locked: `content/blog/*.md` files synced to Neon (`scripts/publish-blog.ts`), auto-publish on merge, drafts from the local LM Studio model (`mistral-small-3.2-24b-instruct-2506-mlx`) reviewed by Claude, `scripts/validate-blog.ts` CI gate enforcing per-blog guardrails R1-R14. REQUIREMENTS at `.planning/milestones/v9-REQUIREMENTS.md`; pillar map + backlog at `.planning/CONTENT-STRATEGY.md`. Phases 22 (pipeline foundation) -> 23-32 (one pillar each). Prior to this, the CRM cannibalization was resolved + an off-brand draft rewritten into the published "Blueprint" post (PR #369). **Next:** plan + build Phase 22.
 
 - **v8 milestone CLOSED — Hardening complete.** All 3 phases shipped to `origin/main` + merged CI-green: Phase 19 dependency-security (PR #344), 20 correctness-bugs (#345), 21 code-hygiene (#346). Milestone audit **PASSED, 10/10 requirements** — canonical record `.planning/milestones/v8-AUDIT.md`. Delivered: 5 known dependency vulns patched (`bun audit` -> 0), 4 verified correctness bugs fixed with regression tests (email double-send race, rate-limiter outage leak, testimonials 404/400 contract, calculator JSON cap; suite 1073 -> 1090), and hygiene (user-facing em-dash, dead-export prune, `flattenZod` x6 dedup, 9 unsound casts, stale-doc fix). Driven by the post-v7 repo review (2 reviewer agents + `bun audit` + `fallow`); 2 fallow false-positives correctly excluded (`icon0`/`icon1` Next routes — build-confirmed serving; `deleteTestimonial` re-export). Closed lightly per v5-v7 convention (AUDIT doc is the record; no tag). v8 REQUIREMENTS archived to `.planning/milestones/v8-REQUIREMENTS.md`. **Operator follow-ups (not v8 gaps):** reconcile local `main` (`git merge origin/main` — gated for the agent; #344/#345/#346 on origin/main); confirm `BASE_URL` set in prod Vercel env (same-origin guard depends on it). **Deferred (logged):** e2e-spec clone families, admin `list*ForAdmin` complexity hotspots, `card.tsx` union casts, NewsletterSignup variant-branch dedup.
 - **Phase 21 (`code-hygiene`) complete — CLEAN-01..05 (PR #346 merged `e755cbbc`).** CLEAN-01 pagespeed em-dash -> period; CLEAN-02 deleted dead `getClientIpFromHeaders` + un-exported 2 internal-only types + justified `isGoogleAdsConfigured`/`getCsrfTokenFromRequest`; CLEAN-03 extracted `flattenZod` to `src/lib/admin/zod-errors.ts` (6 admin actions), `ActionResult` left per-file (blog's id is required), NewsletterSignup variant-branch dup kept-by-decision (visual-regression risk, no visual test); CLEAN-04 dropped 9 `error as Error` casts; CLEAN-05 fixed CLAUDE.md `errors.ts` ref, favicons build-confirmed serving, BASE_URL flagged. Net -60 lines, no behavior change. Gate green; suite 1090/0. SUMMARY + VERIFICATION passed.

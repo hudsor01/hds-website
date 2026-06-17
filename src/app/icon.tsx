@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
-import { BRAND } from '@/lib/_generated/brand'
+import { LOGO_DATA_URL } from '@/lib/og-logo'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 export const size = { width: 32, height: 32 }
 export const contentType = 'image/png'
 
@@ -14,15 +14,11 @@ export default function Icon() {
 				display: 'flex',
 				alignItems: 'center',
 				justifyContent: 'center',
-				background: BRAND.primary,
-				color: BRAND.primaryForeground,
-				fontSize: 22,
-				fontWeight: 800,
-				fontFamily: 'system-ui, sans-serif',
-				letterSpacing: '-0.04em'
+				background: '#ffffff'
 			}}
 		>
-			H
+			{/* biome-ignore lint/performance/noImgElement: ImageResponse (Satori) requires a raw img element. */}
+			<img src={LOGO_DATA_URL} width={30} alt="Hudson Digital Solutions" />
 		</div>,
 		{ ...size }
 	)
