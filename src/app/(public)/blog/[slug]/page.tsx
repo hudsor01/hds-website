@@ -90,6 +90,9 @@ export async function generateMetadata({
 		openGraph: {
 			title: post.title,
 			description,
+			// When a post has no custom feature_image, omit images here so the
+			// dynamic opengraph-image.tsx branded card is used instead (every
+			// post gets a Facebook/social preview without hand-made images).
 			images: post.feature_image
 				? [
 						{
@@ -99,7 +102,7 @@ export async function generateMetadata({
 							alt: post.title
 						}
 					]
-				: [],
+				: undefined,
 			type: 'article',
 			publishedTime: post.published_at,
 			authors: [post.author?.name ?? 'Unknown'],
@@ -109,7 +112,7 @@ export async function generateMetadata({
 			card: 'summary_large_image',
 			title: post.title,
 			description,
-			images: post.feature_image ? [post.feature_image] : []
+			images: post.feature_image ? [post.feature_image] : undefined
 		},
 		alternates: {
 			canonical: `https://hudsondigitalsolutions.com/blog/${post.slug}`

@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
-import { BRAND } from '@/lib/_generated/brand'
+import { LOGO_DATA_URL } from '@/lib/og-logo'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 export const size = { width: 180, height: 180 }
 export const contentType = 'image/png'
 
@@ -14,16 +14,12 @@ export default function AppleIcon() {
 				display: 'flex',
 				alignItems: 'center',
 				justifyContent: 'center',
-				background: `linear-gradient(135deg, ${BRAND.primaryDeep} 0%, ${BRAND.primary} 100%)`,
-				color: BRAND.primaryForeground,
-				fontSize: 110,
-				fontWeight: 800,
-				fontFamily: 'system-ui, sans-serif',
-				letterSpacing: '-0.06em',
+				background: '#ffffff',
 				borderRadius: 36
 			}}
 		>
-			H
+			{/* biome-ignore lint/performance/noImgElement: ImageResponse (Satori) requires a raw img element. */}
+			<img src={LOGO_DATA_URL} width={150} alt="Hudson Digital Solutions" />
 		</div>,
 		{ ...size }
 	)

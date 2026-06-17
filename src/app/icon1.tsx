@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
-import { BRAND } from '@/lib/_generated/brand'
+import { LOGO_DATA_URL } from '@/lib/og-logo'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 export const size = { width: 512, height: 512 }
 export const contentType = 'image/png'
 
@@ -14,15 +14,11 @@ export default function Icon512() {
 				display: 'flex',
 				alignItems: 'center',
 				justifyContent: 'center',
-				background: `linear-gradient(135deg, ${BRAND.primaryDeep} 0%, ${BRAND.primary} 100%)`,
-				color: BRAND.primaryForeground,
-				fontSize: 320,
-				fontWeight: 800,
-				fontFamily: 'system-ui, sans-serif',
-				letterSpacing: '-0.06em'
+				background: '#ffffff'
 			}}
 		>
-			H
+			{/* biome-ignore lint/performance/noImgElement: ImageResponse (Satori) requires a raw img element. */}
+			<img src={LOGO_DATA_URL} width={456} alt="Hudson Digital Solutions" />
 		</div>,
 		{ ...size }
 	)
