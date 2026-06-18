@@ -99,18 +99,40 @@ export function bodyToHtml(
 	return marked.parse(body, { async: false }) as string
 }
 
+export type Severity = 'error' | 'warn'
+
 export interface Violation {
 	rule: string
 	message: string
+	severity: Severity
 }
+
+/**
+ * Two tiers, by design (v9 philosophy: push for quality + volume, do not
+ * block strong content on arbitrary boxes):
+ *   - error: blocks the PR. Only things that break publish (missing/invalid
+ *     frontmatter, slug, taxonomy tag), violate the absolute project brand
+ *     rule (no em/en-dash, no emoji in user-facing text), or are too thin to
+ *     be real content (word floor). There is NO upper word limit.
+ *   - warn: reported, never blocks. SEO/quality nudges Claude resolves during
+ *     finalization (title/excerpt length, internal-link count, CTA, keyword
+ *     placement). Over-length excerpts are clamped for the meta tag at render.
+ */
+// Floor pushes quality UP (no thin sub-1k stubs); there is deliberately no
+// ceiling, so strong long-form content is never penalized for depth.
+const MIN_WORDS = 1000
 
 export function validatePost(p: ParsedPost): Violation[] {
 	const v: Violation[] = []
 	const d = p.data
-	const push = (rule: string, message: string): void => {
-		v.push({ rule, message })
+	const err = (rule: string, message: string): void => {
+		v.push({ rule, message, severity: 'error' })
+	}
+	const warn = (rule: string, message: string): void => {
+		v.push({ rule, message, severity: 'warn' })
 	}
 
+	// --- HARD ERRORS: publish/integrity ---
 	for (const k of [
 		'title',
 		'slug',
@@ -119,61 +141,82 @@ export function validatePost(p: ParsedPost): Violation[] {
 		'publishedAt'
 	] as const) {
 		if (typeof d?.[k] !== 'string' || !d[k]) {
-			push('R0', `missing/!string frontmatter: ${k}`)
+			err('R0', `missing/!string frontmatter: ${k}`)
 		}
 	}
 	if (!Array.isArray(d?.tags) || d.tags.length < 1) {
-		push('R4', 'tags must be a non-empty array')
+		err('R4', 'tags must be a non-empty array')
 	} else {
 		for (const t of d.tags) {
 			if (!TAXONOMY.includes(t as TagSlug)) {
-				push('R4', `unknown tag: ${t}`)
+				err('R4', `unknown tag: ${t}`)
 			}
 		}
 	}
 	if (typeof d?.published !== 'boolean') {
-		push('R0', 'published must be a boolean')
+		err('R0', 'published must be a boolean')
 	}
 	if (typeof d?.slug === 'string') {
 		if (!SLUG_RE.test(d.slug)) {
-			push('R3', `slug not kebab-case: ${d.slug}`)
+			err('R3', `slug not kebab-case: ${d.slug}`)
 		}
 		if (d.slug !== p.file.replace(/\.md$/, '')) {
-			push('R3', `slug "${d.slug}" != filename "${p.file}"`)
+			err('R3', `slug "${d.slug}" != filename "${p.file}"`)
 		}
 	}
 
-	// Migrated posts are grandfathered: structural frontmatter only.
-	if (d?.legacy || v.length > 0) {
+	// Migrated posts are grandfathered to structural frontmatter only.
+	if (d?.legacy || v.some(x => x.severity === 'error')) {
 		return v
 	}
 
-	if (typeof d.targetKeyword !== 'string' || !d.targetKeyword) {
-		push('R1', 'missing targetKeyword')
-		return v
+	// --- HARD ERROR: absolute brand rule (no em/en-dash, no emoji) ---
+	for (const [field, text] of [
+		['title', d.title],
+		['excerpt', d.excerpt],
+		['body', p.body]
+	] as const) {
+		if (DASH_RE.test(text)) {
+			err('R9', `em/en-dash in ${field}`)
+		}
+		if (EMOJI_RE.test(text)) {
+			err('R9', `emoji in ${field}`)
+		}
+	}
+
+	// --- HARD ERROR: thin-content floor (no upper bound; volume is good) ---
+	const words = wordCount(p.body)
+	if (words < MIN_WORDS) {
+		err('R8', `${words} words (min ${MIN_WORDS}; too thin to be real content)`)
+	}
+
+	// --- WARNINGS: SEO/quality nudges, never block ---
+	const kw =
+		typeof d.targetKeyword === 'string' ? d.targetKeyword.toLowerCase() : ''
+	if (!kw) {
+		warn('R1', 'missing targetKeyword')
 	}
 	if (typeof d.pillar !== 'number') {
-		push('R0', 'pillar must be a number 1-10')
+		warn('R0', 'pillar should be a number 1-10 (tracking)')
 	}
-	const kw = d.targetKeyword.toLowerCase()
 	if (d.title.length > 60) {
-		push('R1', `title ${d.title.length} chars (> 60)`)
+		warn('R1', `title ${d.title.length} chars (> 60 may truncate in SERP)`)
 	}
-	if (!d.title.toLowerCase().includes(kw)) {
-		push('R1', 'title does not contain targetKeyword')
+	if (kw && !d.title.toLowerCase().includes(kw)) {
+		warn('R1', 'title does not contain targetKeyword')
 	}
 	if (d.excerpt.length < 120 || d.excerpt.length > 160) {
-		push('R2', `excerpt ${d.excerpt.length} chars (need 120-160)`)
+		warn('R2', `excerpt ${d.excerpt.length} chars (ideal 120-160)`)
 	}
 	const links = (p.body.match(INTERNAL_LINK_RE) ?? []).length
 	if (links < 2) {
-		push('R5', `${links} internal links (need >= 2)`)
+		warn('R5', `${links} internal links (aim >= 2)`)
 	}
 	if (!CTA_RE.test(p.body)) {
-		push('R6', 'no CTA link to /contact or /tools')
+		warn('R6', 'no CTA link to /contact or /tools')
 	}
 	if (!/(^|\n)##\s|<h2/i.test(p.body)) {
-		push('R7', 'no H2 section')
+		warn('R7', 'no H2 section')
 	}
 	const first100 = p.body
 		.replace(/<[^>]+>/g, ' ')
@@ -182,24 +225,8 @@ export function validatePost(p: ParsedPost): Violation[] {
 		.slice(0, 100)
 		.join(' ')
 		.toLowerCase()
-	if (!first100.includes(kw)) {
-		push('R7', 'targetKeyword not in first 100 words')
-	}
-	const words = wordCount(p.body)
-	if (words < 1000 || words > 2000) {
-		push('R8', `${words} words (need 1000-2000)`)
-	}
-	for (const [field, text] of [
-		['title', d.title],
-		['excerpt', d.excerpt],
-		['body', p.body]
-	] as const) {
-		if (DASH_RE.test(text)) {
-			push('R9', `em/en-dash in ${field}`)
-		}
-		if (EMOJI_RE.test(text)) {
-			push('R9', `emoji in ${field}`)
-		}
+	if (kw && !first100.includes(kw)) {
+		warn('R7', 'targetKeyword not in first 100 words')
 	}
 	return v
 }
