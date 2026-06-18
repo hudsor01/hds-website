@@ -10,8 +10,11 @@ import matter from 'gray-matter'
 import { CONTENT_DIR } from './lib'
 
 const LM_URL = process.env.LM_STUDIO_URL ?? 'http://localhost:1234/v1'
-const MODEL =
-	process.env.LM_STUDIO_MODEL ?? 'mistral-small-3.2-24b-instruct-2506-mlx'
+// qwen3.6-35b-a3b is a reasoning model: it emits a chain-of-thought into
+// `reasoning_content` (which we ignore) and the final post into `content`.
+// max_tokens below must cover BOTH, or the reasoning consumes the budget and
+// content comes back empty (finish_reason: length).
+const MODEL = process.env.LM_STUDIO_MODEL ?? 'qwen3.6-35b-a3b-mlx'
 
 const PILLAR_TAGS: Record<number, string[]> = {
 	1: ['web-design', 'small-business'],
@@ -59,16 +62,18 @@ async function main(): Promise<void> {
 	const system = [
 		'You are a senior content writer for Hudson Digital Solutions, a small-business web design, local SEO, and booking/payments automation studio in the Dallas-Fort Worth area.',
 		'Write in plain, concrete, benefit-led English for small-business owners and position the company as the subject-matter expert.',
-		'Rules: NO em-dashes or en-dashes anywhere (use commas, periods, hyphens, or the word "to"). No emojis.',
-		'Do NOT start with an H1 or a title. Start with a one-sentence share hook, then use ## and ### section headings.',
-		'Length 1200 to 1600 words. Include at least two internal links in markdown (one to a relevant /tools/* or /services page, one to /contact) and one clear call to action to /contact.',
-		'Output ONLY the markdown body. No frontmatter, no title heading, no closing notes.'
+		'Hard rules: never use an em-dash or en-dash (use commas, periods, hyphens, or the word "to"); no emojis; straight ASCII punctuation only.',
+		'Internal links MUST be relative paths that begin with a slash, for example [our services](/services). NEVER write a full URL or any other domain.',
+		'Output format: the FIRST line must be "META: " followed by a 120 to 160 character meta description, then a blank line, then the article body. Do NOT begin the body with an H1 or the title; open with a one-sentence hook, then use ## and ### headings.',
+		'Depth: write AT LEAST 1100 words (aim 1300 to 1600). Give each section 2 to 4 full paragraphs with concrete examples, and include at least one bulleted list.',
+		'You MUST include a markdown link to /contact and at least one link to a relevant /tools/* or /services page, plus a clear call to action to /contact near the end.',
+		'Output only the META line and the markdown body, nothing else.'
 	].join(' ')
 	const user = [
 		`Pillar ${pillar}. Topic: ${topic}.`,
 		`Target keyword (use it in the first 100 words and naturally throughout): ${keyword}.`,
-		'Internal links you may use: /contact, /services, /tools/roi-calculator, /tools/cost-estimator, /tools/performance-calculator, /tools/schema-generator, /tools/proposal-generator.',
-		'Write the post now.'
+		'Relative internal links you may use: /contact, /services, /tools/roi-calculator, /tools/cost-estimator, /tools/performance-calculator, /tools/schema-generator, /tools/proposal-generator.',
+		'Write the META line and the full post now.'
 	].join(' ')
 
 	const res = await fetch(`${LM_URL}/chat/completions`, {
@@ -77,7 +82,7 @@ async function main(): Promise<void> {
 		body: JSON.stringify({
 			model: MODEL,
 			temperature: 0.7,
-			max_tokens: 4096,
+			max_tokens: 16000,
 			messages: [
 				{ role: 'system', content: system },
 				{ role: 'user', content: user }
@@ -89,16 +94,25 @@ async function main(): Promise<void> {
 		process.exit(1)
 	}
 	const json = (await res.json()) as ChatResponse
-	const body = json.choices?.[0]?.message?.content?.trim()
-	if (!body) {
+	const raw = json.choices?.[0]?.message?.content?.trim()
+	if (!raw) {
 		console.error('empty completion from LM Studio')
 		process.exit(1)
+	}
+	// The model emits a leading "META: <120-160 char description>" line; split
+	// it off into the excerpt and keep the remainder as the body.
+	let excerpt = 'DRAFT: replace with a 120-160 character meta description.'
+	let body = raw
+	const metaMatch = raw.match(/^META:\s*(.+)$/im)
+	if (metaMatch?.[1]) {
+		excerpt = metaMatch[1].trim()
+		body = raw.slice(raw.indexOf(metaMatch[0]) + metaMatch[0].length).trim()
 	}
 
 	const fm = {
 		title: topic.length <= 60 ? topic : `${topic.slice(0, 57)}...`,
 		slug,
-		excerpt: 'DRAFT: replace with a 120-160 character meta description.',
+		excerpt,
 		targetKeyword: keyword,
 		pillar,
 		tags,
