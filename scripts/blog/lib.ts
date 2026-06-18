@@ -6,7 +6,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import matter from 'gray-matter'
 import { marked } from 'marked'
-import { findAiTells } from './voice'
+import { countCommaBeforeAnd, findAiTells } from './voice'
 
 export const CONTENT_DIR = join(process.cwd(), 'content/blog')
 
@@ -234,6 +234,10 @@ export function validatePost(p: ParsedPost): Violation[] {
 	const tells = findAiTells(`${d.title} ${d.excerpt} ${p.body}`)
 	if (tells.length > 0) {
 		warn('AIVOICE', `AI tell-tale phrases: ${tells.join(', ')}`)
+	}
+	const commaAnd = countCommaBeforeAnd(`${d.excerpt} ${p.body}`)
+	if (commaAnd > 0) {
+		warn('VOICE', `${commaAnd}x comma before "and" (voice rule: never use it)`)
 	}
 	return v
 }

@@ -12,8 +12,9 @@
 export const VOICE_GUIDE = [
 	'VOICE: Write as Richard Hudson, founder of Hudson Digital Solutions, in first person ("I" and "we"). I spent almost a decade in revenue operations (Salesforce, Power BI, Workato, HubSpot, PartnerStack) before building websites, so I treat a website as a revenue system, not a brochure. I scaled a partner network 2,200%, hit 95% forecast accuracy, and drove $3.7M through forecasting work; I think in attribution, automation, and measurable outcomes.',
 	'TONE: confident, direct, plain-spoken. Lead with the point. Short punchy sentences mixed with longer ones for rhythm; never uniform same-length paragraphs. Use contractions. Sound like a sharp operator talking to another business owner, not a marketing brochure.',
-	'SUBSTANCE: prefer hard numbers, named tools, and concrete Dallas-Fort Worth scenarios over vague adjectives. Show the systems thinking: what to measure, what to automate, what it costs, what it returns. Real specifics beat generalities every time.',
-	'STRUCTURE: vary paragraph and sentence length. It is fine to use a one-sentence paragraph for emphasis. Do not make every section the same shape.'
+	'SUBSTANCE: prefer hard numbers, named tools and concrete Dallas-Fort Worth scenarios over vague adjectives. Show the systems thinking: what to measure, what to automate, what it costs, what it returns. Real specifics beat generalities every time.',
+	'STRUCTURE: vary paragraph and sentence length. It is fine to use a one-sentence paragraph for emphasis. Do not make every section the same shape.',
+	'PUNCTUATION: never put a comma before the word "and". Write "fast and reliable" and "I track leads and route them", never "fast, and reliable" or a clause like "..., and it will not...". This applies to lists too: write "design, SEO and automation", not "design, SEO, and automation".'
 ].join('\n')
 
 /**
@@ -105,4 +106,16 @@ export function findAiTells(text: string): string[] {
 		}
 	}
 	return [...hits]
+}
+
+const COMMA_BEFORE_AND = /,\s+and\b/gi
+
+/** Count comma-before-"and" occurrences (a personal-voice rule: never use it). */
+export function countCommaBeforeAnd(text: string): number {
+	return (text.match(COMMA_BEFORE_AND) ?? []).length
+}
+
+/** Remove the comma before "and" (", and" -> " and") wherever it appears. */
+export function stripCommaBeforeAnd(text: string): string {
+	return text.replace(/,(\s+and\b)/gi, '$1')
 }
