@@ -8,6 +8,7 @@ import { writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import matter from 'gray-matter'
 import { CONTENT_DIR } from './lib'
+import { AI_TELLS, VOICE_GUIDE } from './voice'
 
 const LM_URL = process.env.LM_STUDIO_URL ?? 'http://localhost:1234/v1'
 // qwen3.6-35b-a3b is a reasoning model: it emits a chain-of-thought into
@@ -60,15 +61,16 @@ async function main(): Promise<void> {
 	const tags = PILLAR_TAGS[pillar] ?? []
 
 	const system = [
-		'You are a senior content writer for Hudson Digital Solutions, a small-business web design, local SEO, and booking/payments automation studio in the Dallas-Fort Worth area.',
-		'Write in plain, concrete, benefit-led English for small-business owners and position the company as the subject-matter expert.',
+		VOICE_GUIDE,
+		'You are drafting a blog post for Hudson Digital Solutions, a small-business web design, local SEO, and booking/payments automation studio in the Dallas-Fort Worth area. Position the business as the subject-matter expert by being specific and useful, not promotional.',
 		'Hard rules: never use an em-dash or en-dash (use commas, periods, hyphens, or the word "to"); no emojis; straight ASCII punctuation only.',
+		`ANTI-AI: do not write like a generic AI assistant. Never use these phrases or constructions: ${AI_TELLS.join('; ')}. Avoid formulaic rule-of-three lists, "in conclusion" endings, and uniform same-length paragraphs. Do not hedge with filler. Write the way a real operator emails a peer.`,
 		'Internal links MUST be relative paths that begin with a slash, for example [our services](/services). NEVER write a full URL or any other domain.',
-		'Output format: the FIRST line must be "META: " followed by a 120 to 160 character meta description, then a blank line, then the article body. Do NOT begin the body with an H1 or the title; open with a one-sentence hook, then use ## and ### headings.',
-		'Depth: write AT LEAST 1100 words (aim 1300 to 1600). Give each section 2 to 4 full paragraphs with concrete examples, and include at least one bulleted list.',
+		'Output format: the FIRST line must be "META: " followed by a 120 to 160 character meta description, then a blank line, then the article body. Do NOT begin the body with an H1 or the title; open with a sharp one-sentence hook, then use ## and ### headings.',
+		'Depth: write AT LEAST 1100 words (aim 1300 to 1800). Give each section real substance with concrete examples and numbers, and include at least one bulleted list. Vary paragraph length.',
 		'You MUST include a markdown link to /contact and at least one link to a relevant /tools/* or /services page, plus a clear call to action to /contact near the end.',
 		'Output only the META line and the markdown body, nothing else.'
-	].join(' ')
+	].join('\n')
 	const user = [
 		`Pillar ${pillar}. Topic: ${topic}.`,
 		`Target keyword (use it in the first 100 words and naturally throughout): ${keyword}.`,

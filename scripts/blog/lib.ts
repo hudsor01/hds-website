@@ -6,6 +6,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import matter from 'gray-matter'
 import { marked } from 'marked'
+import { findAiTells } from './voice'
 
 export const CONTENT_DIR = join(process.cwd(), 'content/blog')
 
@@ -227,6 +228,12 @@ export function validatePost(p: ParsedPost): Violation[] {
 		.toLowerCase()
 	if (kw && !first100.includes(kw)) {
 		warn('R7', 'targetKeyword not in first 100 words')
+	}
+	// AI tell-tale phrases: warn (Claude scrubs at finalization so published
+	// posts read human and in-voice). Use --strict to make these block.
+	const tells = findAiTells(`${d.title} ${d.excerpt} ${p.body}`)
+	if (tells.length > 0) {
+		warn('AIVOICE', `AI tell-tale phrases: ${tells.join(', ')}`)
 	}
 	return v
 }
