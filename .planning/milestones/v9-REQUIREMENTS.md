@@ -45,20 +45,27 @@ Pillar definitions, SME angles, and the topic backlog live in
   edits every draft for guardrails + brand voice before it is committed. Keeps
   Claude token usage low; the local model does the word generation.
 - **Guardrails:** enforced by `scripts/validate-blog.ts` wired into the CI Code
-  Quality job. A PR cannot merge while any post fails. This is the no-drift gate.
+  Quality job, in two tiers so strong content is never blocked on an arbitrary
+  box (philosophy: push for quality AND volume, not box-fitting):
+  - **ERROR (blocks the PR):** only what breaks publish, linkability, the
+    absolute brand rule, or ships thin content. R0/R3/R4 (frontmatter, slug,
+    taxonomy), R9 (no dash/emoji), R8-floor (min 1000 words, NO upper limit).
+  - **WARN (reported, never blocks):** SEO/quality nudges Claude resolves at
+    finalization. R1 (title length/keyword), R2 (excerpt length), R5 (link
+    count), R6 (CTA), R7 (keyword placement). Run `--strict` to fail on these.
 
 ## Per-blog guardrails (Definition of Done, every post)
 
 SEO
-- R1: title <= 60 chars and contains the target keyword.
-- R2: meta description (excerpt) 120-160 chars.
-- R3: unique kebab-case slug.
-- R4: exactly one primary pillar tag from the 12-tag taxonomy (+ optional secondary).
-- R5: at least 2 internal links, one to the matching tool/service and one to a related post.
-- R6: one clear CTA (free website plan, or the relevant tool).
-- R7: H2/H3 structure; target keyword in the H1 and the first 100 words.
-- R8: 1000-2000 words; reading_time set.
-- R9: NO em-dash or en-dash anywhere; no emojis.
+- R1 (warn): title aims <= 60 chars and contains the target keyword.
+- R2 (warn): meta description (excerpt) ideally 120-160 chars (clamped at render).
+- R3 (error): unique kebab-case slug.
+- R4 (error): primary pillar tag from the 12-tag taxonomy (+ optional secondary).
+- R5 (warn): aim for at least 2 internal links (a tool/service and a related post).
+- R6 (warn): one clear CTA (free website plan, or the relevant tool).
+- R7 (warn): H2/H3 structure; target keyword early (first 100 words).
+- R8 (error): minimum 1000 words (floor pushes quality up; NO ceiling, depth is good); reading_time auto-set.
+- R9 (error): NO em-dash or en-dash anywhere; no emojis.
 - R10: Article (or BlogPosting) JSON-LD emitted on the post page.
 
 Social
