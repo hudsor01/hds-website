@@ -35,6 +35,7 @@
 		"db:push": "drizzle-kit push",
 		"brand:generate": "bun run scripts/generate-brand-tokens.ts",
 		"blog:validate": "bun run scripts/blog/validate.ts",
+		"blog:coverage": "bun run scripts/blog/tool-coverage.ts",
 		"blog:publish": "bun run scripts/blog/publish.ts",
 		"blog:generate": "bun run scripts/blog/generate.ts",
 		"prepare": "lefthook install && bun run brand:generate"
