@@ -111,3 +111,36 @@ leverage). Titles are starting points, not final.
    Undefined into Defined Success" lean on a coding pun rather than the concrete
    benefit-led voice. Recommendation: rewrite into a single pillar-1 or pillar-8
    post, or drop.
+
+## Tool coverage (one post per free tool, REQUIRED)
+
+Every public free tool must have at least one published post that links to it
+(markdown link), so the blog funnels readers into the tools. Enforced by
+`bun run blog:coverage` (`--strict` is the milestone-close gate). 18 public
+tools; testimonial-collector is admin-only and excluded.
+
+| Tool | Covering post / pillar |
+|---|---|
+| /tools/cost-estimator | covered (pillars 1, 2) |
+| /tools/roi-calculator | covered (pillars 1, 2) |
+| /tools/performance-calculator | covered (pillar 2) |
+| /tools/proposal-generator | covered (pillar 1) |
+| /tools/schema-generator | covered (pillars 1, 3) |
+| /tools/meta-tag-generator | Pillar 3 (local keyword research post) |
+| /tools/invoice-generator | Pillar 9 (invoicing) |
+| /tools/invoice-late-fee-calculator | Pillar 9 (late fees) |
+| /tools/paystub-calculator | Pillar 9 (payroll basics) |
+| /tools/profit-margin-calculator | Pillar 9 (margin vs markup) |
+| /tools/time-card-calculator | Pillar 9 (tracking hours) |
+| /tools/contract-generator | Pillar 9 (service contracts) |
+| /tools/ttl-calculator | Pillar 9 (Texas vehicle costs) |
+| /tools/mortgage-calculator | Pillar 9 (owner finance/buying) |
+| /tools/tip-calculator | Pillar 9 (tipping/POS) |
+| /tools/json-formatter | Pillar 10 (developer utilities) |
+| /tools/comma-separator | Pillar 10 (developer utilities) |
+| /tools/word-counter | Pillar 10 (content limits / meta length) |
+
+Pillar 9 (Ops/Finance, +9) is exactly the 9 business tools, one post each.
+Pillar 10 (Technical, +8) covers the 3 developer tools plus stack/case-study
+posts. Pillar 3 adds the meta-tag generator. After pillars 9 and 10 merge,
+`blog:coverage --strict` must report 0 uncovered before v9 closes.
