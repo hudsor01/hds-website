@@ -59,6 +59,13 @@ async function main(): Promise<void> {
 	}
 	const slug = arg('slug') ?? slugify(topic)
 	const tags = PILLAR_TAGS[pillar] ?? []
+	// Optional: the specific free tool this post should funnel readers into.
+	// When set, the model is told to link it as the primary recommended tool.
+	const tool = arg('tool')
+
+	const toolRule = tool
+		? `PRIMARY TOOL: this post supports the free tool at ${tool}. You MUST link to it as a markdown link at least twice, including one clear call to action telling the reader to try it (for example [try our free tool](${tool})). Frame the tool as the practical next step, not an ad.`
+		: 'You MUST include a markdown link to at least one relevant /tools/* or /services page.'
 
 	const system = [
 		VOICE_GUIDE,
@@ -66,15 +73,19 @@ async function main(): Promise<void> {
 		'Hard rules: never use an em-dash or en-dash (use commas, periods, hyphens, or the word "to"); no emojis; straight ASCII punctuation only.',
 		`ANTI-AI: do not write like a generic AI assistant. Never use these phrases or constructions: ${AI_TELLS.join('; ')}. Avoid formulaic rule-of-three lists, "in conclusion" endings, and uniform same-length paragraphs. Do not hedge with filler. Write the way a real operator emails a peer.`,
 		'Internal links MUST be relative paths that begin with a slash, for example [our services](/services). NEVER write a full URL or any other domain.',
+		toolRule,
 		'Output format: the FIRST line must be "META: " followed by a 120 to 160 character meta description, then a blank line, then the article body. Do NOT begin the body with an H1 or the title; open with a sharp one-sentence hook, then use ## and ### headings.',
 		'Depth: write AT LEAST 1100 words (aim 1300 to 1800). Give each section real substance with concrete examples and numbers, and include at least one bulleted list. Vary paragraph length.',
-		'You MUST include a markdown link to /contact and at least one link to a relevant /tools/* or /services page, plus a clear call to action to /contact near the end.',
+		'You MUST also include a markdown link to /contact with a clear call to action near the end.',
 		'Output only the META line and the markdown body, nothing else.'
 	].join('\n')
+	const linkList = tool
+		? `${tool}, /contact, /services`
+		: '/contact, /services, /tools/roi-calculator, /tools/cost-estimator, /tools/performance-calculator, /tools/schema-generator, /tools/proposal-generator'
 	const user = [
 		`Pillar ${pillar}. Topic: ${topic}.`,
 		`Target keyword (use it in the first 100 words and naturally throughout): ${keyword}.`,
-		'Relative internal links you may use: /contact, /services, /tools/roi-calculator, /tools/cost-estimator, /tools/performance-calculator, /tools/schema-generator, /tools/proposal-generator.',
+		`Relative internal links you may use: ${linkList}.`,
 		'Write the META line and the full post now.'
 	].join(' ')
 
