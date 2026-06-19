@@ -98,6 +98,8 @@ playwright-report/
 !docs/plans/*.md
 !.planning/**/*.md
 !.github/**/*.md
+# Blog content is the source of truth for the Neon blog_posts table (v9).
+!content/blog/*.md
 
 # Log files
 *.log
