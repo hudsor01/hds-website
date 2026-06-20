@@ -30,11 +30,20 @@ const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
 		'code',
 		'pre',
 		'br',
-		'img'
+		'img',
+		'hr',
+		'table',
+		'thead',
+		'tbody',
+		'tr',
+		'th',
+		'td'
 	],
 	allowedAttributes: {
 		a: ['href', 'title', 'target', 'rel', 'class'],
-		img: ['src', 'alt', 'title', 'class']
+		img: ['src', 'alt', 'title', 'class'],
+		th: ['align'],
+		td: ['align']
 	},
 	allowedSchemes: ['http', 'https', 'mailto']
 	// Intentionally NOT allowing data: URIs on <img>: blog content can be
