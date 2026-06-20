@@ -1,13 +1,15 @@
 ---
 title: Tip Calculator and Bill Splitting Made Simple
 slug: tip-calculation-and-bill-splitting
-excerpt: 'How DFW businesses automate tip splitting and bill math for faster checkout and higher turnover. Try our free tip calculator.'
+excerpt: >-
+  How DFW businesses automate tip splitting and bill math for faster checkout
+  and higher turnover. Try our free tip calculator.
 targetKeyword: tip calculator
 pillar: 9
 tags:
   - business
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2026-02-16'
 published: true
 featured: false
 featureImage: ''

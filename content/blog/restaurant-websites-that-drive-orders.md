@@ -1,14 +1,16 @@
 ---
 title: Restaurant Websites That Drive Orders and Reservations
 slug: restaurant-websites-that-drive-orders
-excerpt: 'A restaurant website should drive orders and reservations, not just display a menu. How we turn your site into a revenue system.'
+excerpt: >-
+  A restaurant website should drive orders and reservations, not just display a
+  menu. How we turn your site into a revenue system.
 targetKeyword: restaurant website
 pillar: 7
 tags:
   - home-services
   - local-marketing
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-11-27'
 published: true
 featured: false
 featureImage: ''

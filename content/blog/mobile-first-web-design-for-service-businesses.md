@@ -1,14 +1,16 @@
 ---
 title: Mobile-First Web Design for Service Businesses
 slug: mobile-first-web-design-for-service-businesses
-excerpt: 'Mobile-first web design for DFW service businesses should run like a revenue engine. The metrics, automation and tracking that move booked jobs.'
+excerpt: >-
+  Mobile-first web design for DFW service businesses should run like a revenue
+  engine. The metrics, automation and tracking that move booked jobs.
 targetKeyword: mobile-first web design
 pillar: 1
 tags:
   - web-design
   - small-business
 author: richard-hudson
-publishedAt: '2026-06-18'
+publishedAt: '2025-09-15'
 published: true
 featured: false
 featureImage: ''

@@ -1,14 +1,16 @@
 ---
 title: Law Firm Websites for Small Practices
 slug: law-firm-websites-for-small-practices
-excerpt: 'Stop treating your site as a brochure. We build law firm websites that run on revenue automation, track every lead and convert more clients.'
+excerpt: >-
+  Stop treating your site as a brochure. We build law firm websites that run on
+  revenue automation, track every lead and convert more clients.
 targetKeyword: law firm website
 pillar: 7
 tags:
   - home-services
   - local-marketing
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-08-06'
 published: true
 featured: false
 featureImage: ''

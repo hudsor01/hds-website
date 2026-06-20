@@ -9,7 +9,7 @@ pillar: 4
 tags:
   - conversion-optimization
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-01-01'
 published: true
 featured: false
 featureImage: ''

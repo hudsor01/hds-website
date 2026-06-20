@@ -1,14 +1,16 @@
 ---
 title: 'LocalBusiness Schema: Help Google Find You'
 slug: localbusiness-schema-help-google-find-you
-excerpt: 'Localbusiness schema for DFW businesses. Feed Google structured data to win map pack visibility and drive predictable revenue.'
+excerpt: >-
+  Localbusiness schema for DFW businesses. Feed Google structured data to win
+  map pack visibility and drive predictable revenue.
 targetKeyword: localbusiness schema
 pillar: 3
 tags:
   - seo
   - local-marketing
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-09-02'
 published: true
 featured: false
 featureImage: ''

@@ -1,14 +1,16 @@
 ---
 title: Local Keyword Research for Service Businesses
 slug: local-keyword-research-for-service-businesses
-excerpt: 'Local keyword research for DFW service businesses: the workflow to map search intent, track conversions and book more qualified calls.'
+excerpt: >-
+  Local keyword research for DFW service businesses: the workflow to map search
+  intent, track conversions and book more qualified calls.
 targetKeyword: local keyword research
 pillar: 3
 tags:
   - seo
   - local-marketing
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-08-19'
 published: true
 featured: false
 featureImage: ''

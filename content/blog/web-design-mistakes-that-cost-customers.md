@@ -1,14 +1,16 @@
 ---
 title: Web Design Mistakes That Cost Small Businesses Customers
 slug: web-design-mistakes-that-cost-customers
-excerpt: 'Stop losing customers to common web design mistakes. Get expert fixes for faster sites, higher SEO rankings and more bookings in Dallas-Fort Worth.'
+excerpt: >-
+  Stop losing customers to common web design mistakes. Get expert fixes for
+  faster sites, higher SEO rankings and more bookings in Dallas-Fort Worth.
 targetKeyword: web design mistakes
 pillar: 1
 tags:
   - web-design
   - small-business
 author: richard-hudson
-publishedAt: '2026-06-18'
+publishedAt: '2026-03-01'
 published: true
 featured: false
 featureImage: ''

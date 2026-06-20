@@ -1,14 +1,16 @@
 ---
 title: How to Rank in the Google Local Pack
 slug: how-to-rank-in-the-google-local-pack
-excerpt: 'Stop guessing why your Dallas business vanishes from map results. The metrics, automations and local SEO tactics that fill your google local pack.'
+excerpt: >-
+  Stop guessing why your Dallas business vanishes from map results. The metrics,
+  automations and local SEO tactics that fill your google local pack.
 targetKeyword: google local pack
 pillar: 3
 tags:
   - seo
   - local-marketing
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-05-12'
 published: true
 featured: false
 featureImage: ''

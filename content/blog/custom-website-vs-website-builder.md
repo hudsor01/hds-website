@@ -1,13 +1,15 @@
 ---
 title: 'Custom Website vs Website Builder: A Developer''s View'
 slug: custom-website-vs-website-builder
-excerpt: 'Custom website vs website builder: the real cost, automation limits and revenue impact for Dallas businesses, in hard numbers.'
+excerpt: >-
+  Custom website vs website builder: the real cost, automation limits and
+  revenue impact for Dallas businesses, in hard numbers.
 targetKeyword: custom website vs website builder
 pillar: 10
 tags:
   - web-development
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-02-11'
 published: true
 featured: false
 featureImage: ''

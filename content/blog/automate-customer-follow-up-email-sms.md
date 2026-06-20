@@ -1,13 +1,15 @@
 ---
 title: Automate Customer Follow-Up With Email and SMS
 slug: automate-customer-follow-up-email-sms
-excerpt: 'How to automate customer follow-up with email and SMS. The systems, tools and metrics DFW businesses use to recover lost revenue.'
+excerpt: >-
+  How to automate customer follow-up with email and SMS. The systems, tools and
+  metrics DFW businesses use to recover lost revenue.
 targetKeyword: automate customer follow-up
 pillar: 5
 tags:
   - business-automation
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2024-12-19'
 published: true
 featured: false
 featureImage: ''
