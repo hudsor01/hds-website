@@ -5,11 +5,14 @@ import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { AuthorCard } from '@/components/blog/AuthorCard'
 import { BlogPostContent } from '@/components/blog/BlogPostContent'
+import { BlogTableOfContents } from '@/components/blog/BlogTableOfContents'
+import { ReadingProgress } from '@/components/blog/ReadingProgress'
 import { RelatedPosts } from '@/components/blog/RelatedPosts'
 import { Button } from '@/components/ui/button'
 import { BackLink } from '@/components/utilities/BackLink'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { getPostBySlug, getPosts, getPostsByTag } from '@/lib/blog'
+import { withHeadingIds } from '@/lib/blog-toc'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { formatDate } from '@/lib/utils'
 
@@ -228,8 +231,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 		]
 	}
 
+	// Headings drive the table of contents; ids here match those injected by
+	// BlogPostContent (same deterministic slugify over the same headings).
+	const { toc } = withHeadingIds(post.content ?? '')
+
 	return (
 		<div className="min-h-screen bg-background">
+			<ReadingProgress />
 			<JsonLd data={blogPostingSchema} />
 			<JsonLd data={breadcrumbSchema} />
 
@@ -314,9 +322,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 					</div>
 				)}
 
-				{/* Article Content */}
-				<div className="container-narrow py-8">
-					<BlogPostContent post={post} />
+				{/* Article Content + sticky table of contents */}
+				<div className="container-wide py-8">
+					<div className="mx-auto max-w-5xl lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12">
+						<div className="min-w-0 max-w-3xl">
+							<BlogPostContent post={post} />
+						</div>
+						{toc.length >= 2 && (
+							<aside className="hidden lg:block">
+								<div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto">
+									<BlogTableOfContents items={toc} />
+								</div>
+							</aside>
+						)}
+					</div>
 				</div>
 
 				{/* Author Bio */}
