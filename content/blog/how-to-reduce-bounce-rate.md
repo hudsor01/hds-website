@@ -1,13 +1,15 @@
 ---
 title: How to Reduce Bounce Rate on Your Website
 slug: how-to-reduce-bounce-rate
-excerpt: 'How to reduce bounce rate by treating your site as a revenue system. DFW tactics, automation and measurable fixes that move bookings.'
+excerpt: >-
+  How to reduce bounce rate by treating your site as a revenue system. DFW
+  tactics, automation and measurable fixes that move bookings.
 targetKeyword: reduce bounce rate
 pillar: 4
 tags:
   - conversion-optimization
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-05-17'
 published: true
 featured: false
 featureImage: ''

@@ -1,13 +1,15 @@
 ---
 title: Landing Page Optimization for Small Business
 slug: landing-page-optimization-small-business
-excerpt: 'Stop treating your site like a brochure. How landing page optimization turns local traffic into booked appointments for DFW businesses.'
+excerpt: >-
+  Stop treating your site like a brochure. How landing page optimization turns
+  local traffic into booked appointments for DFW businesses.
 targetKeyword: landing page optimization
 pillar: 4
 tags:
   - conversion-optimization
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-07-24'
 published: true
 featured: false
 featureImage: ''
