@@ -1,5 +1,5 @@
 ---
-title: 'Is a Custom Website Worth It?'
+title: Is a Custom Website Worth It?
 slug: is-a-custom-website-worth-the-investment
 excerpt: >-
   Stop guessing if your site pays for itself. I track revenue systems, not
@@ -10,7 +10,7 @@ tags:
   - business
   - small-business
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-07-14'
 published: true
 featured: false
 featureImage: ''

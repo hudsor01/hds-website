@@ -1,14 +1,16 @@
 ---
 title: How to Rank in Multiple Cities Without Thin Pages
 slug: how-to-rank-in-multiple-cities
-excerpt: 'Rank in multiple cities without thin pages. How DFW businesses build local SEO systems that drive booked calls from every zip code.'
+excerpt: >-
+  Rank in multiple cities without thin pages. How DFW businesses build local SEO
+  systems that drive booked calls from every zip code.
 targetKeyword: rank in multiple cities
 pillar: 3
 tags:
   - seo
   - local-marketing
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-05-03'
 published: true
 featured: false
 featureImage: ''

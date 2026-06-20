@@ -1,13 +1,15 @@
 ---
 title: 'Profit Margin vs Markup: Price Your Services Right'
 slug: profit-margin-vs-markup
-excerpt: 'Stop guessing your pricing. The profit margin vs markup difference and how to build a DFW pricing system that grows your bottom line.'
+excerpt: >-
+  Stop guessing your pricing. The profit margin vs markup difference and how to
+  build a DFW pricing system that grows your bottom line.
 targetKeyword: profit margin vs markup
 pillar: 9
 tags:
   - business
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-11-13'
 published: true
 featured: false
 featureImage: ''

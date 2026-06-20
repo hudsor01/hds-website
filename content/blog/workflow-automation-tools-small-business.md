@@ -10,7 +10,7 @@ pillar: 5
 tags:
   - business-automation
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2026-06-12'
 published: true
 featured: false
 featureImage: ''

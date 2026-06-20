@@ -1,14 +1,16 @@
 ---
 title: Plumber Website Design That Books Jobs
 slug: plumber-website-design-that-books-jobs
-excerpt: 'We build plumber websites that book jobs in DFW: traffic turned into revenue with automation, local SEO and real ROI tracking.'
+excerpt: >-
+  We build plumber websites that book jobs in DFW: traffic turned into revenue
+  with automation, local SEO and real ROI tracking.
 targetKeyword: plumber website
 pillar: 7
 tags:
   - home-services
   - local-marketing
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-11-09'
 published: true
 featured: false
 featureImage: ''

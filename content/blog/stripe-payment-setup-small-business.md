@@ -1,13 +1,16 @@
 ---
 title: Stripe Payment Setup for Small Business Websites
 slug: stripe-payment-setup-small-business
-excerpt: 'A no-nonsense guide to stripe payment setup for DFW small businesses. Cut friction, track revenue automatically and turn checkout into a forecasting engine.'
+excerpt: >-
+  A no-nonsense guide to stripe payment setup for DFW small businesses. Cut
+  friction, track revenue automatically and turn checkout into a forecasting
+  engine.
 targetKeyword: stripe payment setup
 pillar: 5
 tags:
   - business-automation
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2026-01-20'
 published: true
 featured: false
 featureImage: ''

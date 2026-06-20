@@ -1,13 +1,15 @@
 ---
 title: The Anatomy of a High-Converting Homepage
 slug: anatomy-of-a-high-converting-homepage
-excerpt: 'A high-converting homepage is a revenue system, not a brochure. The tracking, automation and content structure that turns Dallas visitors into clients.'
+excerpt: >-
+  A high-converting homepage is a revenue system, not a brochure. The tracking,
+  automation and content structure that turns Dallas visitors into clients.
 targetKeyword: high-converting homepage
 pillar: 4
 tags:
   - conversion-optimization
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2024-12-10'
 published: true
 featured: false
 featureImage: ''

@@ -1,14 +1,16 @@
 ---
 title: Roofing Company Websites That Convert
 slug: roofing-company-websites-that-convert
-excerpt: 'Your DFW roofing company website should drive quotes, not just traffic. Revenue systems with HubSpot automation and local SEO that cut cost per lead.'
+excerpt: >-
+  Your DFW roofing company website should drive quotes, not just traffic.
+  Revenue systems with HubSpot automation and local SEO that cut cost per lead.
 targetKeyword: roofing company website
 pillar: 7
 tags:
   - home-services
   - local-marketing
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-12-06'
 published: true
 featured: false
 featureImage: ''
