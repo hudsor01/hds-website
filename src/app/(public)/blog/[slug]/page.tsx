@@ -93,29 +93,34 @@ export async function generateMetadata({
 		openGraph: {
 			title: post.title,
 			description,
-			// When a post has no custom feature_image, omit images here so the
-			// dynamic opengraph-image.tsx branded card is used instead (every
-			// post gets a Facebook/social preview without hand-made images).
-			images: post.feature_image
-				? [
-						{
-							url: post.feature_image,
-							width: 1200,
-							height: 630,
-							alt: post.title
-						}
-					]
-				: undefined,
 			type: 'article',
 			publishedTime: post.published_at,
 			authors: [post.author?.name ?? 'Unknown'],
-			tags: post.tags?.map(tag => tag.name)
+			tags: post.tags?.map(tag => tag.name),
+			// Only set `images` when a custom feature_image exists. The key must
+			// be OMITTED entirely (not set to undefined) when absent: Next treats
+			// a present `images` key as "explicitly provided" and then does NOT
+			// auto-inject the file-based opengraph-image.tsx branded card, which
+			// left every post with no og:image (socials fell back to the page's
+			// author headshot).
+			...(post.feature_image
+				? {
+						images: [
+							{
+								url: post.feature_image,
+								width: 1200,
+								height: 630,
+								alt: post.title
+							}
+						]
+					}
+				: {})
 		},
 		twitter: {
 			card: 'summary_large_image',
 			title: post.title,
 			description,
-			images: post.feature_image ? [post.feature_image] : undefined
+			...(post.feature_image ? { images: [post.feature_image] } : {})
 		},
 		alternates: {
 			canonical: `https://hudsondigitalsolutions.com/blog/${post.slug}`
