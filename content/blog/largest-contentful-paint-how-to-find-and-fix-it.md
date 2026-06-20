@@ -9,7 +9,7 @@ pillar: 2
 tags:
   - website-performance
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-07-28'
 published: true
 featured: false
 featureImage: ''

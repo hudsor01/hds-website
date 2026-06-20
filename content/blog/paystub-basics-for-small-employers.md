@@ -1,13 +1,15 @@
 ---
 title: Paystub Basics Every Small Employer Should Know
 slug: paystub-basics-for-small-employers
-excerpt: 'Small employers in DFW need accurate paystubs to stay compliant. The basics, how to automate the workflow and cut payroll errors with our free calculator.'
+excerpt: >-
+  Small employers in DFW need accurate paystubs to stay compliant. The basics,
+  how to automate the workflow and cut payroll errors with our free calculator.
 targetKeyword: paystub
 pillar: 9
 tags:
   - business
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-10-31'
 published: true
 featured: false
 featureImage: ''

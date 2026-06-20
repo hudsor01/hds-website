@@ -1,5 +1,5 @@
 ---
-title: 'Google Business Profile Not Showing Up? Here Is Why'
+title: Google Business Profile Not Showing Up? Here Is Why
 slug: why-google-business-profile-not-showing-up
 excerpt: >-
   Fix your google business profile not showing issues with a data-driven
@@ -10,7 +10,7 @@ tags:
   - seo
   - local-marketing
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2026-05-13'
 published: true
 featured: false
 featureImage: ''

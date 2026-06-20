@@ -9,7 +9,7 @@ pillar: 10
 tags:
   - web-development
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-01-15'
 published: true
 featured: false
 featureImage: ''

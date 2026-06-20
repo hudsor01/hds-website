@@ -1,13 +1,15 @@
 ---
 title: 'Website Migration Checklist: Move Without Losing SEO'
 slug: website-migration-checklist
-excerpt: 'A website migration checklist that protects your SEO, preserves revenue tracking and cuts downtime. Built for DFW businesses moving platforms.'
+excerpt: >-
+  A website migration checklist that protects your SEO, preserves revenue
+  tracking and cuts downtime. Built for DFW businesses moving platforms.
 targetKeyword: website migration checklist
 pillar: 6
 tags:
   - website-migration
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2026-03-15'
 published: true
 featured: false
 featureImage: ''

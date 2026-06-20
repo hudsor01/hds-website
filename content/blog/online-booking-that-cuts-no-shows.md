@@ -1,13 +1,15 @@
 ---
 title: Online Booking That Cuts No-Shows
 slug: online-booking-that-cuts-no-shows
-excerpt: 'DFW businesses lose revenue to no-shows. How online booking systems automate reminders, fill gaps and protect your revenue.'
+excerpt: >-
+  DFW businesses lose revenue to no-shows. How online booking systems automate
+  reminders, fill gaps and protect your revenue.
 targetKeyword: online booking
 pillar: 5
 tags:
   - business-automation
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-10-17'
 published: true
 featured: false
 featureImage: ''

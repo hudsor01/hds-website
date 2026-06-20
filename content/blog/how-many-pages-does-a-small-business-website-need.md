@@ -10,7 +10,7 @@ tags:
   - web-design
   - small-business
 author: richard-hudson
-publishedAt: '2026-06-18'
+publishedAt: '2025-03-15'
 published: true
 featured: false
 featureImage: ''

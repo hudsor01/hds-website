@@ -1,13 +1,15 @@
 ---
 title: 'Case Study: A Local Business Website (Ink37 Tattoos)'
 slug: case-study-ink37-local-service-website
-excerpt: 'Case study: how we turned Ink37 Tattoos into a revenue-driving local business website. The numbers, automation and ROI for a Dallas studio.'
+excerpt: >-
+  Case study: how we turned Ink37 Tattoos into a revenue-driving local business
+  website. The numbers, automation and ROI for a Dallas studio.
 targetKeyword: local business website
 pillar: 10
 tags:
   - web-development
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-01-06'
 published: true
 featured: false
 featureImage: ''

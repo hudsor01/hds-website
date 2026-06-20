@@ -1,13 +1,15 @@
 ---
 title: Core Web Vitals Explained for Small Business Owners
 slug: core-web-vitals-explained-for-small-business
-excerpt: 'Core web vitals measure real user experience: load speed, interactivity and visual stability. How Dallas business owners fix them without wasting budget.'
+excerpt: >-
+  Core web vitals measure real user experience: load speed, interactivity and
+  visual stability. How Dallas business owners fix them without wasting budget.
 targetKeyword: core web vitals
 pillar: 2
 tags:
   - website-performance
 author: richard-hudson
-publishedAt: '2026-06-19'
+publishedAt: '2025-01-28'
 published: true
 featured: false
 featureImage: ''
