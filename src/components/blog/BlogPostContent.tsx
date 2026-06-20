@@ -1,6 +1,7 @@
 import { cacheLife, cacheTag } from 'next/cache'
 import sanitizeHtml from 'sanitize-html'
 import type { BlogPost } from '@/lib/blog'
+import { withHeadingIds } from '@/lib/blog-toc'
 
 interface BlogPostContentProps {
 	post: BlogPost
@@ -74,13 +75,15 @@ export async function BlogPostContent({ post }: BlogPostContentProps) {
 	}
 
 	// Blog content comes from our trusted n8n pipeline; sanitization is
-	// defense in depth.
+	// defense in depth. Heading ids are injected after sanitizing (clean
+	// slugs, safe) so the table of contents can anchor-link to each section.
 	const sanitizedContent = sanitizeHtml(post.content, SANITIZE_OPTIONS)
+	const { html } = withHeadingIds(sanitizedContent)
 
 	return (
 		<div
 			className="typography max-w-none"
-			dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+			dangerouslySetInnerHTML={{ __html: html }}
 		/>
 	)
 }
