@@ -88,9 +88,9 @@ export default function AboutPage() {
 						Built Around Your Business
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						I spent 5+ years in revenue operations before I built websites. Now
-						I build DFW small businesses a site that earns its keep and does
-						justice to the reputation you already have.
+						I spent nearly a decade in revenue operations before I built
+						websites. Now I build DFW small businesses a site that earns its
+						keep and does justice to the reputation you already have.
 					</p>
 				</div>
 			</section>
@@ -115,13 +115,13 @@ export default function AboutPage() {
 						{/* Story Content */}
 						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
 							<h3 className="text-h3 text-foreground mb-4">
-								Five Years in Revenue Operations First
+								Nearly a Decade in Revenue Operations First
 							</h3>
 							<div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
 								<p>
 									Most agencies learned web development in a bootcamp. I learned
-									revenue first. I spent 5+ years in revenue operations running
-									Salesforce, Power BI, Workato and HubSpot, where every
+									revenue first. I spent nearly a decade in revenue operations
+									running Salesforce, Power BI, Workato and HubSpot, where every
 									decision either moved the number or it did not.
 								</p>
 								<p>
@@ -308,7 +308,7 @@ export default function AboutPage() {
 						</div>
 						<div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
 							<p className="text-base">
-								Before I built for clients, I spent 5+ years in{' '}
+								Before I built for clients, I spent nearly a decade in{' '}
 								<strong className="text-accent">revenue operations</strong> at
 								established companies. Salesforce, Power BI, Workato, HubSpot.
 								Close enough to the numbers to see exactly which sites{' '}
@@ -345,25 +345,27 @@ export default function AboutPage() {
 
 							<div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-border">
 								<div className="text-center">
-									<div className="text-3xl font-black text-accent mb-1">5+</div>
+									<div className="text-3xl font-black text-accent mb-1">
+										2,200%
+									</div>
 									<div className="text-sm text-muted-foreground">
-										Years in Rev Ops
+										Partner growth scaled
 									</div>
 								</div>
 								<div className="text-center">
 									<div className="text-3xl font-black text-accent mb-1">
-										10+
+										95%
 									</div>
 									<div className="text-sm text-muted-foreground">
-										Businesses Served
+										Forecast accuracy
 									</div>
 								</div>
 								<div className="text-center">
 									<div className="text-3xl font-black text-accent mb-1">
-										Measurable
+										$3.7M
 									</div>
 									<div className="text-sm text-muted-foreground">
-										Revenue Impact
+										Pipeline driven
 									</div>
 								</div>
 							</div>

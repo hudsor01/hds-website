@@ -36,7 +36,7 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 	about: {
 		title: 'Web Designer Who Gets Small Business | Hudson Digital',
 		description:
-			'I spent 5+ years in revenue operations before building websites. Now I build DFW small businesses a site that brings in real customers.',
+			'I spent nearly a decade in revenue operations before building websites. Now I build DFW small businesses a site that brings in real customers.',
 		ogTitle: 'Web Designer Who Gets Small Business | Hudson Digital',
 		ogDescription:
 			'Former revenue operations operator who builds DFW small businesses a website that brings in real customers instead of sitting there as a brochure.',
@@ -46,7 +46,7 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 			'@type': 'AboutPage',
 			name: 'About Hudson Digital Solutions',
 			description:
-				'I spent 5+ years in revenue operations before building DFW small businesses a website that turns their reputation into booked customers.'
+				'I spent nearly a decade in revenue operations before building DFW small businesses a website that turns their reputation into booked customers.'
 		}
 	}
 } as const
