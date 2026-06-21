@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { getPostBySlug } from '@/lib/blog'
+import { OG_FONTS } from '@/lib/og-fonts'
 import { LOGO_DATA_URL } from '@/lib/og-logo'
 
 // Dynamic so the Facebook/social scrape always gets the real post title at
@@ -45,7 +46,8 @@ export default async function Image({
 				flexDirection: 'column',
 				width: '100%',
 				height: '100%',
-				backgroundColor: C.background
+				backgroundColor: C.background,
+				fontFamily: 'Hanken Grotesk'
 			}}
 		>
 			{/* Content area: logo top, title block anchored at the bottom. */}
@@ -124,11 +126,18 @@ export default async function Image({
 				>
 					hudsondigitalsolutions.com
 				</div>
-				<div style={{ display: 'flex', fontSize: 25, color: C.footerMuted }}>
+				<div
+					style={{
+						display: 'flex',
+						fontSize: 25,
+						fontWeight: 600,
+						color: C.footerMuted
+					}}
+				>
 					Websites that drive revenue, Dallas to Fort Worth
 				</div>
 			</div>
 		</div>,
-		{ ...size }
+		{ ...size, fonts: OG_FONTS }
 	)
 }
