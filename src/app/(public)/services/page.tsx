@@ -7,20 +7,19 @@ import { ServicesGrid } from '@/components/ui/ServicesGrid'
 import { SEO_CONFIG } from '@/lib/seo-config'
 
 export const metadata: Metadata = {
-	title:
-		SEO_CONFIG.services?.title || 'Our Services | Hudson Digital Solutions',
+	title: SEO_CONFIG.services?.title || 'Services | Hudson Digital Solutions',
 	description:
 		SEO_CONFIG.services?.description ||
-		'Professional website design and development for small businesses.',
+		'I build fast, mobile-ready websites for Dallas-Fort Worth small businesses, plus booking and payments when you want them. Free plan, no obligation.',
 	openGraph: {
 		title:
 			SEO_CONFIG.services?.ogTitle ??
 			SEO_CONFIG.services?.title ??
-			'Our Services | Hudson Digital Solutions',
+			'Services | Hudson Digital Solutions',
 		description:
 			SEO_CONFIG.services?.ogDescription ??
 			SEO_CONFIG.services?.description ??
-			'Professional website design and development for small businesses.',
+			'I build fast, mobile-ready websites for Dallas-Fort Worth small businesses, plus booking and payments when you want them. Free plan, no obligation.',
 		url: SEO_CONFIG.services?.canonical || ''
 	},
 	alternates: {
@@ -67,15 +66,15 @@ export default function ServicesPage() {
 				/>
 				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						Professional Services
+						What I Do
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
 						Websites Built for Small Businesses
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
-						A professional website designed, built, and launched for your
-						business. Plus the option to connect booking, payments, and
-						follow-up when you&apos;re ready.
+						I design, build and launch your website. When you&apos;re ready, I
+						wire in booking, payments and follow-up so the site actually brings
+						work in instead of just sitting there.
 					</p>
 					<div className="flex flex-col sm:flex-row gap-3 justify-center">
 						<Button asChild variant="accent" size="xl">
@@ -101,13 +100,13 @@ export default function ServicesPage() {
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							What We Build
+							What I Build
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 							A Website, Done Right
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							We handle the tech. You focus on running your business.
+							I handle the tech. You run your business.
 						</p>
 					</div>
 					<ServicesGrid />
@@ -125,8 +124,10 @@ export default function ServicesPage() {
 							Proven Results
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Small business owners trust us to get it done right and on time,
-							without the technical runaround.
+							Before I built websites, I spent about ten years in revenue
+							operations running Salesforce, Power BI and HubSpot. I bring that
+							same focus on outcomes here: done right, on time, no technical
+							runaround.
 						</p>
 					</div>
 
@@ -157,11 +158,11 @@ export default function ServicesPage() {
 							How It Works
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							Our Process
+							My Process
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Simple, clear steps from first conversation to live and working,
-							no technical jargon required.
+							Clear steps from our first conversation to live and working. No
+							jargon, no surprises.
 						</p>
 					</div>
 					<ProcessSteps />
@@ -183,8 +184,9 @@ export default function ServicesPage() {
 							</h2>
 
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Tell us about your business. We&apos;ll map out the website it
-								needs, pages, timeline, and cost, and you decide from there.
+								Tell me about your business. I&apos;ll map out the website it
+								needs with pages, timeline and cost spelled out. Then you decide
+								from there.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">

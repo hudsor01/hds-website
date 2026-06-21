@@ -71,7 +71,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'ROI Calculator',
 		description:
-			'Calculate how much additional revenue you could generate by improving your website conversion rate.',
+			'Your website is a revenue system. See the dollars a higher conversion rate puts in your pocket, with the math laid out so you can trust the number.',
 		href: TOOL_ROUTES.ROI_CALCULATOR,
 		Icon: TrendingUp,
 		benefits: [
@@ -85,7 +85,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Website Cost Estimator',
 		description:
-			'Get an instant estimate for your website project based on your specific requirements and features.',
+			'Pick the features your business needs and get a real ballpark for your site, no sales call required. Same pricing logic I quote DFW clients.',
 		href: TOOL_ROUTES.COST_ESTIMATOR,
 		Icon: Calculator,
 		benefits: [
@@ -99,7 +99,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Performance Savings Calculator',
 		description:
-			'Discover how much revenue you are losing due to slow website performance with real PageSpeed analysis.',
+			'A slow site quietly bleeds sales. Run real PageSpeed numbers against your traffic and see the revenue a faster site wins back every month.',
 		href: TOOL_ROUTES.PERFORMANCE_CALCULATOR,
 		Icon: Zap,
 		benefits: [
@@ -113,7 +113,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Meta Tag Generator',
 		description:
-			'Generate SEO-optimized meta tags, Open Graph, and Twitter Card markup for your web pages.',
+			'Get the title, description, Open Graph and Twitter Card tags Google and social feeds actually read. Paste them in and your pages stop looking broken when shared.',
 		href: TOOL_ROUTES.META_TAG_GENERATOR,
 		Icon: Tags,
 		benefits: [
@@ -127,12 +127,12 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'LocalBusiness Schema Generator',
 		description:
-			'Build schema.org LocalBusiness JSON-LD structured data so Google understands your business and shows you in local results.',
+			'Build the schema.org JSON-LD that tells Google what your business is and where it is. This is the markup I use to land DFW clients in the local pack.',
 		href: TOOL_ROUTES.SCHEMA_GENERATOR,
 		Icon: MapPin,
 		benefits: [
 			'Valid schema.org JSON-LD',
-			'Address, hours, geo, and social links',
+			'Address, hours, geo, social links',
 			'Helps you rank in the local pack'
 		],
 		cta: 'Generate Schema',
@@ -141,11 +141,11 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Texas TTL Calculator',
 		description:
-			'Calculate tax, title, and license fees plus monthly payment estimates for vehicle purchases in Texas.',
+			'Buying a vehicle in Texas? Get the tax, title and license fees plus a monthly payment estimate before you sit down at the dealer.',
 		href: TOOL_ROUTES.TTL_CALCULATOR,
 		Icon: Car,
 		benefits: [
-			'Tax, title, and license fees',
+			'Tax, title, license fees',
 			'Monthly payment estimates',
 			'Texas-specific calculations'
 		],
@@ -155,7 +155,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Mortgage Calculator',
 		description:
-			'Calculate your monthly mortgage payment including principal, interest, taxes, insurance, and PMI.',
+			'See the full monthly mortgage payment, not the teaser number. Principal, interest, taxes, insurance and PMI broken out so you know what you are signing up for.',
 		href: TOOL_ROUTES.MORTGAGE_CALCULATOR,
 		Icon: Home,
 		benefits: [
@@ -169,7 +169,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Tip Calculator',
 		description:
-			'Calculate tip amounts and split the bill fairly among multiple people for any dining occasion.',
+			'Figure the tip and split the check evenly across the table. Set the percentage, set the headcount, get the per-person number.',
 		href: TOOL_ROUTES.TIP_CALCULATOR,
 		Icon: Receipt,
 		benefits: [
@@ -183,7 +183,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Paystub Calculator',
 		description:
-			'Generate detailed payroll breakdowns with federal and state tax calculations and net pay.',
+			'Run a clean payroll breakdown with federal and state withholding and the net pay that actually hits the bank. Useful when you are cutting checks yourself.',
 		href: TOOL_ROUTES.PAYSTUB_CALCULATOR,
 		Icon: DollarSign,
 		benefits: [
@@ -197,7 +197,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Profit Margin & Markup Calculator',
 		description:
-			'Enter your cost and selling price to get gross margin, markup, and profit, or find the price for a target margin.',
+			'Drop in your cost and price to see gross margin, markup and profit per sale. Or work it backward and find the price that hits the margin you want.',
 		href: TOOL_ROUTES.PROFIT_MARGIN_CALCULATOR,
 		Icon: Percent,
 		benefits: [
@@ -211,7 +211,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Invoice Late Fee Calculator',
 		description:
-			'Work out the late fee and total owed on an overdue invoice, using a flat fee or a percentage rate per day, week, or month.',
+			'Client paying late? Work out the late fee and total owed on an overdue invoice with a flat fee or a percentage rate per day, week, or month.',
 		href: TOOL_ROUTES.INVOICE_LATE_FEE_CALCULATOR,
 		Icon: CalendarClock,
 		benefits: [
@@ -225,7 +225,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Time Card Calculator',
 		description:
-			'Add clock-in and clock-out times with breaks to total hours, split overtime, and calculate gross pay.',
+			'Punch in clock-in and clock-out times with breaks to total the hours, split overtime at 1.5x and get gross pay. Built for running a small crew.',
 		href: TOOL_ROUTES.TIME_CARD_CALCULATOR,
 		Icon: Clock,
 		benefits: [
@@ -239,7 +239,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Contract Generator',
 		description:
-			'Create professional contracts ready for signature with customizable terms and PDF download.',
+			'Put together a clean contract you can send for signature today. Set your own terms and download the PDF. No legal-template subscription to cancel later.',
 		href: TOOL_ROUTES.CONTRACT_GENERATOR,
 		Icon: FileSignature,
 		benefits: [
@@ -253,7 +253,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Invoice Generator',
 		description:
-			'Create professional invoices with line items, totals, and tax, ready to download as PDF.',
+			'Build a sharp invoice with line items, tax and totals, then download the PDF and send it. Get paid faster without paying for billing software.',
 		href: TOOL_ROUTES.INVOICE_GENERATOR,
 		Icon: FileText,
 		benefits: [
@@ -267,7 +267,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Proposal Generator',
 		description:
-			'Create professional project proposals for clients with scope, timeline, and pricing. PDF included.',
+			'Send a proposal that closes. Lay out scope, timeline and pricing in a clean PDF clients can read and approve fast.',
 		href: TOOL_ROUTES.PROPOSAL_GENERATOR,
 		Icon: Briefcase,
 		benefits: [
@@ -281,7 +281,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'JSON Formatter',
 		description:
-			'Format, validate, and minify JSON data online with syntax error detection and instant feedback.',
+			'Format, validate and minify JSON right in the browser. It points to the exact line that broke so you stop guessing where the syntax error is.',
 		href: TOOL_ROUTES.JSON_FORMATTER,
 		Icon: Code2,
 		benefits: [
@@ -295,7 +295,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Comma Separator',
 		description:
-			'Convert a column of values into a comma-separated series. Paste a spreadsheet column or any space-separated list and get clean, comma-separated output.',
+			'Paste a spreadsheet column or any list and get a clean comma-separated string back. Add quotes, drop duplicates, copy it where you need it.',
 		href: TOOL_ROUTES.COMMA_SEPARATOR,
 		Icon: List,
 		benefits: [
@@ -309,7 +309,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Word & Character Counter',
 		description:
-			'Count words, characters, sentences, paragraphs, and reading time as you type. Handy for meta descriptions, tweets, and content limits.',
+			'Counts words, characters, sentences, paragraphs and reading time as you type. Handy for hitting meta description limits, post lengths and content caps.',
 		href: TOOL_ROUTES.WORD_COUNTER,
 		Icon: Type,
 		benefits: [

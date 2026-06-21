@@ -15,11 +15,10 @@ export const metadata: Metadata = {
 	alternates: { canonical: '/tools' },
 	title: 'Free Business Tools & Calculators | Hudson Digital Solutions',
 	description:
-		'Free interactive tools for business owners and freelancers. Calculate ROI, generate invoices and contracts, format JSON, analyze performance, and more.',
+		'Free tools I built for DFW small business owners. Run the numbers on ROI, generate invoices and contracts, format JSON, then check site performance.',
 	openGraph: {
 		title: 'Free Business Tools & Calculators',
-		description:
-			'Interactive tools to help you make data-driven decisions about your website.'
+		description: 'Run the numbers before you spend a dollar on your website.'
 	}
 }
 
@@ -38,14 +37,14 @@ export default function ToolsPage() {
 				/>
 				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						Try For Free
+						Free To Use
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
 						Free Business Tools
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						Make data-driven decisions about your website with our free
-						interactive calculators. No credit card required, no signup needed.
+						I built these to help you run the numbers on your website before you
+						spend a dollar. No credit card, no signup, no catch.
 					</p>
 				</div>
 			</section>
@@ -100,11 +99,12 @@ export default function ToolsPage() {
 						/>
 						<div className="relative z-10">
 							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
-								Ready to Take Action?
+								Ready to Build the Real Thing?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								These calculators show the potential. Let&apos;s make it
-								reality. Schedule a free consultation to discuss your project.
+								The numbers tell you what is possible. I build the website that
+								gets you there. Grab a free call and tell me what you are
+								working on.
 							</p>
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">
 								<Button asChild variant="accent" size="xl">

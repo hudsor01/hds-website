@@ -7,11 +7,11 @@ export const metadata: Metadata = {
 	alternates: { canonical: '/contact' },
 	title: 'Get a Free Website Plan | Hudson Digital Solutions',
 	description:
-		"Tell us about your business and we'll map out the website it needs (pages, timeline, and cost) on a free 30-minute call. No sales pitch.",
+		"Tell me about your business and I'll map the website it needs: pages, timeline and a real price. Free 30-minute call. No pitch. I reply in 2 hours.",
 	openGraph: {
 		title: 'Free Website Plan in 30 Minutes | Hudson Digital',
 		description:
-			'A free 30-minute call where we map out the website your business needs: pages, timeline, and cost. No sales pitch. Response in 2 hours.'
+			'A free 30-minute call where I map the website your business needs: pages, timeline and price. No pitch. I reply within 2 hours.'
 	}
 }
 
@@ -84,9 +84,9 @@ export default function ContactPage() {
 									Get Your Free Website Plan
 								</h1>
 								<p className="mt-4 text-lead text-muted-foreground">
-									Tell us about your business. We&apos;ll map out the website it
-									needs (pages, timeline, and cost) on a free 30-minute call. No
-									sales pitch. No commitment.
+									Tell me about your business. I&apos;ll map the website it
+									needs: the pages, the timeline and a real price, on a free
+									30-minute call. No pitch. No commitment.
 								</p>
 							</div>
 
@@ -105,10 +105,10 @@ export default function ContactPage() {
 									</div>
 									<div>
 										<p className="font-semibold text-foreground text-sm">
-											We respond within 2 hours
+											I reply within 2 hours
 										</p>
 										<p className="text-xs text-muted-foreground mt-0.5">
-											Get a confirmation email with next steps
+											You get a confirmation email with next steps
 										</p>
 									</div>
 								</div>
@@ -122,7 +122,8 @@ export default function ContactPage() {
 											30-minute website call
 										</p>
 										<p className="text-xs text-muted-foreground mt-0.5">
-											We learn your business and map out what your site needs
+											I learn how your business makes money and map what the
+											site needs to do
 										</p>
 									</div>
 								</div>
@@ -136,7 +137,7 @@ export default function ContactPage() {
 											Get your website plan
 										</p>
 										<p className="text-xs text-muted-foreground mt-0.5">
-											Pages, timeline, and a clear price, yours to keep, no
+											Pages, timeline and a clear price. Yours to keep, no
 											obligation
 										</p>
 									</div>
@@ -229,11 +230,11 @@ export default function ContactPage() {
 						    those signals and with the site's TX-headquartered
 						    address (1301 Cherry Hill Ln, Lewisville, TX 75067). */}
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							Dallas-Fort Worth headquarters. Remote across the South.
+							Based in Dallas-Fort Worth. Working across the South.
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Local-first in the DFW metroplex; remote-capable across TX, FL,
-							GA, OK, and the surrounding states.
+							I work local-first in the DFW metroplex and remote across TX, FL,
+							GA, OK and the states around them.
 						</p>
 					</div>
 
