@@ -5,10 +5,9 @@
 -- "seamless" (Ink 37), Oxford comma-before-"and" (JirahShop, TenantFlow,
 -- portfolio), and "we built" -> "I built".
 --
--- NOTE for review: the richard-hudson-jr (RevOps portfolio) entry cites
--- "$4.8M+ documented revenue impact". The blogs/About cite "$3.7M pipeline
--- through forecasting". Left $4.8M as-is (it reads as a separate, broader
--- career figure) - confirm both are accurate or reconcile.
+-- Reconciled the revenue-impact figure to $3.7M everywhere (per Richard):
+-- the portfolio previously said "$4.8M+", now $3.7M to match the blogs and
+-- About page (single consistent number across the site).
 --
 -- Idempotent: each statement matches a single row by slug.
 
@@ -22,7 +21,7 @@ UPDATE showcase
  WHERE slug = 'jirah-shop';
 
 UPDATE showcase
-   SET description = 'Personal brand site for a revenue operations consultant with $4.8M+ in documented revenue impact across mid-market clients.',
+   SET description = 'Personal brand site for a revenue operations consultant with $3.7M in documented revenue impact across mid-market clients.',
        long_description = 'A seasoned RevOps consultant with SalesLoft and HubSpot certifications needed a personal site that matched the credibility of his results. I built something clean, fast and professional that opens doors with enterprise buyers.'
  WHERE slug = 'richard-hudson-jr';
 
