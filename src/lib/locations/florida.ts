@@ -8,9 +8,9 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		stateCode: 'FL',
 		tagline: 'Web Design for Miami Small Businesses',
 		description:
-			'Miami is a global gateway for business, real estate, and international commerce. We design fast, mobile-ready websites for small businesses across the Magic City, from Brickell to Wynwood.',
+			'Miami runs on real estate, international trade and businesses competing hard for attention. I build fast, mobile-ready websites for small businesses across the Magic City, from Brickell to Wynwood, that bring in real customers instead of just sitting there.',
 		metaDescription:
-			'Web design in Miami, FL for small businesses. Bilingual, mobile-friendly websites built to win customers from Brickell to Coral Gables and rank on Google.',
+			'Web design in Miami, FL for small businesses. I build bilingual, mobile-friendly sites that win customers from Brickell to Coral Gables and rank on Google.',
 		neighborhoods: [
 			'Downtown Miami',
 			'Brickell',
@@ -30,17 +30,17 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Bilingual Websites',
 				description:
-					'English and Spanish websites that reach the full Miami customer base and read naturally in both languages.'
+					'I build English and Spanish sites that reach the full Miami customer base and read naturally in both languages, not a machine translation bolted on after the fact.'
 			},
 			{
 				title: 'Real Estate Websites',
 				description:
-					'Polished property and brokerage websites that show South Florida listings off and look sharp on every screen.'
+					'I build property and brokerage sites that show South Florida listings off and look sharp on every screen, with contact paths that turn lookers into showings.'
 			},
 			{
 				title: 'E-Commerce Websites',
 				description:
-					'Online stores for Miami retailers and brands, built to load fast and turn browsers into buyers.'
+					'I build online stores for Miami retailers and brands that load fast and turn browsers into buyers, with checkout that does not lose the sale.'
 			}
 		]
 	},
@@ -51,9 +51,9 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		stateCode: 'FL',
 		tagline: 'Web Design for Tallahassee Small Businesses',
 		description:
-			"Florida's capital city blends state government, FSU and FAMU, and a growing local business scene. We build clean, modern websites for Tallahassee small businesses serving that mix.",
+			'Tallahassee mixes state government, FSU and FAMU and a local business scene that keeps growing. I build clean, modern websites for small businesses serving that mix, built to get found and bring in work.',
 		metaDescription:
-			'Web design in Tallahassee, FL for small businesses near FSU, FAMU, and the Capitol. Modern, mobile-ready websites built to be found on Google.',
+			'Web design in Tallahassee, FL for small businesses near FSU, FAMU and the Capitol. I build modern, mobile-ready sites built to get found on Google.',
 		neighborhoods: [
 			'Downtown',
 			'Midtown',
@@ -73,17 +73,17 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Local Business Websites',
 				description:
-					'Approachable websites for Tallahassee shops and service providers that explain what you do and how to reach you.'
+					'I build sites for Tallahassee shops and service providers that explain what you do and how to reach you, no jargon and no guessing.'
 			},
 			{
 				title: 'College Town Websites',
 				description:
-					'Websites for businesses serving FSU and FAMU students and staff, built mobile-first for an on-the-go audience.'
+					'I build sites for businesses serving FSU and FAMU students and staff, built mobile-first because that audience lives on its phone.'
 			},
 			{
 				title: 'Local SEO Setup',
 				description:
-					'Google-friendly websites that help Tallahassee customers find you when they search the capital area.'
+					'I set up local SEO so Tallahassee customers find you when they search the capital area, not three pages down from a competitor.'
 			}
 		]
 	},
@@ -94,9 +94,9 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		stateCode: 'FL',
 		tagline: 'Web Design for Jacksonville Small Businesses',
 		description:
-			'The largest city by area in the contiguous US, Jacksonville is a powerhouse of logistics, finance, and military families. We design websites for Bold City small businesses serving that community.',
+			'Jacksonville is the biggest city by area in the lower 48, built on logistics, finance and military families. I build websites for Bold City small businesses serving that community, designed to bring in calls and quotes.',
 		metaDescription:
-			'Web design in Jacksonville, FL for small businesses. Fast, mobile-ready websites for Bold City logistics, finance, and Navy-area companies.',
+			'Web design in Jacksonville, FL for small businesses. I build fast, mobile-ready sites for Bold City logistics, finance and Navy-area companies.',
 		neighborhoods: [
 			'Downtown',
 			'San Marco',
@@ -116,17 +116,17 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Trade & Service Websites',
 				description:
-					'Clear websites for Jacksonville logistics, trucking, and trade firms that show services and bring in quote requests.'
+					'I build clear sites for Jacksonville logistics, trucking and trade firms that lay out your services and bring in quote requests.'
 			},
 			{
 				title: 'Professional Websites',
 				description:
-					'Trustworthy websites for Jacksonville accounting, insurance, and financial services firms that win local clients.'
+					'I build sites for Jacksonville accounting, insurance and financial services firms that read as credible and win local clients.'
 			},
 			{
 				title: 'Booking & Contact Forms',
 				description:
-					'Websites with simple contact and request forms so NAS Jacksonville and Mayport-area customers can reach you fast.'
+					'I wire in simple contact and request forms so NAS Jacksonville and Mayport-area customers can reach you fast and you never miss a lead.'
 			}
 		]
 	},
@@ -137,9 +137,9 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		stateCode: 'FL',
 		tagline: 'Web Design for Tampa Small Businesses',
 		description:
-			"Tampa Bay is Florida's fast-growing coast, with a busy port, world-class healthcare, and a thriving small business community. We design modern websites for Tampa Bay businesses.",
+			"Tampa Bay is one of Florida's fastest-growing coasts, with a busy port, strong healthcare and small businesses opening every week. I build modern websites for Tampa Bay businesses that turn local search traffic into customers.",
 		metaDescription:
-			'Web design in Tampa, FL for small businesses. Mobile-ready websites for Ybor City shops, healthcare practices, and Tampa Bay companies built to win customers.',
+			'Web design in Tampa, FL for small businesses. I build mobile-ready sites for Ybor City shops, healthcare practices and Tampa Bay companies that win customers.',
 		neighborhoods: [
 			'Downtown',
 			'Ybor City',
@@ -159,17 +159,17 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Local Business Websites',
 				description:
-					'Modern websites for Tampa service companies and local retailers, built to look great and bring in customers.'
+					'I build modern sites for Tampa service companies and local retailers that look great and bring in customers, not just compliments.'
 			},
 			{
 				title: 'Healthcare Websites',
 				description:
-					'Clean, reassuring websites for Tampa Bay clinics, dental offices, and healthcare providers that help patients book.'
+					'I build clean, reassuring sites for Tampa Bay clinics, dental offices and healthcare providers that make it easy for patients to book.'
 			},
 			{
 				title: 'Mobile-First Design',
 				description:
-					'Websites that load fast and look sharp on phones, so Channelside and Westshore customers reach you anywhere.'
+					'I build sites that load fast and look sharp on phones, so Channelside and Westshore customers can reach you from anywhere.'
 			}
 		]
 	},
@@ -180,9 +180,9 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		stateCode: 'FL',
 		tagline: 'Web Design for Orlando Small Businesses',
 		description:
-			'Beyond the theme parks, Orlando is a hub for hospitality, healthcare, and a booming small business scene. We design websites for City Beautiful businesses from Winter Park to Lake Nona.',
+			'Past the theme parks, Orlando runs on hospitality, healthcare and a small business scene that keeps booming. I build websites for City Beautiful businesses from Winter Park to Lake Nona that turn searches into booked work.',
 		metaDescription:
-			'Web design in Orlando, FL for small businesses. Mobile-ready websites for tourism, hospitality, and Lake Nona-area companies built to bring in bookings.',
+			'Web design in Orlando, FL for small businesses. I build mobile-ready sites for tourism, hospitality and Lake Nona-area companies that bring in bookings.',
 		neighborhoods: [
 			'Downtown',
 			'Thornton Park',
@@ -202,17 +202,17 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Hospitality Websites',
 				description:
-					'Inviting websites for Orlando hotels, tours, and attractions that show off the experience and drive bookings.'
+					'I build sites for Orlando hotels, tours and attractions that show off the experience and drive bookings instead of just describing them.'
 			},
 			{
 				title: 'Booking & Contact Forms',
 				description:
-					'Websites with easy booking and inquiry forms so Dr. Phillips and Kissimmee customers can reserve in a few taps.'
+					'I wire in easy booking and inquiry forms so Dr. Phillips and Kissimmee customers can reserve in a few taps, not abandon a clunky one.'
 			},
 			{
 				title: 'Website Redesigns',
 				description:
-					'Refreshed, modern websites for Winter Park and Lake Nona businesses ready to leave a dated site behind.'
+					'I rebuild dated sites for Winter Park and Lake Nona businesses into something modern that finally earns its keep.'
 			}
 		]
 	},
@@ -223,9 +223,9 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		stateCode: 'FL',
 		tagline: 'Web Design for St. Petersburg Small Businesses',
 		description:
-			'St. Petersburg has transformed into a vibrant arts, dining, and waterfront destination. We design websites for Sunshine City small businesses in its creative and coastal districts.',
+			'St. Petersburg has turned into a serious arts, dining and waterfront destination. I build websites for Sunshine City small businesses across its creative and coastal districts, built to get found by locals and visitors alike.',
 		metaDescription:
-			'Web design in St. Petersburg, FL for small businesses. Mobile-ready websites for Grand Central galleries, restaurants, and coastal companies.',
+			'Web design in St. Petersburg, FL for small businesses. I build mobile-ready sites for Grand Central galleries, restaurants and coastal companies.',
 		neighborhoods: [
 			'Downtown',
 			'Grand Central District',
@@ -245,17 +245,17 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Arts & Gallery Websites',
 				description:
-					'Visual websites for St. Pete galleries, studios, and arts organizations that put the work front and center.'
+					'I build visual sites for St. Pete galleries, studios and arts organizations that put the work front and center where it belongs.'
 			},
 			{
 				title: 'Restaurant Websites',
 				description:
-					'Appetizing websites for Grand Central and Edge District eateries, with menus that look great on any phone.'
+					'I build sites for Grand Central and Edge District eateries with menus that look great and load fast on any phone.'
 			},
 			{
 				title: 'Waterfront Business Websites',
 				description:
-					'Websites for St. Petersburg charters and coastal businesses, built to be found by visitors searching nearby.'
+					'I build sites for St. Petersburg charters and coastal businesses, set up to get found by visitors searching nearby for what you offer.'
 			}
 		]
 	},
@@ -266,9 +266,9 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		stateCode: 'FL',
 		tagline: 'Web Design for Fort Lauderdale Small Businesses',
 		description:
-			'Fort Lauderdale is a hub for the marine industry, dining, and luxury tourism. We design websites for small businesses across the Venice of America and greater Broward County.',
+			'Fort Lauderdale runs on the marine industry, dining and luxury tourism. I build websites for small businesses across the Venice of America and greater Broward County that match a high-end market and bring in real inquiries.',
 		metaDescription:
-			'Web design in Fort Lauderdale, FL for small businesses. Mobile-ready websites for Las Olas shops, marine-industry firms, and Broward County companies.',
+			'Web design in Fort Lauderdale, FL for small businesses. I build mobile-ready sites for Las Olas shops, marine-industry firms and Broward County companies.',
 		neighborhoods: [
 			'Downtown',
 			'Las Olas',
@@ -288,17 +288,17 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Marine Industry Websites',
 				description:
-					'Sharp websites for Fort Lauderdale yacht brokers, marine suppliers, and boat-show exhibitors that win inquiries.'
+					'I build sharp sites for Fort Lauderdale yacht brokers, marine suppliers and boat-show exhibitors that win serious inquiries.'
 			},
 			{
 				title: 'Luxury Brand Websites',
 				description:
-					'Premium websites for Las Olas hotels, restaurants, and upscale service providers that match a high-end clientele.'
+					'I build premium sites for Las Olas hotels, restaurants and upscale service providers that match the clientele they want to attract.'
 			},
 			{
 				title: 'Fast, Modern Websites',
 				description:
-					'Quick-loading, mobile-ready websites for Broward County small businesses built to be found and convert visitors.'
+					'I build quick-loading, mobile-ready sites for Broward County small businesses, set up to get found and turn visitors into customers.'
 			}
 		]
 	}
