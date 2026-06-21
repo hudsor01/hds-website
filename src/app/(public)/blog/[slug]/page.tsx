@@ -251,62 +251,66 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 			{/* Article Header */}
 			<article className="pb-16">
 				<header className="relative bg-background py-section-sm overflow-hidden">
-					<div className="relative container-narrow px-4 sm:px-6">
-						{/* Tags */}
-						{tags.length > 0 && (
-							<div className="flex flex-wrap gap-tight mb-content-block">
-								{tags.map(tag => (
-									<Link
-										key={tag.id}
-										href={`/blog/tag/${tag.slug}`}
-										className="flex flex-center gap-1 text-sm text-accent bg-accent/10 hover:bg-accent/20 px-3 py-1 rounded-full transition-colors"
-									>
-										<Tag className="w-4 h-4" />
-										{tag.name}
-									</Link>
-								))}
-							</div>
-						)}
+					<div className="relative container-wide">
+						<div className="mx-auto max-w-5xl">
+							<div className="max-w-3xl">
+								{/* Tags */}
+								{tags.length > 0 && (
+									<div className="flex flex-wrap gap-tight mb-content-block">
+										{tags.map(tag => (
+											<Link
+												key={tag.id}
+												href={`/blog/tag/${tag.slug}`}
+												className="flex flex-center gap-1 text-sm text-accent bg-accent/10 hover:bg-accent/20 px-3 py-1 rounded-full transition-colors"
+											>
+												<Tag className="w-4 h-4" />
+												{tag.name}
+											</Link>
+										))}
+									</div>
+								)}
 
-						{/* Title */}
-						<h1 className="text-page-title text-foreground leading-tight text-balance mb-content-block">
-							{post.title}
-						</h1>
+								{/* Title */}
+								<h1 className="text-page-title text-foreground leading-tight text-balance mb-content-block">
+									{post.title}
+								</h1>
 
-						{/* Excerpt */}
-						{post.excerpt && (
-							<p className="text-xl text-muted-foreground mb-comfortable text-pretty">
-								{post.excerpt}
-							</p>
-						)}
+								{/* Excerpt */}
+								{post.excerpt && (
+									<p className="text-xl text-muted-foreground mb-comfortable text-pretty">
+										{post.excerpt}
+									</p>
+								)}
 
-						{/* Meta */}
-						<div className="flex flex-wrap gap-comfortable text-muted-foreground">
-							<div className="flex flex-center gap-tight">
-								<Calendar className="w-5 h-5" />
-								<time dateTime={post.published_at}>
-									{formatDate(post.published_at, 'long')}
-								</time>
-							</div>
-							<div className="flex flex-center gap-tight">
-								<Clock className="w-5 h-5" />
-								<span>{post.reading_time} min read</span>
-							</div>
-							{post.author && (
-								<div className="flex flex-center gap-tight">
-									{post.author.profile_image && (
-										<Image
-											src={post.author.profile_image}
-											alt={post.author.name}
-											width={24}
-											height={24}
-											className="w-6 h-6 rounded-full object-cover"
-											sizes="24px"
-										/>
+								{/* Meta */}
+								<div className="flex flex-wrap gap-comfortable text-muted-foreground">
+									<div className="flex flex-center gap-tight">
+										<Calendar className="w-5 h-5" />
+										<time dateTime={post.published_at}>
+											{formatDate(post.published_at, 'long')}
+										</time>
+									</div>
+									<div className="flex flex-center gap-tight">
+										<Clock className="w-5 h-5" />
+										<span>{post.reading_time} min read</span>
+									</div>
+									{post.author && (
+										<div className="flex flex-center gap-tight">
+											{post.author.profile_image && (
+												<Image
+													src={post.author.profile_image}
+													alt={post.author.name}
+													width={24}
+													height={24}
+													className="w-6 h-6 rounded-full object-cover"
+													sizes="24px"
+												/>
+											)}
+											<span>By {post.author.name}</span>
+										</div>
 									)}
-									<span>By {post.author.name}</span>
 								</div>
-							)}
+							</div>
 						</div>
 					</div>
 				</header>
@@ -345,8 +349,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
 				{/* Author Bio */}
 				{post.author && (
-					<div className="container-narrow py-8">
-						<AuthorCard author={post.author} />
+					<div className="container-wide py-8">
+						<div className="mx-auto max-w-5xl">
+							<div className="max-w-3xl">
+								<AuthorCard author={post.author} />
+							</div>
+						</div>
 					</div>
 				)}
 			</article>
