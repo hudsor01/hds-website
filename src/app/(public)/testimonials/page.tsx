@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 	alternates: { canonical: '/testimonials' },
 	title: 'Client Testimonials | Hudson Digital Solutions',
 	description:
-		'Real results from the small businesses we have built websites for. See how a professional website turned local reputations into booked customers.'
+		'Real results from DFW small businesses I have built websites for. See how a site built as a revenue system turned local reputations into booked work.'
 }
 
 const testimonials = [
@@ -112,14 +112,14 @@ export default function TestimonialsPage() {
 				/>
 				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						Client Success Stories
+						Client Results
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
 						Real Results. Real Clients.
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						Don&apos;t just take our word for it. See what small businesses are
-						achieving with a website built for their reputation.
+						You do not have to take my word for it. Here is what DFW owners got
+						after I rebuilt their website to actually pull in work.
 					</p>
 				</div>
 			</section>
@@ -172,11 +172,11 @@ export default function TestimonialsPage() {
 							Testimonials
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							What Our Clients Say
+							What My Clients Say
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Every testimonial is a small business whose website finally
-							matches the work behind it.
+							Each one is a local business owner whose website finally matches
+							the reputation they earned the hard way.
 						</p>
 					</div>
 
@@ -237,13 +237,13 @@ export default function TestimonialsPage() {
 						/>
 						<div className="relative z-10">
 							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
-								Ready to be our next{' '}
+								Want to be my next{' '}
 								<span className="text-accent">success story?</span>
 							</h2>
 
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Join the small businesses that finally have a website doing
-								justice to the reputation they have earned.
+								Let us build you a website that books work instead of collecting
+								dust. Tell me about your business and I will map out a plan.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">

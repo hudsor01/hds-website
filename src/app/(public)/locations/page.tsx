@@ -13,10 +13,11 @@ export const metadata: Metadata = {
 	alternates: { canonical: '/locations' },
 	title: 'Service Locations | Hudson Digital Solutions',
 	description:
-		'Hudson Digital Solutions builds websites for small businesses across the US. Find professional web design in your city: Texas, Florida, Georgia, and more.',
+		'I build websites that book jobs and take payments for small businesses across the US. Find local web design in Texas, Florida, Georgia and beyond.',
 	openGraph: {
 		title: 'Service Locations | Hudson Digital Solutions',
-		description: 'Professional web design for small businesses across the US.'
+		description:
+			'Websites that book jobs and take payments for small businesses across the US.'
 	}
 }
 
@@ -45,11 +46,11 @@ export default function LocationsPage() {
 						Service Locations
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
-						Serving Businesses Across the US
+						Building Websites for Businesses Across the US
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						{totalCities} cities across {states.length} states. Find
-						professional web design near you.
+						{totalCities} cities across {states.length} states. Find a web
+						designer who works near you.
 					</p>
 				</div>
 			</section>
@@ -97,8 +98,9 @@ export default function LocationsPage() {
 								Don&apos;t see your city?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								We work with clients remotely across the entire US. Get in touch
-								to discuss your project.
+								I work with clients remotely across the entire US. Tell me what
+								you&apos;re building and I&apos;ll tell you how I&apos;d
+								approach it.
 							</p>
 							<Button asChild variant="accent" size="xl">
 								<Link href="/contact">

@@ -12,11 +12,11 @@ export const metadata: Metadata = {
 	alternates: { canonical: '/showcase' },
 	title: 'Showcase | Hudson Digital Solutions',
 	description:
-		'Real websites delivering measurable results for small businesses. See how we help local businesses get found online, win customers, and grow.',
+		'Websites I built for DFW small businesses that turn traffic into booked jobs and paid invoices. See the work, the numbers and how it gets done.',
 	openGraph: {
 		title: 'Showcase | Hudson Digital Solutions',
 		description:
-			'Real websites delivering measurable results for small businesses. See how we help local businesses get found online, win customers, and grow.',
+			'Websites I built for DFW small businesses that turn traffic into booked jobs and paid invoices. See the work, the numbers and how it gets done.',
 		type: 'website'
 	}
 }
@@ -86,12 +86,12 @@ async function ShowcaseProjects() {
 							Featured
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							Four small businesses.{' '}
+							Four DFW businesses.{' '}
 							<span className="text-accent">One thing in common.</span>
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							A website built around what they actually needed, not what looked
-							good in a template.
+							I built each site around how the business actually makes money,
+							not around a template that looked nice on a sales deck.
 						</p>
 					</div>
 
@@ -160,8 +160,8 @@ async function ShowcaseProjects() {
 								Want your business on this page?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-8 max-w-xl mx-auto">
-								Free 30-minute call. We map out pages, timeline, and a clear
-								price for your website. No sales pitch.
+								Book a free 30-minute call. We map out your pages, a timeline,
+								and a flat price. No sales pitch, just a plan.
 							</p>
 							<Button asChild variant="accent" size="xl">
 								<Link href="/contact">
@@ -209,8 +209,8 @@ export default function ShowcasePage() {
 						Real Projects. Real Results.
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
-						Real websites for small businesses. See how we help local businesses
-						get found online, win customers, and grow.
+						Websites I built for DFW small businesses. Each one gets the
+						business found, books the work and gets it paid. Here is the proof.
 					</p>
 
 					<div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -264,13 +264,13 @@ export default function ShowcasePage() {
 								    (closing CTA). The inline CTA precedes this one in DOM
 								    order. */}
 							<h3 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
-								Ready to create your{' '}
-								<span className="text-accent">success story?</span>
+								Ready to be the{' '}
+								<span className="text-accent">next one on this page?</span>
 							</h3>
 
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Join these businesses with a website that does justice to what
-								they&apos;ve built. Let&apos;s build yours.
+								You have built a real business. Your website should pull its
+								weight too. Tell me what you do and I&apos;ll build it.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">

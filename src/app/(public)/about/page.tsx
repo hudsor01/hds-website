@@ -88,9 +88,9 @@ export default function AboutPage() {
 						Built Around Your Business
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						Where real business experience meets the skill to build it. I make
-						small businesses a website that does justice to the reputation
-						they&apos;ve already earned.
+						I spent 5+ years in revenue operations before I built websites. Now
+						I build DFW small businesses a site that earns its keep and does
+						justice to the reputation you already have.
 					</p>
 				</div>
 			</section>
@@ -106,8 +106,8 @@ export default function AboutPage() {
 							The Experience Behind Your Website
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							I build websites the way a business owner thinks. Every choice is
-							measured against whether it brings customers in.
+							I build the way a business owner thinks. Every choice gets
+							measured against one thing: does it bring customers in.
 						</p>
 					</div>
 
@@ -115,46 +115,42 @@ export default function AboutPage() {
 						{/* Story Content */}
 						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
 							<h3 className="text-h3 text-foreground mb-4">
-								Built in Revenue Operations, Refined in Practice
+								Five Years in Revenue Operations First
 							</h3>
 							<div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
 								<p>
-									Most agencies learned web development in bootcamps. I learned
-									it in the trenches of revenue operations, where every decision
-									either moves the business forward or holds it back.
+									Most agencies learned web development in a bootcamp. I learned
+									revenue first. I spent 5+ years in revenue operations running
+									Salesforce, Power BI, Workato and HubSpot, where every
+									decision either moved the number or it did not.
 								</p>
 								<p>
-									With{' '}
-									<strong className="text-accent">
-										hands-on revenue experience
-									</strong>{' '}
-									across growing businesses, I discovered something agencies
-									miss:{' '}
+									Working that close to the{' '}
+									<strong className="text-accent">numbers</strong> taught me
+									something most agencies miss:{' '}
 									<strong className="text-info">
-										websites fail not because of bad code, but because they were
-										never built to bring in customers, just to look nice
+										websites do not fail on bad code. They fail because nobody
+										built them to bring in customers. They were built to look
+										nice
 									</strong>
 									.
 								</p>
 								<p>
-									That&apos;s why my clients see{' '}
-									<strong className="text-accent">
-										real, measurable results
-									</strong>{' '}
-									in months, not years. I don&apos;t just launch a{' '}
+									So my clients see{' '}
+									<strong className="text-accent">measurable results</strong> in
+									months, not years. I do not launch a{' '}
 									<Link href="/services" className="link-primary font-semibold">
 										professional website
 									</Link>{' '}
-									and walk away. Every page is built and measured against one
-									question:{' '}
+									and walk away. Every page gets measured against one question:{' '}
 									<strong className="text-success-text">
-										does this help your business get and keep customers?
+										does this help you get and keep customers?
 									</strong>
 								</p>
 								<p className="text-foreground font-semibold">
-									I&apos;m not another agency selling &quot;beautiful
-									websites&quot; that sit there doing nothing. I build websites
-									that earn their keep.{' '}
+									I am not another agency selling &quot;beautiful websites&quot;
+									that sit there doing nothing. I build a website that earns its
+									keep.{' '}
 									<Link href="/contact" className="link-primary">
 										Let&apos;s talk about your project
 									</Link>
@@ -173,11 +169,10 @@ export default function AboutPage() {
 									<h3 className="text-h3 text-foreground">My Mission</h3>
 								</div>
 								<p className="text-sm text-muted-foreground leading-relaxed">
-									Make a great website accessible to every small business. No
-									small business should have to choose between a site
-									that&apos;s cheap but embarrassing and one that&apos;s great
-									but unaffordable. You get a professional site that brings in
-									customers, at a fair price.
+									Put a real website in reach of every small business. No owner
+									should have to pick between a site that is cheap and
+									embarrassing and one that is great and unaffordable. You get a
+									professional site that brings in customers, at a fair price.
 								</p>
 							</div>
 
@@ -189,13 +184,13 @@ export default function AboutPage() {
 									<h3 className="text-h3 text-foreground">My Guarantee</h3>
 								</div>
 								<p className="text-sm text-muted-foreground leading-relaxed">
-									If the KPI I agree to with you at kickoff (typically
-									conversion rate, qualified leads per month, or revenue per
-									visitor) doesn&apos;t improve over its installed-analytics
-									baseline within 90 days, I keep working (up to 3 additional
-									revision rounds covering optimization scope) at no extra cost
-									until it does. Baseline is measured from analytics installed
-									on day one of the engagement.
+									We agree on one KPI at kickoff (usually conversion rate,
+									qualified leads per month, or revenue per visitor). If it does
+									not beat its installed-analytics baseline within 90 days, I
+									keep working at no extra cost until it does, up to 3 added
+									revision rounds covering optimization scope. The baseline is
+									measured from analytics installed on day one of the
+									engagement.
 								</p>
 							</div>
 						</div>
@@ -214,8 +209,8 @@ export default function AboutPage() {
 							What I Build With
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Proven tools. Modern technology. Everything chosen because it
-							delivers results for business owners.
+							Proven tools, modern tech. I pick each one because it gets results
+							for the owner, not because it is trendy.
 						</p>
 					</div>
 
@@ -288,9 +283,9 @@ export default function AboutPage() {
 							The Builder Behind the Work
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Why trust a former revenue operations professional to build your
-							website? Because I understand something most agencies don&apos;t:
-							a website is only worth what it brings in.
+							Why hand your website to a former revenue operations guy? Because
+							I know something most agencies do not: a website is only worth
+							what it brings in.
 						</p>
 					</div>
 
@@ -313,31 +308,29 @@ export default function AboutPage() {
 						</div>
 						<div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
 							<p className="text-base">
-								Before building for clients, I spent 5+ years in{' '}
+								Before I built for clients, I spent 5+ years in{' '}
 								<strong className="text-accent">revenue operations</strong> at
-								established companies, close enough to the numbers to see
-								exactly which websites{' '}
+								established companies. Salesforce, Power BI, Workato, HubSpot.
+								Close enough to the numbers to see exactly which sites{' '}
 								<strong className="text-accent">brought in customers</strong>{' '}
 								and which just looked nice.
 							</p>
 
 							<p className="text-base">
-								Here&apos;s what I learned:{' '}
+								Same job, same lesson every time:{' '}
 								<strong className="text-info">
-									most websites fail not because of bad technology, but because
-									they were never built to bring in customers
+									most websites fail not on the technology but because nobody
+									built them to bring in customers
 								</strong>
-								. Agencies charge $50K for a beautiful site the owner can&apos;t
-								even update. I build small businesses a professional website
-								they control, one that turns the reputation they&apos;ve already
-								earned into booked customers.
+								. Agencies charge $50K for a pretty site the owner cannot even
+								update. I build a professional website you control, one that
+								turns the reputation you already have into booked customers.
 							</p>
 
 							<p className="text-base">
-								When I saw how many great local businesses had glowing reviews
-								but no website (or one so dated it cost them customers), I knew
-								where I could help. Hudson Digital Solutions exists to fix
-								exactly that:{' '}
+								I kept seeing great DFW businesses with glowing reviews and no
+								website, or one so dated it was costing them customers. That is
+								the gap I fill. Hudson Digital Solutions exists to fix it:{' '}
 								<strong className="text-accent">
 									a professional website, built around how your business
 									actually works
@@ -346,9 +339,8 @@ export default function AboutPage() {
 							</p>
 
 							<blockquote className="text-base text-foreground font-bold border-l-4 border-accent pl-6 py-4 bg-accent/5">
-								&quot;I don&apos;t care how beautiful your website is if it
-								doesn&apos;t bring in customers. Build results or build
-								nothing.&quot;
+								&quot;I do not care how pretty your website is if it does not
+								bring in customers. Build results or build nothing.&quot;
 							</blockquote>
 
 							<div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-border">
@@ -391,7 +383,7 @@ export default function AboutPage() {
 							How I Work
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							The core beliefs behind every website I build.
+							The rules I build every website by.
 						</p>
 					</div>
 
@@ -404,9 +396,8 @@ export default function AboutPage() {
 								Performance First
 							</h3>
 							<p className="text-sm text-muted-foreground leading-relaxed">
-								Every millisecond matters. I build for speed because fast sites
-								convert better, rank higher, and deliver a better experience for
-								your customers.
+								Every millisecond counts. I build for speed because fast sites
+								convert better, rank higher and feel better to your customers.
 							</p>
 						</div>
 
@@ -416,9 +407,9 @@ export default function AboutPage() {
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">Data Driven</h3>
 							<p className="text-sm text-muted-foreground leading-relaxed">
-								Assumptions kill businesses. Every decision is backed by data,
-								every feature is measured, and every optimization is validated
-								against real results.
+								Guessing kills businesses. Data backs every decision, every
+								feature gets measured and every change is checked against real
+								results.
 							</p>
 						</div>
 
@@ -430,8 +421,9 @@ export default function AboutPage() {
 								Built to Grow With You
 							</h3>
 							<p className="text-sm text-muted-foreground leading-relaxed">
-								I build for growth. Your website and systems grow with your
-								business, no expensive rebuilds when you scale.
+								I build for growth. Your site and your booking and payment
+								systems scale with the business, so no costly rebuild when you
+								get bigger.
 							</p>
 						</div>
 					</div>
@@ -455,8 +447,8 @@ export default function AboutPage() {
 							</h2>
 
 							<p className="text-lead text-muted-foreground max-w-2xl mx-auto mb-10">
-								Let&apos;s map out the website your business needs, and build
-								you something that turns the reputation you&apos;ve earned into
+								Let&apos;s map out the website your business actually needs and
+								build you something that turns the reputation you have into
 								booked customers.
 							</p>
 

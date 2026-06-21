@@ -22,12 +22,12 @@ export const metadata: Metadata = {
 	title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
 	description:
 		SEO_CONFIG.home?.description ??
-		'Professional website design for small businesses in Dallas-Fort Worth.',
+		'I build Dallas-Fort Worth small businesses fast websites with local SEO and booking that turn your reputation into booked, paying customers.',
 	openGraph: {
 		title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
 		description:
 			SEO_CONFIG.home?.description ??
-			'Professional website design for small businesses in Dallas-Fort Worth.',
+			'I build Dallas-Fort Worth small businesses fast websites with local SEO and booking that turn your reputation into booked, paying customers.',
 		url: SEO_CONFIG.home?.canonical ?? 'https://hudsondigitalsolutions.com'
 	},
 	twitter: {
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 		title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
 		description:
 			SEO_CONFIG.home?.description ??
-			'Professional website design for small businesses in Dallas-Fort Worth.'
+			'I build Dallas-Fort Worth small businesses fast websites with local SEO and booking that turn your reputation into booked, paying customers.'
 	},
 	alternates: {
 		canonical:
@@ -50,11 +50,11 @@ const websiteOutcomes = [
 	},
 	{
 		trigger: 'A customer opens it on their phone',
-		outcome: 'it looks sharp on every screen'
+		outcome: 'it loads fast and looks sharp on every screen'
 	},
 	{
 		trigger: 'Someone wants to reach you',
-		outcome: 'the inquiry hits your inbox instantly'
+		outcome: 'the inquiry lands in your inbox right away'
 	},
 	{
 		trigger: 'A customer is ready to book',
@@ -76,7 +76,7 @@ const solutions = [
 		Icon: Code2,
 		title: 'A Website That Looks the Part',
 		description:
-			'A clean, professional design that matches the quality of your work, so first-time visitors trust you before they ever call. Mobile-ready and fast on every device.',
+			'A clean, professional design that matches the quality of your work, so first-time visitors trust you before they call. Fast on every device, sharp on every phone.',
 		stat: '1-4 wks',
 		statLabel: 'First Delivery',
 		ctaLabel: 'See Recent Work',
@@ -86,17 +86,17 @@ const solutions = [
 		Icon: TrendingUp,
 		title: 'Found When Customers Search',
 		description:
-			'Built to show up when people in your area search for what you do. Proper SEO, fast load times, and the local details Google looks for, so your reputation actually gets seen.',
+			'Built to show up when people in DFW search for what you do. Real local SEO, fast load times and the details Google looks for, so your reputation gets seen by the people nearby.',
 		stat: 'Built in',
 		statLabel: 'local SEO',
-		ctaLabel: 'Read Our SEO Approach',
+		ctaLabel: 'Read My SEO Approach',
 		ctaHref: `${ROUTES.SERVICES}#seo`
 	},
 	{
 		Icon: Settings,
 		title: 'Yours to Control',
 		description:
-			'A simple admin panel means you change your hours, prices, photos, and text yourself, in minutes, no developer, no waiting, no invoice.',
+			'A simple admin panel means you change your hours, prices, photos and text yourself in minutes. No developer, no waiting, no invoice every time you tweak a line.',
 		stat: '$0',
 		statLabel: 'to make edits',
 		ctaLabel: "See What's Included",
@@ -124,15 +124,15 @@ export default function HomePage() {
 						{/* Left — headline + CTAs */}
 						<div className="lg:col-span-3 flex flex-col gap-8">
 							<h1 className="text-page-title text-foreground leading-tight text-balance">
-								Your business earned the reviews. Now it needs the website.
+								You earned the reviews. Now you need the website to match.
 							</h1>
 
 							<p className="text-lead text-muted-foreground max-w-lg text-balance">
 								You&apos;ve got the 5-star ratings and the word-of-mouth. But
 								when someone Googles you, there&apos;s no website to send them
-								to, or one that doesn&apos;t do you justice. We build small
-								businesses a professional website that turns your reputation
-								into booked customers.
+								to, or one that doesn&apos;t do you justice. I build DFW small
+								businesses a fast, professional website that turns your
+								reputation into booked customers.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3">
@@ -191,7 +191,7 @@ export default function HomePage() {
 									<div className="flex items-center gap-2 mb-1">
 										<Zap className="w-3.5 h-3.5 text-accent shrink-0" />
 										<span className="text-xs font-semibold text-foreground uppercase tracking-widest">
-											Everything Your Website Does For You
+											What Your Website Does For You
 										</span>
 									</div>
 									<p className="text-xs text-muted-foreground">
@@ -231,7 +231,7 @@ export default function HomePage() {
 							What You Get
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							A Website That Pulls Its Weight
+							A Website That Earns Its Keep
 						</h2>
 					</div>
 
@@ -276,7 +276,8 @@ export default function HomePage() {
 
 					<p className="text-sm text-muted-foreground text-center mt-8 max-w-2xl mx-auto">
 						Need online booking, payments, or automatic lead follow-up wired in?
-						We handle that too, once your site is doing its job.
+						I spent ten years in revenue operations before building websites, so
+						I handle that part too once your site is doing its job.
 					</p>
 				</div>
 			</section>
@@ -292,7 +293,8 @@ export default function HomePage() {
 							Free Business Tools
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Calculate your potential in 60 seconds. No signup required.
+							Run the numbers on your own business in 60 seconds. No signup, no
+							sales call.
 						</p>
 					</div>
 
@@ -308,7 +310,7 @@ export default function HomePage() {
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
 									See how much business you&apos;re leaving on the table with a
-									website that doesn&apos;t convert visitors into customers.
+									website that doesn&apos;t turn visitors into customers.
 								</p>
 								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
 									Try Calculator
@@ -327,8 +329,8 @@ export default function HomePage() {
 									Website Cost Estimator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
-									Get instant transparent pricing for your project based on
-									features, scope, and complexity.
+									Get a straight, no-guesswork price for your project based on
+									the features, scope and pages you actually need.
 								</p>
 								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
 									Get Estimate
@@ -350,8 +352,8 @@ export default function HomePage() {
 									Performance Savings Calculator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
-									Discover how much revenue slow load times are costing you
-									every single month.
+									See how much revenue a slow site is costing you every month.
+									Speed moves sales. The math is rarely small.
 								</p>
 								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
 									Analyze Site
@@ -395,7 +397,7 @@ export default function HomePage() {
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 							Every month without a real website is another month of customers
 							Googling you and finding nothing, or finding a competitor instead.
-							Let&apos;s fix that.
+							Tell me about your business and I&apos;ll map out the fix.
 						</p>
 					</div>
 

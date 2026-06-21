@@ -10,11 +10,11 @@ import FaqClient from './FaqClient'
 export const metadata: Metadata = {
 	title: 'Frequently Asked Questions | Hudson Digital Solutions',
 	description:
-		'Answers to common questions about our small business website design and development: pricing, process, timelines, and what is included.',
+		'Real answers about my small business web design in Dallas-Fort Worth: pricing, process, timelines and what every site I build includes.',
 	openGraph: {
 		title: 'Frequently Asked Questions | Hudson Digital Solutions',
 		description:
-			'Common questions about our small business website design and development: pricing, process, timelines, and what every project includes.',
+			'Questions about my small business web design in Dallas-Fort Worth: pricing, process, timelines and what every project I take on includes.',
 		url: 'https://hudsondigitalsolutions.com/faq',
 		images: [
 			{
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: 'Frequently Asked Questions | Hudson Digital Solutions',
 		description:
-			'Common questions about our small business website design and development: pricing, process, timelines, and what every project includes.',
+			'Questions about my small business web design in Dallas-Fort Worth: pricing, process, timelines and what every project I take on includes.',
 		images: ['/HDS-Logo.webp']
 	},
 	alternates: {
@@ -48,7 +48,7 @@ const faqSchema = {
 			name: 'What website design services do you offer?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'We design and build professional websites for small businesses: custom design, mobile-ready, fast, and built to be found on Google. Once your site is live, we can also connect booking, payments, and customer follow-up.'
+				text: 'I build websites for small businesses in Dallas-Fort Worth that bring in work: custom design, fast, mobile-first and built to show up on Google. Once your site is live, I wire in booking, payments and customer follow-up so the leads it generates turn into paying customers.'
 			}
 		},
 		{
@@ -56,7 +56,7 @@ const faqSchema = {
 			name: 'How much does it cost to build a website?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Every project is scoped to your specific needs, so costs vary based on the number of pages, the features you need, and the timeline. The best way to get a realistic estimate is to use our free Cost Estimator tool or book a free website plan call. We will walk you through options that fit your budget.'
+				text: 'Every project is priced to what you actually need, so it comes down to page count, features and timeline. The fastest way to a real number is our free Cost Estimator tool or a free website plan call. I will walk you through options that fit your budget. No surprise line items later.'
 			}
 		},
 		{
@@ -64,7 +64,7 @@ const faqSchema = {
 			name: 'What is your typical project timeline?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Timelines depend on project scope. Simple websites take 4 to 6 weeks. E-commerce and booking-enabled sites take 8 to 12 weeks. Larger sites with custom features and booking or payment setup typically take 3 to 6 months. We can expedite urgent projects with dedicated resources.'
+				text: 'Depends on scope. A simple site runs 4 to 6 weeks. Add online store or booking and it is 8 to 12 weeks. Bigger builds with custom features and payment setup run 3 to 6 months. If you are on a deadline, I can put dedicated time on it and move faster.'
 			}
 		},
 		{
@@ -72,7 +72,7 @@ const faqSchema = {
 			name: 'Do you offer monthly retainer packages?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Yes. We offer ongoing maintenance and support retainers that include regular updates, security patches, performance monitoring, feature additions, and priority support. Perfect for businesses that need continuous support without hiring in-house. Contact us to discuss a package that fits your needs.'
+				text: 'Yes. I keep sites running with monthly retainers: updates, security patches, performance checks, new features and priority support. It is for owners who want the site handled without hiring someone in-house. Reach out and I will scope a package to what your business actually needs.'
 			}
 		}
 	]

@@ -91,11 +91,12 @@ export default function Footer() {
 									<h3 className="text-h4 text-foreground">HDS</h3>
 								</div>
 								<p className="text-accent text-xs font-semibold mb-subheading">
-									Professional websites for small businesses.
+									Websites built like revenue systems for DFW small businesses.
 								</p>
 								<p className="text-xs text-muted-foreground">
-									We build small businesses a professional website that turns
-									the reputation they&apos;ve earned into booked customers.
+									I spent ten years in revenue operations before I built sites.
+									I treat your website the same way: a system that turns the
+									reputation you&apos;ve earned into booked customers.
 								</p>
 							</div>
 
@@ -103,15 +104,15 @@ export default function Footer() {
 							<div className="space-y-tight">
 								<div className="flex items-center gap-tight text-muted-foreground">
 									<CheckCircle className="h-4 w-4 text-accent" />
-									<span className="text-xs">Proven Track Record</span>
+									<span className="text-xs">Real numbers, not promises</span>
 								</div>
 								<div className="flex items-center gap-tight text-muted-foreground">
 									<CheckCircle className="h-4 w-4 text-accent" />
-									<span className="text-xs">Launched in Weeks</span>
+									<span className="text-xs">Live in weeks, not months</span>
 								</div>
 								<div className="flex items-center gap-tight text-muted-foreground">
 									<Clock className="h-4 w-4 text-accent" />
-									<span className="text-xs">Response within 2 hours</span>
+									<span className="text-xs">I reply within 2 hours</span>
 								</div>
 							</div>
 						</div>
@@ -191,11 +192,11 @@ export default function Footer() {
 						    form-routing CTA card above. */}
 						<div className="md:col-span-1">
 							<h4 className="text-foreground font-semibold mb-heading">
-								Prefer to reach out directly?
+								Rather just talk?
 							</h4>
 							<p className="text-xs text-muted-foreground mb-heading">
-								Email or call. Fastest path to a quote without filling out a
-								form.
+								Email or call me. Fastest way to a quote with no form to fill
+								out.
 							</p>
 
 							<div className="space-y-3">
