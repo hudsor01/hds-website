@@ -18,11 +18,11 @@ import { ROUTES } from '@/lib/constants/routes'
 export const metadata: Metadata = {
 	title: 'Website Migration: Keep Your Rankings | Hudson Digital',
 	description:
-		'Migrate your website to a platform you own without losing Google rankings. We recover your domain, set up redirects, and build a faster, fully owned site.',
+		'I move your DFW business to a website you own without losing Google rankings. I recover your domain, set up redirects, then build a faster site you keep.',
 	openGraph: {
 		title: 'Website Migration - Keep Your Rankings, Lose the Fees',
 		description:
-			'We migrate your website to a platform you own. No contracts, no monthly hostage fees.',
+			'I move your site to a platform you own. No contracts, no monthly hostage fees.',
 		url: 'https://hudsondigitalsolutions.com/website-migration'
 	},
 	alternates: {
@@ -42,19 +42,19 @@ const risks = [
 		Icon: Globe,
 		title: 'Your Website Can Go Dark Overnight',
 		description:
-			"Many managed website platforms delete your site within 30 days of cancellation. No export option, no backup. If you haven't planned ahead, your online presence vanishes."
+			'A lot of managed platforms delete your site within 30 days of cancellation. No export, no backup. Stop paying and your whole online presence disappears with it.'
 	},
 	{
 		Icon: Shield,
 		title: 'Your Domain May Not Be Yours',
 		description:
-			'Some providers register your domain under their own account. Getting it transferred can take weeks of back-and-forth, or worse, they hold it hostage.'
+			'Some providers register your domain under their own account, not yours. Getting it back can take weeks of email tag. A few of them will flat out hold it hostage.'
 	},
 	{
 		Icon: AlertTriangle,
 		title: 'Your Google Rankings Are at Risk',
 		description:
-			"A botched migration can tank your Google Business Profile and search rankings. If URLs change without proper redirects, you lose the SEO equity you've built over years."
+			'A sloppy migration can tank your Google Business Profile and your search rankings. Change URLs without proper redirects and you throw away years of SEO you paid for.'
 	}
 ]
 
@@ -69,25 +69,25 @@ const migrationSteps: MigrationStep[] = [
 		step: '01',
 		title: 'Free Migration Audit',
 		description:
-			'We review your current setup (website, domain ownership, Google Business Profile, CRM data) and create a migration plan with zero downtime.'
+			'I go through your current setup. Website, domain ownership, Google Business Profile, your customer data. Then I map out a plan to switch you over with zero downtime.'
 	},
 	{
 		step: '02',
 		title: 'Domain Recovery',
 		description:
-			'We handle the domain transfer process with your current provider on your behalf. If your domain is locked, we know the exact steps to get it released.'
+			'I deal with your current provider to transfer the domain so you do not have to. If it is locked down, I know the exact steps to pry it loose.'
 	},
 	{
 		step: '03',
 		title: 'Website Rebuild',
 		description:
-			'Your new website goes live on a platform you own. Faster, mobile-optimized, and built to rank on Google. We preserve your existing content and improve it.'
+			'Your new site goes live on a platform you own. Faster, built for phones, built to rank on Google. I keep your existing content and make it sharper.'
 	},
 	{
 		step: '04',
 		title: 'SEO Preservation',
 		description:
-			'We set up proper redirects, submit updated sitemaps, and verify your Google Business Profile stays connected. Your rankings are protected throughout the switch.'
+			'I set up the redirects, submit fresh sitemaps, then confirm your Google Business Profile stays connected. Your rankings are covered the whole way through.'
 	}
 ]
 
@@ -139,7 +139,7 @@ export default function WebsiteMigrationPage() {
 				name: 'How long does a website migration take?',
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text: 'Most migrations are complete in 1-2 weeks. Your new site goes live before we touch anything on the old platform, so there is zero downtime.'
+					text: 'Most migrations wrap in 1-2 weeks. Your new site goes live before I touch anything on the old platform, so there is zero downtime.'
 				}
 			},
 			{
@@ -147,7 +147,7 @@ export default function WebsiteMigrationPage() {
 				name: 'Will I lose my Google rankings?',
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text: 'No. We set up proper 301 redirects, update your Google Business Profile, and submit fresh sitemaps. Most clients see improved rankings within 30 days because the new site loads faster.'
+					text: 'No. I set up proper 301 redirects, update your Google Business Profile, then submit fresh sitemaps. Most clients see better rankings within 30 days because the new site loads faster.'
 				}
 			},
 			{
@@ -155,7 +155,7 @@ export default function WebsiteMigrationPage() {
 				name: "What if my provider won't release my domain?",
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text: 'We handle the domain transfer process directly with your provider. If they delay, we know the ICANN dispute process and have helped multiple clients recover their domains.'
+					text: 'I run the domain transfer directly with your provider. If they stall, I know the ICANN dispute process and have gotten domains back for clients in exactly this spot.'
 				}
 			}
 		]
@@ -184,9 +184,9 @@ export default function WebsiteMigrationPage() {
 						Customers
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
-						Stuck paying hundreds a month for a website you don&apos;t own? We
-						migrate everything to a faster site that&apos;s 100% yours, with
-						zero downtime and preserved SEO rankings.
+						Paying hundreds a month for a website you don&apos;t even own? I
+						move everything to a faster site that is 100% yours, with zero
+						downtime and your SEO rankings kept intact.
 					</p>
 					<div className="flex flex-col sm:flex-row gap-3 justify-center">
 						<Button asChild variant="accent" size="xl">
@@ -223,9 +223,9 @@ export default function WebsiteMigrationPage() {
 							What Happens When You Leave Your Provider Without a Plan
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Managed website platforms make it easy to sign up and hard to
-							leave. Here&apos;s what most business owners don&apos;t realize
-							until it&apos;s too late.
+							Managed platforms make it easy to sign up and a pain to leave.
+							Here is what most owners do not find out until they try to walk
+							away.
 						</p>
 					</div>
 
@@ -308,7 +308,7 @@ export default function WebsiteMigrationPage() {
 							Your Migration in 4 Steps
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							We handle everything. You keep running your business.
+							I handle all of it. You keep running your business.
 						</p>
 					</div>
 
@@ -347,15 +347,15 @@ export default function WebsiteMigrationPage() {
 
 					<div className="grid sm:grid-cols-2 gap-4">
 						{[
-							'A website you own, no monthly hostage fees',
+							'A website you own outright, no monthly hostage fees',
 							'Your domain registered in your name',
 							'Google Business Profile connected and verified',
-							'Page load under 2 seconds',
-							'Mobile-optimized responsive design',
-							'SEO rankings preserved or improved',
+							'Pages that load in under 2 seconds',
+							'A design that works on every phone',
+							'SEO rankings kept or improved',
 							'Contact forms that email you directly',
-							'Analytics dashboard to track visitors',
-							'Full training so you can update it yourself',
+							'An analytics dashboard so you can see your visitors',
+							'Training so you can update the site yourself',
 							'30 days of priority support after launch'
 						].map(item => (
 							<div key={item} className="flex items-start gap-3">
@@ -380,7 +380,7 @@ export default function WebsiteMigrationPage() {
 								30 days
 							</div>
 							<div className="text-sm text-muted-foreground">
-								Most platforms delete your site after cancellation
+								How long most platforms keep your site before deleting it
 							</div>
 						</div>
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
@@ -392,7 +392,7 @@ export default function WebsiteMigrationPage() {
 								1-2 wks
 							</div>
 							<div className="text-sm text-muted-foreground">
-								Typical migration timeline with zero downtime
+								Typical time to move you over with zero downtime
 							</div>
 						</div>
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
@@ -404,7 +404,7 @@ export default function WebsiteMigrationPage() {
 								$0/mo
 							</div>
 							<div className="text-sm text-muted-foreground">
-								Required monthly fees after your site is built
+								Monthly fees you owe me once the site is built
 							</div>
 						</div>
 					</div>
@@ -426,9 +426,9 @@ export default function WebsiteMigrationPage() {
 							</h2>
 
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Book a free migration consultation. We&apos;ll audit your
-								current setup, tell you exactly what it takes to switch, and
-								give you a fixed quote with no surprises.
+								Book a free migration consult. I will audit your current setup,
+								tell you straight what it takes to switch, then hand you a fixed
+								quote with no surprises.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">
