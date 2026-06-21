@@ -26,7 +26,7 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 	services: {
 		title: 'Small Business Website Design | Hudson Digital',
 		description:
-			'Professional websites designed and built for small businesses: custom, mobile-ready, fast, and easy to find on Google. Free website plan, no obligation.',
+			'Professional websites designed and built for small businesses: custom, mobile-ready, fast and easy to find on Google. Free website plan, no obligation.',
 		ogTitle: 'Website Design for Small Businesses | Hudson Digital',
 		ogDescription:
 			'Professional websites built for small businesses: custom, fast, mobile-ready, built to bring in customers. Launched in weeks.',
@@ -34,19 +34,19 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 	},
 
 	about: {
-		title: 'Web Designer Who Understands Small Business | Hudson Digital',
+		title: 'Web Designer Who Gets Small Business | Hudson Digital',
 		description:
-			'An experienced web developer with a real business background, building small businesses the professional website their reputation deserves.',
-		ogTitle: 'Web Designer Who Understands Small Business | Hudson Digital',
+			'I spent nearly a decade in revenue operations before building websites. Now I build DFW small businesses a site that brings in real customers.',
+		ogTitle: 'Web Designer Who Gets Small Business | Hudson Digital',
 		ogDescription:
-			'Experienced developer with a business background, building websites that actually bring in customers for small businesses.',
+			'Former revenue operations operator who builds DFW small businesses a website that brings in real customers instead of sitting there as a brochure.',
 		canonical: `${SITE_URL}/about`,
 		structuredData: {
 			'@context': 'https://schema.org',
 			'@type': 'AboutPage',
 			name: 'About Hudson Digital Solutions',
 			description:
-				'Learn about our founder and our mission: building small businesses the professional website their reputation deserves'
+				'I spent nearly a decade in revenue operations before building DFW small businesses a website that turns their reputation into booked customers.'
 		}
 	}
 } as const

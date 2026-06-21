@@ -19,22 +19,22 @@ const faqs = [
 			{
 				question: 'What website design services do you offer?',
 				answer:
-					'We design and build professional websites for small businesses: custom design, mobile-ready, fast, and built to be found on Google. Once your site is live, we can also connect booking, payments, and customer follow-up.'
+					'I build websites for small businesses in Dallas-Fort Worth that bring in work: custom design, fast, mobile-first and built to show up on Google. Once your site is live, I wire in booking, payments and customer follow-up so the leads it generates turn into paying customers.'
 			},
 			{
 				question: 'How much does it cost to build a website?',
 				answer:
-					'Every project is scoped to your specific needs, so costs vary based on the number of pages, the features you need, and the timeline. The best way to get a realistic estimate is to use our free Cost Estimator tool or book a free website plan call. We will walk you through options that fit your budget.'
+					'Every project is priced to what you actually need, so it comes down to page count, features and timeline. The fastest way to a real number is our free Cost Estimator tool or a free website plan call. I will walk you through options that fit your budget. No surprise line items later.'
 			},
 			{
 				question: 'Do you offer monthly retainer packages?',
 				answer:
-					'Yes. We offer ongoing maintenance and support retainers that include regular updates, security patches, performance monitoring, feature additions, and priority support. Perfect for businesses that need continuous support without hiring in-house. Contact us to discuss a package that fits your needs.'
+					'Yes. I keep sites running with monthly retainers: updates, security patches, performance checks, new features and priority support. It is for owners who want the site handled without hiring someone in-house. Reach out and I will scope a package to what your business actually needs.'
 			},
 			{
 				question: 'What is your typical project timeline?',
 				answer:
-					'Timelines depend on project scope. Simple websites take 4 to 6 weeks. E-commerce and booking-enabled sites take 8 to 12 weeks. Larger sites with custom features and booking or payment setup typically take 3 to 6 months. We can expedite urgent projects with dedicated resources.'
+					'Depends on scope. A simple site runs 4 to 6 weeks. Add online store or booking and it is 8 to 12 weeks. Bigger builds with custom features and payment setup run 3 to 6 months. If you are on a deadline, I can put dedicated time on it and move faster.'
 			}
 		]
 	},
@@ -44,22 +44,22 @@ const faqs = [
 			{
 				question: 'What is your development process?',
 				answer:
-					'Our process includes: 1) Discovery call to understand your business and goals, 2) Detailed proposal with timeline and milestones, 3) Design phase with mockups for approval, 4) Build phase with weekly progress updates, 5) Testing and quality checks, 6) Launch and go-live, 7) Training and handoff, 8) Ongoing support and maintenance.'
+					'Eight steps, no mystery: 1) a discovery call to learn your business and goals, 2) a detailed proposal with timeline and milestones, 3) design with mockups you sign off on, 4) the build with weekly progress updates, 5) testing and quality checks, 6) launch and go-live, 7) training and handoff, 8) ongoing support. You always know what is next.'
 			},
 			{
 				question: 'How often will we communicate during the project?',
 				answer:
-					"We provide weekly progress updates via email or video call. You'll have access to a shared project management board to track progress in real-time. For urgent matters, we're available via Slack or email within 2 hours during business hours."
+					'You get a progress update every week by email or video call and a shared board so you can see exactly where things stand any time. Need me fast? Slack or email gets a reply within 2 hours during business hours.'
 			},
 			{
 				question: 'Can I make changes to the project after it starts?',
 				answer:
-					'Yes, we understand requirements evolve. Minor changes are included in the project scope. Major changes that affect timeline or budget will be discussed and approved before implementation. We plan for flexibility from the start.'
+					'Yes. Plans change once you see the work taking shape. Small tweaks are part of the scope. Anything big enough to move the timeline or budget gets talked through and approved before I touch it. I build in room for that from the start.'
 			},
 			{
 				question: 'Do you sign NDAs?',
 				answer:
-					"Absolutely. We're happy to sign your NDA before discussing confidential project details. We take intellectual property and confidentiality very seriously."
+					'Yes. Send your NDA and I will sign it before we get into anything confidential. Your ideas and your business stay yours.'
 			}
 		]
 	},
@@ -69,27 +69,27 @@ const faqs = [
 			{
 				question: 'What technologies do you use?',
 				answer:
-					"We use modern, proven tools chosen for reliability and speed, not because they're trendy. The specific technology depends on what works best for your business. You don't need to know what's under the hood; you just need it to work."
+					'I use modern, proven tools picked for speed and reliability, not because they are trendy. The exact stack depends on what fits your business. You do not need to know what is under the hood. You need it to load fast, work right and never embarrass you in front of a customer.'
 			},
 			{
 				question: 'Will my website be mobile-friendly?',
 				answer:
-					'Yes, all our websites are fully responsive and mobile-first. We test on actual devices (iOS and Android) to ensure perfect functionality across all screen sizes. Mobile-friendliness is essential for SEO and user experience.'
+					'Yes. Every site I build is mobile-first and fully responsive. I test on real iOS and Android devices, not on a single browser tab. Most of your customers will find you on a phone. Google ranks on mobile first too, so this is not optional.'
 			},
 			{
 				question: 'Do you provide SEO services?',
 				answer:
-					'We build SEO-friendly websites with clean code, fast loading times, proper meta tags, schema markup, and sitemap generation. For ongoing SEO, content strategy, and link building, we can recommend trusted SEO partners.'
+					'Every site I build is set up to be found: clean code, fast load times, proper meta tags, schema markup and a sitemap. Local SEO so DFW customers find you on Google is part of the work. For deep ongoing content and link building, I can point you to partners I trust.'
 			},
 			{
 				question: 'Can you integrate with my existing systems?',
 				answer:
-					'Yes. We connect whatever tools your business already uses: HubSpot, Salesforce, Stripe, your booking system, your email platform. If it has a connection point, we can link it to your website and your workflows.'
+					'Yes. I spent about ten years in revenue operations wiring up HubSpot, Salesforce, Stripe and Workato before I built sites, so connecting tools is home turf. Booking system, email platform, payment processor: if it has a connection point, I can tie it into your site and your workflow.'
 			},
 			{
 				question: 'Do you provide hosting and maintenance?',
 				answer:
-					'We can set up hosting on your preferred platform or recommend one that fits your needs. We offer maintenance packages that include updates, security patches, backups, monitoring, and technical support.'
+					'Yes. I can set you up on the host you prefer or recommend one that fits. And I offer maintenance packages that cover updates, security patches, backups, monitoring and support, so the site keeps running while you run the business.'
 			}
 		]
 	},
@@ -99,22 +99,22 @@ const faqs = [
 			{
 				question: 'How do I get started?',
 				answer:
-					"Schedule a free 30-minute website plan call. We'll discuss your business, your customers, and what your website needs to do for you. After the call, we'll send a detailed plan with exact pricing and deliverables."
+					'Book a free 30-minute website plan call. We talk through your business, your customers and what the site has to do for you. After that I send a detailed plan with exact pricing and deliverables. No pressure, no canned pitch.'
 			},
 			{
 				question: 'Do you work with new businesses?',
 				answer:
-					"Absolutely. We understand fast timelines, tight budgets, and the need for quick wins. We help new businesses get their digital foundation right from day one, so you're not paying to redo it later."
+					'Yes, plenty of them. I get the tight budgets, the fast timelines and the need for early wins. I help new businesses get the foundation right on day one so you are not paying to rip it out and redo it in a year.'
 			},
 			{
 				question: 'What payment terms do you offer?',
 				answer:
-					'For fixed-price projects, we typically split payments: 50% upfront, 25% at midpoint, 25% at completion. For retainers, we bill monthly. We accept bank transfers, credit cards, and PayPal.'
+					'On fixed-price projects I usually split it 50% up front, 25% at the midpoint and 25% at completion. Retainers are billed monthly. I take bank transfers, credit cards and PayPal.'
 			},
 			{
 				question: 'Do you offer guarantees?',
 				answer:
-					"Yes. We guarantee our work meets the specifications outlined in the proposal. If something doesn't work as promised, we'll fix it at no additional cost. We also offer a 30-day bug-fix warranty after launch."
+					'Yes. I stand behind what is in the proposal. If something does not work the way I promised, I fix it at no extra cost and you get a 30-day bug-fix warranty after launch on top of that.'
 			}
 		]
 	}
@@ -158,8 +158,8 @@ export default function FaqClient() {
 					</h1>
 
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-8">
-						Everything you need to know about working with us: websites,
-						pricing, process, and timelines.
+						Straight answers about working with me: websites, pricing, process
+						and timelines.
 					</p>
 
 					{/* Search */}
@@ -236,8 +236,8 @@ export default function FaqClient() {
 								Still Have Questions?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Get a free website plan. We&apos;ll map out what your site needs
-								and answer every question along the way.
+								Get a free website plan. I&apos;ll map out exactly what your
+								site needs and answer every question you have along the way.
 							</p>
 							<Button asChild variant="accent" size="xl">
 								<Link href="/contact">
