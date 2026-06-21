@@ -8,9 +8,9 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 		stateCode: 'AZ',
 		tagline: 'Web Design for Phoenix Small Businesses',
 		description:
-			'Phoenix is one of the fastest-growing metros in America. We build fast, mobile-ready websites that help Valley of the Sun businesses turn that growth into new customers.',
+			'Phoenix is one of the fastest-growing metros in America. I build fast, mobile-ready websites that turn that growth into booked jobs and paying customers for businesses across the Valley of the Sun.',
 		metaDescription:
-			'Web design for Phoenix small businesses. Fast, mobile-ready websites built to win customers across the Valley of the Sun, from Downtown to Scottsdale.',
+			'Web design for Phoenix small businesses. I build fast, mobile-ready sites that win customers across the Valley of the Sun, from Downtown to Scottsdale.',
 		neighborhoods: [
 			'Downtown Phoenix',
 			'Scottsdale',
@@ -30,17 +30,17 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Local Business Websites',
 				description:
-					'Clean, mobile-first websites for Phoenix real estate agents and brokerages that look great on every screen.'
+					'I build clean, mobile-first sites for Phoenix real estate agents and brokerages that look sharp on every screen and make listings easy to find.'
 			},
 			{
 				title: 'Local SEO Setup',
 				description:
-					'Websites built so Phoenix medical practices and wellness centers get found on Google by nearby patients.'
+					'I build sites so Phoenix medical practices and wellness centers get found on Google by patients searching nearby.'
 			},
 			{
 				title: 'E-Commerce Websites',
 				description:
-					'High-converting online stores for Phoenix retail brands ready to sell to more customers.'
+					'I build online stores for Phoenix retail brands that are built to convert browsers into buyers and sell to more customers.'
 			}
 		]
 	},
@@ -51,9 +51,9 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 		stateCode: 'AZ',
 		tagline: 'Web Design for Tucson Small Businesses',
 		description:
-			'Tucson blends rich heritage with aerospace innovation and university research. We design fast, modern websites for Old Pueblo businesses from downtown to the Catalina foothills.',
+			'Tucson runs on aerospace, university research and deep local heritage. I design fast, modern websites for Old Pueblo businesses from downtown to the Catalina foothills.',
 		metaDescription:
-			'Tucson web design for small businesses. Modern, mobile-ready websites for aerospace firms, Fourth Avenue shops, and southern Arizona companies.',
+			'Tucson web design for small businesses. I build modern, mobile-ready sites for aerospace firms, Fourth Avenue shops and southern Arizona companies.',
 		neighborhoods: [
 			'Downtown',
 			'Fourth Avenue',
@@ -73,17 +73,17 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Professional Websites',
 				description:
-					'Polished, fast websites for Tucson aerospace and defense firms that make a strong first impression.'
+					'I build polished, fast sites for Tucson aerospace and defense firms that earn trust the moment a buyer lands on them.'
 			},
 			{
 				title: 'Mobile-First Design',
 				description:
-					'Mobile-ready websites for University of Arizona research programs and biotech companies near campus.'
+					'I build mobile-ready sites for University of Arizona research programs and biotech companies near campus.'
 			},
 			{
 				title: 'Local Business Websites',
 				description:
-					'Inviting websites for Tucson resorts, restaurants, and southwestern tourism businesses.'
+					'I build inviting sites for Tucson resorts, restaurants and southwestern tourism businesses that turn visitors into bookings.'
 			}
 		]
 	},
@@ -94,9 +94,9 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 		stateCode: 'AZ',
 		tagline: 'Web Design for Mesa Small Businesses',
 		description:
-			"Arizona's third-largest city, Mesa anchors the East Valley with aerospace, healthcare, and a vibrant downtown arts district. We design fast, mobile-ready websites for Mesa businesses.",
+			"Mesa is Arizona's third-largest city and anchors the East Valley with aerospace, healthcare and a busy downtown arts district. I design fast, mobile-ready websites for Mesa businesses.",
 		metaDescription:
-			'Mesa web design for small businesses. Fast, mobile-ready websites for East Valley aerospace firms near Falcon Field, clinics, and downtown shops.',
+			'Mesa web design for small businesses. I build fast, mobile-ready sites for East Valley aerospace firms near Falcon Field, clinics and downtown shops.',
 		neighborhoods: [
 			'Downtown',
 			'Eastmark',
@@ -116,17 +116,17 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Professional Websites',
 				description:
-					'Sharp, fast websites for Mesa aerospace manufacturers and drone companies based at Falcon Field.'
+					'I build sharp, fast sites for Mesa aerospace manufacturers and drone companies based at Falcon Field.'
 			},
 			{
 				title: 'Local SEO Setup',
 				description:
-					'Websites built to help Mesa medical practices and specialty clinics rank for local searches.'
+					'I build sites that help Mesa medical practices and specialty clinics rank for the local searches patients actually run.'
 			},
 			{
 				title: 'E-Commerce Websites',
 				description:
-					'Online stores for Mesa shopping center retailers and East Valley shops ready to sell online.'
+					'I build online stores for Mesa shopping center retailers and East Valley shops ready to sell online.'
 			}
 		]
 	},
@@ -137,9 +137,9 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 		stateCode: 'AZ',
 		tagline: 'Web Design for Scottsdale Small Businesses',
 		description:
-			'Known for luxury resorts, art galleries, and upscale living, Scottsdale demands a polished first impression. We design premium, fast websites for the Scottsdale market.',
+			'Scottsdale runs on luxury resorts, art galleries and upscale living, so the website has to match the room. I design premium, fast sites for the Scottsdale market.',
 		metaDescription:
-			'Scottsdale web design for small businesses. Premium, mobile-ready websites for Old Town galleries, resorts, spas, and upscale local brands.',
+			'Scottsdale web design for small businesses. I build premium, mobile-ready sites for Old Town galleries, resorts, spas and upscale local brands.',
 		neighborhoods: [
 			'Old Town',
 			'Scottsdale Quarter',
@@ -159,17 +159,17 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Premium Brand Websites',
 				description:
-					'Refined, high-end websites for Scottsdale luxury retailers, art galleries, and upscale service providers.'
+					'I build refined, high-end sites for Scottsdale luxury retailers, art galleries and upscale service providers.'
 			},
 			{
 				title: 'Booking & Contact Forms',
 				description:
-					'Websites for Scottsdale resorts, spas, and golf courses with easy booking and inquiry forms built in.'
+					'I build sites for Scottsdale resorts, spas and golf courses with easy booking and inquiry forms wired in so reservations come straight to you.'
 			},
 			{
 				title: 'Mobile-First Design',
 				description:
-					'Mobile-ready websites for Scottsdale luxury real estate agents that showcase listings beautifully.'
+					'I build mobile-ready sites for Scottsdale luxury real estate agents that show listings off and load fast on any phone.'
 			}
 		]
 	},
@@ -180,9 +180,9 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 		stateCode: 'AZ',
 		tagline: 'Web Design for Chandler Small Businesses',
 		description:
-			"Home to Intel and a growing tech corridor, Chandler is Arizona's Silicon Desert. We design fast, modern websites that help Chandler businesses win customers.",
+			'Chandler is home to Intel and a growing tech corridor people call the Silicon Desert. I design fast, modern websites that help Chandler businesses win customers.',
 		metaDescription:
-			'Chandler web design for small businesses. Fast, modern websites built to bring in customers for companies across the Silicon Desert tech corridor.',
+			'Chandler web design for small businesses. I build fast, modern sites that bring in customers for companies across the Silicon Desert tech corridor.',
 		neighborhoods: [
 			'Downtown',
 			'Ocotillo',
@@ -202,17 +202,17 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Local Business Websites',
 				description:
-					'Modern, fast websites for Chandler businesses, designed to turn visitors into customers.'
+					'I build modern, fast sites for Chandler businesses, designed to turn visitors into paying customers.'
 			},
 			{
 				title: 'Fast, Modern Websites',
 				description:
-					'Get your Chandler business online quickly with a professional website, set up and launched end to end.'
+					'I get your Chandler business online fast with a professional website I set up and launch end to end.'
 			},
 			{
 				title: 'Website Redesigns',
 				description:
-					'Refresh an outdated site into a fast, mobile-ready website that works for Chandler businesses of every size.'
+					'I turn an outdated site into a fast, mobile-ready website that earns its keep for Chandler businesses of every size.'
 			}
 		]
 	},
@@ -223,9 +223,9 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 		stateCode: 'AZ',
 		tagline: 'Web Design for Flagstaff Small Businesses',
 		description:
-			"Flagstaff combines NAU's academic community with world-class outdoor recreation and dark sky science. We design fast, mobile-ready websites for northern Arizona businesses.",
+			"Flagstaff brings together NAU's academic community, top-tier outdoor recreation and dark sky science. I design fast, mobile-ready websites for northern Arizona businesses.",
 		metaDescription:
-			'Flagstaff web design for small businesses. Mobile-ready websites for ski outfitters, Grand Canyon tour operators, and NAU-area companies.',
+			'Flagstaff web design for small businesses. I build mobile-ready sites for ski outfitters, Grand Canyon tour operators and NAU-area companies.',
 		neighborhoods: [
 			'Downtown',
 			'Southside',
@@ -245,17 +245,17 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Local Business Websites',
 				description:
-					'Inviting websites for Flagstaff ski resorts, hiking outfitters, and Grand Canyon tour operators.'
+					'I build inviting sites for Flagstaff ski resorts, hiking outfitters and Grand Canyon tour operators that turn visitors into bookings.'
 			},
 			{
 				title: 'Mobile-First Design',
 				description:
-					'Mobile-ready websites for NAU programs and northern Arizona research institutions like Lowell Observatory.'
+					'I build mobile-ready sites for NAU programs and northern Arizona research institutions like Lowell Observatory.'
 			},
 			{
 				title: 'E-Commerce Websites',
 				description:
-					'Online stores for Flagstaff outdoor gear companies and adventure businesses ready to sell online.'
+					'I build online stores for Flagstaff outdoor gear companies and adventure businesses ready to sell online.'
 			}
 		]
 	},
@@ -266,9 +266,9 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 		stateCode: 'AZ',
 		tagline: 'Web Design for Tempe Small Businesses',
 		description:
-			'Home to Arizona State University and a thriving business community, Tempe is a center of commerce in the Valley. We design fast, modern websites that help Tempe businesses grow.',
+			'Tempe is home to Arizona State University and a busy business community, which makes it a center of commerce in the Valley. I design fast, modern websites that help Tempe businesses grow.',
 		metaDescription:
-			'Tempe web design for small businesses. Fast, mobile-ready websites for Mill Avenue restaurants, ASU-area shops, and venues that need to be found online.',
+			'Tempe web design for small businesses. I build fast, mobile-ready sites for Mill Avenue restaurants, ASU-area shops and venues that need to be found online.',
 		neighborhoods: [
 			'Downtown Tempe',
 			'Mill Avenue',
@@ -288,17 +288,17 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Fast, Modern Websites',
 				description:
-					'Quick-loading, mobile-ready websites that get Tempe businesses online and bringing in customers.'
+					'I build quick-loading, mobile-ready sites that get Tempe businesses online and bringing in customers.'
 			},
 			{
 				title: 'Local SEO Setup',
 				description:
-					'Websites built so ASU-area shops and education companies get found on Google by nearby customers.'
+					'I build sites so ASU-area shops and education companies get found on Google by customers searching nearby.'
 			},
 			{
 				title: 'Booking & Contact Forms',
 				description:
-					'Websites for Tempe Mill Avenue restaurants, bars, and venues with built-in booking and contact forms.'
+					'I build sites for Tempe Mill Avenue restaurants, bars and venues with booking and contact forms wired in so reservations reach you.'
 			}
 		]
 	}

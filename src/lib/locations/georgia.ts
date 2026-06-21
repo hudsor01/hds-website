@@ -8,9 +8,9 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		stateCode: 'GA',
 		tagline: 'Web Design for Atlanta Small Businesses',
 		description:
-			'Atlanta is a powerhouse of commerce, tech, and culture. We design and build fast, mobile-ready websites for ATL small businesses from Buckhead to Midtown.',
+			'Atlanta moves fast on commerce, tech and culture. I design and build fast, mobile-ready websites for ATL small businesses from Buckhead to Midtown. I treat your site as a system that brings in revenue.',
 		metaDescription:
-			'Web design for Atlanta small businesses. We build fast, mobile-ready websites for shops and services from Buckhead to Midtown, built to be found on Google.',
+			'Atlanta web design from a solo operator. I build fast, mobile-ready sites for shops and services from Buckhead to Midtown, built to get found on Google.',
 		neighborhoods: [
 			'Midtown',
 			'Buckhead',
@@ -30,17 +30,17 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Local Business Websites',
 				description:
-					'Modern websites for Atlanta shops and service businesses, built to win customers from Buckhead to Decatur.'
+					'I build modern websites for Atlanta shops and service businesses that win customers from Buckhead to Decatur.'
 			},
 			{
 				title: 'E-Commerce Websites',
 				description:
-					'Online stores for ATL retailers and makers, built to sell on any device and load fast for shoppers.'
+					'I build online stores for ATL retailers and makers that sell on any device and load fast for shoppers.'
 			},
 			{
 				title: 'Local SEO Setup',
 				description:
-					'Websites built to rank in Atlanta search results so nearby customers find your business first.'
+					'I set up your site to rank in Atlanta search results so nearby customers find your business first.'
 			}
 		]
 	},
@@ -51,9 +51,9 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		stateCode: 'GA',
 		tagline: 'Web Design for Savannah Small Businesses',
 		description:
-			'Savannah combines Southern charm with a booming port and tourism industry. We design and build websites for Hostess City small businesses from River Street to the Historic District.',
+			'Savannah runs on Southern charm, a busy port and steady tourism. I design and build websites for Hostess City small businesses from River Street to the Historic District that turn foot traffic into booked work.',
 		metaDescription:
-			'Web design for Savannah small businesses. We build websites for River Street shops, Historic District restaurants, and tour companies that draw visitors in.',
+			'Savannah web design from a solo operator. I build sites for River Street shops, Historic District restaurants and tour companies that draw visitors in.',
 		neighborhoods: [
 			'Historic District',
 			'River Street',
@@ -73,17 +73,17 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Tourism & Hospitality Sites',
 				description:
-					'Websites for Savannah hotels, restaurants, and tour companies that turn visitors into bookings.'
+					'I build websites for Savannah hotels, restaurants and tour companies that turn visitors into bookings.'
 			},
 			{
 				title: 'Mobile-First Design',
 				description:
-					'Sites that look sharp on phones, so tourists exploring the Historic District can find you on the go.'
+					'I build sites that look sharp on phones so tourists exploring the Historic District can find you on the go.'
 			},
 			{
 				title: 'E-Commerce Websites',
 				description:
-					'Online stores for Starland District artists, makers, and creative businesses to sell beyond the storefront.'
+					'I build online stores for Starland District artists, makers and creative businesses that sell beyond the storefront.'
 			}
 		]
 	},
@@ -94,9 +94,9 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		stateCode: 'GA',
 		tagline: 'Web Design for Augusta Small Businesses',
 		description:
-			'Home to the Masters Tournament and Fort Eisenhower, Augusta anchors the CSRA region. We design and build websites for small businesses across the Garden City.',
+			'Home to the Masters Tournament and Fort Eisenhower, Augusta anchors the CSRA region. I design and build websites for small businesses across the Garden City that bring in steady work year round.',
 		metaDescription:
-			'Web design for Augusta small businesses. We build fast websites for CSRA shops, healthcare practices, and Masters Tournament area hospitality companies.',
+			'Augusta web design from a solo operator. I build fast sites for CSRA shops, healthcare practices and Masters Tournament area hospitality companies.',
 		neighborhoods: [
 			'Downtown',
 			'Summerville',
@@ -116,17 +116,17 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Healthcare Practice Sites',
 				description:
-					'Clean, trustworthy websites for Augusta medical practices and regional healthcare providers.'
+					'I build clean, trustworthy websites for Augusta medical practices and regional healthcare providers.'
 			},
 			{
 				title: 'Local Business Websites',
 				description:
-					'Websites for CSRA shops and service businesses across Martinez, Evans, and downtown Augusta.'
+					'I build websites for CSRA shops and service businesses across Martinez, Evans and downtown Augusta.'
 			},
 			{
 				title: 'Booking & Contact Forms',
 				description:
-					'Websites with simple booking and contact forms for Augusta golf tourism and area hospitality businesses.'
+					'I wire up simple booking and contact forms for Augusta golf tourism and area hospitality businesses.'
 			}
 		]
 	},
@@ -137,9 +137,9 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		stateCode: 'GA',
 		tagline: 'Web Design for Columbus Small Businesses',
 		description:
-			"Columbus is Georgia's second-largest metro and home to Fort Moore. We design and build websites for small businesses across the Chattahoochee Valley.",
+			"Columbus is Georgia's second-largest metro and home to Fort Moore. I design and build websites for small businesses across the Chattahoochee Valley that work as hard as you do.",
 		metaDescription:
-			'Web design for Columbus, GA small businesses. We build fast websites for Fountain City shops, service companies, and Chattahoochee Valley businesses.',
+			'Columbus, GA web design from a solo operator. I build fast sites for Fountain City shops, service companies and Chattahoochee Valley businesses.',
 		neighborhoods: [
 			'Downtown',
 			'Midtown',
@@ -159,17 +159,17 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Local Business Websites',
 				description:
-					'Websites for Columbus shops and service businesses from downtown to North Columbus and Phenix City.'
+					'I build websites for Columbus shops and service businesses from downtown to North Columbus and Phenix City.'
 			},
 			{
 				title: 'Fast, Modern Websites',
 				description:
-					'Quick-loading websites for Chattahoochee Valley businesses, built to keep customers from clicking away.'
+					'I build quick-loading websites for Chattahoochee Valley businesses that keep customers from clicking away.'
 			},
 			{
 				title: 'Local SEO Setup',
 				description:
-					'Websites built to show up when Fountain City customers search for nearby services on Google.'
+					'I set up your site to show up when Fountain City customers search for nearby services on Google.'
 			}
 		]
 	},
@@ -180,9 +180,9 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		stateCode: 'GA',
 		tagline: 'Web Design for Macon Small Businesses',
 		description:
-			'Macon sits at the geographic heart of Georgia with a rich musical heritage and growing healthcare sector. We design and build websites for Middle Georgia small businesses.',
+			'Macon sits at the geographic heart of Georgia with deep musical roots and a growing healthcare sector. I design and build websites for Middle Georgia small businesses that turn clicks into customers.',
 		metaDescription:
-			'Web design for Macon small businesses. We build websites for Middle Georgia healthcare practices, music venues, and shops in the heart of Georgia.',
+			'Macon web design from a solo operator. I build sites for Middle Georgia healthcare practices, music venues and shops in the heart of Georgia.',
 		neighborhoods: [
 			'Downtown',
 			'College Hill',
@@ -202,17 +202,17 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Healthcare Practice Sites',
 				description:
-					'Websites for Macon medical practices and Middle Georgia healthcare providers that put patients at ease.'
+					'I build websites for Macon medical practices and Middle Georgia healthcare providers that put patients at ease.'
 			},
 			{
 				title: 'Website Redesigns',
 				description:
-					'Fresh redesigns for Macon music venues and cultural organizations with roots in Capricorn Studios heritage.'
+					'I redesign sites for Macon music venues and cultural organizations carrying the Capricorn Studios heritage.'
 			},
 			{
 				title: 'Mobile-First Design',
 				description:
-					'Websites that work flawlessly on phones for shops and services across the heart of Georgia.'
+					'I build sites that work flawlessly on phones for shops and services across the heart of Georgia.'
 			}
 		]
 	},
@@ -223,9 +223,9 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		stateCode: 'GA',
 		tagline: 'Web Design for Athens Small Businesses',
 		description:
-			'Home to the University of Georgia and a legendary music scene, Athens blends academic excellence with creative culture. We design and build websites for Classic City small businesses.',
+			'Home to the University of Georgia and a legendary music scene, Athens mixes academic weight with creative energy. I design and build websites for Classic City small businesses that bring customers through the door.',
 		metaDescription:
-			'Web design for Athens, GA small businesses. We build websites for Five Points shops, Classic City restaurants, breweries, and the local music scene.',
+			'Athens, GA web design from a solo operator. I build sites for Five Points shops, Classic City restaurants, breweries and the local music scene.',
 		neighborhoods: [
 			'Downtown',
 			'Five Points',
@@ -245,17 +245,17 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Restaurant Websites',
 				description:
-					'Websites with menus and online ordering for Athens restaurants, breweries, and the Classic City food scene.'
+					'I build websites with menus and online ordering for Athens restaurants, breweries and the Classic City food scene.'
 			},
 			{
 				title: 'Local Business Websites',
 				description:
-					'Modern websites for Athens shops and creative businesses across Five Points and Normaltown.'
+					'I build modern websites for Athens shops and creative businesses across Five Points and Normaltown.'
 			},
 			{
 				title: 'Fast, Modern Websites',
 				description:
-					'Quick, mobile-ready websites for Athens music venues and entertainment businesses that draw a crowd.'
+					'I build quick, mobile-ready websites for Athens music venues and entertainment businesses that draw a crowd.'
 			}
 		]
 	}
