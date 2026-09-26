@@ -71,7 +71,7 @@
 		"react-email": "6.5.0",
 		"react-error-boundary": "6.1.2",
 		"react-markdown": "10.1.0",
-		"recharts": "3.8.1",
+		"recharts": "3.10.1",
 		"resend": "6.12.4",
 		"sanitize-html": "2.17.4",
 		"server-only": "0.0.1",
