@@ -21,7 +21,7 @@
 
 - **Framework**: Next.js 16 (App Router) + React 19
 - **Runtime / PM**: Bun 1.3.x
-- **Lint / Format**: Biome 2.4.4 (`biome.json`)
+- **Lint / Format**: Biome 2.5.15 (`biome.json`)
 - **DB**: Neon Postgres + Drizzle ORM 0.45 — client `src/lib/db.ts`, schema barrel `src/lib/schemas/schema.ts`
 - **Forms**: `@tanstack/react-form` via factory in `src/hooks/form-hook.tsx`
 - **Validation**: Zod 4

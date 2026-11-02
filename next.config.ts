@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
 	// `revalidate` and `force-dynamic` are replaced by function-level caching.
 	cacheComponents: true,
 
+	// Next.js 16.3+ warns when cacheComponents is set without an explicit
+	// partialPrefetching choice. `false` is the unset default and keeps the
+	// existing per-link prefetch behavior; adopting Partial Prefetching (App
+	// Shell prefetches) is a separate, deliberate migration.
+	partialPrefetching: false,
+
 	images: {
 		formats: ['image/webp'],
 		deviceSizes: [640, 750, 828, 1080, 1200, 1920],
