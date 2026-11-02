@@ -233,10 +233,10 @@ test.describe('Secondary User Flows', () => {
 			await page.locator('a[href="/services"]').first().click()
 			await page.waitForURL('**/services')
 
-			// Page title should update
-			const title = await page.title()
-			expect(title).toBeTruthy()
-			expect(title).toMatch(/service|hudson/i)
+			// Page title should update. Web-first assertion: since Next 16.4 the
+			// dev server commits the URL before the streamed metadata swaps the
+			// <title>, so a one-shot page.title() read right after waitForURL races.
+			await expect(page).toHaveTitle(/service|hudson/i)
 		})
 	})
 })

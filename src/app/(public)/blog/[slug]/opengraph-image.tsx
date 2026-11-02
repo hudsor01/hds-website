@@ -1,14 +1,15 @@
 import { ImageResponse } from 'next/og'
+import { connection } from 'next/server'
 import { getPostBySlug } from '@/lib/blog'
 import { OG_FONTS } from '@/lib/og-fonts'
 import { LOGO_DATA_URL } from '@/lib/og-logo'
 
-// Dynamic so the Facebook/social scrape always gets the real post title at
-// request time (the build runs without POSTGRES_URL, so a static render would
-// bake a generic title). OG images are scraped rarely and cached by the
-// platform, so per-request generation is cheap in practice.
-export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
+// Rendered at request time (via `connection()` below) so the Facebook/social
+// scrape always gets the real post title (the build runs without POSTGRES_URL,
+// so a prerender would bake a generic title). OG images are scraped rarely and
+// cached by the platform, so per-request generation is cheap in practice.
+// No `runtime` export: Cache Components rejects it and the readFileSync-based
+// logo/font loads rely on the default Node.js runtime.
 export const alt = 'Hudson Digital Solutions'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
@@ -34,6 +35,7 @@ export default async function Image({
 }: {
 	params: Promise<{ slug: string }>
 }) {
+	await connection()
 	const { slug } = await params
 	const post = await getPostBySlug(slug)
 	const title = (post?.title ?? 'Hudson Digital Solutions').slice(0, 110)
