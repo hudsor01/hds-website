@@ -1,7 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { BRAND } from '@/lib/_generated/brand'
 
-export const runtime = 'edge'
 export const alt =
 	'Hudson Digital Solutions: Professional Websites for Small Businesses'
 export const size = { width: 1200, height: 630 }

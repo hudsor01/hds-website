@@ -1,7 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { LOGO_DATA_URL } from '@/lib/og-logo'
 
-export const runtime = 'nodejs'
 export const size = { width: 32, height: 32 }
 export const contentType = 'image/png'
 
