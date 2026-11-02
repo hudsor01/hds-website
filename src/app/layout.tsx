@@ -1,6 +1,5 @@
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata, Viewport } from 'next'
-import { Hanken_Grotesk, JetBrains_Mono, Roboto_Serif } from 'next/font/google'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from 'sonner'
 import { Analytics } from '@/components/utilities/Analytics'
@@ -14,43 +13,8 @@ import {
 	generateWebsiteSchema
 } from '@/lib/seo-utils'
 import ClientProviders from '@/providers/ClientProviders'
+import { fontVariables } from './fonts'
 import './globals.css'
-
-// Weight inventory across all utility classes (font-normal, font-medium,
-// font-semibold, font-bold, font-black) gives 400/500/600/700/900. Variable
-// fonts subset the binary when `weight` is provided, cutting download size
-// vs. shipping the full wght axis (100-900).
-
-const hankenGrotesk = Hanken_Grotesk({
-	variable: '--font-hanken-grotesk',
-	subsets: ['latin'],
-	weight: ['400', '500', '600', '700', '900'],
-	display: 'swap',
-	preload: true,
-	adjustFontFallback: true
-})
-
-const robotoSerif = Roboto_Serif({
-	variable: '--font-roboto-serif',
-	subsets: ['latin'],
-	weight: ['400', '600', '700', '900'],
-	display: 'swap',
-	preload: true,
-	adjustFontFallback: true
-})
-
-// adjustFontFallback off for mono: the ui-monospace fallback is already
-// metric-compatible with JetBrains Mono and the code blocks that consume
-// it are never above the fold, so the synthesized fallback @font-face
-// is dead weight.
-const jetbrainsMono = JetBrains_Mono({
-	variable: '--font-jetbrains-mono',
-	subsets: ['latin'],
-	weight: ['400'],
-	display: 'swap',
-	preload: false,
-	adjustFontFallback: false
-})
 
 export const viewport: Viewport = {
 	width: 'device-width',
@@ -180,10 +144,7 @@ export default function RootLayout({
 				<meta name="HandheldFriendly" content="true" />
 				<meta name="MobileOptimized" content="320" />
 			</head>
-			<body
-				className={`${hankenGrotesk.variable} ${robotoSerif.variable} ${jetbrainsMono.variable} antialiased`}
-				suppressHydrationWarning
-			>
+			<body className={`${fontVariables} antialiased`} suppressHydrationWarning>
 				<a
 					href="#main-content"
 					className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-background focus:text-foreground focus:rounded focus:shadow-lg"
