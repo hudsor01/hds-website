@@ -27,7 +27,6 @@
 		"test:unit:coverage": "bun test --coverage tests/",
 		"test:all": "command bun run lint && command bun run typecheck && command bun run test:unit && command bun run test:e2e:fast",
 		"test:ci": "command bun run lint && command bun run typecheck && command bun run test:unit && command bun run test:e2e",
-		"env:setup": "cp .env.example .env.local && echo 'Created .env.local from template. Please update with your actual values.'",
 		"clean": "rm -rf .next out playwright-report test-results",
 		"clean:test": "rm -rf playwright-report test-results",
 		"test:install": "npm run test:e2e:install",
