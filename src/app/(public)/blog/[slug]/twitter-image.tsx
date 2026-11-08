@@ -1,7 +1,6 @@
 // Twitter card image reuses the Open Graph card generator. Image metadata
 // (alt/size/contentType) is declared DIRECTLY here, not re-exported, so Next.js
-// can statically analyze it. Only the rendering component is re-exported; it
-// opts into request-time rendering itself via `connection()`.
+// can statically analyze it. Only the rendering component is re-exported.
 export { default } from './opengraph-image'
 
 export const alt = 'Hudson Digital Solutions'

@@ -2,18 +2,15 @@
  * Blog Journey E2E Tests
  * =============================================================================
  *
- * Tests the blog listing page and slug navigation. Key assertion: confirms
- * real (n8n auto-generated) posts exist at /blog, not just Phase 42 placeholders.
- *
- * DB state (confirmed 2026-02-24): 8 published posts — 3 Phase-42 placeholders,
- * 5 n8n auto-generated. Placeholder slugs are stable (not regenerated).
+ * Tests the blog listing page, slug navigation, tag/author pages, and the 404
+ * for unknown slugs. Posts are compiled from content/blog at build time, so
+ * these run without a database.
  */
 
 import { expect, type TestInfo, test } from '@playwright/test'
 import { createTestLogger } from './test-logger'
 
-// Phase 42 placeholder slugs — seeded during blog data strategy phase.
-// Test must confirm at least 1 NON-placeholder post is visible.
+// Oldest legacy posts. The listing must show newer posts, not only these.
 const PLACEHOLDER_SLUGS = [
 	'small-business-website-cost-2025',
 	'how-to-increase-website-conversion-rates-2025-guide',
@@ -21,17 +18,6 @@ const PLACEHOLDER_SLUGS = [
 ]
 
 test.describe('Blog Journey', () => {
-	// Every assertion here depends on seeded DB posts at /blog. Without a
-	// live backend (E2E_LIVE_BACKEND) the page renders its empty state, so
-	// skip - consistent with the other data-dependent specs (contact,
-	// newsletter, testimonials).
-	test.beforeEach(() => {
-		test.skip(
-			!process.env.E2E_LIVE_BACKEND,
-			'Requires seeded blog posts in the DB. Set E2E_LIVE_BACKEND=1 to run.'
-		)
-	})
-
 	test('should show at least one post card on /blog', async ({
 		page
 	}, testInfo: TestInfo) => {
@@ -68,7 +54,7 @@ test.describe('Blog Journey', () => {
 		const slugs = hrefs.map(href => href.replace('/blog/', ''))
 		logger.step(`Found slugs: ${slugs.join(', ')}`)
 
-		// At least one slug must be from the n8n pipeline (not a Phase 42 placeholder)
+		// At least one slug must be a newer post, not one of the legacy three
 		const realPostCount = slugs.filter(
 			slug => !PLACEHOLDER_SLUGS.includes(slug)
 		).length
@@ -109,5 +95,24 @@ test.describe('Blog Journey', () => {
 			'text=No articles found. Check back soon for new content!'
 		)
 		await expect(emptyState).not.toBeVisible()
+	})
+
+	test('should render a tag page and an author page', async ({ page }) => {
+		await page.goto('/blog/tag/seo')
+		await expect(page.locator('h1').first()).toHaveText('SEO')
+		await expect(
+			page.locator('article a[href^="/blog/"]').first()
+		).toBeVisible()
+
+		await page.goto('/blog/author/richard-hudson')
+		await expect(page.locator('h1').first()).toHaveText('Richard Hudson')
+		await expect(
+			page.locator('article a[href^="/blog/"]').first()
+		).toBeVisible()
+	})
+
+	test('should return 404 for an unknown slug', async ({ page }) => {
+		const response = await page.goto('/blog/wp-login.php')
+		expect(response?.status()).toBe(404)
 	})
 })

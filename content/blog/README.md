@@ -1,15 +1,16 @@
 # Blog content (`content/blog/`)
 
-Source of truth for blog posts. Each `*.md` file is one post. Files are synced to
-the Neon `blog_posts` table by `scripts/publish-blog.ts` (idempotent upsert by
-slug). This is the PR-tracked, no-drift pipeline for GSD milestone v9 (see
-`.planning/milestones/v9-REQUIREMENTS.md`).
+The only source of truth for blog posts. Each `*.md` file is one post. At build
+time `scripts/blog/build.ts` validates every file and compiles the published ones
+into `src/lib/_generated/blog-posts.ts`, which the site serves directly (no
+database). Merging a file is publishing it. See
+`.planning/milestones/v9-REQUIREMENTS.md` for the v9 content rules.
 
 ## File = one post
 
 - Filename: `<slug>.md` (the slug is the URL: `/blog/<slug>`).
 - Frontmatter (YAML) + body. Body is Markdown by default (converted to HTML at
-  publish via `marked`, then sanitized on render by `BlogPostContent`).
+  build via `marked`, then sanitized on render by `BlogPostContent`).
 
 ## Frontmatter
 
@@ -21,7 +22,7 @@ excerpt: "Meta description."   # R2: 120-160 chars, no markdown
 targetKeyword: "keyword"       # R1/R7: appears in title, H1, first 100 words
 pillar: 3                      # 1-10, the content pillar (tracking/distribution)
 tags: ["seo", "local-marketing"] # R4: tags[0] = primary pillar tag (taxonomy slug)
-author: "richard-hudson"       # author slug (blog_authors.slug)
+author: "richard-hudson"       # author slug (src/lib/constants/blog.ts)
 publishedAt: "2026-06-17"      # date
 published: true                # R14
 featured: false                # optional
@@ -37,7 +38,7 @@ First paragraph is the share hook (R13).
 and one clear CTA (R6) to /contact or a /tools/* page.
 ```
 
-## Guardrails (enforced by `scripts/validate-blog.ts`, CI gate)
+## Guardrails (enforced by `scripts/blog/validate.ts`, CI gate; errors also fail `blog:build`)
 
 R1 title <=60 + keyword - R2 excerpt 120-160 - R3 kebab slug - R4 primary pillar
 tag in taxonomy - R5 >=2 internal links - R6 a CTA link - R7 H2 + keyword early -
@@ -49,8 +50,7 @@ Full list: `.planning/milestones/v9-REQUIREMENTS.md`.
 
 ```bash
 bun run blog:validate              # lint every post against R1-R9/R14 (CI gate)
-bun run blog:publish               # upsert all files to Neon (auto-publish on merge)
-bun run blog:publish -- --dry-run  # show the upsert diff, write nothing
+bun run blog:build                 # compile published posts for the site (runs in dev/build)
 bun run blog:generate -- --pillar 3 --topic "..."  # LM Studio draft -> new .md
 ```
 

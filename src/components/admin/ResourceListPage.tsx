@@ -1,8 +1,8 @@
 /**
  * Common shell for every admin list page (server component).
  *
- * Owns the layout shared by the three Wave 2 resource pages (showcase,
- * blog, testimonials):
+ * Owns the layout shared by the Wave 2 resource pages (showcase,
+ * testimonials):
  *  - Page heading on the left.
  *  - "New {resource}" Link button on the right.
  *  - Either the per-resource table (children) or, when `isEmpty` is true,

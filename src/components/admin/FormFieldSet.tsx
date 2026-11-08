@@ -12,8 +12,8 @@
  * Two child shapes are supported:
  *
  *  1. ReactNode -- the caller wires `id`, `aria-describedby`, and
- *     `aria-invalid` on the child input manually (used by the blog forms,
- *     where the inputs were authored before the render-prop API existed).
+ *     `aria-invalid` on the child input manually (the original API, kept
+ *     for inputs that need custom wiring).
  *
  *  2. Render prop `(aria) => ReactNode` -- the FormFieldSet computes the
  *     aria attributes and hands them to the child via the callback. The

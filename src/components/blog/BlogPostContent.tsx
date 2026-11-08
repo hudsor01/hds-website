@@ -1,4 +1,3 @@
-import { cacheLife, cacheTag } from 'next/cache'
 import sanitizeHtml from 'sanitize-html'
 import type { BlogPost } from '@/lib/blog'
 import { withHeadingIds } from '@/lib/blog-toc'
@@ -47,22 +46,13 @@ const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
 		td: ['align']
 	},
 	allowedSchemes: ['http', 'https', 'mailto']
-	// Intentionally NOT allowing data: URIs on <img>: blog content can be
-	// edited by humans (or pipelines) and data: images can carry tracking
-	// pixels or, in legacy browsers, exfiltration vectors. n8n ingest
-	// rewrites image hosts before they reach this component.
+	// Intentionally NOT allowing data: URIs on <img>: data: images can carry
+	// tracking pixels or, in legacy browsers, exfiltration vectors.
 }
 
-export async function BlogPostContent({ post }: BlogPostContentProps) {
-	'use cache'
-	cacheLife('days')
-	// Tag key matches getPostBySlug in src/lib/blog.ts which uses
-	// `blog-post:${slug}` — keep them aligned so a single
-	// revalidateTag('blog-post:my-post-slug') invalidates BOTH the data
-	// fetch and this render cache. Using post.id here would create a
-	// silent mismatch that breaks per-post targeted invalidation.
-	cacheTag('blog-posts', `blog-post:${post.slug}`)
-
+// Rendered once per post at build time (the blog is fully prerendered), so
+// no render cache is needed here.
+export function BlogPostContent({ post }: BlogPostContentProps) {
 	if (!post.content) {
 		return (
 			<div className="typography max-w-none">
@@ -74,7 +64,7 @@ export async function BlogPostContent({ post }: BlogPostContentProps) {
 		)
 	}
 
-	// Blog content comes from our trusted n8n pipeline; sanitization is
+	// Blog content comes from content/blog in this repo; sanitization is
 	// defense in depth. Heading ids are injected after sanitizing (clean
 	// slugs, safe) so the table of contents can anchor-link to each section.
 	const sanitizedContent = sanitizeHtml(post.content, SANITIZE_OPTIONS)

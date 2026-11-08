@@ -5,7 +5,7 @@ import type { ZodError } from 'zod'
  * `{ ok: false, errors }` envelope. Nested paths join with '.'; issues with no
  * path collapse to the form-level '_form' key. The first message per key wins.
  *
- * Shared by every admin Server Action (showcase / blog / testimonials /
+ * Shared by every admin Server Action (showcase / testimonials /
  * leads / emails / newsletter) so the flattening stays identical across the
  * CRUD surfaces.
  */

@@ -1,6 +1,6 @@
 /**
- * Shared cursor-pagination control for the admin list pages (blog,
- * showcase, testimonials). Renders the shadcn `<Pagination>` footer with
+ * Shared cursor-pagination control for the admin list pages (showcase,
+ * testimonials). Renders the shadcn `<Pagination>` footer with
  * server-built `<Link>` hrefs from `buildPaginationHref`; a null cursor
  * renders the disabled (non-interactive) variant of that edge.
  *
@@ -18,7 +18,7 @@ import {
 import { buildPaginationHref } from '@/lib/admin/list-cursor'
 
 interface AdminListPaginationProps {
-	/** List route the cursors resolve against, e.g. "/admin/blog". */
+	/** List route the cursors resolve against, e.g. "/admin/showcase". */
 	basePath: string
 	/** Previous-page cursor, or null when on the first page. */
 	prevCursor: string | null

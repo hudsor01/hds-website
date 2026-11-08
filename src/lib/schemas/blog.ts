@@ -1,6 +1,12 @@
 /**
- * Blog-related schemas
+ * LEGACY blog tables, pending a manual DROP.
  * Tables: blog_authors, blog_tags, blog_posts, blog_post_tags
+ *
+ * Nothing reads or writes these anymore: blog posts are compiled from
+ * content/blog (scripts/blog/build.ts) and authors/tags live in
+ * src/lib/constants/blog.ts. The definitions stay only so `drizzle-kit push`
+ * does not propose DROP TABLE while the tables still exist in Neon. Remove
+ * this file (and its barrel export) in the same change that drops them.
  */
 import {
 	boolean,
@@ -64,13 +70,3 @@ export const blogPostTags = pgTable(
 	},
 	table => [primaryKey({ columns: [table.postId, table.tagId] })]
 )
-
-// Type exports
-export type DbBlogAuthor = typeof blogAuthors.$inferSelect
-export type NewBlogAuthor = typeof blogAuthors.$inferInsert
-export type DbBlogTag = typeof blogTags.$inferSelect
-export type NewBlogTag = typeof blogTags.$inferInsert
-export type DbBlogPost = typeof blogPosts.$inferSelect
-export type NewBlogPost = typeof blogPosts.$inferInsert
-export type DbBlogPostTag = typeof blogPostTags.$inferSelect
-export type NewBlogPostTag = typeof blogPostTags.$inferInsert

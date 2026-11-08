@@ -1,13 +1,12 @@
 import { ImageResponse } from 'next/og'
-import { connection } from 'next/server'
 import { getPostBySlug } from '@/lib/blog'
 import { OG_FONTS } from '@/lib/og-fonts'
 import { LOGO_DATA_URL } from '@/lib/og-logo'
 
-// Rendered at request time (via `connection()` below) so the Facebook/social
-// scrape always gets the real post title (the build runs without POSTGRES_URL,
-// so a prerender would bake a generic title). OG images are scraped rarely and
-// cached by the platform, so per-request generation is cheap in practice.
+// Rendered on request (metadata image routes under [slug] are not
+// prerendered). The post lookup is an in-memory read of the compiled
+// content/blog module, so a social scrape never touches the database; an
+// unknown slug gets the generic fallback title.
 // No `runtime` export: Cache Components rejects it and the readFileSync-based
 // logo/font loads rely on the default Node.js runtime.
 export const alt = 'Hudson Digital Solutions'
@@ -35,7 +34,6 @@ export default async function Image({
 }: {
 	params: Promise<{ slug: string }>
 }) {
-	await connection()
 	const { slug } = await params
 	const post = await getPostBySlug(slug)
 	const title = (post?.title ?? 'Hudson Digital Solutions').slice(0, 110)

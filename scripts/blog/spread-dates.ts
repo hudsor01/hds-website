@@ -5,7 +5,7 @@
  * their real historical dates). Deterministic: even spread + small jitter.
  *   bun run scripts/blog/spread-dates.ts            # write new dates
  *   bun run scripts/blog/spread-dates.ts --dry-run  # preview only
- * After running, commit the files and run blog:publish to sync Neon.
+ * After running, commit the files; the next deploy rebuilds the blog from them.
  */
 import { writeFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -26,7 +26,7 @@ function fmt(ms: number): string {
 
 function main(): void {
 	const targets = listPostFiles()
-		.map(parsePost)
+		.map(file => parsePost(file))
 		.filter(p => p.data.legacy !== true)
 		.sort((a, b) => a.slug.localeCompare(b.slug))
 

@@ -16,8 +16,8 @@
 #
 # Denylist scope (see .planning/phases/17-test-suite-isolation/17-01-PLAN.md
 # guard_scope_note): @/lib/utils and @/lib/constants/* only. @/lib/schemas/* is
-# intentionally NOT banned -- blog.test.ts and newsletter-unsubscribe-route.test.ts
-# legitimately stub Drizzle table barrels as complete column-key objects.
+# intentionally NOT banned -- newsletter-unsubscribe-route.test.ts
+# legitimately stubs Drizzle table barrels as complete column-key objects.
 #
 # Usage: bash scripts/check-test-mock-leaks.sh   (run from project root)
 

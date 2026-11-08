@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { TOOLS } from '@/app/(public)/tools/tools-data'
-import { type BlogPost, getAuthors, getPosts, getTags } from '@/lib/blog'
+import { getAllPosts, getAuthors, getTags } from '@/lib/blog'
 import {
 	getAllCategorySlugs,
 	getAllPublishedArticles
@@ -159,46 +159,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		// DB unavailable at build time — showcase pages omitted from sitemap
 	}
 
-	let blogPages: MetadataRoute.Sitemap = []
-	try {
-		const { posts } = await getPosts({ limit: 1000 })
-		blogPages = posts.map((post: BlogPost) => ({
-			url: `${SITE_URL}/blog/${post.slug}`,
-			lastModified: post.published_at
-				? new Date(post.published_at)
-				: BUILD_TIME,
-			changeFrequency: 'monthly' as const,
-			priority: 0.7
-		}))
-	} catch {
-		// DB unavailable at build time — blog pages omitted from sitemap
-	}
+	// Blog data is compiled from content/blog at build time, so these lists
+	// cannot fail at runtime and need no fallback.
+	const blogPages: MetadataRoute.Sitemap = (await getAllPosts()).map(post => ({
+		url: `${SITE_URL}/blog/${post.slug}`,
+		lastModified: new Date(post.published_at),
+		changeFrequency: 'monthly' as const,
+		priority: 0.7
+	}))
 
-	let tagPages: MetadataRoute.Sitemap = []
-	try {
-		const tags = await getTags()
-		tagPages = tags.map(tag => ({
-			url: `${SITE_URL}/blog/tag/${tag.slug}`,
-			lastModified: BUILD_TIME,
-			changeFrequency: 'weekly' as const,
-			priority: 0.5
-		}))
-	} catch {
-		// DB unavailable at build time — blog tag pages omitted from sitemap
-	}
+	const tagPages: MetadataRoute.Sitemap = (await getTags()).map(tag => ({
+		url: `${SITE_URL}/blog/tag/${tag.slug}`,
+		lastModified: BUILD_TIME,
+		changeFrequency: 'weekly' as const,
+		priority: 0.5
+	}))
 
-	let authorPages: MetadataRoute.Sitemap = []
-	try {
-		const authors = await getAuthors()
-		authorPages = authors.map(author => ({
+	const authorPages: MetadataRoute.Sitemap = (await getAuthors()).map(
+		author => ({
 			url: `${SITE_URL}/blog/author/${author.slug}`,
 			lastModified: BUILD_TIME,
 			changeFrequency: 'weekly' as const,
 			priority: 0.5
-		}))
-	} catch {
-		// DB unavailable at build time — blog author pages omitted from sitemap
-	}
+		})
+	)
 
 	return [
 		...staticPages,

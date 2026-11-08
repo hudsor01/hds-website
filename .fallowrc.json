@@ -32,7 +32,14 @@
 			"file": "src/lib/schemas/content.ts",
 			"exports": ["Testimonial", "TestimonialRequest"]
 		},
-		{ "file": "src/lib/admin/testimonials-queries.ts", "exports": ["deleteTestimonial"] }
+		{
+			"file": "src/lib/admin/testimonials-queries.ts",
+			"exports": ["deleteTestimonial"]
+		},
+		{
+			"file": "src/app/(public)/blog/**/page.tsx",
+			"exports": ["unstable_paramMatching"]
+		}
 	],
 	"rules": {
 		"unused-files": "error",

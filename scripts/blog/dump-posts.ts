@@ -7,7 +7,7 @@ import { listPostFiles, parsePost } from './lib'
 const SITE = 'https://hudsondigitalsolutions.com'
 
 const posts = listPostFiles()
-	.map(parsePost)
+	.map(file => parsePost(file))
 	.filter(p => p.data.published)
 	.map(p => ({
 		slug: p.slug,

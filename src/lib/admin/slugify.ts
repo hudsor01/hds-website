@@ -2,7 +2,7 @@
  * Pure slug generator for admin create forms.
  *
  * Mirrors the slug regex `^[a-z0-9]+(?:-[a-z0-9]+)*$` enforced by the
- * public schemas (see `src/lib/schemas/blog-api.ts`). Lowercases, strips
+ * public schemas (e.g. `src/lib/schemas/admin-showcase.ts`). Lowercases, strips
  * combining diacritics via NFKD normalization, collapses every run of
  * non-alphanumeric characters into a single hyphen, then trims leading
  * and trailing hyphens. Returns the empty string when the input has no
