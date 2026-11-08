@@ -1,98 +1,19 @@
 /**
- * Blog Data Layer Tests
- * Tests Drizzle ORM query functions and row-to-type mapping
+ * Blog data layer tests (src/lib/blog.ts).
+ *
+ * Runs against the real compiled module (src/lib/_generated/blog-posts.ts,
+ * produced by `bun run blog:build`, which `test:unit` runs first) and checks
+ * it against a fresh compile of content/blog, so the tests track the content
+ * without hard-coding post counts.
  */
-import { describe, expect, mock, test } from 'bun:test'
-
-// ─── Mock Database ──────────────────────────────────────────────────────────
-
-/** Creates a chainable query builder mock that resolves to `result` when awaited */
-function createQueryChain(result: unknown[] = []) {
-	const chain: Record<string, unknown> = {}
-	const methods = [
-		'from',
-		'leftJoin',
-		'innerJoin',
-		'where',
-		'orderBy',
-		'groupBy',
-		'limit',
-		'offset'
-	]
-	for (const method of methods) {
-		chain[method] = mock(() => chain)
-	}
-	// Make chain thenable so `await db.select()...` resolves to result
-	chain.then = (resolve: (v: unknown) => void) => resolve(result)
-	chain.catch = () => chain
-	return chain
-}
-
-let selectCallIndex = 0
-let selectResults: unknown[][] = []
-
-const mockSelect = mock(() => {
-	const result = selectResults[selectCallIndex] ?? []
-	selectCallIndex++
-	return createQueryChain(result)
-})
-
-mock.module('@/lib/db', () => ({
-	db: { select: mockSelect }
-}))
-
-// Mock schema column references (Drizzle uses these for eq/desc/etc.)
-mock.module('@/lib/schemas/schema', () => ({
-	blogPosts: {
-		id: 'id',
-		slug: 'slug',
-		title: 'title',
-		excerpt: 'excerpt',
-		content: 'content',
-		featureImage: 'feature_image',
-		publishedAt: 'published_at',
-		readingTime: 'reading_time',
-		featured: 'featured',
-		published: 'published',
-		authorId: 'author_id',
-		createdAt: 'created_at',
-		updatedAt: 'updated_at'
-	},
-	blogAuthors: {
-		id: 'id',
-		slug: 'slug',
-		name: 'name',
-		bio: 'bio',
-		profileImage: 'profile_image',
-		createdAt: 'created_at'
-	},
-	blogTags: {
-		id: 'id',
-		slug: 'slug',
-		name: 'name',
-		description: 'description'
-	},
-	blogPostTags: {
-		postId: 'post_id',
-		tagId: 'tag_id'
-	}
-}))
-
-// Mock drizzle-orm operators (they're just identity functions for mock purposes)
-mock.module('drizzle-orm', () => ({
-	eq: mock((...args: unknown[]) => args),
-	desc: mock((col: unknown) => col),
-	and: mock((...args: unknown[]) => args),
-	inArray: mock((...args: unknown[]) => args),
-	count: mock((col: unknown) => ({ __agg: 'count', col }))
-}))
-
-// Import after all mocks
+import { describe, expect, test } from 'bun:test'
 import {
+	getAllPosts,
 	getAuthorBySlug,
 	getAuthors,
 	getFeaturedPosts,
 	getPostBySlug,
+	getPostIndex,
 	getPosts,
 	getPostsByAuthor,
 	getPostsByTag,
@@ -100,410 +21,132 @@ import {
 	getTags,
 	getTagsWithCounts
 } from '@/lib/blog'
+import { BLOG_TAGS } from '@/lib/constants/blog'
+import { compilePosts } from '../../scripts/blog/build'
 
-// ─── Test Fixtures ──────────────────────────────────────────────────────────
+const COMPILED = compilePosts()
 
-const MOCK_AUTHOR_ROW = {
-	id: 'author-1',
-	slug: 'richard-hudson',
-	name: 'Richard Hudson',
-	bio: 'Web developer',
-	profileImage: '/images/richard.webp',
-	createdAt: new Date('2024-01-01')
-}
-
-const MOCK_POST_ROW = {
-	id: 'post-1',
-	slug: 'test-post',
-	title: 'Test Post Title',
-	excerpt: 'A test excerpt',
-	content: '<p>Test content</p>',
-	featureImage: '/images/test.webp',
-	publishedAt: new Date('2024-06-15T12:00:00Z'),
-	readingTime: 7,
-	featured: false,
-	published: true,
-	authorId: 'author-1',
-	createdAt: new Date('2024-06-15'),
-	updatedAt: new Date('2024-06-15')
-}
-
-const MOCK_TAG_ROW = {
-	postId: 'post-1',
-	id: 'tag-1',
-	slug: 'web-dev',
-	name: 'Web Development',
-	description: 'Web dev articles'
-}
-
-/** A joined row as returned by db.select().from(blogPosts).leftJoin(blogAuthors, ...) */
-function makeJoinedRow(
-	post = MOCK_POST_ROW,
-	author: typeof MOCK_AUTHOR_ROW | null = MOCK_AUTHOR_ROW
-) {
-	return { blog_posts: post, blog_authors: author }
-}
-
-// ─── Helper ─────────────────────────────────────────────────────────────────
-
-function resetMockDb(...results: unknown[][]) {
-	selectCallIndex = 0
-	selectResults = results
-}
-
-// ─── Tests ──────────────────────────────────────────────────────────────────
-
-describe('Blog Data Layer', () => {
-	describe('getTags', () => {
-		test('returns mapped tags', async () => {
-			const tagRows = [
-				{
-					id: 'tag-1',
-					slug: 'web-dev',
-					name: 'Web Development',
-					description: 'Articles about web dev'
-				},
-				{ id: 'tag-2', slug: 'business', name: 'Business', description: null }
-			]
-			resetMockDb(tagRows)
-
-			const tags = await getTags()
-
-			expect(tags).toHaveLength(2)
-			expect(tags[0]).toEqual({
-				id: 'tag-1',
-				slug: 'web-dev',
-				name: 'Web Development',
-				description: 'Articles about web dev'
-			})
-			// null description maps to undefined
-			expect(tags[1]?.description).toBeUndefined()
-		})
-
-		test('returns empty array when no tags exist', async () => {
-			resetMockDb([])
-			const tags = await getTags()
-			expect(tags).toEqual([])
-		})
+describe('blog data layer', () => {
+	test('serves exactly the published posts in content/blog, newest first', async () => {
+		const posts = await getAllPosts()
+		expect(posts.map(p => p.slug)).toEqual(COMPILED.map(p => p.slug))
+		const times = posts.map(p => Date.parse(p.published_at))
+		expect(times).toEqual([...times].sort((a, b) => b - a))
 	})
 
-	describe('getTagsWithCounts', () => {
-		test('coerces SQL count to a number and preserves description', async () => {
-			// Drizzle returns counts as bigint-like strings in postgres; the
-			// production query path must normalize them so JSX can render
-			// `({count})` without `NaN` or string concatenation surprises.
-			const rows = [
-				{
-					id: 'tag-1',
-					slug: 'web-dev',
-					name: 'Web Development',
-					description: 'Desc',
-					count: '12'
-				},
-				{
-					id: 'tag-2',
-					slug: 'business',
-					name: 'Business',
-					description: null,
-					count: 0
-				}
-			]
-			resetMockDb(rows)
-
-			const tags = await getTagsWithCounts()
-
-			expect(tags).toHaveLength(2)
-			expect(tags[0]).toEqual({
-				id: 'tag-1',
-				slug: 'web-dev',
-				name: 'Web Development',
-				description: 'Desc',
-				count: 12
-			})
-			expect(tags[1]?.description).toBeUndefined()
-			expect(tags[1]?.count).toBe(0)
-		})
-
-		test('returns empty array on DB error', async () => {
-			selectCallIndex = 0
-			selectResults = []
-			mockSelect.mockImplementationOnce(() => {
-				throw new Error('boom')
-			})
-			const tags = await getTagsWithCounts()
-			expect(tags).toEqual([])
-		})
+	test('list functions never carry article content', async () => {
+		const lists = [
+			await getAllPosts(),
+			(await getPosts()).posts,
+			await getFeaturedPosts(),
+			await getPostsByTag('seo'),
+			await getPostsByAuthor('richard-hudson')
+		]
+		for (const list of lists) {
+			expect(list.length).toBeGreaterThan(0)
+			for (const post of list) {
+				expect('content' in post).toBe(false)
+			}
+		}
 	})
 
-	describe('getTagBySlug', () => {
-		test('returns tag when found', async () => {
-			resetMockDb([
-				{
-					id: 'tag-1',
-					slug: 'web-dev',
-					name: 'Web Development',
-					description: 'Desc'
-				}
+	test('getPosts paginates with a default page size of 10', async () => {
+		const all = await getAllPosts()
+		const page1 = (await getPosts()).posts
+		const page2 = (await getPosts({ limit: 10, page: 2 })).posts
+		expect(page1.map(p => p.slug)).toEqual(all.slice(0, 10).map(p => p.slug))
+		expect(page2.map(p => p.slug)).toEqual(all.slice(10, 20).map(p => p.slug))
+	})
+
+	test('getPostBySlug returns the full post, null for unknown slugs', async () => {
+		const first = COMPILED[0]
+		if (!first) {
+			throw new Error('no compiled posts')
+		}
+		const post = await getPostBySlug(first.slug)
+		expect(post?.content).toBe(first.content)
+		expect(post?.title).toBe(first.title)
+		expect(post?.author.slug).toBe(first.authorSlug)
+		expect(post?.tags.map(t => t.slug)).toEqual(first.tagSlugs)
+		expect(await getPostBySlug('wp-login.php')).toBeNull()
+	})
+
+	test('drafts are not served', async () => {
+		expect(
+			await getPostBySlug(
+				'why-your-business-needs-a-custom-crm-integration-to-unlock-true-efficiency'
+			)
+		).toBeNull()
+	})
+
+	test('getFeaturedPosts returns only featured posts, capped by limit', async () => {
+		const featured = await getFeaturedPosts(3)
+		expect(featured.length).toBeGreaterThan(0)
+		expect(featured.length).toBeLessThanOrEqual(3)
+		expect(featured.every(p => p.featured)).toBe(true)
+		expect(await getFeaturedPosts(1)).toHaveLength(1)
+	})
+
+	test('tags resolve to display names and render in name order', async () => {
+		const tags = await getTags()
+		expect(tags.map(t => t.slug)).toEqual(BLOG_TAGS.map(t => t.slug))
+		const names = tags.map(t => t.name)
+		expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)))
+		expect(await getTagBySlug('seo')).toMatchObject({
+			slug: 'seo',
+			name: 'SEO'
+		})
+		expect(await getTagBySlug('nope')).toBeNull()
+	})
+
+	test('tag counts match the posts carrying each tag', async () => {
+		for (const tag of await getTagsWithCounts()) {
+			const expected = COMPILED.filter(p =>
+				p.tagSlugs.includes(tag.slug)
+			).length
+			expect(tag.count).toBe(expected)
+			expect((await getPostsByTag(tag.slug)).length).toBe(expected)
+		}
+	})
+
+	test('getPostsByTag returns only posts with that tag', async () => {
+		const posts = await getPostsByTag('website-migration')
+		expect(posts.length).toBeGreaterThan(0)
+		for (const post of posts) {
+			expect(post.tags.some(t => t.slug === 'website-migration')).toBe(true)
+		}
+		expect(await getPostsByTag('nope')).toEqual([])
+	})
+
+	test('author lookup and author posts', async () => {
+		const author = await getAuthorBySlug('richard-hudson')
+		expect(author).toMatchObject({
+			name: 'Richard Hudson',
+			bio: 'Founder of Hudson Digital Solutions',
+			profile_image: '/images/founder.jpg'
+		})
+		expect(await getAuthors()).toHaveLength(1)
+		expect(await getAuthorBySlug('nope')).toBeNull()
+		expect((await getPostsByAuthor('richard-hudson')).length).toBe(
+			COMPILED.length
+		)
+		expect(await getPostsByAuthor('nope')).toEqual([])
+	})
+
+	test('getPostIndex is the palette projection only', async () => {
+		const index = await getPostIndex(50)
+		expect(index).toHaveLength(Math.min(50, COMPILED.length))
+		for (const entry of index) {
+			expect(Object.keys(entry).sort()).toEqual([
+				'excerpt',
+				'slug',
+				'tagNames',
+				'title'
 			])
-
-			const tag = await getTagBySlug('web-dev')
-
-			expect(tag).toEqual({
-				id: 'tag-1',
-				slug: 'web-dev',
-				name: 'Web Development',
-				description: 'Desc'
-			})
-		})
-
-		test('returns null when not found', async () => {
-			resetMockDb([])
-			const tag = await getTagBySlug('nonexistent')
-			expect(tag).toBeNull()
-		})
-	})
-
-	describe('getAuthors', () => {
-		test('returns mapped authors', async () => {
-			resetMockDb([MOCK_AUTHOR_ROW])
-
-			const authors = await getAuthors()
-
-			expect(authors).toHaveLength(1)
-			expect(authors[0]).toEqual({
-				id: 'author-1',
-				slug: 'richard-hudson',
-				name: 'Richard Hudson',
-				bio: 'Web developer',
-				profile_image: '/images/richard.webp'
-			})
-		})
-
-		test('maps null bio and profileImage to undefined', async () => {
-			resetMockDb([{ ...MOCK_AUTHOR_ROW, bio: null, profileImage: null }])
-
-			const authors = await getAuthors()
-
-			expect(authors[0]?.bio).toBeUndefined()
-			expect(authors[0]?.profile_image).toBeUndefined()
-		})
-	})
-
-	describe('getAuthorBySlug', () => {
-		test('returns author when found', async () => {
-			resetMockDb([MOCK_AUTHOR_ROW])
-
-			const author = await getAuthorBySlug('richard-hudson')
-
-			expect(author).not.toBeNull()
-			expect(author?.name).toBe('Richard Hudson')
-		})
-
-		test('returns null when not found', async () => {
-			resetMockDb([])
-			const author = await getAuthorBySlug('nonexistent')
-			expect(author).toBeNull()
-		})
-	})
-
-	describe('getPostBySlug', () => {
-		test('returns mapped post with author and tags', async () => {
-			resetMockDb(
-				[makeJoinedRow()], // main query
-				[MOCK_TAG_ROW] // loadTagsForPosts
-			)
-
-			const post = await getPostBySlug('test-post')
-
-			expect(post).not.toBeNull()
-			expect(post?.id).toBe('post-1')
-			expect(post?.slug).toBe('test-post')
-			expect(post?.title).toBe('Test Post Title')
-			expect(post?.excerpt).toBe('A test excerpt')
-			expect(post?.content).toBe('<p>Test content</p>')
-			expect(post?.feature_image).toBe('/images/test.webp')
-			expect(post?.published_at).toBe('2024-06-15T12:00:00.000Z')
-			expect(post?.reading_time).toBe(7)
-			expect(post?.featured).toBe(false)
-		})
-
-		test('maps author correctly', async () => {
-			resetMockDb([makeJoinedRow()], [])
-
-			const post = await getPostBySlug('test-post')
-
-			expect(post?.author.name).toBe('Richard Hudson')
-			expect(post?.author.slug).toBe('richard-hudson')
-			expect(post?.author.bio).toBe('Web developer')
-			expect(post?.author.profile_image).toBe('/images/richard.webp')
-		})
-
-		test('handles null author with fallback', async () => {
-			resetMockDb([makeJoinedRow(MOCK_POST_ROW, null)], [])
-
-			const post = await getPostBySlug('test-post')
-
-			expect(post?.author.name).toBe('Unknown')
-			expect(post?.author.id).toBe('')
-			expect(post?.author.slug).toBe('')
-		})
-
-		test('attaches tags to post', async () => {
-			resetMockDb([makeJoinedRow()], [MOCK_TAG_ROW])
-
-			const post = await getPostBySlug('test-post')
-
-			expect(post?.tags).toHaveLength(1)
-			expect(post?.tags[0]).toEqual({
-				id: 'tag-1',
-				slug: 'web-dev',
-				name: 'Web Development',
-				description: 'Web dev articles'
-			})
-		})
-
-		test('returns null when post not found', async () => {
-			resetMockDb([])
-
-			const post = await getPostBySlug('nonexistent')
-			expect(post).toBeNull()
-		})
-
-		test('strips markdown from title', async () => {
-			const postWithMarkdownTitle = {
-				...MOCK_POST_ROW,
-				title: 'Why **Custom CRM** Beats Off-the-Shelf'
-			}
-			resetMockDb([makeJoinedRow(postWithMarkdownTitle)], [])
-
-			const post = await getPostBySlug('test-post')
-
-			expect(post?.title).toBe('Why Custom CRM Beats Off-the-Shelf')
-		})
-
-		test('strips markdown from excerpt (n8n inline-bullet pattern)', async () => {
-			const postWithMarkdownExcerpt = {
-				...MOCK_POST_ROW,
-				excerpt:
-					'Crashes:  *   **Broken Journeys:** lost users *   **Slow Performance:** abandoned carts'
-			}
-			resetMockDb([makeJoinedRow(postWithMarkdownExcerpt)], [])
-
-			const post = await getPostBySlug('test-post')
-
-			expect(post?.excerpt).toBe(
-				'Crashes: Broken Journeys: lost users Slow Performance: abandoned carts'
-			)
-		})
-
-		test('falls back to humanized slug when title strips to empty', async () => {
-			// Defense-in-depth: matches the runtime guard in mapPost. The DB
-			// CHECK constraint blocks empty titles at write time, but a
-			// legacy/pre-constraint row or a `***`-style title would otherwise
-			// render an empty <h1>. The fallback prevents that.
-			const postWithEmptyableTitle = {
-				...MOCK_POST_ROW,
-				slug: 'how-to-build-a-website',
-				title: '***'
-			}
-			resetMockDb([makeJoinedRow(postWithEmptyableTitle)], [])
-
-			const post = await getPostBySlug('how-to-build-a-website')
-
-			expect(post?.title).toBe('How To Build A Website')
-		})
-
-		test('humanized-slug fallback handles dash-only and empty slug edges', async () => {
-			// Both `''` and `'-'` would otherwise produce empty humanized
-			// strings; the inner OR fallback in humanizeSlug returns the
-			// "Untitled Post" sentinel so the UI never renders an empty <h1>.
-			// Slug nonempty is also enforced at DB level via
-			// blog_posts_slug_nonempty, so this branch is two-layer defense.
-			const dashSlug = { ...MOCK_POST_ROW, slug: '-', title: '   ' }
-			resetMockDb([makeJoinedRow(dashSlug)], [])
-
-			const post = await getPostBySlug('-')
-
-			expect(post?.title).toBe('Untitled Post')
-		})
-	})
-
-	describe('getPosts', () => {
-		test('returns posts', async () => {
-			resetMockDb(
-				[makeJoinedRow()], // main query
-				[] // loadTagsForPosts (no tags)
-			)
-
-			const result = await getPosts({ limit: 10, page: 1 })
-
-			expect(result.posts).toHaveLength(1)
-			expect(result.posts[0]?.slug).toBe('test-post')
-		})
-
-		test('returns empty when no published posts', async () => {
-			resetMockDb([], [])
-
-			const result = await getPosts()
-
-			expect(result.posts).toEqual([])
-		})
-	})
-
-	describe('getFeaturedPosts', () => {
-		test('returns featured posts', async () => {
-			const featuredRow = makeJoinedRow({ ...MOCK_POST_ROW, featured: true })
-			resetMockDb(
-				[featuredRow], // main query
-				[] // loadTagsForPosts
-			)
-
-			const posts = await getFeaturedPosts(3)
-
-			expect(posts).toHaveLength(1)
-			expect(posts[0]?.featured).toBe(true)
-		})
-
-		test('returns empty array when no featured posts', async () => {
-			resetMockDb([])
-
-			const posts = await getFeaturedPosts()
-			expect(posts).toEqual([])
-		})
-	})
-
-	describe('getPostsByTag', () => {
-		test('returns empty when tag not found', async () => {
-			resetMockDb([]) // getTagBySlug returns empty
-
-			const posts = await getPostsByTag('nonexistent')
-			expect(posts).toEqual([])
-		})
-
-		test('returns empty when tag has no posts', async () => {
-			resetMockDb(
-				[
-					{
-						id: 'tag-1',
-						slug: 'web-dev',
-						name: 'Web Development',
-						description: null
-					}
-				], // getTagBySlug
-				[] // postTagRows (no posts for this tag)
-			)
-
-			const posts = await getPostsByTag('web-dev')
-			expect(posts).toEqual([])
-		})
-	})
-
-	describe('getPostsByAuthor', () => {
-		test('returns empty when author not found', async () => {
-			resetMockDb([])
-
-			const posts = await getPostsByAuthor('nonexistent')
-			expect(posts).toEqual([])
-		})
+		}
+		const first = index[0]
+		const firstPost = (await getAllPosts())[0]
+		expect(first?.slug).toBe(firstPost?.slug)
+		expect(first?.tagNames).toEqual(firstPost?.tags.map(t => t.name))
 	})
 })

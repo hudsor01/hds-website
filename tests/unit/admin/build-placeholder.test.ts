@@ -25,7 +25,6 @@ const ADMIN_ROOT = join(process.cwd(), 'src/app/(admin)/admin')
 //   2. Reference it from generateStaticParams() (not a hard-coded string)
 //   3. Reference it from the loader's short-circuit check
 const ADMIN_DYNAMIC_PAGES: string[] = [
-	'blog/[id]/edit/page.tsx',
 	'showcase/[id]/edit/page.tsx',
 	'testimonials/[id]/edit/page.tsx',
 	'leads/[id]/page.tsx',
@@ -39,42 +38,45 @@ describe('BUILD_PLACEHOLDER_ID', () => {
 		expect(BUILD_PLACEHOLDER_ID).toBe('__build_placeholder__')
 	})
 
-	it.each(
-		ADMIN_DYNAMIC_PAGES
-	)('%s imports BUILD_PLACEHOLDER_ID from the shared module', relPath => {
-		const source = readFileSync(join(ADMIN_ROOT, relPath), 'utf8')
-		expect(source).toContain(
-			"import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'"
-		)
-	})
+	it.each(ADMIN_DYNAMIC_PAGES)(
+		'%s imports BUILD_PLACEHOLDER_ID from the shared module',
+		relPath => {
+			const source = readFileSync(join(ADMIN_ROOT, relPath), 'utf8')
+			expect(source).toContain(
+				"import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'"
+			)
+		}
+	)
 
-	it.each(
-		ADMIN_DYNAMIC_PAGES
-	)('%s does not hard-code the placeholder string literal', relPath => {
-		const source = readFileSync(join(ADMIN_ROOT, relPath), 'utf8')
-		// The literal MUST only appear in the shared constant module.
-		// Any direct occurrence in a page file means the import was
-		// bypassed and the short-circuit could drift silently.
-		expect(source).not.toContain("'__build_placeholder__'")
-		expect(source).not.toContain('"__build_placeholder__"')
-	})
+	it.each(ADMIN_DYNAMIC_PAGES)(
+		'%s does not hard-code the placeholder string literal',
+		relPath => {
+			const source = readFileSync(join(ADMIN_ROOT, relPath), 'utf8')
+			// The literal MUST only appear in the shared constant module.
+			// Any direct occurrence in a page file means the import was
+			// bypassed and the short-circuit could drift silently.
+			expect(source).not.toContain("'__build_placeholder__'")
+			expect(source).not.toContain('"__build_placeholder__"')
+		}
+	)
 
-	it.each(
-		ADMIN_DYNAMIC_PAGES
-	)('%s short-circuits to notFound() before connection() in its loader', relPath => {
-		// Strip JSDoc + line comments so we only check actual code.
-		// Without this, an `await connection()` mention in the file
-		// header docstring would match first and the test would
-		// spuriously fail.
-		const source = readFileSync(join(ADMIN_ROOT, relPath), 'utf8')
-			.replace(/\/\*[\s\S]*?\*\//g, '')
-			.replace(/^\s*\/\/.*$/gm, '')
-		const notFoundIdx = source.indexOf('if (id === BUILD_PLACEHOLDER_ID) {')
-		const connectionIdx = source.indexOf('await connection()')
-		expect(notFoundIdx).toBeGreaterThan(-1)
-		expect(connectionIdx).toBeGreaterThan(-1)
-		expect(notFoundIdx).toBeLessThan(connectionIdx)
-	})
+	it.each(ADMIN_DYNAMIC_PAGES)(
+		'%s short-circuits to notFound() before connection() in its loader',
+		relPath => {
+			// Strip JSDoc + line comments so we only check actual code.
+			// Without this, an `await connection()` mention in the file
+			// header docstring would match first and the test would
+			// spuriously fail.
+			const source = readFileSync(join(ADMIN_ROOT, relPath), 'utf8')
+				.replace(/\/\*[\s\S]*?\*\//g, '')
+				.replace(/^\s*\/\/.*$/gm, '')
+			const notFoundIdx = source.indexOf('if (id === BUILD_PLACEHOLDER_ID) {')
+			const connectionIdx = source.indexOf('await connection()')
+			expect(notFoundIdx).toBeGreaterThan(-1)
+			expect(connectionIdx).toBeGreaterThan(-1)
+			expect(notFoundIdx).toBeLessThan(connectionIdx)
+		}
+	)
 
 	it('covers every admin [id] page (no new dynamic route slipped through)', () => {
 		// Walk the admin tree; collect every leaf `page.tsx` that lives

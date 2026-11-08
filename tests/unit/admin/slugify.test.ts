@@ -3,7 +3,7 @@
  *
  * Goal: turn arbitrary title input into a URL-safe slug that matches the
  * existing public slug regex `^[a-z0-9]+(?:-[a-z0-9]+)*$` (see
- * `src/lib/schemas/blog-api.ts`). All input characters outside [a-z0-9]
+ * `src/lib/schemas/admin-showcase.ts`). All input characters outside [a-z0-9]
  * collapse into a single dash; leading and trailing dashes are stripped.
  * Pure function, no DB call, no async.
  */

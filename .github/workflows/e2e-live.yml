@@ -2,8 +2,8 @@ name: E2E (live backend)
 
 # Nightly live-backend e2e. Provisions an ephemeral Neon branch (a
 # copy-on-write fork of the project's default branch where prod data lives),
-# seeds deterministic fixtures, runs the data-dependent specs (blog,
-# testimonials, contact, newsletter) against it, then deletes the branch.
+# seeds deterministic fixtures, runs the data-dependent specs
+# (testimonials, contact, newsletter) against it, then deletes the branch.
 #
 # Decoupled from the per-push/PR CI lane on purpose: the normal `E2E` job in
 # ci.yml is functional-only and never spends a Neon branch, so regular

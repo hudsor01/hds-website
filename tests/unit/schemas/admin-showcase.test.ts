@@ -4,8 +4,8 @@
  * Verifies the create / update contract that backs both the Server Action
  * safeParse and the TanStack Form bindings:
  *  - Required fields (slug, title, description, showcaseType) reject when missing.
- *  - The shared slug regex matches the existing public schema in
- *    `src/lib/schemas/blog-api.ts`.
+ *  - The shared kebab-case slug regex matches the rule in
+ *    `scripts/blog/lib.ts`.
  *  - Optional text columns accept empty strings and coerce them to null so
  *    the DB sees a real NULL rather than the literal empty string.
  *  - URL-typed columns either look like an http(s) URL or come through as null.

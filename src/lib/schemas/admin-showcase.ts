@@ -12,8 +12,9 @@
  * empty string from an unfilled form field coerces to `null` so the DB
  * sees a real NULL rather than the literal "".
  *
- * Slug regex matches the existing public schema in `src/lib/schemas/blog-api.ts`
- * so admin-created rows are always reachable from the public read helpers.
+ * Slug regex matches the kebab-case slug rule used across the site (and by
+ * scripts/blog/lib.ts) so admin-created rows are reachable by the public
+ * read helpers.
  */
 import { z } from 'zod'
 import { formBoolean } from '@/lib/admin/form-boolean'

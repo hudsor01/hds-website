@@ -35,7 +35,7 @@
 - `proxy.ts` (project root) - Edge proxy (Next.js 16 rename of middleware.ts). Owns security headers, HTTPS redirect, UA blocklist, cache-control, CORS. NOT CSRF or rate-limit — those moved to `src/lib/api/guards.ts::withMutationGuards` for per-route control. Don't recreate `middleware.ts`.
 - `src/app/` - App Router pages, layouts, API route handlers
 - `src/app/actions/` - Server Actions (currently: `ttl-calculator.tsx`)
-- `src/app/api/` - API routes (blog, calculators, contact, csp-reports, health, newsletter, pagespeed, process-emails, rss, testimonials, web-vitals)
+- `src/app/api/` - API routes (calculators, contact, csp-reports, health, newsletter, pagespeed, process-emails, rss, testimonials, web-vitals)
 - `src/components/layout/` - `Navbar.tsx` (exported as `NavbarLight`), `Footer.tsx`
 - `src/components/forms/` - `ContactForm`, `NewsletterSignup`, `FormField`, `FormSuccessMessage`
 - `src/components/ui/` - Base primitives (button, card, input, label)
@@ -44,6 +44,7 @@
 - Server-only modules (`db`, `resend-client`, `contact-service`, `scheduled-emails`, `testimonials`) import `'server-only'` to fail-fast on accidental client imports
 - `src/lib/auth/admin.ts` - Bearer-token guard for admin/cron endpoints (no user auth in this app)
 - `src/lib/schemas/` - Drizzle table schemas + Zod schemas; barrel at `schema.ts`
+- `content/blog/` - Blog posts (one Markdown file per post). The ONLY source of truth for the blog; see Blog under INTEGRATIONS
 - `src/lib/constants/` - Domain constants (`business.ts` etc.)
 - `src/types/` - Shared TypeScript types
 - `src/hooks/` - Custom React hooks
@@ -166,6 +167,14 @@
 - Drizzle config `drizzle.config.ts` (dialect `postgresql`, `schemaFilter: ['public']`)
 - `DATABASE_URL_UNPOOLED` is used by drizzle-kit for migrations
 - pg_cron runs weekly VACUUM ANALYZE; see `.planning/` for details
+
+**Blog (files, not the database):**
+- Posts live in `content/blog/*.md`; authors and the tag taxonomy live in `src/lib/constants/blog.ts`
+- `scripts/blog/build.ts` (`bun run blog:build`) validates every file and compiles published posts into `src/lib/_generated/blog-posts.ts` (gitignored). `dev`, `build`, `typecheck` and `test:unit` run it first. Any parse or validation error fails the build
+- `src/lib/blog.ts` reads only that module: no DB, no runtime filesystem. Every post, tag and author page is prerendered at build
+- Unknown post/tag/author slugs are a real HTTP 404 via `export const unstable_paramMatching = { slug: 'not-found' }` (Cache Components rejects `dynamicParams = false`; without it the `loading.tsx` shell streams a 200 soft 404)
+- Publishing = merge the `.md` file; the deploy rebuilds the blog. There is no admin blog UI and no blog write API
+- The Neon `blog_*` tables are legacy (definitions kept in `src/lib/schemas/blog.ts` only so `drizzle-kit push` does not propose DROP TABLE)
 
 **Auth:**
 - User auth: Better Auth, session cookies, see src/lib/auth/. Admin promotion is currently SQL-only - first signup gets it; later admins via UPDATE users SET role='admin' WHERE email='...'.

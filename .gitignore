@@ -21,6 +21,9 @@
 # production
 /build
 
+# generated blog module (scripts/blog/build.ts; content/blog is the source)
+/src/lib/_generated/blog-posts.ts
+
 # misc
 .DS_Store
 *.pem
