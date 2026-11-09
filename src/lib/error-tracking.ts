@@ -9,7 +9,7 @@ import { env } from '@/env'
  * Next.js 16 Cache Components forbids inside cached server functions
  * during prerender. When SENTRY_DSN is unset (CI builds, dev) we skip
  * the call entirely so prerender stays clean; in production the SDK
- * is initialised in instrumentation.ts and reports normally.
+ * is initialised in src/instrumentation.ts and reports normally.
  */
 export function reportError(
 	error: unknown,

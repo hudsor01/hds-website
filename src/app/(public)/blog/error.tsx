@@ -12,6 +12,7 @@
  * fetches without a full reload.
  */
 
+import * as Sentry from '@sentry/nextjs'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 
@@ -22,14 +23,8 @@ interface BlogErrorProps {
 
 export default function BlogError({ error, reset }: BlogErrorProps) {
 	useEffect(() => {
-		// Same constraint as src/app/error.tsx: this is a client error
-		// boundary, importing the server-side logger would pull db.ts
-		// into the client bundle.
-		console.error('[BlogError]', {
-			name: error.name,
-			message: error.message,
-			digest: error.digest
-		})
+		// No-op until the client SDK is initialised (NEXT_PUBLIC_SENTRY_DSN).
+		Sentry.captureException(error)
 	}, [error])
 
 	return (

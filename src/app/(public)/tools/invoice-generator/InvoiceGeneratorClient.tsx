@@ -6,7 +6,6 @@
 'use client'
 
 import { Plus, RotateCcw, Save, Trash2 } from 'lucide-react'
-import dynamic from 'next/dynamic'
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
@@ -22,11 +21,6 @@ import { BUSINESS_INFO } from '@/lib/constants/business'
 import { logger } from '@/lib/logger'
 import type { InvoiceData, InvoiceLineItem } from '@/lib/pdf/invoice-template'
 import { formatCurrency } from '@/lib/utils'
-
-const InvoiceDocument = dynamic(
-	() => import('@/lib/pdf/invoice-template').then(mod => mod.InvoiceDocument),
-	{ ssr: false }
-)
 
 const STORAGE_KEY = 'hds-invoice-draft'
 
@@ -278,7 +272,12 @@ export default function InvoiceGeneratorClient() {
 			return
 		}
 		try {
-			const { pdf } = await import('@react-pdf/renderer')
+			// Import the template module directly: a next/dynamic wrapper
+			// suspends via use(), which react-pdf's reconciler rejects (#438).
+			const [{ pdf }, { InvoiceDocument }] = await Promise.all([
+				import('@react-pdf/renderer'),
+				import('@/lib/pdf/invoice-template')
+			])
 			const blob = await pdf(
 				<InvoiceDocument data={{ ...invoiceData, ...computedTotals }} />
 			).toBlob()

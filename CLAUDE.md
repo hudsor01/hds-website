@@ -32,7 +32,8 @@
 
 ## FILE ORGANIZATION
 
-- `proxy.ts` (project root) - Edge proxy (Next.js 16 rename of middleware.ts). Owns security headers, HTTPS redirect, UA blocklist, cache-control, CORS. NOT CSRF or rate-limit — those moved to `src/lib/api/guards.ts::withMutationGuards` for per-route control. Don't recreate `middleware.ts`.
+- `src/proxy.ts` - Proxy (Next.js 16 rename of middleware.ts; Node.js runtime). Must live in `src/`, not the project root: Next only loads `proxy.ts` and `instrumentation*.ts` from the directory that holds `app/`, and the app is in `src/app`. Owns security headers (CSP built in `src/lib/security-headers.ts`), UA blocklist, CORS, and the `/admin` session-cookie gate. Does NOT set Cache-Control (cacheComponents and route handlers own caching) or redirect to HTTPS (Vercel does that at its edge). NOT CSRF or rate-limit — those moved to `src/lib/api/guards.ts::withMutationGuards` for per-route control. Its matcher skips static assets, metadata routes, prefetches and the Sentry tunnel (`/monitoring`) to limit Vercel function invocations. Don't recreate `middleware.ts`.
+- `src/instrumentation.ts` / `src/instrumentation-client.ts` - Sentry server and browser init (same `src/` rule as the proxy). Both no-op without a DSN. Set `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN` together: `next.config.ts` adds the `/monitoring` tunnel when either is present at build, and the CSP does not allow direct Sentry ingest.
 - `src/app/` - App Router pages, layouts, API route handlers
 - `src/app/actions/` - Server Actions (currently: `ttl-calculator.tsx`)
 - `src/app/api/` - API routes (calculators, contact, csp-reports, health, newsletter, pagespeed, process-emails, rss, testimonials, web-vitals)

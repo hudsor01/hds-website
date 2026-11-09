@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { withMutationGuards } from '@/lib/api/guards'
-import { reportError } from '@/lib/error-tracking'
 import { logger } from '@/lib/logger'
 import { errorReportSchema } from '@/lib/schemas/error-report'
 
@@ -15,8 +14,11 @@ async function handleErrorReport(request: NextRequest) {
 
 		// Always-on capture (console in dev, error_logs in prod, server-side).
 		// The logger sink runs redactSensitive on this metadata before it is
-		// persisted, so URLs / user-agents carrying tokens are masked.
+		// persisted, so URLs / user-agents carrying tokens are masked. No
+		// Sentry forward here: the ErrorBoundary already captured the error
+		// client-side with its source-mapped stack.
 		logger.error('[ErrorReport] client error boundary report', {
+			message: r.message,
 			url: r.url,
 			userAgent: r.userAgent,
 			platform: r.platform,
@@ -24,13 +26,6 @@ async function handleErrorReport(request: NextRequest) {
 			timestamp: r.timestamp,
 			stack: r.stack
 		})
-
-		// Env-gated Sentry forward (no-op when SENTRY_DSN unset).
-		const errorObj = new Error(r.message)
-		if (r.stack) {
-			errorObj.stack = r.stack
-		}
-		reportError(errorObj, { source: 'error-boundary', url: r.url })
 
 		return new NextResponse(null, { status: 204 })
 	} catch (error) {

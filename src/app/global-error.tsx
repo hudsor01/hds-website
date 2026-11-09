@@ -1,5 +1,6 @@
 'use client'
 
+import * as Sentry from '@sentry/nextjs'
 import { useEffect } from 'react'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import './globals.css'
@@ -12,14 +13,8 @@ export default function GlobalError({
 	reset: () => void
 }) {
 	useEffect(() => {
-		// Use console.error — cannot import server-side logger here as
-		// global-error.tsx is a 'use client' component and importing logger.ts
-		// pulls in db.ts which accesses DATABASE_URL, crashing client hydration.
-		console.error('[GlobalError] CRITICAL: Global Application Error', {
-			name: error.name,
-			message: error.message,
-			digest: error.digest
-		})
+		// No-op until the client SDK is initialised (NEXT_PUBLIC_SENTRY_DSN).
+		Sentry.captureException(error)
 	}, [error])
 
 	return (

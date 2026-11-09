@@ -322,7 +322,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 														'embed/'
 													)}
 													title={`Video testimonial from ${item.testimonialAuthor}`}
-													allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+													allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
 													allowFullScreen
 													className="w-full h-full"
 												/>

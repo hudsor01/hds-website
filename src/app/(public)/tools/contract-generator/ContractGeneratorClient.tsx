@@ -5,7 +5,6 @@
 
 'use client'
 
-import dynamic from 'next/dynamic'
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
@@ -24,11 +23,6 @@ import type {
 	ContractData,
 	ContractTemplate
 } from '@/lib/pdf/contract-template'
-
-const ContractDocument = dynamic(
-	() => import('@/lib/pdf/contract-template').then(mod => mod.ContractDocument),
-	{ ssr: false }
-)
 
 const STORAGE_KEY = 'hds-contract-draft'
 
@@ -222,7 +216,12 @@ export default function ContractGeneratorClient() {
 			return
 		}
 		try {
-			const { pdf } = await import('@react-pdf/renderer')
+			// Import the template module directly: a next/dynamic wrapper
+			// suspends via use(), which react-pdf's reconciler rejects (#438).
+			const [{ pdf }, { ContractDocument }] = await Promise.all([
+				import('@react-pdf/renderer'),
+				import('@/lib/pdf/contract-template')
+			])
 			const blob = await pdf(<ContractDocument data={contractData} />).toBlob()
 			const url = URL.createObjectURL(blob)
 			const a = document.createElement('a')

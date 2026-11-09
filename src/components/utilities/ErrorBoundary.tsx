@@ -1,5 +1,6 @@
 'use client'
 
+import * as Sentry from '@sentry/nextjs'
 import { AlertTriangle, Check, Clipboard, RotateCw } from 'lucide-react'
 import {
 	type ComponentType,
@@ -211,6 +212,11 @@ export function ErrorBoundary({
 			name: errorObj.name,
 			message: errorObj.message,
 			componentStack: errorInfo.componentStack
+		})
+
+		// No-op until the client SDK is initialised (NEXT_PUBLIC_SENTRY_DSN).
+		Sentry.captureException(error, {
+			contexts: { react: { componentStack: errorInfo.componentStack } }
 		})
 	}
 

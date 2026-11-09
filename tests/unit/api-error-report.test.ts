@@ -2,8 +2,9 @@
  * /api/error-report smoke tests.
  *
  * Confirms the route accepts a well-formed error-boundary report (204),
- * captures it via logger.error, forwards it to Sentry via reportError, and
- * rejects malformed bodies (400). The route is unauthenticated public
+ * captures it via logger.error without a second Sentry forward (the
+ * ErrorBoundary already captured it client-side), and rejects malformed
+ * bodies (400). The route is unauthenticated public
  * telemetry — anyone can POST a report — so the only protection is Zod
  * shape validation + mutation-guards (origin + rate-limit), which we mock
  * through.
@@ -53,7 +54,7 @@ describe('POST /api/error-report', () => {
 		)
 		expect(res.status).toBe(204)
 		expect(mocks.mockLogger.error).toHaveBeenCalled()
-		expect(reportErrorSpy).toHaveBeenCalledTimes(1)
+		expect(reportErrorSpy).not.toHaveBeenCalled()
 	})
 
 	it('returns 400 when the body is missing message', async () => {

@@ -6,7 +6,8 @@
  * Verifies routes resolve, pages render, and core UI elements are present.
  *
  * Strategy: smoke-test level — confirm page loads and key elements visible.
- * Full interaction tests (form submission, PDF generation) are out of scope.
+ * The invoice generator also runs one real PDF download end to end; other
+ * full interaction tests (form submission) are out of scope.
  */
 
 import { expect, test } from '@playwright/test'
@@ -133,6 +134,24 @@ test.describe('Invoice Generator', () => {
 			'input, textarea, button[type="button"], button[type="submit"]'
 		)
 		expect(await interactive.count()).toBeGreaterThan(0)
+	})
+
+	test('downloads the invoice as a PDF', async ({ page }) => {
+		// react-pdf lays out pages with yoga-layout (WebAssembly), so this
+		// also guards the production CSP's 'wasm-unsafe-eval' when run
+		// against `next start`.
+		await page.getByLabel('Client Name').fill('Acme Co')
+		await page
+			.getByPlaceholder('Service or product description')
+			.first()
+			.fill('Website build')
+		await page.getByPlaceholder('0.00').first().fill('1500')
+
+		const downloadPromise = page.waitForEvent('download')
+		await page.getByRole('button', { name: 'Download PDF' }).click()
+		const download = await downloadPromise
+
+		expect(download.suggestedFilename()).toMatch(/\.pdf$/)
 	})
 })
 
