@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, type Locator, type Page, test } from '@playwright/test'
 import { createTestLogger } from './test-logger'
 
 /**
@@ -24,14 +24,35 @@ import { createTestLogger } from './test-logger'
  * changes via the "Update Visual Baselines" workflow.
  */
 
-const PAGES_TO_TEST = [
+interface PageDef {
+	path: string
+	name: string
+	/** Lists posts, so its length and text change with every publish. */
+	contentDriven?: boolean
+}
+
+const PAGES_TO_TEST: readonly PageDef[] = [
 	{ path: '/', name: 'home' },
 	{ path: '/services', name: 'services' },
 	{ path: '/showcase', name: 'portfolio' },
 	{ path: '/contact', name: 'contact' },
 	{ path: '/about', name: 'about' },
-	{ path: '/blog', name: 'blog' }
-] as const
+	{ path: '/blog', name: 'blog', contentDriven: true }
+]
+
+// Scheduled posts go live without a commit (scripts/blog/build.ts), so a
+// full-page /blog baseline would break the day after every publish date.
+// For content-driven pages, compare the first viewport with post cards
+// masked: the layout is still guarded, the content is not.
+function contentOptions(
+	page: Page,
+	pageDef: PageDef
+): { fullPage: boolean; mask?: Locator[] } {
+	if (!pageDef.contentDriven) {
+		return { fullPage: true }
+	}
+	return { fullPage: false, mask: [page.locator('article')] }
+}
 
 const VIEWPORTS = {
 	mobile: { width: 375, height: 667 },
@@ -63,7 +84,7 @@ test.describe('Visual Regression - Light Mode', { tag: '@visual' }, () => {
 
 			// Take screenshot and compare
 			await expect(page).toHaveScreenshot(`${pageDef.name}-light-desktop.png`, {
-				fullPage: true,
+				...contentOptions(page, pageDef),
 				animations: 'disabled',
 				// Allow small pixel differences for anti-aliasing
 				maxDiffPixelRatio: 0.01
@@ -89,7 +110,7 @@ test.describe('Visual Regression - Light Mode', { tag: '@visual' }, () => {
 			logger.step('Taking screenshot')
 
 			await expect(page).toHaveScreenshot(`${pageDef.name}-light-mobile.png`, {
-				fullPage: true,
+				...contentOptions(page, pageDef),
 				animations: 'disabled',
 				maxDiffPixelRatio: 0.01
 			})
@@ -123,7 +144,7 @@ test.describe('Visual Regression - Dark Mode', { tag: '@visual' }, () => {
 			logger.step('Taking screenshot')
 
 			await expect(page).toHaveScreenshot(`${pageDef.name}-dark-desktop.png`, {
-				fullPage: true,
+				...contentOptions(page, pageDef),
 				animations: 'disabled',
 				maxDiffPixelRatio: 0.01
 			})
@@ -148,7 +169,7 @@ test.describe('Visual Regression - Dark Mode', { tag: '@visual' }, () => {
 			logger.step('Taking screenshot')
 
 			await expect(page).toHaveScreenshot(`${pageDef.name}-dark-mobile.png`, {
-				fullPage: true,
+				...contentOptions(page, pageDef),
 				animations: 'disabled',
 				maxDiffPixelRatio: 0.01
 			})
