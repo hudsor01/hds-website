@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Card } from '@/components/ui/card'
 import type { BlogPostSummary } from '@/lib/blog'
-import { formatDate, truncateAtWord } from '@/lib/utils'
+import { formatCalendarDate, truncateAtWord } from '@/lib/utils'
 
 // ~2 lines at the card's typography is ~180 chars worst case. Truncating
 // at a word boundary here means CSS `line-clamp-2` becomes a belt-and-
@@ -73,7 +73,7 @@ export function BlogPostCard({
 							<div className="flex items-center gap-1">
 								<Calendar className="w-4 h-4" />
 								<time dateTime={post.published_at}>
-									{formatDate(post.published_at)}
+									{formatCalendarDate(post.published_at)}
 								</time>
 							</div>
 							<div className="flex items-center gap-1">

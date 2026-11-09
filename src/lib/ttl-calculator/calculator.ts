@@ -4,68 +4,97 @@ import type {
 	VehicleInputs
 } from '@/types/ttl-types'
 
-// Texas county-specific fees - using more comprehensive data
-// Define the CountyFees type
+// Per-county fees. Sources (re-check each January):
+// - titleFee: TxDMV Motor Vehicle Title Manual, Table 3-1. $33 in
+//   nonattainment counties, $28 everywhere else.
+// - localFees: TxDMV Fee Chart 1C, effective Jan 1 - Dec 31, 2026. Collected
+//   with registration, not with the title.
+// - emissionsFee: the state's $2.75 Emissions Inspection Fee, collected at
+//   registration in emissions counties. Bexar joined the list Nov 1, 2026.
 type CountyFees = Record<
 	string,
 	{ titleFee: number; localFees: number; emissionsFee: number }
 >
 
+const EMISSIONS_FEE = 2.75
+
 export const COUNTY_FEES: CountyFees = {
-	Travis: { titleFee: 33, localFees: 21.5, emissionsFee: 8.25 },
-	Harris: { titleFee: 33, localFees: 11.5, emissionsFee: 8.25 },
-	Dallas: { titleFee: 33, localFees: 16.75, emissionsFee: 8.25 },
-	Bexar: { titleFee: 33, localFees: 16.75, emissionsFee: 8.25 },
-	Tarrant: { titleFee: 33, localFees: 16.75, emissionsFee: 8.25 },
-	Collin: { titleFee: 33, localFees: 11.5, emissionsFee: 0 },
-	Denton: { titleFee: 33, localFees: 11.5, emissionsFee: 0 },
-	'El Paso': { titleFee: 28, localFees: 6.5, emissionsFee: 0 },
-	'Fort Bend': { titleFee: 33, localFees: 11.5, emissionsFee: 0 },
-	Montgomery: { titleFee: 33, localFees: 11.5, emissionsFee: 0 },
-	Williamson: { titleFee: 33, localFees: 16.75, emissionsFee: 0 },
-	Hidalgo: { titleFee: 33, localFees: 16.75, emissionsFee: 0 },
-	Cameron: { titleFee: 33, localFees: 16.75, emissionsFee: 0 },
-	Guadalupe: { titleFee: 33, localFees: 16.75, emissionsFee: 0 },
-	McLennan: { titleFee: 33, localFees: 16.75, emissionsFee: 0 },
-	Brazoria: { titleFee: 33, localFees: 11.5, emissionsFee: 0 },
-	Nueces: { titleFee: 33, localFees: 16.75, emissionsFee: 0 },
-	Midland: { titleFee: 33, localFees: 16.75, emissionsFee: 0 },
-	Bastrop: { titleFee: 33, localFees: 16.75, emissionsFee: 0 },
-	Default: { titleFee: 33, localFees: 15.75, emissionsFee: 0 }
+	Travis: { titleFee: 33, localFees: 11.5, emissionsFee: EMISSIONS_FEE },
+	Harris: { titleFee: 33, localFees: 11.5, emissionsFee: EMISSIONS_FEE },
+	Dallas: { titleFee: 33, localFees: 11.5, emissionsFee: EMISSIONS_FEE },
+	Bexar: { titleFee: 33, localFees: 21.5, emissionsFee: EMISSIONS_FEE },
+	Tarrant: { titleFee: 33, localFees: 10, emissionsFee: EMISSIONS_FEE },
+	Collin: { titleFee: 33, localFees: 11.5, emissionsFee: EMISSIONS_FEE },
+	Denton: { titleFee: 33, localFees: 11.5, emissionsFee: EMISSIONS_FEE },
+	'El Paso': { titleFee: 33, localFees: 20, emissionsFee: EMISSIONS_FEE },
+	'Fort Bend': { titleFee: 33, localFees: 11.5, emissionsFee: EMISSIONS_FEE },
+	Montgomery: { titleFee: 33, localFees: 10, emissionsFee: EMISSIONS_FEE },
+	Williamson: { titleFee: 33, localFees: 11.5, emissionsFee: EMISSIONS_FEE },
+	Hidalgo: { titleFee: 28, localFees: 20, emissionsFee: 0 },
+	Cameron: { titleFee: 28, localFees: 21.5, emissionsFee: 0 },
+	Guadalupe: { titleFee: 33, localFees: 11.5, emissionsFee: 0 },
+	McLennan: { titleFee: 28, localFees: 11.5, emissionsFee: 0 },
+	Brazoria: { titleFee: 33, localFees: 10, emissionsFee: EMISSIONS_FEE },
+	Nueces: { titleFee: 33, localFees: 10, emissionsFee: 0 },
+	Midland: { titleFee: 28, localFees: 10, emissionsFee: 0 },
+	Bastrop: { titleFee: 33, localFees: 11.5, emissionsFee: 0 },
+	// Any other county: attainment title fee and the most common local fee.
+	Default: { titleFee: 28, localFees: 10, emissionsFee: 0 }
 }
 
-// Texas state fees - updated with current rates
-const TEXAS_SALES_TAX_RATE = 0.0625 // 6.25% - updated to current rate
-const BASE_REGISTRATION_FEE = 50.75 // Standard vehicle ≤6,000 lbs - updated
-const PROCESSING_FEE = 4.75 // Updated processing fee
-const INSURANCE_VERIFICATION_FEE = 1.0 // Updated insurance verification fee
-const INSPECTION_FEE = 7.5 // Updated inspection fee
-const NEW_VEHICLE_INSPECTION_FEE = 16.75 // 2-year registration - updated
-const EV_FEE_ANNUAL = 200 // Electric vehicle fee - updated for 2024
+// Texas state fees (TxDMV "Register Your Vehicle" and Fee Chart 1C, 2026)
+const TEXAS_SALES_TAX_RATE = 0.0625
+const BASE_REGISTRATION_FEE = 50.75 // 6,000 lbs or less
+const PROCESSING_FEE = 4.75
+const INSURANCE_VERIFICATION_FEE = 1.0 // TexasSure
+const INSPECTION_FEE = 7.5 // Inspection Program Replacement Fee
+const NEW_VEHICLE_INSPECTION_FEE = 16.75 // Two-year initial inspection
+const EV_FEE_ANNUAL = 200
+const EV_FEE_NEW_TWO_YEAR = 400
+
+// Weight-based registration above 6,000 lbs: [max weight, fee]
+const WEIGHT_FEES: ReadonlyArray<readonly [number, number]> = [
+	[10000, 54],
+	[18000, 110],
+	[25999, 205],
+	[40000, 340],
+	[54999, 535],
+	[70000, 740],
+	[80000, 840]
+]
+
+function baseRegistrationFee(weight: number): number {
+	if (weight <= 6000) {
+		return BASE_REGISTRATION_FEE
+	}
+	const bracket = WEIGHT_FEES.find(([maxWeight]) => weight <= maxWeight)
+	if (!bracket) {
+		throw new Error(`No Texas registration fee bracket for ${weight} lbs`)
+	}
+	return bracket[1]
+}
 
 /**
- * Calculate registration fee based on vehicle weight and new vehicle status
- * Optimized for Next.js 16 with memoization-friendly pure function
+ * Registration line: base fee by weight, the county's local fees and the
+ * fees TxDMV collects with every registration.
  */
 function calculateRegistrationFee(
 	isNewVehicle: boolean,
-	vehicleWeight: number
+	vehicleWeight: number,
+	localFees: number
 ): number {
 	const weight = vehicleWeight || 4000 // Default to average car weight if not provided
-	let baseFee = BASE_REGISTRATION_FEE
-
-	// Use mutually exclusive conditions for weight tiers
-	if (weight > 10000) {
-		baseFee = 60.0 // Over 10,000 lbs
-	} else if (weight > 6000) {
-		baseFee = 54.0 // 6,001-10,000 lbs
-	}
-
 	const inspectionFee = isNewVehicle
 		? NEW_VEHICLE_INSPECTION_FEE
 		: INSPECTION_FEE
 
-	return baseFee + PROCESSING_FEE + INSURANCE_VERIFICATION_FEE + inspectionFee
+	return (
+		baseRegistrationFee(weight) +
+		localFees +
+		PROCESSING_FEE +
+		INSURANCE_VERIFICATION_FEE +
+		inspectionFee
+	)
 }
 
 /**
@@ -86,20 +115,27 @@ export function calculateTTL(input: VehicleInputs): TTLResults {
 	// Sales tax
 	const salesTax = taxableAmount * TEXAS_SALES_TAX_RATE
 
-	// Title fee
-	const titleFee = countyData.titleFee + countyData.localFees
+	// Title application fee
+	const titleFee = countyData.titleFee
 
 	// Registration fees
 	const registrationFees = calculateRegistrationFee(
 		input.isNewVehicle,
-		input.vehicleWeight
+		input.vehicleWeight,
+		countyData.localFees
 	)
 
-	// EV fee (if electric vehicle)
-	const evFee = input.isElectric ? EV_FEE_ANNUAL : 0
+	// EV fee: new EVs get two years of registration and pay both years up front
+	const evFee = input.isElectric
+		? input.isNewVehicle
+			? EV_FEE_NEW_TWO_YEAR
+			: EV_FEE_ANNUAL
+		: 0
 
-	// Emissions testing fee (county-specific)
-	const emissions = countyData.emissionsFee
+	// Emissions inspection fee: vehicles under two years old and electric
+	// vehicles are exempt from the emissions test (TCEQ), so no fee is due
+	const emissions =
+		input.isNewVehicle || input.isElectric ? 0 : countyData.emissionsFee
 
 	// Total TTL
 	const totalTTL = salesTax + titleFee + registrationFees + evFee + emissions

@@ -143,7 +143,7 @@ interface ContractDocumentProps {
 	data: ContractData
 }
 
-const formatDate = (dateString: string): string => {
+const formatCalendarDate = (dateString: string): string => {
 	if (!dateString) {
 		return '__________________'
 	}
@@ -289,9 +289,9 @@ const NDAContent = ({ data }: { data: ContractData }) => (
 			<Text style={styles.sectionTitle}>4. TERM</Text>
 			<Text style={styles.paragraph}>
 				This agreement shall remain in effect from{' '}
-				{formatDate(data.effectiveDate)} until{' '}
+				{formatCalendarDate(data.effectiveDate)} until{' '}
 				{data.endDate
-					? formatDate(data.endDate)
+					? formatCalendarDate(data.endDate)
 					: 'terminated by either party with 30 days written notice'}
 				. The confidentiality obligations shall survive for a period of 3 years
 				after termination.
@@ -425,7 +425,7 @@ export function ContractDocument({ data }: ContractDocumentProps) {
 
 				{/* Effective Date */}
 				<Text style={styles.effectiveDate}>
-					Effective Date: {formatDate(data.effectiveDate)}
+					Effective Date: {formatCalendarDate(data.effectiveDate)}
 				</Text>
 
 				{/* Parties */}

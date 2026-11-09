@@ -12,7 +12,7 @@
  * loudly instead of shipping an empty or partial blog.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { stripMarkdown } from '@/lib/strip-markdown'
 import type { CompiledBlogPost } from '@/types/blog'
 import {
@@ -135,11 +135,22 @@ function writeIfChanged(file: string, source: string): boolean {
 	return true
 }
 
+/**
+ * BLOG_CONTENT_DIR swaps in another post directory. The visual regression
+ * run points it at tests/fixtures/blog so /blog renders the same posts no
+ * matter what has been published or scheduled since the baselines were made.
+ */
+function contentDir(): string {
+	const override = process.env.BLOG_CONTENT_DIR
+	return override ? resolve(override) : CONTENT_DIR
+}
+
 function main(): void {
-	const posts = compilePosts()
+	const dir = contentDir()
+	const posts = compilePosts(dir)
 	const changed = writeIfChanged(POSTS_FILE, renderModule(posts))
 	console.warn(
-		`blog:build - ${posts.length} published posts -> src/lib/_generated/blog-posts.ts${changed ? '' : ' (unchanged)'}`
+		`blog:build - ${posts.length} published posts${dir === CONTENT_DIR ? '' : ` from ${dir}`} -> src/lib/_generated/blog-posts.ts${changed ? '' : ' (unchanged)'}`
 	)
 }
 

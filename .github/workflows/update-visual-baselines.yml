@@ -50,7 +50,7 @@ jobs:
         run: bunx playwright install --with-deps chromium
 
       - name: Generate Linux baselines for @visual
-        run: bunx playwright test --project=chromium --grep @visual --update-snapshots
+        run: bun run test:e2e:visual --update-snapshots
         env:
           SKIP_ENV_VALIDATION: true
           NEON_AUTH_BASE_URL: https://ci-e2e-placeholder.neon.tech
