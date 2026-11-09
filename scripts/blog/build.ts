@@ -19,6 +19,7 @@ import {
 	bodyToHtml,
 	CONTENT_DIR,
 	computeReadingTime,
+	isLive,
 	listPostFiles,
 	type ParsedPost,
 	parsePost,
@@ -65,9 +66,13 @@ function compilePost({ slug, data, body }: ParsedPost): CompiledBlogPost {
 
 /**
  * Parse, validate, and compile every post in `dir`. Drafts
- * (`published: false`) are validated but excluded from the output.
+ * (`published: false`) and scheduled posts (publishedAt after `now`) are
+ * validated but excluded from the output.
  */
-export function compilePosts(dir: string = CONTENT_DIR): CompiledBlogPost[] {
+export function compilePosts(
+	dir: string = CONTENT_DIR,
+	now: Date = new Date()
+): CompiledBlogPost[] {
 	const failures: string[] = []
 	const posts: CompiledBlogPost[] = []
 
@@ -90,7 +95,7 @@ export function compilePosts(dir: string = CONTENT_DIR): CompiledBlogPost[] {
 			continue
 		}
 
-		if (!parsed.data.published) {
+		if (!isLive(parsed.data, now)) {
 			continue
 		}
 		try {
