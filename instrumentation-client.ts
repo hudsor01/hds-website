@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/nextjs'
+import { SENTRY_DATA_COLLECTION } from '@/lib/sentry-data-collection'
 
 if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
 	Sentry.init({
@@ -10,6 +11,7 @@ if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
 		integrations: [
 			Sentry.replayIntegration({ maskAllText: true, blockAllMedia: true })
 		],
+		dataCollection: SENTRY_DATA_COLLECTION,
 		enabled: process.env.NODE_ENV !== 'test'
 	})
 }

@@ -43,7 +43,7 @@ export function formatBytes(bytes: number, decimals = 1): string {
 		return '0 bytes'
 	}
 	const k = 1024
-	const dm = decimals < 0 ? 0 : decimals
+	const dm = Math.max(0, decimals)
 	const sizes = ['bytes', 'KB', 'MB', 'GB'] as const
 	const i = Math.min(
 		Math.floor(Math.log(bytes) / Math.log(k)),

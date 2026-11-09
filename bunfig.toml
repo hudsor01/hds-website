@@ -1,8 +1,9 @@
 [test]
 # Test configuration for bun test
-# Happy-dom is registered via preload script (tests/setup.ts)
+# Happy-dom is registered by the first preload (tests/happydom.ts) so DOM
+# globals exist before tests/setup.ts imports @testing-library/jest-dom
 # Test scope is controlled via CLI: "bun test tests/"
-preload = ["./tests/setup.ts"]
+preload = ["./tests/happydom.ts", "./tests/setup.ts"]
 
 # Coverage
 coverage = true

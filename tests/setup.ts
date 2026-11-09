@@ -203,10 +203,6 @@ try {
 } catch {
 	// Silently continue if globals don't exist
 }
-
-// Register happy-dom globals
-GlobalRegistrator.register()
-
 // Set IS_REACT_ACT_ENVIRONMENT for React 19 Testing Library compatibility
 ;(
 	globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
@@ -279,6 +275,7 @@ afterEach(() => {
 })
 
 afterAll(() => {
-	// Cleanup and unregister happy-dom
+	// Cleanup and unregister happy-dom (registered by the tests/happydom.ts
+	// preload, which bunfig.toml runs before this file)
 	GlobalRegistrator.unregister()
 })
