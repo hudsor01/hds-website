@@ -278,7 +278,7 @@ const formatCurrency = (amount: number): string => {
 	})}`
 }
 
-const formatDate = (dateString: string): string => {
+const formatCalendarDate = (dateString: string): string => {
 	if (!dateString) {
 		return ''
 	}
@@ -303,7 +303,9 @@ export function ProposalDocument({ data }: ProposalDocumentProps) {
 					<Text style={styles.coverClient}>
 						Prepared for: {data.clientCompany || data.clientName || 'Client'}
 					</Text>
-					<Text style={styles.coverDate}>{formatDate(data.projectDate)}</Text>
+					<Text style={styles.coverDate}>
+						{formatCalendarDate(data.projectDate)}
+					</Text>
 				</View>
 				<View style={styles.coverCompany}>
 					<Text style={styles.coverCompanyName}>{data.companyName}</Text>
@@ -415,7 +417,8 @@ export function ProposalDocument({ data }: ProposalDocumentProps) {
 						{data.validUntil && (
 							<View style={styles.validUntil}>
 								<Text style={styles.validUntilText}>
-									This proposal is valid until {formatDate(data.validUntil)}
+									This proposal is valid until{' '}
+									{formatCalendarDate(data.validUntil)}
 								</Text>
 							</View>
 						)}

@@ -14,7 +14,7 @@ import { JsonLd } from '@/components/utilities/JsonLd'
 import { getAllPosts, getPostBySlug, getPostsByTag } from '@/lib/blog'
 import { withHeadingIds } from '@/lib/blog-toc'
 import { BUSINESS_INFO } from '@/lib/constants/business'
-import { formatDate } from '@/lib/utils'
+import { formatCalendarDate } from '@/lib/utils'
 
 interface BlogPostPageProps {
 	params: Promise<{ slug: string }>
@@ -245,7 +245,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 									<div className="flex flex-center gap-tight">
 										<Calendar className="w-5 h-5" />
 										<time dateTime={post.published_at}>
-											{formatDate(post.published_at, 'long')}
+											{formatCalendarDate(post.published_at, 'long')}
 										</time>
 									</div>
 									<div className="flex flex-center gap-tight">
