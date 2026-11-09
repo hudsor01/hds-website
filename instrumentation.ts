@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/nextjs'
+import { SENTRY_DATA_COLLECTION } from '@/lib/sentry-data-collection'
 
 export async function register() {
 	if (!process.env.SENTRY_DSN) {
@@ -11,6 +12,7 @@ export async function register() {
 			environment: process.env.VERCEL_ENV || process.env.NODE_ENV,
 			tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
 			release: process.env.npm_package_version,
+			dataCollection: SENTRY_DATA_COLLECTION,
 			enabled: process.env.NODE_ENV !== 'test'
 		})
 	}
@@ -21,6 +23,7 @@ export async function register() {
 			environment: process.env.VERCEL_ENV || process.env.NODE_ENV,
 			tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
 			release: process.env.npm_package_version,
+			dataCollection: SENTRY_DATA_COLLECTION,
 			enabled: process.env.NODE_ENV !== 'test'
 		})
 	}
