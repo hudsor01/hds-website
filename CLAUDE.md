@@ -176,6 +176,7 @@
 - Unknown post/tag/author slugs are a real HTTP 404 via `export const unstable_paramMatching = { slug: 'not-found' }` (Cache Components rejects `dynamicParams = false`; without it the `loading.tsx` shell streams a 200 soft 404)
 - Publishing = merge the `.md` file; the deploy rebuilds the blog. There is no admin blog UI and no blog write API
 - Scheduling: a `published: true` post with a future `publishedAt` is held out of the build until that date (UTC). `.github/workflows/publish-scheduled-posts.yml` runs daily at 11:00 UTC, runs `scripts/blog/pending.ts` against production, and POSTs the Vercel deploy hook (`VERCEL_DEPLOY_HOOK_URL` repo secret) only when a due post is not live yet. Queue a batch by merging posts with staggered future dates
+- Visual tests: `test:e2e:visual` sets `BLOG_CONTENT_DIR=tests/fixtures/blog`, so `/blog` baselines render five fixed fixture posts and never change when real posts publish
 - The Neon `blog_*` tables are legacy (definitions kept in `src/lib/schemas/blog.ts` only so `drizzle-kit push` does not propose DROP TABLE)
 
 **Auth:**

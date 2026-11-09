@@ -207,3 +207,16 @@ describe('renderModule', () => {
 		expect(JSON.parse(json)).toEqual(posts)
 	})
 })
+
+describe('visual regression fixtures', () => {
+	test('tests/fixtures/blog compiles to a stable, fully past-dated set', () => {
+		const fixtures = join(process.cwd(), 'tests/fixtures/blog')
+		const posts = compilePosts(fixtures, new Date('2026-02-01T00:00:00.000Z'))
+		expect(posts).toHaveLength(5)
+		expect(posts.filter(p => p.featured)).toHaveLength(3)
+		// Same output far in the future: no fixture is ever held back or added.
+		expect(
+			compilePosts(fixtures, new Date('2099-01-01T00:00:00.000Z'))
+		).toEqual(posts)
+	})
+})

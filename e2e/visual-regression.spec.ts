@@ -22,6 +22,10 @@ import { createTestLogger } from './test-logger'
  * baselines generated on the runner image (the macOS `-darwin.png` set is
  * kept for local runs). Regenerate Linux baselines after intentional UI
  * changes via the "Update Visual Baselines" workflow.
+ *
+ * /blog renders tests/fixtures/blog (test:e2e:visual sets BLOG_CONTENT_DIR),
+ * so new or scheduled posts never change its baselines. Stop any dev server
+ * on :3001 first locally; Playwright reuses it and it serves real posts.
  */
 
 const PAGES_TO_TEST = [
