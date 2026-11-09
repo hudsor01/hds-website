@@ -17,6 +17,19 @@ const nextConfig: NextConfig = {
 					'/blog/why-your-business-needs-a-custom-crm-integration-to-unlock-true-efficiency',
 				destination: '/blog/why-your-business-needs-a-custom-crm-integration',
 				permanent: true
+			},
+			// JirahShop is paused and unpublished from the showcase
+			// (scripts/sql/2026-11-09-unpublish-jirah-shop.sql). Not permanent,
+			// so the URLs can come back if the store relaunches.
+			{
+				source: '/showcase/jirah-shop',
+				destination: '/showcase',
+				permanent: false
+			},
+			{
+				source: '/blog/case-study-jirahshop-ecommerce-build',
+				destination: '/showcase',
+				permanent: false
 			}
 		]
 	},
