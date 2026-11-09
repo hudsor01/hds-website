@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { formatDate } from '@/lib/utils'
+import { formatCalendarDate } from '@/lib/utils'
 
 export const metadata: Metadata = {
 	alternates: { canonical: '/privacy' },
@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 	robots: 'index, follow'
 }
 
-// Hardcoded authored date instead of `formatDate(new Date())` — the
+// Hardcoded authored date instead of `formatCalendarDate(new Date())` — the
 // runtime form could render a UTC date one day ahead of the user's
 // local date and made "Last updated" appear in the future (audit #273).
 // Update this constant when the policy is actually reviewed.
-const lastUpdated = formatDate(new Date('2026-06-03T00:00:00Z'))
+const lastUpdated = formatCalendarDate(new Date('2026-06-03T00:00:00Z'))
 
 export default function PrivacyPage() {
 	return (

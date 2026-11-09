@@ -218,6 +218,8 @@ jobs:
     # Linux baselines were generated against no-DB (empty-state) pages, so
     # the comparison must render that same deterministic state. Running it
     # against the e2e job's live Neon data would diff on every data change.
+    # The blog is files, not DB rows: test:e2e:visual builds it from
+    # tests/fixtures/blog so published or scheduled posts never move /blog.
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

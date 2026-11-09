@@ -111,27 +111,34 @@ export function formatCurrency(amount: number): string {
 	}).format(amount)
 }
 
+const DATE_FORMATS: Record<'short' | 'long', Intl.DateTimeFormatOptions> = {
+	short: { year: 'numeric', month: 'short', day: 'numeric' },
+	long: { year: 'numeric', month: 'long', day: 'numeric' }
+}
+
 /**
- * Format date with proper locale
+ * Format a moment in time (a timestamp) in the viewer's local time zone.
+ * For a calendar day with no time, use formatCalendarDate.
  */
 export function formatDate(
 	date: Date | string,
 	format: 'short' | 'long' = 'short'
 ): string {
-	const dateObj = new Date(date)
+	return new Date(date).toLocaleDateString('en-US', DATE_FORMATS[format])
+}
 
-	let options: Intl.DateTimeFormatOptions
-
-	switch (format) {
-		case 'short':
-			options = { year: 'numeric', month: 'short', day: 'numeric' }
-			break
-		case 'long':
-			options = { year: 'numeric', month: 'long', day: 'numeric' }
-			break
-		default:
-			options = { year: 'numeric', month: 'short', day: 'numeric' }
-	}
-
-	return dateObj.toLocaleDateString('en-US', options)
+/**
+ * Format a calendar day: a 'YYYY-MM-DD' string (date inputs) or a Date at
+ * UTC midnight (blog publishedAt, legal "last updated"). JavaScript parses
+ * both as UTC midnight, so formatting in local time shows the previous day
+ * anywhere west of UTC. Formatting in UTC keeps the day that was picked.
+ */
+export function formatCalendarDate(
+	date: Date | string,
+	format: 'short' | 'long' = 'short'
+): string {
+	return new Date(date).toLocaleDateString('en-US', {
+		...DATE_FORMATS[format],
+		timeZone: 'UTC'
+	})
 }
