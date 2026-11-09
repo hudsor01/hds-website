@@ -115,4 +115,32 @@ test.describe('Blog Journey', () => {
 		const response = await page.goto('/blog/wp-login.php')
 		expect(response?.status()).toBe(404)
 	})
+
+	test('should serve social cards for known slugs and 404 unknown ones', async ({
+		page,
+		request
+	}) => {
+		const slug = 'workflow-automation-tools-small-business'
+		await page.goto(`/blog/${slug}`)
+
+		// Image route paths carry a build hash, so read them off the page.
+		for (const property of ['og:image', 'twitter:image']) {
+			const attr = property.startsWith('og:') ? 'property' : 'name'
+			const content = await page
+				.locator(`meta[${attr}="${property}"]`)
+				.first()
+				.getAttribute('content')
+			expect(content).toBeTruthy()
+			const { pathname } = new URL(content ?? '')
+
+			const known = await request.get(pathname)
+			expect(known.status()).toBe(200)
+			expect(known.headers()['content-type']).toBe('image/png')
+
+			const unknown = await request.get(
+				pathname.replace(`/blog/${slug}/`, '/blog/wp-login.php/')
+			)
+			expect(unknown.status()).toBe(404)
+		}
+	})
 })
