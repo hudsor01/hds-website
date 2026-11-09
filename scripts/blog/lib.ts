@@ -1,31 +1,19 @@
 /**
- * Shared helpers for the content/blog pipeline (validate, publish, generate).
- * No DB import here, so validate.ts runs in CI without POSTGRES_URL.
+ * Shared helpers for the content/blog pipeline (build, validate, generate).
+ * No DB or network access: content/blog is the only source of truth.
  */
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import matter from 'gray-matter'
 import { marked } from 'marked'
+import { BLOG_AUTHORS, BLOG_TAGS } from '@/lib/constants/blog'
 import { countCommaBeforeAnd, findAiTells } from './voice'
 
 export const CONTENT_DIR = join(process.cwd(), 'content/blog')
 
-/** The 12-slug tag taxonomy (mirror of the blog_tags table). */
-export const TAXONOMY = [
-	'web-development',
-	'business',
-	'conversion-optimization',
-	'business-automation',
-	'dallas-fort-worth',
-	'home-services',
-	'local-marketing',
-	'seo',
-	'small-business',
-	'web-design',
-	'website-migration',
-	'website-performance'
-] as const
-export type TagSlug = (typeof TAXONOMY)[number]
+/** Tag taxonomy and author registry, owned by src/lib/constants/blog.ts. */
+const TAXONOMY: ReadonlySet<string> = new Set(BLOG_TAGS.map(t => t.slug))
+const AUTHOR_SLUGS: ReadonlySet<string> = new Set(BLOG_AUTHORS.map(a => a.slug))
 
 export interface BlogFrontmatter {
 	title: string
@@ -59,14 +47,14 @@ const EMOJI_RE =
 const INTERNAL_LINK_RE = /\]\(\/(?!\/)|href=["']\/(?!\/)/g
 const CTA_RE = /\]\(\/(?:contact|tools)|href=["']\/(?:contact|tools)/
 
-export function listPostFiles(): string[] {
-	return readdirSync(CONTENT_DIR)
+export function listPostFiles(dir: string = CONTENT_DIR): string[] {
+	return readdirSync(dir)
 		.filter(f => f.endsWith('.md') && f !== 'README.md')
 		.sort()
 }
 
-export function parsePost(file: string): ParsedPost {
-	const raw = readFileSync(join(CONTENT_DIR, file), 'utf8')
+export function parsePost(file: string, dir: string = CONTENT_DIR): ParsedPost {
+	const raw = readFileSync(join(dir, file), 'utf8')
 	const { data, content } = matter(raw)
 	const fm = data as BlogFrontmatter
 	return {
@@ -149,10 +137,19 @@ export function validatePost(p: ParsedPost): Violation[] {
 		err('R4', 'tags must be a non-empty array')
 	} else {
 		for (const t of d.tags) {
-			if (!TAXONOMY.includes(t as TagSlug)) {
+			if (!TAXONOMY.has(t)) {
 				err('R4', `unknown tag: ${t}`)
 			}
 		}
+	}
+	if (typeof d?.author === 'string' && !AUTHOR_SLUGS.has(d.author)) {
+		err('R0', `unknown author: ${d.author}`)
+	}
+	if (
+		typeof d?.publishedAt === 'string' &&
+		Number.isNaN(Date.parse(d.publishedAt))
+	) {
+		err('R0', `publishedAt is not a valid date: ${d.publishedAt}`)
 	}
 	if (typeof d?.published !== 'boolean') {
 		err('R0', 'published must be a boolean')

@@ -16,7 +16,6 @@
  * equivalents.
  */
 import {
-	FileText,
 	Home,
 	LayoutGrid,
 	type LucideIcon,
@@ -37,7 +36,6 @@ interface NavItem {
 const NAV_ITEMS: readonly NavItem[] = [
 	{ label: 'Dashboard', href: '/admin/dashboard', Icon: Home },
 	{ label: 'Showcase', href: '/admin/showcase', Icon: LayoutGrid },
-	{ label: 'Blog', href: '/admin/blog', Icon: FileText },
 	{ label: 'Testimonials', href: '/admin/testimonials', Icon: MessagesSquare },
 	{ label: 'Leads', href: '/admin/leads', Icon: Users },
 	{ label: 'Newsletter', href: '/admin/newsletter', Icon: Mail },

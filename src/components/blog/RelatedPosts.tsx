@@ -1,8 +1,8 @@
-import type { BlogPost } from '@/lib/blog'
+import type { BlogPostSummary } from '@/lib/blog'
 import { BlogPostCard } from './BlogPostCard'
 
 interface RelatedPostsProps {
-	posts: BlogPost[]
+	posts: BlogPostSummary[]
 }
 
 export function RelatedPosts({ posts }: RelatedPostsProps) {

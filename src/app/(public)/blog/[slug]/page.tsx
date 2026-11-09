@@ -2,7 +2,7 @@ import { Calendar, Clock, Tag } from 'lucide-react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { notFound, permanentRedirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { AuthorCard } from '@/components/blog/AuthorCard'
 import { BlogPostContent } from '@/components/blog/BlogPostContent'
 import { BlogTableOfContents } from '@/components/blog/BlogTableOfContents'
@@ -11,29 +11,13 @@ import { RelatedPosts } from '@/components/blog/RelatedPosts'
 import { Button } from '@/components/ui/button'
 import { BackLink } from '@/components/utilities/BackLink'
 import { JsonLd } from '@/components/utilities/JsonLd'
-import { getPostBySlug, getPosts, getPostsByTag } from '@/lib/blog'
+import { getAllPosts, getPostBySlug, getPostsByTag } from '@/lib/blog'
 import { withHeadingIds } from '@/lib/blog-toc'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { formatDate } from '@/lib/utils'
 
 interface BlogPostPageProps {
 	params: Promise<{ slug: string }>
-}
-
-/**
- * Canonical slug map for posts that exist as duplicates in the DB.
- * Visiting a key in this map permanently redirects to the value, so
- * search engines converge on a single URL and inbound links keep
- * working from either side (audit #249).
- *
- * Add an entry here whenever a duplicate post is discovered and the
- * canonical one is identified. A future cleanup pass can drop the
- * legacy row from the DB; the redirect is the contract that keeps
- * old links honest in the meantime.
- */
-const CANONICAL_SLUG_REDIRECTS: Record<string, string> = {
-	'why-your-business-needs-a-custom-crm-integration-to-unlock-true-efficiency':
-		'why-your-business-needs-a-custom-crm-integration'
 }
 
 const META_DESCRIPTION_MAX = 160
@@ -62,16 +46,7 @@ export async function generateMetadata({
 	params
 }: BlogPostPageProps): Promise<Metadata> {
 	const { slug } = await params
-
-	// Short-circuit metadata generation for duplicate slugs — the page
-	// component redirects on render, but a crawler-only metadata fetch
-	// (or anything that depends on `generateMetadata` without rendering
-	// the page) would otherwise see the duplicate post's title and
-	// excerpt. Returning the canonical post's metadata keeps the
-	// search-engine signal consistent with the redirect target.
-	const canonical = CANONICAL_SLUG_REDIRECTS[slug]
-	const lookupSlug = canonical ?? slug
-	const post = await getPostBySlug(lookupSlug)
+	const post = await getPostBySlug(slug)
 
 	if (!post) {
 		return {
@@ -128,37 +103,20 @@ export async function generateMetadata({
 	}
 }
 
+// Every published post is prerendered at build. "not-found" matching is the
+// Cache Components replacement for `dynamicParams = false` (which it rejects):
+// any other slug, e.g. a scanner probing /blog/wp-login.php, is a hard 404
+// with no render. Without it the loading.tsx shell streams first and an
+// unknown slug answers HTTP 200.
+export const unstable_paramMatching = { slug: 'not-found' }
+
 export async function generateStaticParams() {
-	try {
-		const { posts } = await getPosts()
-		const results = posts.map(post => ({
-			slug: post.slug
-		}))
-
-		if (results.length === 0) {
-			return [{ slug: '__placeholder__' }]
-		}
-
-		return results
-	} catch {
-		// Tables may not exist yet during initial deployment
-		return [{ slug: '__placeholder__' }]
-	}
+	const posts = await getAllPosts()
+	return posts.map(post => ({ slug: post.slug }))
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
 	const { slug } = await params
-
-	// Permanent redirect for known-duplicate slugs before any DB work.
-	// `permanentRedirect()` returns a 308 which preserves request method
-	// (the relevant property for any future POST/PUT analytics beacons
-	// against the old URL) and signals to crawlers that the canonical
-	// URL has changed.
-	const canonical = CANONICAL_SLUG_REDIRECTS[slug]
-	if (canonical) {
-		permanentRedirect(`/blog/${canonical}`)
-	}
-
 	const post = await getPostBySlug(slug)
 
 	if (!post) {

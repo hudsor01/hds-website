@@ -3,7 +3,7 @@
  * before passing the result to a Zod schema's safeParse.
  *
  * Single-occurrence keys produce a string value; repeated keys (e.g. a
- * multi-select for blog tag ids) produce a string array in insertion
+ * multi-select) produce a string array in insertion
  * order. Empty FormData returns `{}`. Non-string values are stringified
  * via `String(value)` so File / Blob inputs never crash the helper
  * (admin forms do not upload files per CONTEXT.md D-04, but defensive

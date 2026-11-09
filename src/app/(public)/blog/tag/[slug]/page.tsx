@@ -38,22 +38,12 @@ export async function generateMetadata({
 	}
 }
 
+// Unknown slugs are a hard 404, not a streamed soft 404 (see blog/[slug]).
+export const unstable_paramMatching = { slug: 'not-found' }
+
 export async function generateStaticParams() {
-	try {
-		const tags = await getTags()
-		const results = tags.map(tag => ({
-			slug: tag.slug
-		}))
-
-		if (results.length === 0) {
-			return [{ slug: '__placeholder__' }]
-		}
-
-		return results
-	} catch {
-		// Tables may not exist yet during initial deployment
-		return [{ slug: '__placeholder__' }]
-	}
+	const tags = await getTags()
+	return tags.map(tag => ({ slug: tag.slug }))
 }
 
 export default async function TagPage({ params }: TagPageProps) {

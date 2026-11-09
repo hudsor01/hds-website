@@ -1,7 +1,7 @@
 /**
  * Phase 10 admin list text-search input (client component, nuqs-driven).
  *
- * Shared by the 7 admin list pages -- /admin/showcase, /admin/blog,
+ * Shared by the 6 admin list pages -- /admin/showcase,
  * /admin/testimonials, /admin/leads, /admin/leads/calculator,
  * /admin/newsletter, /admin/emails -- so every list page gets the same
  * search bar UX without duplicating markup.

@@ -31,10 +31,9 @@ export const metadata: Metadata = {
 	}
 }
 
-// Each data-driven section is its own async server component so Suspense
-// can stream the page header while the DB calls resolve. Required by
-// cacheComponents:true — every dynamic data access must sit inside a
-// Suspense boundary or the whole page will block on it.
+// Each data-driven section is its own async server component behind its own
+// Suspense boundary. Blog data is compiled in at build time, so all of them
+// resolve during prerender and the whole page ships as static HTML.
 
 async function FeaturedSection() {
 	const featuredPosts = await getFeaturedPosts(3)

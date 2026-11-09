@@ -2,7 +2,7 @@ import { Calendar, Clock, User } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Card } from '@/components/ui/card'
-import type { BlogPost } from '@/lib/blog'
+import type { BlogPostSummary } from '@/lib/blog'
 import { formatDate, truncateAtWord } from '@/lib/utils'
 
 // ~2 lines at the card's typography is ~180 chars worst case. Truncating
@@ -12,7 +12,7 @@ import { formatDate, truncateAtWord } from '@/lib/utils'
 const EXCERPT_MAX_CHARS = 180
 
 interface BlogPostCardProps {
-	post: BlogPost
+	post: BlogPostSummary
 	featured?: boolean
 	/**
 	 * Set on the LCP-candidate card(s) above the fold (e.g. the first

@@ -7,6 +7,20 @@ const nextConfig: NextConfig = {
 	poweredByHeader: false,
 	trailingSlash: false,
 
+	// Retired duplicate blog post (its file is an unpublished draft). Mirrors
+	// the vercel.json redirect so `next start` and the standalone Docker image
+	// keep the 308 too, now that unknown blog slugs simply 404.
+	async redirects() {
+		return [
+			{
+				source:
+					'/blog/why-your-business-needs-a-custom-crm-integration-to-unlock-true-efficiency',
+				destination: '/blog/why-your-business-needs-a-custom-crm-integration',
+				permanent: true
+			}
+		]
+	},
+
 	// Next.js 16 Cache Components — enables 'use cache' directive in data layer.
 	// Cascading constraints: every dynamic data access must be in a <Suspense>
 	// boundary, generateStaticParams must return at least one entry, page-level

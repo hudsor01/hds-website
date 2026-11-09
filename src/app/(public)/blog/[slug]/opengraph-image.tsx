@@ -1,18 +1,26 @@
 import { ImageResponse } from 'next/og'
-import { connection } from 'next/server'
-import { getPostBySlug } from '@/lib/blog'
+import { getAllPosts, getPostBySlug } from '@/lib/blog'
 import { OG_FONTS } from '@/lib/og-fonts'
 import { LOGO_DATA_URL } from '@/lib/og-logo'
 
-// Rendered at request time (via `connection()` below) so the Facebook/social
-// scrape always gets the real post title (the build runs without POSTGRES_URL,
-// so a prerender would bake a generic title). OG images are scraped rarely and
-// cached by the platform, so per-request generation is cheap in practice.
+// One card per published post is prerendered at build, mirroring the sibling
+// page.tsx. Any other slug, e.g. a scanner probing
+// /blog/<anything>/opengraph-image-<hash>, gets a 404 before any Satori render.
+// The page's `unstable_paramMatching` cannot close this route: Next.js 16.4
+// rejects it on route handlers (they see no parent params) and Cache Components
+// rejects `dynamicParams`, so the handler checks the slug itself. The post
+// lookup is an in-memory read of the compiled content/blog module, so neither
+// path touches the database.
 // No `runtime` export: Cache Components rejects it and the readFileSync-based
 // logo/font loads rely on the default Node.js runtime.
 export const alt = 'Hudson Digital Solutions'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
+
+export async function generateStaticParams() {
+	const posts = await getAllPosts()
+	return posts.map(post => ({ slug: post.slug }))
+}
 
 // Brand tokens from globals.css (oklch) converted to hex, since Satori cannot
 // read CSS variables or oklch. Keep in sync with @theme in src/app/globals.css.
@@ -35,11 +43,13 @@ export default async function Image({
 }: {
 	params: Promise<{ slug: string }>
 }) {
-	await connection()
 	const { slug } = await params
 	const post = await getPostBySlug(slug)
-	const title = (post?.title ?? 'Hudson Digital Solutions').slice(0, 110)
-	const eyebrow = eyebrowFor(post?.tags?.[0]?.name)
+	if (!post) {
+		return new Response(null, { status: 404 })
+	}
+	const title = post.title.slice(0, 110)
+	const eyebrow = eyebrowFor(post.tags?.[0]?.name)
 
 	return new ImageResponse(
 		<div

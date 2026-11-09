@@ -11,7 +11,7 @@
  * NOTE: it asserts against `globalThis.__REAL_DB__`, the genuine `@/lib/db`
  * export captured at preload in tests/setup.ts. A plain `import { db } from
  * '@/lib/db'` would be intercepted by sibling suites that register
- * `mock.module('@/lib/db', ...)` (blog, showcase, api-*) — those registrations
+ * `mock.module('@/lib/db', ...)` (showcase, api-*) — those registrations
  * persist for the whole run and are never cleared by mock.restore()
  * (oven-sh/bun#7823), so the import cannot reach the real module under
  * full-suite ordering. The preload capture is the only pollution-immune handle

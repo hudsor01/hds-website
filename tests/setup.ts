@@ -45,7 +45,7 @@ require('@/lib/auth/admin')
 
 // Capture the genuine `@/lib/db` export (the createMockDb proxy, since TEST_ENV
 // omits POSTGRES_URL) at preload time, before any test file registers
-// `mock.module('@/lib/db', ...)`. Several suites (blog, showcase, api-*) stub
+// `mock.module('@/lib/db', ...)`. Several suites (showcase, api-*) stub
 // `@/lib/db`, and Bun's mock.module() registrations persist for the whole run
 // and are NOT cleared by mock.restore() (oven-sh/bun#7823) — so a later
 // `import { db } from '@/lib/db'` can never reach the real module once a

@@ -115,6 +115,46 @@ export async function getShowcaseItems(): Promise<ShowcaseItem[]> {
 	}
 }
 
+export interface ShowcasePaletteItem {
+	slug: string
+	title: string
+}
+
+/**
+ * Remote ('use cache: remote') rather than in-memory: the command palette
+ * renders on every public route, and per-instance memory caches miss on most
+ * serverless invocations, so bot traffic kept waking Neon. The remote entry
+ * is shared by every instance and still invalidates via 'showcase-list'.
+ * Errors propagate so a failed query is never cached.
+ */
+async function fetchShowcasePaletteItems(): Promise<ShowcasePaletteItem[]> {
+	'use cache: remote'
+	cacheLife('hours')
+	cacheTag('showcase-list')
+
+	return db
+		.select({ slug: showcase.slug, title: showcase.title })
+		.from(showcase)
+		.where(eq(showcase.published, true))
+		.orderBy(asc(showcase.displayOrder), desc(showcase.createdAt))
+}
+
+/**
+ * Published showcase slugs + titles for the global command palette. The
+ * palette is optional chrome, so a database failure degrades to no showcase
+ * entries instead of failing every public page.
+ */
+export async function getShowcasePaletteItems(): Promise<
+	ShowcasePaletteItem[]
+> {
+	try {
+		return await fetchShowcasePaletteItems()
+	} catch (error) {
+		logger.error('Failed to fetch showcase palette items', error)
+		return []
+	}
+}
+
 /**
  * Get showcase item by slug
  */
