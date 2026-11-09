@@ -6,7 +6,6 @@
 'use client'
 
 import { Plus, Trash2 } from 'lucide-react'
-import dynamic from 'next/dynamic'
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
@@ -27,11 +26,6 @@ import type {
 	ProposalPricingItem
 } from '@/lib/pdf/proposal-template'
 import { formatCurrency } from '@/lib/utils'
-
-const ProposalDocument = dynamic(
-	() => import('@/lib/pdf/proposal-template').then(mod => mod.ProposalDocument),
-	{ ssr: false }
-)
 
 const STORAGE_KEY = 'hds-proposal-draft'
 
@@ -326,7 +320,12 @@ export default function ProposalGeneratorClient() {
 			return
 		}
 		try {
-			const { pdf } = await import('@react-pdf/renderer')
+			// Import the template module directly: a next/dynamic wrapper
+			// suspends via use(), which react-pdf's reconciler rejects (#438).
+			const [{ pdf }, { ProposalDocument }] = await Promise.all([
+				import('@react-pdf/renderer'),
+				import('@/lib/pdf/proposal-template')
+			])
 			const blob = await pdf(
 				<ProposalDocument data={{ ...proposalData, total: computedTotal }} />
 			).toBlob()

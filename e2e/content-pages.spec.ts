@@ -179,3 +179,36 @@ test.describe('Contact page', () => {
 		await expect(form).toBeVisible({ timeout: 15000 })
 	})
 })
+
+// ---------------------------------------------------------------------------
+// Proxy (src/proxy.ts) - security headers and /admin gate
+// ---------------------------------------------------------------------------
+
+test.describe('Proxy security layer', () => {
+	test('page responses carry the security headers', async ({ request }) => {
+		for (const path of ['/', '/services', '/blog']) {
+			const res = await request.get(path)
+			expect(res.status()).toBe(200)
+			const headers = res.headers()
+			expect(headers['content-security-policy']).toContain("default-src 'self'")
+			expect(headers['content-security-policy']).toContain(
+				"frame-ancestors 'none'"
+			)
+			expect(headers['x-content-type-options']).toBe('nosniff')
+			expect(headers['x-frame-options']).toBe('DENY')
+			expect(headers['referrer-policy']).toBe('strict-origin-when-cross-origin')
+			expect(headers['strict-transport-security']).toBe('max-age=63072000')
+			expect(headers['cross-origin-embedder-policy']).toBeUndefined()
+		}
+	})
+
+	test('/admin redirects unauthenticated users to sign-in', async ({
+		request
+	}) => {
+		const res = await request.get('/admin', { maxRedirects: 0 })
+		expect(res.status()).toBe(302)
+		expect(new URL(res.headers().location ?? '', res.url()).pathname).toBe(
+			'/auth/sign-in'
+		)
+	})
+})

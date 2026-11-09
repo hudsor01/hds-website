@@ -75,12 +75,12 @@ const nextConfig: NextConfig = {
 	}
 }
 
-// withSentryConfig adds webpack instrumentation that calls
-// crypto.randomUUID() during prerender, which Next.js 16 Cache
-// Components forbids inside 'use cache' functions. CI builds and any
-// deploy without SENTRY_DSN skip the wrap; production deploys with
-// the DSN set get full source-map upload + tunnelRoute.
-export default process.env.SENTRY_DSN
+// The wrap is gated so DSN-less builds (CI, local) stay free of Sentry
+// build plugins. Either DSN turns it on: the client SDK inits on
+// NEXT_PUBLIC_SENTRY_DSN and needs the same-origin /monitoring tunnel the
+// wrap adds, because the CSP does not allow direct Sentry ingest. Set both
+// DSNs together. src/proxy.ts excludes /monitoring from its matcher.
+export default process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN
 	? withSentryConfig(nextConfig, {
 			silent: !process.env.CI,
 			org: process.env.SENTRY_ORG,

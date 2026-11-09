@@ -53,6 +53,15 @@ require('@/lib/auth/admin')
 // assert the genuine no-op contract regardless of suite ordering.
 ;(globalThis as { __REAL_DB__?: unknown }).__REAL_DB__ = require('@/lib/db').db
 
+// Same reason as __REAL_DB__: setupApiMocks() stubs `@/lib/security-headers`
+// for route suites (and bun swaps the exports of an already-loaded module in
+// place), so proxy.test.ts reads the genuine function captured here to
+// assert the real CSP / HSTS values regardless of suite ordering.
+;(
+	globalThis as { __REAL_APPLY_SECURITY_HEADERS__?: unknown }
+).__REAL_APPLY_SECURITY_HEADERS__ =
+	require('@/lib/security-headers').applySecurityHeaders
+
 // ===================================================================
 // TESTING CONVENTION: shared-module mocks (read before adding a mock)
 // ===================================================================

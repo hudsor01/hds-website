@@ -1,5 +1,6 @@
 'use client'
 
+import * as Sentry from '@sentry/nextjs'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -13,14 +14,8 @@ export default function Error({
 	reset: () => void
 }) {
 	useEffect(() => {
-		// Use console.error — cannot import server-side logger or analytics here as
-		// error.tsx is a 'use client' component and importing them pulls in db.ts
-		// which accesses DATABASE_URL, crashing client hydration.
-		console.error('[Error] Application Error Caught', {
-			name: error.name,
-			message: error.message,
-			digest: error.digest
-		})
+		// No-op until the client SDK is initialised (NEXT_PUBLIC_SENTRY_DSN).
+		Sentry.captureException(error)
 	}, [error])
 
 	return (
