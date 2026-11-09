@@ -18,7 +18,7 @@ readingTime: 0
 bodyFormat: markdown
 ---
 
-Your google local pack ranking is not a marketing mystery it is a revenue system waiting to be calibrated. I spent nine years running revenue operations for scaling companies, managing Salesforce pipelines and Power BI dashboards that tracked every dollar from first click to closed deal. I scaled a partner network by two thousand two hundred percent, hit ninety five percent forecast accuracy and drove three point seven million dollars through pure forecasting work. When I started building websites for Dallas and Fort Worth businesses, I applied that exact systems thinking to local search. You don't need another brochure site. You need a machine that captures intent, routes leads and converts them on autopilot.
+Your google local pack ranking is not a marketing mystery it is a revenue system waiting to be calibrated. I spent nearly a decade running revenue operations for scaling companies, managing Salesforce pipelines and Power BI dashboards that tracked every dollar from first click to closed deal. I scaled a partner network by two thousand two hundred percent, hit ninety five percent forecast accuracy and drove three point seven million dollars through pure forecasting work. When I started building websites for Dallas and Fort Worth businesses, I applied that exact systems thinking to local search. You don't need another brochure site. You need a machine that captures intent, routes leads and converts them on autopilot.
 
 ## The google local pack is a pipeline, not a billboard
 
@@ -32,13 +32,13 @@ I built a simple attribution model that tracks every phone call from the map pin
 
 You can pour money into ads and still sit in the bottom half of the map results. Paid search and organic local SEO operate on different tracks. The google local pack rewards foundational hygiene before it rewards aggressive tactics. I see too many DFW contractors spending thousands on backlink campaigns while their name, address and phone number still show an old route number or a suite that no longer exists.
 
-Citation accuracy is non negotiable. I run a weekly audit using BrightLocal and cross check it against Apple Maps, Bing Places and the major industry directories. One mismatched phone number drops your prominence score by a measurable margin. Google treats inconsistent data as a trust signal failure. I also strip out any directory that requires you to pay for a listing just to get your NAP listed. Those are vanity links that do nothing for local ranking and waste budget.
+Citation accuracy is non negotiable. I run a weekly citation audit and cross check it against Apple Maps, Bing Places and the major industry directories. One mismatched phone number is enough to weaken your prominence. Google treats inconsistent data as a trust signal failure. I also strip out any directory that requires you to pay for a listing just to get your NAP listed. Those are vanity links that do nothing for local ranking and waste budget.
 
 Your Google Business Profile needs to function like a sales page, not an archive of past posts. I structure the primary category around exact match search intent for DFW markets. A dental implants clinic in McKinney should lead with that phrase, not a generic cosmetic dentistry label. I fill out every attribute, add service area radii that match actual drive times and upload real photos of the shop floor, not stock images. The algorithm reads image metadata to confirm legitimacy. I also make sure the booking link sits above the fold on mobile because friction kills local conversions faster than anything else.
 
 ## The automation layer most DFW shops ignore
 
-Ranking in the top three means nothing if your team drops leads before they become revenue. I treat local SEO and booking automation as one continuous system. When a prospect clicks your map pin, they should land on a mobile optimized page that loads in under two seconds. That page must capture their name, phone number and service request without making them fill out a ten field form. I use Typeform or HubSpot forms with conditional logic to keep it tight.
+Ranking in the top three means nothing if your team drops leads before they become revenue. I treat local SEO and booking automation as one continuous system. When a prospect clicks your map pin, they should land on a mobile optimized page that loads in under two seconds. That page must capture their name, phone number and service request without making them fill out a ten field form. I use HubSpot forms with conditional logic to keep it tight.
 
 Once the lead enters your CRM, Workato triggers a three step workflow. First, an immediate SMS confirmation with a direct calendar link. Second, a personalized email with your service area map and pricing tiers. Third, a task assigned to the technician or account manager based on job type. I monitor response time in Power BI because Google tracks how quickly you reply to customer messages on your GBP. Fast replies boost local visibility and reduce lead leakage.
 
@@ -48,7 +48,7 @@ I also automate review requests through a post job email sequence that fires for
 
 Most agencies send you a PDF that says rankings improved without showing what happened to your pipeline. I don't report on rankings unless they tie directly to booked revenue. I build a dashboard that tracks cost per lead, close rate and average ticket size from local search. If your google local pack traffic doubles but booked jobs stay flat, you have a conversion problem, not an awareness problem.
 
-I use the [cost estimator tool](/tools/cost-estimator) on our site to run scenario models before we commit to a campaign. You input your average job value and current close rate, then see exactly how many map clicks you need to hit a specific monthly revenue target. The math changes when you factor in automation. A manual sales process typically drops thirty percent of leads between first contact and close. An automated routing system cuts that loss to under ten percent. That directly impacts your customer acquisition cost and extends your runway during slow seasons.
+I use the [cost estimator tool](/tools/cost-estimator) on our site to run scenario models before we commit to a campaign. You input your average job value and current close rate, then see exactly how many map clicks you need to hit a specific monthly revenue target. The math changes when you factor in automation. A manual sales process leaks leads between first contact and close. An automated routing system plugs most of that leak. That directly impacts your customer acquisition cost and extends your runway during slow seasons.
 
 I also track attribution windows. Local service leads often take five to fourteen days to convert because they are comparing quotes. I set up multi touch attribution in HubSpot so we can see the full journey from initial map click to signed contract. This tells you whether your local SEO efforts are actually feeding the pipeline or just collecting vanity traffic.
 
@@ -60,7 +60,7 @@ Schema markup is another area where most shops leave money on the table. I gener
 
 I also audit your internal linking structure. Your service pages need to support each other with contextual backlinks that pass equity toward your money keywords. A general contractor in Arlington should link their roofing page to their gutter installation page when the context makes sense. This creates a topical cluster that Google reads as expertise. I run regular crawl reports to find broken redirects and orphaned pages that drain your indexing budget.
 
-## The exact workflow I use to put clients in the top three
+## The exact workflow I use to push for the top three
 
 I don't guess. I run a repeatable system that aligns local SEO with revenue operations. Here is the sequence I follow for every new DFW client:
 

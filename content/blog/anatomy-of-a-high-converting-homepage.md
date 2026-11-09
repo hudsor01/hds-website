@@ -17,7 +17,7 @@ readingTime: 0
 bodyFormat: markdown
 ---
 
-Your homepage is either printing money or setting it on fire and most Dallas businesses do not even know which one they are running. I spent nine years in revenue operations before I ever touched a WordPress dashboard. I built forecasting models that hit 95 percent accuracy, scaled partner networks by two thousand two hundred percent and routed three point seven million dollars through pipeline tracking. You do not get those numbers by making things look pretty. You get them by treating every pixel like a transaction in a pipeline. A high-converting homepage is just the front end of that same machinery. It needs an offer, a routing mechanism and a tracking layer that tells you exactly where the money leaks.
+Your homepage is either printing money or setting it on fire and most Dallas businesses do not even know which one they are running. I spent nearly a decade in revenue operations before I ever touched a WordPress dashboard. I built forecasting models that hit 95 percent accuracy, scaled partner networks by two thousand two hundred percent and drove three point seven million dollars in revenue through forecasting work. You do not get those numbers by making things look pretty. You get them by treating every pixel like a transaction in a pipeline. A high-converting homepage is just the front end of that same machinery. It needs an offer, a routing mechanism and a tracking layer that tells you exactly where the money leaks.
 
 ## The Revenue System Mindset
 
@@ -25,11 +25,11 @@ Most agencies sell you a brochure. I sell you an intake valve. When I started bu
 
 ### Above The Fold
 
-I see too many local businesses waste the first three seconds of a visitor session. You have exactly one shot to tell someone in Plano or Fort Worth what you do, who it is for and why they should click. Keep the headline under nine words. State the outcome, not the feature. A dental clinic in Arlington should write “Same day emergency crowns without the wait” instead of “Comprehensive restorative dentistry.” The subhead answers the objection. Price, timeline or guarantee. Then put a single primary button that routes directly to a booking flow or payment page. Do not split the traffic between phone calls, contact forms and newsletter signups. One path. Measure it in GA4 and track the click through Workato into HubSpot or Salesforce.
+Too many local businesses waste the first three seconds of a visitor session. You have exactly one shot to tell someone in Plano or Fort Worth what you do, who it is for and why they should click. Keep the headline under nine words. State the outcome, not the feature. A dental clinic in Arlington should write “Same day emergency crowns without the wait” instead of “Comprehensive restorative dentistry.” The subhead answers the objection. Price, timeline or guarantee. Then put a single primary button that routes directly to a booking flow or payment page. Do not split the traffic between phone calls, contact forms and newsletter signups. One path. Measure it in GA4 and track the click through Workato into HubSpot or Salesforce.
 
 ### The Proof Engine
 
-Social proof stops the scroll, but only if it is structured for conversion. I do not want a wall of five star quotes that nobody reads. I want verifiable outcomes tied to local intent. List the exact neighborhoods you serve, name the number of clients handled last quarter and show a screenshot of a calendar booking confirmation with names redacted. If you run paid ads to this page, the proof must match the ad copy exactly. Mismatched messaging drops conversion rates by forty percent or more. Add a short video of you explaining the onboarding process. People buy from operators who show their face and explain the workflow.
+Social proof stops the scroll, but only if it is structured for conversion. I do not want a wall of five star quotes that nobody reads. I want verifiable outcomes tied to local intent. List the exact neighborhoods you serve, name the number of clients handled last quarter and show a screenshot of a calendar booking confirmation with names redacted. If you run paid ads to this page, the proof must match the ad copy exactly. Mismatched messaging tells the visitor they clicked the wrong thing and they leave. Add a short video of you explaining the onboarding process. People buy from operators who show their face and explain the workflow.
 
 ### Automation and Routing Logic
 
@@ -43,13 +43,13 @@ A high-converting homepage must survive the local search economy. DFW visitors t
 
 ### The Numbers Game
 
-Building a site that actually moves revenue requires upfront discipline. I charge between four and eight thousand dollars for a fully tracked homepage built on Webflow or WordPress, depending on the automation depth. That includes design, SEO and automation setup. You will also need a CRM subscription, a booking tool and analytics access. The real cost is lost leads from broken routing or missing UTM tracking. I have seen businesses bleed two thousand dollars a month in missed opportunities because their contact form did not push data to the sales pipeline. Fix the leak and you pay for the rebuild in three weeks.
+Building a site that actually moves revenue requires upfront discipline. I charge between four and eight thousand dollars for a fully tracked homepage built on Webflow or WordPress, depending on the automation depth. That includes design, SEO and automation setup. You will also need a CRM subscription, a booking tool and analytics access. The real cost is lost leads from broken routing or missing UTM tracking. A contact form that never pushes data to the sales pipeline can quietly cost more each month than the rebuild does. Fix the leak and the rebuild pays for itself.
 
 ## Run Your Own Numbers Before You Build
 
-You can map out the structure until you are blue in the face, but guessing at your current conversion rate wastes time. I built a simple calculator that takes your traffic numbers, average order value and current booking rate to show exactly where the revenue is sitting on the table. [try our free tool](/tools/roi-calculator). Plug in your Dallas traffic volume and see what a two point five percent lift actually means for your bottom line. The math is brutal but fair. 
+You can map out the structure until you are blue in the face, but guessing at your current conversion rate wastes time. I built a simple calculator that takes your traffic numbers, average order value and current booking rate to show exactly where the revenue is sitting on the table. [Try our free tool](/tools/roi-calculator). Plug in your Dallas traffic volume and see what a two point five percent lift actually means for your bottom line. The math is brutal but fair. 
 
-I watch small business owners skip this step every week. They buy a new site, dump it online and then wonder why the phone does not ring. The homepage is only as strong as the tracking behind it. [Run your own numbers with our ROI calculator](/tools/roi-calculator) before we touch a single line of code. You will immediately see whether your current setup is leaking bookings or capturing them efficiently. The output tells you exactly where to focus your budget.
+Plenty of small business owners skip this step. They buy a new site, dump it online and then wonder why the phone does not ring. The homepage is only as strong as the tracking behind it. [Run your own numbers with our ROI calculator](/tools/roi-calculator) before we touch a single line of code. You will immediately see whether your current setup is leaking bookings or capturing them efficiently. The output tells you exactly where to focus your budget.
 
 ### Implementation Checklist
 
@@ -63,4 +63,4 @@ I do not hand off a site and walk away. We implement the tracking, audit the rou
 
 ## Close the Loop
 
-A high-converting homepage is not a marketing expense. It is the intake valve for your entire revenue engine. Treat it like one and you will see forecast accuracy climb, lead response time drop and close rates stabilize. I build these systems for DallasFort Worth operators who want predictability over guesswork. Let us map your funnel, wire the tracking and ship a page that actually books appointments or processes payments. [Book a strategy call with us](/contact) and we will run your current traffic through the calculator together.
+A high-converting homepage is not a marketing expense. It is the intake valve for your entire revenue engine. Treat it like one and you will see forecast accuracy climb, lead response time drop and close rates stabilize. I build these systems for Dallas-Fort Worth operators who want predictability over guesswork. Let us map your funnel, wire the tracking and ship a page that actually books appointments or processes payments. [Book a strategy call with us](/contact) and we will run your current traffic through the calculator together.

@@ -17,7 +17,7 @@ readingTime: 0
 bodyFormat: markdown
 ---
 
-Most founders launch software and hope the marketing team figures out how to sell it. I spent nine years inside revenue operations before building custom code for clients who actually needed a saas web application built to capture data, route leads and close deals. TenantFlow proves that your platform should never sit idle waiting for human intervention to generate revenue.
+Most founders launch software and hope the marketing team figures out how to sell it. I spent nearly a decade inside revenue operations before building custom code for clients who actually needed a saas web application built to capture data, route leads and close deals. TenantFlow proves that your platform should never sit idle waiting for human intervention to generate revenue.
 
 ## The Build Started With A Revenue Question, Not a Wireframe
 
@@ -52,7 +52,7 @@ The results came in fast and predictable. We tracked everything against the base
 * Monthly recurring revenue grew from forty two thousand to one hundred twenty eight thousand in six months
 * Forecast accuracy improved to ninety three percent because usage data now drives pipeline projections
 
-I do not believe in vanity metrics. Page views mean nothing if they do not correlate with revenue events. I tie every frontend interaction to a backend conversion step. The [performance calculator](/tools/performance-calculator) we use internally shows exactly how infrastructure changes impact user retention and server costs. We optimized the database queries, which reduced load times by sixty percent and cut AWS monthly spend by three thousand dollars. That pure margin went straight into paid acquisition because the unit economics finally worked.
+I do not believe in vanity metrics. Page views mean nothing if they do not correlate with revenue events. I tie every frontend interaction to a backend conversion step. The [performance calculator](/tools/performance-calculator) on our site shows how much revenue a slow application or site costs you. We optimized the database queries, which reduced load times by sixty percent and cut AWS monthly spend by three thousand dollars. That pure margin went straight into paid acquisition because the unit economics finally worked.
 
 ### How We Keep It Running Without Breaking Budgets
 
@@ -60,7 +60,7 @@ Maintenance is not an afterthought. I treat post launch support as a revenue pro
 
 We also built a partner portal directly into the app architecture using PartnerStack for referral tracking. The client could invite local DFW contractors to promote TenantFlow and automatically track commission payouts. That network scaled by two hundred percent in eight months without adding headcount. I configured attribution rules that give credit to the right channel based on first touch and last touch data. Revenue attribution becomes transparent instead of a guessing game.
 
-I always run clients through our [services page](/services) so they understand exactly what gets delivered at each phase. We never hide behind technical jargon to justify scope. Every sprint delivers a measurable outcome. If a feature does not improve activation, retention or expansion revenue, we cut it. Discipline keeps projects on time and budgets intact.
+I always walk clients through our [services page](/services) so they understand exactly what gets delivered at each phase. We never hide behind technical jargon to justify scope. Every sprint delivers a measurable outcome. If a feature does not improve activation, retention or expansion revenue, we cut it. Discipline keeps projects on time and budgets intact.
 
 ## Stop Treating Software Like A Decoration
 
