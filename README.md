@@ -33,25 +33,14 @@ A modern, high-performance business website built with Next.js 15, React, and Ty
    ```
 
 3. **Setup environment variables**
+   Create `.env.local` (git-ignored) or pull the values from Vercel:
    ```bash
-   cp .env.example .env.local
+   vercel env pull .env.local
    ```
 
-   Then edit `.env.local` with your actual values.
+   `src/env.ts` is the source of truth for every variable and its validation. See [Environment Variables](#environment-variables) below.
 
-   **Required Variables** (app won't start without these):
-   - `RESEND_API_KEY` - Email service for contact forms
-   - `POSTGRES_URL` - Neon PostgreSQL connection string
-
-   **Optional Variables**:
-   - `CSRF_SECRET` - CSRF protection (required in production, 32+ characters)
-   - `DISCORD_WEBHOOK_URL` - Discord notifications for leads
-   - `SLACK_WEBHOOK_URL` - Slack notifications for leads
-   - `ADMIN_EMAILS` - Comma-separated admin email addresses
-
-   See `.env.example` for all available options and detailed documentation.
-
-   **Note**: Environment variables are validated at runtime using [@t3-oss/env-nextjs](https://env.t3.gg). The app will fail to start if required variables are missing or invalid.
+   **Note**: Environment variables are validated using [@t3-oss/env-nextjs](https://env.t3.gg). The app fails to start if a variable is present but invalid.
 
 4. **Run the development server**
 
@@ -198,16 +187,23 @@ The website includes automated email sequences:
 
 ## Environment Variables
 
-See `.env.example` for a complete list with detailed instructions.
+All variables are defined and validated in `src/env.ts`.
 
-**Required:**
-- `RESEND_API_KEY` - Email service for contact form
+**Required in production** (`VERCEL_ENV=production`; optional elsewhere):
+- `POSTGRES_URL` - Neon PostgreSQL connection string
+- `CSRF_SECRET` - CSRF protection (32+ characters)
+- `ADMIN_SECRET` - Bearer token for admin endpoints
+- `CRON_SECRET` - Bearer token for scheduled tasks
+- `BETTER_AUTH_SECRET` - Better Auth session signing
 
-**Optional:**
-- `CSRF_SECRET` - CSRF protection
-- `CRON_SECRET` - Scheduled task authentication
+**Optional / feature-gated:**
+- `RESEND_API_KEY` - Email delivery (contact form, newsletter)
+- `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` - Rate limiting
+- `DISCORD_WEBHOOK_URL`, `SLACK_WEBHOOK_URL` - Lead notifications
+- `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN` - Error monitoring
+- `DATABASE_URL_UNPOOLED` - Direct connection for drizzle-kit
 
-Run `cp .env.example .env.local` to get started.
+Defaults: `BASE_URL` and `NEXT_PUBLIC_BASE_URL` default to `http://localhost:3000`.
 
 ## Analytics & Monitoring
 The website includes comprehensive analytics and performance monitoring
