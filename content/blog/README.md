@@ -3,7 +3,9 @@
 The only source of truth for blog posts. Each `*.md` file is one post. At build
 time `scripts/blog/build.ts` validates every file and compiles the published ones
 into `src/lib/_generated/blog-posts.ts`, which the site serves directly (no
-database). Merging a file is publishing it. See
+database). Merging a file is publishing it, unless its `publishedAt` is in the
+future: then it waits in the repo and goes live on that date (UTC), when the
+daily `publish-scheduled-posts` workflow rebuilds production. See
 `.planning/milestones/v9-REQUIREMENTS.md` for the v9 content rules.
 
 ## File = one post
@@ -23,7 +25,7 @@ targetKeyword: "keyword"       # R1/R7: appears in title, H1, first 100 words
 pillar: 3                      # 1-10, the content pillar (tracking/distribution)
 tags: ["seo", "local-marketing"] # R4: tags[0] = primary pillar tag (taxonomy slug)
 author: "richard-hudson"       # author slug (src/lib/constants/blog.ts)
-publishedAt: "2026-06-17"      # date
+publishedAt: "2026-06-17"      # date; a future date schedules the post
 published: true                # R14
 featured: false                # optional
 featureImage: ""               # optional in-article hero; OG image is always the dynamic card
@@ -50,9 +52,10 @@ Full list: `.planning/milestones/v9-REQUIREMENTS.md`.
 
 ```bash
 bun run blog:validate              # lint every post against R1-R9/R14 (CI gate)
-bun run blog:build                 # compile published posts for the site (runs in dev/build)
+bun run blog:build                 # compile live posts for the site (runs in dev/build)
+bun run scripts/blog/pending.ts https://hudsondigitalsolutions.com  # due posts not live yet
 bun run blog:generate -- --pillar 3 --topic "..."  # LM Studio draft -> new .md
 ```
 
-Generation uses the local LM Studio model `mistral-small-3.2-24b-instruct-2506-mlx`
+Generation uses the local LM Studio model `qwen3.6-35b-a3b-mlx` (override with `LM_STUDIO_MODEL`)
 at `http://localhost:1234/v1`; Claude reviews every draft before commit.

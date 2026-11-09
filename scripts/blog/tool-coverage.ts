@@ -7,7 +7,7 @@
  * Strict is the milestone-close gate; the plain report tracks progress.
  */
 import { TOOL_ROUTES } from '@/lib/constants/routes'
-import { listPostFiles, parsePost } from './lib'
+import { isLive, listPostFiles, parsePost } from './lib'
 
 // Public tools only. The testimonial-collector is admin-only (gated, not in
 // the TOOLS registry or the sitemap), so it is intentionally excluded.
@@ -19,14 +19,16 @@ const PUBLIC_TOOLS = Object.values(TOOL_ROUTES).filter(
 function main(): void {
 	const strict = process.argv.includes('--strict')
 
-	// Map each tool path -> published post slugs that link to it.
+	// Map each tool path -> live post slugs that link to it. Scheduled posts
+	// do not count until their date: the tool is not reachable from them yet.
+	const now = new Date()
 	const coverage = new Map<string, string[]>()
 	for (const tool of PUBLIC_TOOLS) {
 		coverage.set(tool, [])
 	}
 	for (const file of listPostFiles()) {
 		const post = parsePost(file)
-		if (!post.data.published) {
+		if (!isLive(post.data, now)) {
 			continue
 		}
 		for (const tool of PUBLIC_TOOLS) {

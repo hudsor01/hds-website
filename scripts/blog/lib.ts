@@ -65,6 +65,15 @@ export function parsePost(file: string, dir: string = CONTENT_DIR): ParsedPost {
 	}
 }
 
+/**
+ * Live = published and dated today or earlier. A future publishedAt schedules
+ * the post: it stays out of the build until the first build on or after that
+ * day (UTC midnight), which the publish-scheduled-posts workflow triggers.
+ */
+export function isLive(data: BlogFrontmatter, now: Date): boolean {
+	return data.published && Date.parse(data.publishedAt) <= now.getTime()
+}
+
 export function wordCount(body: string): number {
 	return body
 		.replace(/<[^>]+>/g, ' ')

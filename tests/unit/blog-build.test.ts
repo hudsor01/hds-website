@@ -114,6 +114,25 @@ describe('compilePosts', () => {
 		expect(compilePosts(dir).map(p => p.slug)).toEqual(['live-post'])
 	})
 
+	test('holds scheduled posts back until their date', () => {
+		writePost({ slug: 'live-post', publishedAt: '2026-03-01' })
+		writePost({ slug: 'scheduled-post', publishedAt: '2026-03-02' })
+		const dayBefore = new Date('2026-03-01T23:59:59.999Z')
+		const onTheDay = new Date('2026-03-02T00:00:00.000Z')
+		expect(compilePosts(dir, dayBefore).map(p => p.slug)).toEqual(['live-post'])
+		expect(compilePosts(dir, onTheDay).map(p => p.slug)).toEqual([
+			'scheduled-post',
+			'live-post'
+		])
+	})
+
+	test('throws when every published post is still scheduled', () => {
+		writePost({ slug: 'scheduled-post', publishedAt: '2026-03-02' })
+		expect(() =>
+			compilePosts(dir, new Date('2026-03-01T00:00:00.000Z'))
+		).toThrow(/no published posts/)
+	})
+
 	test('ignores the README template', () => {
 		writePost({ slug: 'live-post' })
 		writeFileSync(join(dir, 'README.md'), '# Not a post\n')
