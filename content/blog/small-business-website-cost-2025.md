@@ -1,198 +1,125 @@
 ---
-title: 'Small Business Website Cost in 2025: What to Expect'
+title: "Small Business Website Cost: What You'll Actually Pay"
 slug: small-business-website-cost-2025
-excerpt: A comprehensive breakdown of website costs for small businesses.
-pillar: 0
+excerpt: >-
+  What a small business website costs to build and run, from DIY builders to
+  custom builds, plus the line items most quotes quietly leave out.
+targetKeyword: small business website cost
+pillar: 8
 tags:
   - business
+  - small-business
 author: richard-hudson
 publishedAt: '2024-11-01'
 published: true
 featured: false
 featureImage: ''
-readingTime: 10
-bodyFormat: html
-legacy: true
+readingTime: 0
+bodyFormat: markdown
 ---
 
-<h2>The Real Question Isn't "How Much?"</h2>
-<blockquote>
-<p><strong>2025 Cost Overview:</strong></p>
-<ul>
-<li>DIY Website Builders: $10-50/month</li>
-<li>Freelance Design: $500-5,000</li>
-<li>Professional Agency: $3,000-25,000</li>
-<li>Enterprise Solutions: $25,000-100,000+</li>
-</ul>
-</blockquote>
-<p>Every day, small business owners ask: <strong>"How much does a website cost?"</strong></p>
-<p>But that's the wrong question.</p>
-<p>The right question is: <strong>"What's the return on investment for each website option, and which choice positions my business for growth?"</strong></p>
-<p>After helping small businesses navigate this decision, I've learned that the cheapest option is rarely the most economical, and the most expensive isn't always the best value.</p>
-<p>This guide breaks down the true costs, hidden expenses, and ROI potential of each approach so you can make an informed investment decision.</p>
-<h2>Option 1: DIY Website Builders</h2>
-<p><strong>Upfront Cost: $10-50/month</strong></p>
-<p><strong>True Cost: $500-2,000/year + opportunity cost</strong></p>
-<p><strong>Popular Platforms:</strong></p>
-<ul>
-<li>Wix: $14-39/month</li>
-<li>Squarespace: $16-40/month</li>
-<li>WordPress.com: $4-45/month</li>
-<li>Shopify: $29-299/month (e-commerce)</li>
-</ul>
-<p><strong>Hidden Costs:</strong></p>
-<ul>
-<li>Premium templates: $50-200</li>
-<li>Stock photos: $10-50/image</li>
-<li>Apps and plugins: $5-50/month each</li>
-<li>Professional email: $6-15/month</li>
-<li>SSL certificates: $50-200/year</li>
-<li>SEO tools: $20-100/month</li>
-</ul>
-<blockquote>
-<p><strong>Reality Check:</strong> DIY builders promise "professional websites in hours," but most small business owners spend 40-80 hours learning the platform, creating content, and troubleshooting issues.</p>
-<p>At $50/hour (conservative business owner value), that's $2,000-4,000 in opportunity cost.</p>
-</blockquote>
-<p><strong>Best For:</strong></p>
-<ul>
-<li>Very early-stage businesses testing market fit</li>
-<li>Personal brands with simple needs</li>
-<li>Businesses with internal technical expertise</li>
-<li>Companies comfortable with limitations</li>
-</ul>
-<h2>Option 2: Freelance Web Designer</h2>
-<p><strong>Cost Range: $500-5,000</strong></p>
-<p><strong>Average: $1,500-3,000</strong></p>
-<p><strong>What You Get:</strong></p>
-<ul>
-<li>Custom design (usually template-based)</li>
-<li>Basic SEO setup</li>
-<li>Mobile responsiveness</li>
-<li>5-10 pages of content</li>
-<li>Contact forms</li>
-<li>Basic analytics setup</li>
-</ul>
-<p><strong>Additional Costs:</strong></p>
-<ul>
-<li>Hosting: $10-50/month</li>
-<li>Domain: $12-20/year</li>
-<li>Maintenance: $50-200/month</li>
-<li>Content updates: $50-100/hour</li>
-<li>Security monitoring: $20-50/month</li>
-</ul>
-<p><strong>The Freelancer Gamble:</strong></p>
-<p>Freelance quality varies dramatically. You might get:</p>
-<ul>
-<li>Exceptional value from an experienced professional</li>
-<li>Decent work that meets basic needs</li>
-<li>Poor execution requiring expensive fixes</li>
-<li>Abandonment mid-project</li>
-</ul>
-<blockquote><p><strong>Success Story:</strong> Local restaurant hired freelancer for $2,500. Site increased online orders by 180% in first 6 months, generating additional $45,000 in revenue. ROI: 1,700%</p></blockquote>
-<h2>Option 3: Professional Web Development Agency</h2>
-<p><strong>Cost Range: $3,000-25,000</strong></p>
-<p><strong>Small Business Sweet Spot: $5,000-12,000</strong></p>
-<p><strong>Professional Agency Includes:</strong></p>
-<ul>
-<li>Strategic discovery and planning</li>
-<li>Custom design system</li>
-<li>Professional development</li>
-<li>Advanced SEO optimization</li>
-<li>Performance optimization</li>
-<li>Security implementation</li>
-<li>Analytics and tracking setup</li>
-<li>Content management system</li>
-<li>Mobile optimization</li>
-<li>Ongoing support and maintenance</li>
-</ul>
-<p><strong>Why the Higher Cost?</strong></p>
-<ul>
-<li><strong>Team Expertise:</strong> Designers, developers, strategists, and project managers</li>
-<li><strong>Business Focus:</strong> Websites engineered for specific business outcomes</li>
-<li><strong>Technology Stack:</strong> Modern, scalable, secure platforms</li>
-<li><strong>Support Systems:</strong> Ongoing optimization and maintenance</li>
-</ul>
-<blockquote><p><strong>ROI Reality:</strong> Professional websites typically generate 3-10x their investment in the first year through improved conversion rates, SEO performance, and brand credibility.</p></blockquote>
-<h2>Hidden Costs Every Small Business Must Consider</h2>
-<h3>Ongoing Maintenance (Often Overlooked)</h3>
-<ul>
-<li><strong>Security Updates:</strong> $50-200/month</li>
-<li><strong>Content Updates:</strong> $100-500/month</li>
-<li><strong>Performance Monitoring:</strong> $25-100/month</li>
-<li><strong>Backup Services:</strong> $10-50/month</li>
-<li><strong>SEO Optimization:</strong> $300-2,000/month</li>
-</ul>
-<h3>Integration Costs</h3>
-<ul>
-<li><strong>Email Marketing:</strong> $20-300/month</li>
-<li><strong>CRM Integration:</strong> $50-500/month</li>
-<li><strong>E-commerce Platform:</strong> $29-299/month</li>
-<li><strong>Analytics Tools:</strong> $100-1,000/month</li>
-<li><strong>Live Chat Software:</strong> $20-200/month</li>
-</ul>
-<h2>ROI Analysis by Investment Level</h2>
-<p><strong>DIY Website:</strong> Investment $1,500-3,000/year. Typical ROI: 50-150%. Best case: $5,000-10,000 annual revenue.</p>
-<p><strong>Freelance Design:</strong> Investment $3,000-6,000. Typical ROI: 200-500%. Best case: $15,000-50,000 annual revenue.</p>
-<p><strong>Professional Agency:</strong> Investment $8,000-15,000. Typical ROI: 300-1,000%. Best case: $50,000-500,000 annual revenue.</p>
-<h2>How to Choose the Right Investment Level</h2>
-<h3>Choose DIY When:</h3>
-<ul>
-<li>You're validating a business concept</li>
-<li>Budget is extremely limited ($0-2,000)</li>
-<li>You have technical skills and time</li>
-<li>Website needs are very simple</li>
-</ul>
-<h3>Choose Freelance When:</h3>
-<ul>
-<li>You have $2,000-5,000 budget</li>
-<li>Need is straightforward but professional</li>
-<li>You can manage the project yourself</li>
-<li>Timeline is flexible</li>
-</ul>
-<h3>Choose Professional Agency When:</h3>
-<ul>
-<li>Website is critical to business growth</li>
-<li>Budget allows $5,000+ investment</li>
-<li>You need strategic guidance</li>
-<li>Integration complexity is high</li>
-<li>You want ongoing support</li>
-</ul>
-<blockquote><p><strong>Hudson Digital Approach:</strong> We help small businesses invest strategically in websites that grow with them. Our $8,000-15,000 professional sites typically generate $50,000-200,000+ in additional annual revenue within 18 months.</p></blockquote>
-<h2>Red Flags to Avoid</h2>
-<h3>DIY Red Flags:</h3>
-<ul>
-<li>Spending 40+ hours without progress</li>
-<li>Website looks obviously template-based</li>
-<li>Can't integrate necessary business tools</li>
-<li>Loading speed is consistently slow</li>
-</ul>
-<h3>Freelancer Red Flags:</h3>
-<ul>
-<li>No portfolio of similar businesses</li>
-<li>Extremely low pricing ($200-500 for full site)</li>
-<li>Poor communication or missed deadlines</li>
-<li>No contracts or project scope</li>
-<li>Unwilling to provide references</li>
-</ul>
-<h3>Agency Red Flags:</h3>
-<ul>
-<li>No discovery process or strategy session</li>
-<li>Cookie-cutter pricing without customization</li>
-<li>Can't explain technical decisions</li>
-<li>No ongoing support options</li>
-<li>Pressure tactics or unrealistic promises</li>
-</ul>
-<h2>2025 Cost Trends and Predictions</h2>
-<p><strong>AI Integration Costs:</strong> Expect to see $500-2,000 add-ons for AI-powered features like chatbots, content generation, and personalization.</p>
-<p><strong>Performance Requirements:</strong> Google's emphasis on Core Web Vitals means performance optimization is becoming non-negotiable, adding $1,000-3,000 to professional projects.</p>
-<p><strong>Security Compliance:</strong> Increased data privacy regulations mean security features will add $500-1,500 to professional websites.</p>
-<h2>Making the Investment Decision</h2>
-<p>The best website investment isn't about finding the cheapest option—it's about maximizing return on investment.</p>
-<p><strong>Ask yourself:</strong></p>
-<ul>
-<li>How much revenue do I lose to poor first impressions?</li>
-<li>What's the value of one additional customer per month?</li>
-<li>How much time am I willing to spend on website management?</li>
-<li>What are my growth goals for the next 2-3 years?</li>
-</ul>
-<p>A $10,000 professional website that generates $100,000 in additional revenue is infinitely more valuable than a $1,000 site that generates $5,000.</p>
+The honest answer to small business website cost is a range. It's wide because people are pricing completely different things. A DIY builder runs a monthly subscription and your weekends. A template site from a freelancer runs a few thousand dollars. A custom build tied into your CRM, booking and payments runs more. All three get called "a website." Only one of them is built to bring in work.
+
+I spent nearly a decade in revenue operations running Salesforce, HubSpot, Power BI and Workato before I started building sites. That background changes how I price a website. I don't ask how many pages you want. I ask what a lead is worth to you and where that lead goes after someone hits submit. The second question decides most of the budget.
+
+Here's how the money actually breaks down.
+
+## The Short Answer: Four Price Tiers
+
+Most quotes you'll get fall into one of these buckets.
+
+- **DIY builder (Wix, Squarespace and similar):** no build fee, a monthly plan in the tens of dollars, plus every hour you spend building and fixing it yourself. Cheapest on paper. Most expensive in time.
+- **Freelancer template build:** usually low thousands. You get a theme with your logo and copy dropped in. Quality varies wildly from person to person.
+- **Small studio custom build:** this is where we sit. Our own [cost estimator](/tools/cost-estimator) starts a landing page at $2,000, a full business website at $5,000 and an e-commerce store at $10,000, before features.
+- **Full-service agency:** often well into five figures, sometimes more. You're paying for strategy sessions, account managers and layers of review.
+
+If you want the side-by-side on who you hire rather than what you buy, I broke that down in [agency vs freelancer vs DIY](/blog/agency-vs-freelancer-vs-diy-website-cost).
+
+The tier matters less than what's inside it. Two $5,000 quotes can deliver wildly different things.
+
+## What You're Actually Paying For
+
+A website quote is a bundle of separate jobs. When you can see the jobs, you can compare quotes honestly.
+
+### Design and Build
+
+This is the part everyone pictures: layout, pages, mobile responsiveness, speed. A five-page service business site and a forty-page multi-location site are not the same job, even if they share a template. Page count drives cost, but so does how custom each page is. A unique service page for every city you cover in DFW takes real work. A single "Areas We Serve" list doesn't.
+
+Speed belongs in this line item too. A fast site is mostly a decision made during the build: lean code, compressed images, no pile of plugins. Fixing a slow site after launch costs more than building it fast the first time.
+
+### Content and Copy
+
+This is the line item owners underestimate the most. Somebody has to write the service descriptions, the about page and the answers to the questions your customers actually ask. If you write it yourself, the project waits on you. If the developer writes it, it costs money. If nobody writes it, you launch with filler that converts nobody.
+
+Photos fall in the same bucket. Real photos of your crew, your trucks and your finished jobs beat stock images every time. Budget for a shoot or at least a phone and a free afternoon.
+
+### Integrations and Automation
+
+This is where small business website cost jumps. It's also where the money earns its keep. Our estimator prices a booking system at $3,500, payment processing at $3,000 and advanced contact forms at $800. Those numbers look big next to a plain contact form. Then you count what the plain form costs you.
+
+A plain form emails someone. That someone has to read it, retype it into a CRM or spreadsheet and remember to call back. Every handoff is a place a lead can die. A form wired straight into HubSpot or Salesforce creates the record, assigns it and starts the follow-up without a human touching it. I built that kind of plumbing for years in Workato. It's the same job on a smaller scale.
+
+### Tracking and Attribution
+
+If your site can't tell you which page or which ad produced a lead, you can't tell which marketing dollars work. Proper setup means conversion events on every form, call button and booking, with source data passed into your CRM. Our estimator lists advanced analytics at $1,200. Cheap builds skip it almost every time. You won't notice until you're spending real money on ads and can't explain the results.
+
+## The Ongoing Costs Nobody Quotes
+
+The build fee is a one-time number. These keep coming.
+
+- **Domain:** a .com usually renews for well under $30 a year. Cheap, but make sure it's registered in your name, not your developer's.
+- **Hosting:** ranges from a few dollars a month to much more depending on traffic and how the site is built. Modern static or serverless hosting is often inexpensive for a small business site.
+- **Business email:** Google Workspace or Microsoft 365, billed per user per month.
+- **Maintenance:** security updates, backups, uptime checks and small content edits. I covered real numbers in [website maintenance costs explained](/blog/website-maintenance-costs-explained).
+- **Connected software:** your CRM, booking tool and email marketing platform each carry their own subscription.
+- **Payment processing:** Stripe, Square and similar processors take a percentage plus a small fee on every transaction. That's a cost of taking cards online, not of the website, but plan for it.
+
+Add these up over three years, not one. A builder that looks cheap at month one can cost more than a custom build by year three once you stack the plan, the paid apps and your own hours. I walk through that math in [the hidden costs of DIY website builders](/blog/hidden-costs-of-diy-website-builders).
+
+## The All-in-One Platform Trap
+
+Some providers sell the website as part of a monthly bundle with listings, reviews and a CRM. The monthly price looks manageable. The catch shows up when you try to leave.
+
+On a lot of these platforms you rent the site. Cancel and the design, the content and sometimes the domain setup stay behind. You start over and risk losing the rankings you spent years building. Before you sign any bundle, ask one question in writing: if I cancel, what do I keep? If the answer is vague, assume the answer is nothing.
+
+If you're already stuck on one of these platforms, we handle the move with your rankings intact. Our [website migration](/website-migration) page explains how that works.
+
+## How to Tell If the Price Is Worth It
+
+Stop comparing website quotes to each other. Compare them to what a customer is worth.
+
+Here's the math I'd run. Say an average job is worth $1,500 to you and your site produces four extra booked jobs a month because the forms work, the tracking works and follow-up happens automatically. That's $6,000 a month in new revenue. A $7,000 build pays for itself in under two months. Now flip it. If the cheapest option loses even one job a month to a broken form or a slow page, it's costing you more than the price difference.
+
+Your numbers will be different. Plug your own average job value and close rate into our [ROI calculator](/tools/roi-calculator) and see where the break-even sits. That's the same discipline I used forecasting pipeline in revenue operations, where I drove $3.7M through forecasting work: tie the spend to the revenue it produces or don't spend it.
+
+## Questions to Ask Before You Sign
+
+Take these to every developer you talk to. The answers tell you what the quote really includes.
+
+1. Who owns the code, the content and the domain when the project ends?
+2. Where do form submissions go? Can they land directly in my CRM?
+3. What conversion tracking is included? Who sets it up?
+4. What does the site score on Google PageSpeed Insights on mobile? Do you commit to a target?
+5. Who writes the copy? How many revision rounds are included?
+6. What does ongoing maintenance cost per month? What does it cover?
+7. If I want to add booking or payments later, what does that cost?
+
+A good developer answers all seven without squirming. If someone can't tell you where your leads go after submit, they're selling you a brochure.
+
+## What I'd Budget at Each Stage
+
+**Just starting out, testing an idea:** a single focused landing page with a working form and call tracking. Get proof of demand before you pay for a full site.
+
+**Established local service business:** a full business site with a page for each service, a page for each core area you serve, a form connected to your CRM and tracking on every conversion. This is the sweet spot for most DFW service businesses, whether you're in Frisco or Fort Worth.
+
+**Selling online or taking deposits:** add booking and payments. The added cost pays back fast when customers can book and pay at 10pm without calling you.
+
+**Multi-location or high ad spend:** invest heavily in attribution. When you're spending thousands a month on ads, knowing which campaign produced which job is worth far more than another design revision.
+
+For a deeper planning walkthrough, see [how to set a website budget](/blog/how-to-budget-for-a-website-project).
+
+## Get a Real Number for Your Business
+
+Ranges only go so far. Your number depends on your pages, your integrations and what you need the site to do once it's live. Run your scope through our [free cost estimator](/tools/cost-estimator) for a starting figure in two minutes.
+
+When you want a quote built around your actual sales process, [reach out through our contact page](/contact). I'll ask what a lead is worth and where it should go, then price the site around that answer.

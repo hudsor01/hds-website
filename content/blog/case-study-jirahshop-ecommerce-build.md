@@ -33,7 +33,7 @@ We rebuilt the measurement framework around five core metrics. I want these trac
 
 ## The Automation Stack That Moved Revenue
 
-I spent nine years in revenue operations before I started building websites. That background shapes how I architect every project. A storefront is just a transaction interface if it does not talk to the rest of your stack. We connected Shopify Plus, HubSpot CRM, Salesforce ERP, Workato for middleware and Stripe for payment routing. The goal was simple. Remove manual handoffs where data gets dropped or delayed. Automate the steps that do not require human judgment. Keep humans in the loop only for exceptions and high-value conversations.
+I spent nearly a decade in revenue operations before I started building websites. That background shapes how I architect every project. A storefront is just a transaction interface if it does not talk to the rest of your stack. We connected Shopify Plus, HubSpot CRM, Salesforce ERP, Workato for middleware and Stripe for payment routing. The goal was simple. Remove manual handoffs where data gets dropped or delayed. Automate the steps that do not require human judgment. Keep humans in the loop only for exceptions and high-value conversations.
 
 We mapped fifteen critical workflows before writing any frontend code. Each workflow had an owner, a trigger and a success metric. I treat automation like pipeline management. If a step does not move revenue forward or protect margin, it gets cut. We focused on the steps that actually drove growth and reduced operational drag.
 
