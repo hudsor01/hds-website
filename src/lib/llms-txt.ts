@@ -73,11 +73,6 @@ const KEY_PAGES: readonly LinkEntry[] = [
 
 const SECONDARY_PAGES: readonly LinkEntry[] = [
 	{
-		title: 'Help center',
-		href: '/help',
-		description: 'Guides for the free tools and common questions.'
-	},
-	{
 		title: 'Locations',
 		href: '/locations',
 		description: 'Local web design pages by city.'
