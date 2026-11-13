@@ -22,6 +22,11 @@ import { getResendClient, isResendConfigured } from '@/lib/resend-client'
 import { scheduleEmail } from '@/lib/scheduled-emails'
 import { calculatorLeads } from '@/lib/schemas/leads'
 
+// Richard prices every project after scoping it, so a cost range emailed
+// from the estimator must say it is a market ballpark, not his quote.
+const COST_ESTIMATE_NOTE =
+	'This is a typical market range for planning, not a quote. I price every project after a free website plan call, once I know what it will take.'
+
 // Caps on the free-form JSON columns (inputs/results). These are persisted
 // verbatim, so an unbounded payload is a storage-bloat / payload-DoS vector.
 // The byte cap is the real protection: it bounds total serialized size
@@ -227,6 +232,11 @@ async function handleCalculatorSubmit(request: NextRequest) {
 							<CalculatorResults
 								calculatorName={getCalculatorName(calculator_type)}
 								results={results || {}}
+								note={
+									calculator_type === 'cost-estimator'
+										? COST_ESTIMATE_NOTE
+										: undefined
+								}
 							/>
 						)
 					})

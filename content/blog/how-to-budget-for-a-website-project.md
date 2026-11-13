@@ -44,13 +44,13 @@ I hit ninety five percent forecast accuracy across a partner network that scaled
 
 You need to assign a dollar value to each component based on expected return. A custom booking widget costs more than a static contact form, but it eliminates scheduling back and forth. Say your sales team closes seventy percent of qualified appointments. Every extra appointment the widget books is worth seventy percent of your average ticket, so you can work out exactly how many it needs to pay for itself. I track attribution in Power BI because I need to see which page, which keyword and which automation path actually generated revenue. Dashboards do not lie. They show you exactly where your spend leaks and which channels deliver profitable deals.
 
-Here is how I structure the numbers for a typical DFW service business:
-- Foundation build and mobile optimization: four to six thousand dollars
-- Local SEO setup with neighborhood targeting: two to three thousand dollars
-- CRM integration and workflow automation: three to five thousand dollars
-- Ongoing maintenance, analytics and quarterly audits: two hundred to four hundred dollars monthly
+Here are the lines I break a budget into for a typical DFW service business. I price every project after scoping it, so treat these as the buckets to plan around, not as numbers:
+- Foundation build and mobile optimization
+- Local SEO setup with neighborhood targeting
+- CRM integration and workflow automation
+- Ongoing maintenance, analytics and quarterly audits, billed monthly
 
-Those ranges assume custom builds with real integration work. You will see lower quotes from freelancers who hand you a WordPress theme and disappear. Those sites break when traffic spikes or Google updates its algorithm. You end up paying double to fix what should have been wired correctly the first time. I do not cut corners on database architecture or routing logic because shortcuts always surface as lost revenue down the line.
+The integration lines are where a custom build carries the most real work. You will see lower quotes from freelancers who hand you a WordPress theme and disappear. Those sites break when traffic spikes or Google updates its algorithm. You end up paying double to fix what should have been wired correctly the first time. I do not cut corners on database architecture or routing logic because shortcuts always surface as lost revenue down the line.
 
 ### The DFW Traffic Math
 

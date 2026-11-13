@@ -1,6 +1,7 @@
 /**
  * Website Cost Estimator
- * Get instant project cost estimates based on requirements and features
+ * Typical market cost range for a website project (a planning ballpark,
+ * not a quote: Hudson Digital prices every project after scoping it)
  */
 
 import type { Metadata } from 'next'
@@ -10,11 +11,11 @@ export const metadata: Metadata = {
 	alternates: { canonical: '/tools/cost-estimator' },
 	title: 'Website Cost Estimator | Hudson Digital Solutions',
 	description:
-		'Get an instant estimate for your website project based on your requirements, features, and design complexity, so you can plan and budget with confidence.',
+		'See what a website like yours typically costs on the market, by type, pages, features and design. A planning ballpark for your budget, not a quote.',
 	openGraph: {
 		title: 'Website Cost Estimator',
 		description:
-			'Get instant project cost estimates based on requirements and features.'
+			'See the typical market cost range for a website like yours. A planning ballpark, not a quote.'
 	}
 }
 

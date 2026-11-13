@@ -43,7 +43,7 @@ Anything shorter is a brochure. Anything longer is padding. You get what you see
 
 I run a studio across Dallas and Fort Worth. The local market is full of contractors, medical groups and professional services who just want the site live before trade shows. I understand the pressure. The problem is that vague scopes create budget blowouts. A plumbing company in Grapevine might think they just need a contact form and a service page list. They actually need automated booking, Google Business Profile sync and review tracking to compete with the big franchise brands.
 
-When a quote ignores those details, change orders appear later. That is where margins die. I build my pricing around fixed deliverables and clear acceptance criteria. If you need live chat, we scope the API limits upfront. If you want payment processing for your consulting packages, we map the Stripe or Square integration before writing code. You will never see a surprise line item if the original quote ties every feature to a measurable outcome.
+When a quote ignores those details, change orders appear later. That is where margins die. I price each project after scoping it, around clear deliverables and acceptance criteria. If you need live chat, we scope the API limits upfront. If you want payment processing for your consulting packages, we map the Stripe or Square integration before writing code. You will never see a surprise line item if the original quote ties every feature to a measurable outcome.
 
 I also price based on data velocity. Static pages cost less. Dynamic components that pull from external databases or trigger email sequences cost more because they require testing and error handling. I track this in Power BI so both sides can see where the hours go. Transparency prevents arguments. I hit ninety five percent forecast accuracy in revenue operations. The same habit applies to a build: lock scope early and track variance daily. You should demand that level of discipline from your vendor.
 
@@ -51,7 +51,7 @@ I also price based on data velocity. Static pages cost less. Dynamic components 
 
 Hourly rates sound flexible until you realize nobody tracks time accurately on creative work. Fixed pricing forces discipline. It means we estimate the architecture, lock the scope and absorb small adjustments if we overestimated. You get budget certainty while I control the workflow. The trade off is that you must define success before we start. If your marketing team keeps changing the wireframes, the quote will adjust. That is not a flaw. It is how professional service contracts work.
 
-I prefer fixed pricing for the core build and hourly rates only for post launch iteration. That structure protects your cash flow while giving you room to experiment with conversion tests once the foundation is stable. Predictable development costs let you channel savings into paid traffic and retention campaigns. You should structure your quote the same way.
+I set one project price for the core build once the scope is clear. That structure protects your cash flow while giving you room to experiment with conversion tests once the foundation is stable. Predictable development costs let you channel savings into paid traffic and retention campaigns. You should structure your quote the same way.
 
 ## What Happens After Launch
 
@@ -83,4 +83,4 @@ Ask for a line by line breakdown that matches your tech stack. If they mention H
 
 You also need to verify their operational discipline. I expect clear communication rhythms, documented QA checklists and version control for every asset. If a vendor cannot explain how they test forms across mobile devices or how they verify tracking pixels before launch, you are handing your revenue system to someone who guesses. Guessing costs more than structured development over the long run.
 
-If you want to see exactly how we structure our pricing and scope, check out [our services](/services). You will find transparent packages that align with revenue operations best practices instead of vague design tiers. When you are ready to lock in a scope, define your metrics and get the site live without budget surprises, [reach out through our contact page](/contact). We will map your lead flow, draft the architecture and hand you a quote that actually tells the truth.
+If you want to see what I build, check out [my services](/services). There are no packages or design tiers: every project gets scoped and priced on its own. When you are ready to lock in a scope, define your metrics and get the site live without budget surprises, [reach out through the contact page](/contact). I will map your lead flow, draft the architecture and hand you a quote that actually tells the truth.

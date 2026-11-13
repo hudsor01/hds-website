@@ -329,11 +329,11 @@ export default function HomePage() {
 									Website Cost Estimator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
-									Get a straight, no-guesswork price for your project based on
-									the features, scope and pages you actually need.
+									See what a site with the pages and features you need typically
+									costs. A ballpark to plan with, not a quote.
 								</p>
 								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
-									Get Estimate
+									See the Range
 									<ArrowRight className="w-4 h-4" />
 								</div>
 							</div>

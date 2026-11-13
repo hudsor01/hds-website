@@ -209,41 +209,41 @@ export function CostEstimatorClient() {
 			return
 		}
 		const text = [
-			'Website Cost Estimate',
-			`Estimated Cost Range: ${results.estimatedCost}`,
-			`Average Estimate: ${results.averageCost}`,
-			`Estimated Timeline: ${results.timeline}`,
-			`Monthly Maintenance: ${results.monthlyMaintenance}`
+			'Website Cost: Typical Market Range (not a quote)',
+			`Typical Market Range: ${results.estimatedCost}`,
+			`Market Midpoint: ${results.averageCost}`,
+			`Typical Timeline: ${results.timeline}`,
+			`Typical Maintenance: ${results.monthlyMaintenance}`
 		].join('\n')
 		navigator.clipboard.writeText(text).catch(() => undefined)
 	}
 
 	const resultItems = [
 		{
-			label: 'Estimated Cost Range',
+			label: 'Typical Market Range',
 			value: results.estimatedCost || '$0',
-			description: 'Based on your project requirements',
+			description: 'What a project like this commonly costs. Not a quote.',
 			highlight: true
 		},
 		{
-			label: 'Average Estimate',
+			label: 'Market Midpoint',
 			value: results.averageCost || '$0',
-			description: 'Most likely final cost'
+			description: 'Middle of the typical range'
 		},
 		{
-			label: 'Estimated Timeline',
+			label: 'Typical Timeline',
 			value: results.timeline || '0 weeks',
-			description: 'From kickoff to launch'
+			description: 'Common kickoff-to-launch time for this scope'
 		},
 		{
-			label: 'Monthly Maintenance',
+			label: 'Typical Maintenance',
 			value: results.monthlyMaintenance || 'Not included',
-			description: 'Optional ongoing support & updates'
+			description: 'Common cost of ongoing support and updates'
 		}
 	]
 
 	const actions: ToolAction[] = [
-		{ type: 'copy', label: 'Copy Estimate', onClick: handleCopy }
+		{ type: 'copy', label: 'Copy Range', onClick: handleCopy }
 	]
 
 	const formSlot = (
@@ -342,9 +342,11 @@ export function CostEstimatorClient() {
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="flexible">Flexible (Best Price)</SelectItem>
+						<SelectItem value="flexible">Flexible</SelectItem>
 						<SelectItem value="normal">Normal (4-12 weeks)</SelectItem>
-						<SelectItem value="urgent">Urgent (+25% Rush Fee)</SelectItem>
+						<SelectItem value="urgent">
+							Urgent (rush work typically +25%)
+						</SelectItem>
 					</SelectContent>
 				</Select>
 			</div>
@@ -387,18 +389,27 @@ export function CostEstimatorClient() {
 		</form>
 	)
 
+	// The numbers are a market ballpark: Richard prices every project after
+	// scoping it, so the result must never read as his quote.
 	const resultSlot = showResults ? (
-		<CalculatorResults
-			results={resultItems}
-			calculatorType="cost-estimator"
-			inputs={inputs}
-		/>
+		<div className="space-y-comfortable">
+			<CalculatorResults
+				results={resultItems}
+				calculatorType="cost-estimator"
+				inputs={inputs}
+			/>
+			<p className="text-sm text-muted-foreground">
+				This is a typical market range for planning, not a quote. I price every
+				project after a free website plan call, once I know what it will take.
+				You get the timeline and a real price on that call.
+			</p>
+		</div>
 	) : undefined
 
 	return (
 		<ToolPageLayout
 			title="Website Cost Estimator"
-			description="Get an instant estimate for your website project based on your specific requirements and features"
+			description="See what a website like yours typically costs on the market, by type, pages and features. A planning ballpark, not a quote"
 			columns="two"
 			formSlot={formSlot}
 			resultSlot={resultSlot}

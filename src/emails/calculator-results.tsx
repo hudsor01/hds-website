@@ -7,6 +7,8 @@ import { BrandLayout } from './_components/brand-layout'
 interface CalculatorResultsProps {
 	calculatorName: string
 	results: Record<string, unknown>
+	/** Shown under the results, e.g. that a cost range is not a quote. */
+	note?: string
 }
 
 // Outlook desktop (Word rendering engine) ignores linear-gradient. The
@@ -74,7 +76,8 @@ const CTA_WRAP_STYLE = {
 
 export function CalculatorResults({
 	calculatorName,
-	results
+	results,
+	note
 }: CalculatorResultsProps) {
 	const entries = Object.entries(results)
 	const lastIndex = entries.length - 1
@@ -106,6 +109,14 @@ export function CalculatorResults({
 						</Section>
 					))}
 				</Section>
+
+				{note && (
+					<Text
+						style={{ fontSize: '14px', lineHeight: 1.6, margin: '0 0 20px' }}
+					>
+						{note}
+					</Text>
+				)}
 
 				<Section style={NEXT_STEPS_BOX_STYLE}>
 					<Text style={{ margin: 0, fontSize: '14px', lineHeight: 1.6 }}>

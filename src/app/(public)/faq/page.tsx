@@ -56,7 +56,7 @@ const faqSchema = {
 			name: 'How much does it cost to build a website?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Every project is priced to what you actually need, so it comes down to page count, features and timeline. The fastest way to a real number is our free Cost Estimator tool or a free website plan call. I will walk you through options that fit your budget. No surprise line items later.'
+				text: 'Every project is priced to what it actually takes: page count, features and timeline. I give you a real price on a free website plan call, once I know what your project needs. For a rough market ballpark before we talk, try the free Cost Estimator. No surprise line items later.'
 			}
 		},
 		{

@@ -43,7 +43,7 @@ A high-converting homepage must survive the local search economy. DFW visitors t
 
 ### The Numbers Game
 
-Building a site that actually moves revenue requires upfront discipline. I charge between four and eight thousand dollars for a fully tracked homepage built on Webflow or WordPress, depending on the automation depth. That includes design, SEO and automation setup. You will also need a CRM subscription, a booking tool and analytics access. The real cost is lost leads from broken routing or missing UTM tracking. A contact form that never pushes data to the sales pipeline can quietly cost more each month than the rebuild does. Fix the leak and the rebuild pays for itself.
+Building a site that actually moves revenue requires upfront discipline. What a fully tracked homepage costs depends on how deep the automation goes, so I price each project after a free website plan call, once I know what it will take. The build covers design, SEO and automation setup. You will also need a CRM subscription, a booking tool and analytics access. The real cost is lost leads from broken routing or missing UTM tracking. A contact form that never pushes data to the sales pipeline can quietly cost more each month than the rebuild does. Fix the leak and the rebuild pays for itself.
 
 ## Run Your Own Numbers Before You Build
 
