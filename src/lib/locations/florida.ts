@@ -21,11 +21,6 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			'Coconut Grove',
 			'Fort Lauderdale'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Bilingual Websites',
@@ -64,11 +59,6 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			'Thomasville Road',
 			'Crawfordville'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -107,11 +97,6 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			'Southside',
 			'St. Augustine'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Trade & Service Websites',
@@ -150,11 +135,6 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			'Brandon',
 			'Wesley Chapel'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -193,11 +173,6 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			'Kissimmee',
 			'Sanford'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Hospitality Websites',
@@ -236,11 +211,6 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			'Treasure Island',
 			'Clearwater'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Arts & Gallery Websites',
@@ -279,11 +249,6 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			'Davie',
 			'Pompano Beach'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Marine Industry Websites',

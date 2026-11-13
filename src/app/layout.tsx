@@ -131,6 +131,16 @@ export default function RootLayout({
 					type="image/png"
 				/>
 
+				{/* Feed discovery. A plain tag, not metadata.alternates: pages that
+				    set their own alternates (every canonical) replace the root
+				    object wholesale, which would drop the feed link there. */}
+				<link
+					rel="alternate"
+					type="application/rss+xml"
+					title="Hudson Digital Solutions Blog"
+					href="https://hudsondigitalsolutions.com/rss"
+				/>
+
 				{/* Manifest for PWA */}
 				<link rel="manifest" href="/manifest.json" />
 

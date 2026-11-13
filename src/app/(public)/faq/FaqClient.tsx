@@ -34,7 +34,7 @@ const faqs = [
 			{
 				question: 'What is your typical project timeline?',
 				answer:
-					'Depends on scope. A simple site runs 4 to 6 weeks. Add online store or booking and it is 8 to 12 weeks. Bigger builds with custom features and payment setup run 3 to 6 months. If you are on a deadline, I can put dedicated time on it and move faster.'
+					'Depends on scope. A simple site runs 1 to 4 weeks. Add online store or booking and it is 8 to 12 weeks. Bigger builds with custom features and payment setup run 3 to 6 months. If you are on a deadline, I can put dedicated time on it and move faster.'
 			}
 		]
 	},
@@ -84,7 +84,7 @@ const faqs = [
 			{
 				question: 'Can you integrate with my existing systems?',
 				answer:
-					'Yes. I spent about ten years in revenue operations wiring up HubSpot, Salesforce, Stripe and Workato before I built sites, so connecting tools is home turf. Booking system, email platform, payment processor: if it has a connection point, I can tie it into your site and your workflow.'
+					'Yes. I spent nearly a decade in revenue operations wiring up HubSpot, Salesforce, Stripe and Workato before I built sites, so connecting tools is home turf. Booking system, email platform, payment processor: if it has a connection point, I can tie it into your site and your workflow.'
 			},
 			{
 				question: 'Do you provide hosting and maintenance?',

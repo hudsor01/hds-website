@@ -21,11 +21,6 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 			'Aurora',
 			'Lakewood'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -64,11 +59,6 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 			'Monument',
 			'Woodland Park'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -107,11 +97,6 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 			'Wellington',
 			'Loveland'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'E-Commerce Websites',
@@ -150,11 +135,6 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 			'Superior',
 			'Longmont'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'E-Commerce Websites',
@@ -193,11 +173,6 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 			'Rye',
 			'Beulah'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -236,11 +211,6 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 			'Highlands Ranch',
 			'Lone Tree'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',

@@ -21,11 +21,6 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			'Huntersville',
 			'Concord'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -64,11 +59,6 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			'Garner',
 			'Wake Forest'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Fast, Modern Websites',
@@ -107,11 +97,6 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			'Burlington',
 			'Kernersville'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Manufacturer Websites',
@@ -150,11 +135,6 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			'Chapel Hill',
 			'Hillsborough'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -193,11 +173,6 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			'Lewisville',
 			'Kernersville'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Fast, Modern Websites',
@@ -236,11 +211,6 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			'Leland',
 			'Hampstead'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'E-Commerce Websites',
@@ -279,11 +249,6 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			'Hendersonville',
 			'Brevard'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'E-Commerce Websites',
@@ -322,11 +287,6 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			'Southern Pines',
 			'Sanford'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',

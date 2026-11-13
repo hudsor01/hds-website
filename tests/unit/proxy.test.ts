@@ -295,6 +295,7 @@ describe('proxy matcher', () => {
 			'/favicon-32x32.png',
 			'/HDS-Logo.webp',
 			'/robots.txt',
+			'/llms.txt',
 			'/sitemap.xml',
 			'/manifest.json',
 			'/offline.html',

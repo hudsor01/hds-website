@@ -10,7 +10,7 @@ const CURRENT_YEAR = new Date().getFullYear()
 
 const footerLinks = {
 	// Anchor IDs (`#design-build`, `#seo`, `#booking`) are owned by the
-	// SERVICES list in `src/components/ui/ServicesGrid.tsx` — keep the
+	// SERVICES list in `src/lib/constants/services.ts` — keep the
 	// two lists in sync. Audit #239: the labels here used to land on the
 	// services index page with no anchor, leaving operators to scroll.
 	solutions: [
@@ -94,9 +94,9 @@ export default function Footer() {
 									Websites built like revenue systems for DFW small businesses.
 								</p>
 								<p className="text-xs text-muted-foreground">
-									I spent ten years in revenue operations before I built sites.
-									I treat your website the same way: a system that turns the
-									reputation you&apos;ve earned into booked customers.
+									I spent nearly a decade in revenue operations before I built
+									sites. I treat your website the same way: a system that turns
+									the reputation you&apos;ve earned into booked customers.
 								</p>
 							</div>
 

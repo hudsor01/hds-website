@@ -30,6 +30,19 @@ const nextConfig: NextConfig = {
 				source: '/blog/case-study-jirahshop-ecommerce-build',
 				destination: '/showcase',
 				permanent: false
+			},
+			// Ink 37 Tattoos is paused too and unpublished the same way
+			// (scripts/sql/2026-11-13-unpublish-ink37.sql). Its old case study
+			// claimed results the project never had, so it is gone, not hidden.
+			{
+				source: '/showcase/ink37-tattoos',
+				destination: '/showcase',
+				permanent: false
+			},
+			{
+				source: '/blog/case-study-ink37-local-service-website',
+				destination: '/showcase',
+				permanent: false
 			}
 		]
 	},

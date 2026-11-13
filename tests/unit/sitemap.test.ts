@@ -29,12 +29,13 @@ describe('sitemap', () => {
 		const urls = new Set((await sitemap()).map(e => e.url))
 		expect(urls.has(`${SITE_URL}/terms`)).toBe(true)
 		expect(urls.has(`${SITE_URL}/website-migration`)).toBe(true)
-		expect(urls.has(`${SITE_URL}/help`)).toBe(true)
 	})
 
-	it('emits help category URLs derived from the help-articles registry', async () => {
-		const urls = new Set((await sitemap()).map(e => e.url))
-		expect(urls.has(`${SITE_URL}/help/getting-started`)).toBe(true)
+	it('leaves out help pages that have no published articles', async () => {
+		// No database here, so there are no help articles: the hub and every
+		// category are empty pages and must not be listed.
+		const urls = (await sitemap()).map(e => e.url)
+		expect(urls.some(u => u.startsWith(`${SITE_URL}/help`))).toBe(false)
 	})
 
 	it('emits exactly one URL per published blog post', async () => {

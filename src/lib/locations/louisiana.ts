@@ -21,11 +21,6 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 			'Gonzales',
 			'Zachary'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -64,11 +59,6 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 			'Metairie',
 			'Kenner'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Restaurant Websites',
@@ -107,11 +97,6 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 			'Minden',
 			'Ruston'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Healthcare Websites',
@@ -150,11 +135,6 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 			'Carencro',
 			'Breaux Bridge'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Energy Sector Websites',
@@ -193,11 +173,6 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 			'Iowa',
 			'Vinton'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Energy Sector Websites',
@@ -236,11 +211,6 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 			'Bastrop',
 			'Richwood'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Healthcare Websites',
@@ -279,11 +249,6 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 			'Lecompte',
 			'Woodworth'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Contractor Websites',

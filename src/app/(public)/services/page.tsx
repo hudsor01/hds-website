@@ -4,7 +4,14 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ProcessSteps } from '@/components/ui/ProcessSteps'
 import { ServicesGrid } from '@/components/ui/ServicesGrid'
+import { JsonLd } from '@/components/utilities/JsonLd'
+import { SERVICES } from '@/lib/constants/services'
 import { SEO_CONFIG } from '@/lib/seo-config'
+import {
+	generateLocalBusinessSchema,
+	generateServiceSchema,
+	toJsonLdGraph
+} from '@/lib/seo-utils'
 
 export const metadata: Metadata = {
 	title: SEO_CONFIG.services?.title || 'Services | Hudson Digital Solutions',
@@ -54,6 +61,13 @@ const stats: Stat[] = [
 export default function ServicesPage() {
 	return (
 		<div className="min-h-screen bg-background">
+			<JsonLd
+				data={toJsonLdGraph([
+					generateLocalBusinessSchema(),
+					...SERVICES.map(generateServiceSchema)
+				])}
+			/>
+
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
@@ -124,7 +138,7 @@ export default function ServicesPage() {
 							Proven Results
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Before I built websites, I spent about ten years in revenue
+							Before I built websites, I spent nearly a decade in revenue
 							operations running Salesforce, Power BI and HubSpot. I bring that
 							same focus on outcomes here: done right, on time, no technical
 							runaround.

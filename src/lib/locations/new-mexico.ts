@@ -21,11 +21,6 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 			'Eldorado',
 			'Los Alamos'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Art & Gallery Websites',
@@ -64,11 +59,6 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 			'Rio Rancho',
 			'Corrales'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -107,11 +97,6 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 			'Anthony',
 			'Hatch'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -150,11 +135,6 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 			'Placitas',
 			'Corrales'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -193,11 +173,6 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 			'Carlsbad',
 			'Ruidoso'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Tourism Websites',
@@ -236,11 +211,6 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 			'Shiprock',
 			'Durango'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
