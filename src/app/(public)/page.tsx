@@ -276,8 +276,8 @@ export default function HomePage() {
 
 					<p className="text-sm text-muted-foreground text-center mt-8 max-w-2xl mx-auto">
 						Need online booking, payments, or automatic lead follow-up wired in?
-						I spent ten years in revenue operations before building websites, so
-						I handle that part too once your site is doing its job.
+						I spent nearly a decade in revenue operations before building
+						websites, so I handle that part too once your site is doing its job.
 					</p>
 				</div>
 			</section>

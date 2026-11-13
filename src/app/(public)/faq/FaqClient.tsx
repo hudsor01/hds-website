@@ -84,7 +84,7 @@ const faqs = [
 			{
 				question: 'Can you integrate with my existing systems?',
 				answer:
-					'Yes. I spent about ten years in revenue operations wiring up HubSpot, Salesforce, Stripe and Workato before I built sites, so connecting tools is home turf. Booking system, email platform, payment processor: if it has a connection point, I can tie it into your site and your workflow.'
+					'Yes. I spent nearly a decade in revenue operations wiring up HubSpot, Salesforce, Stripe and Workato before I built sites, so connecting tools is home turf. Booking system, email platform, payment processor: if it has a connection point, I can tie it into your site and your workflow.'
 			},
 			{
 				question: 'Do you provide hosting and maintenance?',
