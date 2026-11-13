@@ -109,25 +109,18 @@ test.describe('Location slug page (Dallas)', () => {
 		await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
 	})
 
-	test('has stats grid with 3 stats', async ({ page }) => {
-		// Location pages have a 3-column stats grid
-		const statsSection = page.locator('section').filter({
-			has: page.locator('.grid')
-		})
-		await expect(statsSection.first()).toBeVisible()
-
-		// 3 stat cells: businesses, projects, satisfaction
-		const statValues = page.locator('.tabular-nums')
-		const count = await statValues.count()
-		expect(count).toBeGreaterThanOrEqual(3)
+	test('makes no per-city client or project claims', async ({ page }) => {
+		// The page used to show "10+ Local Businesses Served, 40+ Projects
+		// Completed, 100% Client Satisfaction" for every city, none of it real.
+		await expect(page.getByText(/Projects Completed/i)).toHaveCount(0)
+		await expect(page.getByText(/Client Satisfaction/i)).toHaveCount(0)
 	})
 
 	test('has services section', async ({ page }) => {
-		// Location pages list the services offered in that area
-		const servicesHeading = page.getByRole('heading', {
-			name: /services/i
-		})
-		await expect(servicesHeading.first()).toBeVisible()
+		// Location pages list what is built for that area
+		await expect(
+			page.getByRole('heading', { name: /What I Build in Dallas/i })
+		).toBeVisible()
 	})
 
 	test('has closing CTA button linking to /contact', async ({ page }) => {
