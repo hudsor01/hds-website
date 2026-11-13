@@ -31,6 +31,12 @@ describe('entity graph', () => {
 		expect(business.founder['@id']).toBe(FOUNDER_ID)
 	})
 
+	test('opening hours match the contact page: weekdays 9am to 6pm', () => {
+		const [hours] = generateLocalBusinessSchema().openingHoursSpecification
+		expect(hours).toMatchObject({ opens: '09:00', closes: '18:00' })
+		expect(hours?.dayOfWeek).toHaveLength(5)
+	})
+
 	test('the site-wide organization is the same entity and names the founder', () => {
 		const org = generateOrganizationSchema()
 		expect(org['@id']).toBe(BUSINESS_ID)

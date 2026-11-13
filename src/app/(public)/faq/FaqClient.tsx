@@ -34,7 +34,7 @@ const faqs = [
 			{
 				question: 'What is your typical project timeline?',
 				answer:
-					'Depends on scope. A simple site runs 4 to 6 weeks. Add online store or booking and it is 8 to 12 weeks. Bigger builds with custom features and payment setup run 3 to 6 months. If you are on a deadline, I can put dedicated time on it and move faster.'
+					'Depends on scope. A simple site runs 1 to 4 weeks. Add online store or booking and it is 8 to 12 weeks. Bigger builds with custom features and payment setup run 3 to 6 months. If you are on a deadline, I can put dedicated time on it and move faster.'
 			}
 		]
 	},
