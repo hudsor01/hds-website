@@ -4,6 +4,7 @@ interface EmailData {
 	firstName?: string
 	company?: string
 	service?: string
+	calculatorType?: string
 }
 
 /**
@@ -17,6 +18,7 @@ export function replaceTemplateVariables(
 		.replace(/\{\{firstName\}\}/g, data.firstName || 'there')
 		.replace(/\{\{company\}\}/g, data.company || 'your business')
 		.replace(/\{\{service\}\}/g, data.service || 'your project')
+		.replace(/\{\{calculatorType\}\}/g, data.calculatorType || 'calculator')
 }
 
 /**

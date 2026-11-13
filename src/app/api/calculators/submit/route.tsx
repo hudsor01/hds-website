@@ -211,6 +211,9 @@ async function handleCalculatorSubmit(request: NextRequest) {
 		const inputCompany =
 			typeof inputs.company === 'string' ? inputs.company : ''
 		const nameParts = inputName.split(' ')
+		// The drip greets by first name only when the visitor typed one;
+		// otherwise the template falls back to "Hi there".
+		const inputFirstName = inputName.trim().split(/\s+/)[0] ?? ''
 		const firstName = nameParts[0] || email.split('@')[0] || ''
 		const lastName = nameParts.slice(1).join(' ') || ''
 		const sequenceId =
@@ -281,9 +284,13 @@ async function handleCalculatorSubmit(request: NextRequest) {
 					sequenceId,
 					stepId: 'followup-1',
 					scheduledFor: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+					// Keys must match the {{placeholders}} in
+					// src/data/email-templates.json (see replaceTemplateVariables).
+					// They used to be calculator_type / lead_score, so every
+					// calculator drip went out with a literal {{calculatorType}}.
 					variables: {
-						calculator_type: getCalculatorName(calculator_type),
-						lead_score: leadScore.toString()
+						calculatorType: getCalculatorName(calculator_type),
+						...(inputFirstName && { firstName: inputFirstName })
 					}
 				})
 				logger.info('Follow-up email scheduled', { email, sequenceId })
