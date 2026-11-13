@@ -8,59 +8,21 @@
  * remain a Server Component and export metadata.
  */
 
+import type { LucideIcon } from 'lucide-react'
 import { BarChart3, Code2, Settings } from 'lucide-react'
 import { Card } from '@/components/ui/card'
+import { SERVICES, type Service } from '@/lib/constants/services'
 
-// Slugs mirror the in-page anchors the Footer's "Solutions" links
-// target (`/services#design-build`, `/services#seo`, `/services#booking`).
-// Keep these in sync with the Footer link list (audit #239).
-const SERVICES = [
-	{
-		anchorId: 'design-build',
-		title: 'Website Design & Development',
-		description:
-			'A professional website built for your business from scratch: clean custom design, mobile-ready, and fast. Comes with an admin panel so you control your content without calling a developer.',
-		features: [
-			'Custom Design Built for Your Brand',
-			'Mobile-Ready on Every Device',
-			'Fast-Loading, Every Time',
-			'Admin Panel You Control',
-			'Contact & Inquiry Forms Built In'
-		],
-		icon: Code2,
-		gradient: 'bg-muted'
-	},
-	{
-		anchorId: 'seo',
-		title: 'Get Found on Google',
-		description:
-			'A great website only works if customers can find it. We build in the SEO, speed, and local-search details that put your business in front of the people already searching for what you do.',
-		features: [
-			'Local SEO Setup',
-			'Google Business Profile Optimization',
-			'Fast Core Web Vitals',
-			'Search-Ready Page Structure',
-			'Indexed & Submitted to Google'
-		],
-		icon: BarChart3,
-		gradient: 'bg-info/20'
-	},
-	{
-		anchorId: 'booking',
-		title: 'Booking, Payments & Follow-Up',
-		description:
-			'Once your site is live, we can wire in the extras: let customers book online, take payments, and make sure no inquiry slips through the cracks.',
-		features: [
-			'Online Booking & Scheduling',
-			'Stripe Payment Setup',
-			'Calendar Sync',
-			'Automatic Lead Follow-Up',
-			'CRM Connection'
-		],
-		icon: Settings,
-		gradient: 'bg-muted'
-	}
-]
+// Copy lives in @/lib/constants/services (shared with the Service JSON-LD
+// and /llms.txt); only the presentation-specific icon and tint live here.
+const PRESENTATION: Record<
+	Service['anchorId'],
+	{ icon: LucideIcon; gradient: string }
+> = {
+	'design-build': { icon: Code2, gradient: 'bg-muted' },
+	seo: { icon: BarChart3, gradient: 'bg-info/20' },
+	booking: { icon: Settings, gradient: 'bg-muted' }
+}
 
 export function ServicesGrid() {
 	return (
@@ -78,8 +40,8 @@ export function ServicesGrid() {
 						title={service.title}
 						description={service.description}
 						features={service.features}
-						icon={service.icon}
-						gradient={service.gradient}
+						icon={PRESENTATION[service.anchorId].icon}
+						gradient={PRESENTATION[service.anchorId].gradient}
 					/>
 				</div>
 			))}

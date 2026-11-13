@@ -1,7 +1,13 @@
 import { Clock, Mail, Phone } from 'lucide-react'
 import type { Metadata } from 'next'
 import dynamic from 'next/dynamic'
+import { JsonLd } from '@/components/utilities/JsonLd'
 import { BUSINESS_INFO } from '@/lib/constants/business'
+import {
+	generateContactPageSchema,
+	generateLocalBusinessSchema,
+	toJsonLdGraph
+} from '@/lib/seo-utils'
 
 export const metadata: Metadata = {
 	alternates: { canonical: '/contact' },
@@ -62,6 +68,13 @@ const ServiceAreaMapWrapper = dynamic(
 export default function ContactPage() {
 	return (
 		<div className="min-h-screen bg-background">
+			<JsonLd
+				data={toJsonLdGraph([
+					generateContactPageSchema(),
+					generateLocalBusinessSchema()
+				])}
+			/>
+
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
