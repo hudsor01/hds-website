@@ -17,6 +17,12 @@ import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { SEO_CONFIG } from '@/lib/seo-config'
+import {
+	generateAboutPageSchema,
+	generateFounderSchema,
+	generateLocalBusinessSchema,
+	toJsonLdGraph
+} from '@/lib/seo-utils'
 
 // Next.js 15: SSR meta for SEO/TTFB
 export const metadata: Metadata = {
@@ -64,11 +70,13 @@ export const metadata: Metadata = {
 export default function AboutPage() {
 	return (
 		<div className="min-h-screen bg-background">
-			{SEO_CONFIG.about?.structuredData && (
-				<JsonLd
-					data={SEO_CONFIG.about.structuredData as Record<string, unknown>}
-				/>
-			)}
+			<JsonLd
+				data={toJsonLdGraph([
+					generateAboutPageSchema(),
+					generateFounderSchema(),
+					generateLocalBusinessSchema()
+				])}
+			/>
 
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">

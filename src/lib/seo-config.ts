@@ -8,12 +8,8 @@ const SITE_URL = 'https://hudsondigitalsolutions.com'
  * SEO_CONFIG provides static metadata for each route.
  * Use this in your page's generateMetadata exports.
  *
- * Note: structured data is emitted via <JsonLd /> components on the
- * pages that need it (e.g., src/app/about/page.tsx wraps the AboutPage
- * schema below). Only the about route currently consumes its
- * structuredData field — home/services/contact previously had unused
- * structuredData blocks (including a price-claiming Service Offer for
- * /services that never reached Google because no consumer rendered it).
+ * Structured data is not configured here: pages build it from the
+ * generators in src/lib/seo-utils.ts and render it with <JsonLd />.
  */
 export const SEO_CONFIG: Record<string, SEOMetaData> = {
 	home: {
@@ -40,13 +36,6 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 		ogTitle: 'Web Designer Who Gets Small Business | Hudson Digital',
 		ogDescription:
 			'Former revenue operations operator who builds DFW small businesses a website that brings in real customers instead of sitting there as a brochure.',
-		canonical: `${SITE_URL}/about`,
-		structuredData: {
-			'@context': 'https://schema.org',
-			'@type': 'AboutPage',
-			name: 'About Hudson Digital Solutions',
-			description:
-				'I spent nearly a decade in revenue operations before building DFW small businesses a website that turns their reputation into booked customers.'
-		}
+		canonical: `${SITE_URL}/about`
 	}
 } as const

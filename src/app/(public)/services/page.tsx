@@ -4,7 +4,14 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ProcessSteps } from '@/components/ui/ProcessSteps'
 import { ServicesGrid } from '@/components/ui/ServicesGrid'
+import { JsonLd } from '@/components/utilities/JsonLd'
+import { SERVICES } from '@/lib/constants/services'
 import { SEO_CONFIG } from '@/lib/seo-config'
+import {
+	generateLocalBusinessSchema,
+	generateServiceSchema,
+	toJsonLdGraph
+} from '@/lib/seo-utils'
 
 export const metadata: Metadata = {
 	title: SEO_CONFIG.services?.title || 'Services | Hudson Digital Solutions',
@@ -54,6 +61,13 @@ const stats: Stat[] = [
 export default function ServicesPage() {
 	return (
 		<div className="min-h-screen bg-background">
+			<JsonLd
+				data={toJsonLdGraph([
+					generateLocalBusinessSchema(),
+					...SERVICES.map(generateServiceSchema)
+				])}
+			/>
+
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div

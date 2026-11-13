@@ -14,6 +14,7 @@ import { JsonLd } from '@/components/utilities/JsonLd'
 import { getAllPosts, getPostBySlug, getPostsByTag } from '@/lib/blog'
 import { withHeadingIds } from '@/lib/blog-toc'
 import { BUSINESS_INFO } from '@/lib/constants/business'
+import { BUSINESS_ID, generateAuthorSchema } from '@/lib/seo-utils'
 import { formatCalendarDate } from '@/lib/utils'
 
 interface BlogPostPageProps {
@@ -152,12 +153,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 			'@type': 'ImageObject',
 			url: absoluteImage
 		},
-		author: {
-			'@type': 'Person',
-			name: post.author?.name ?? 'Unknown'
-		},
+		author: post.author
+			? generateAuthorSchema(post.author)
+			: { '@type': 'Person', name: 'Unknown' },
 		publisher: {
 			'@type': 'Organization',
+			'@id': BUSINESS_ID,
 			name: BUSINESS_INFO.name,
 			logo: {
 				'@type': 'ImageObject',

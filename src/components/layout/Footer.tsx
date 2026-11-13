@@ -10,7 +10,7 @@ const CURRENT_YEAR = new Date().getFullYear()
 
 const footerLinks = {
 	// Anchor IDs (`#design-build`, `#seo`, `#booking`) are owned by the
-	// SERVICES list in `src/components/ui/ServicesGrid.tsx` — keep the
+	// SERVICES list in `src/lib/constants/services.ts` — keep the
 	// two lists in sync. Audit #239: the labels here used to land on the
 	// services index page with no anchor, leaving operators to scroll.
 	solutions: [

@@ -8,5 +8,4 @@ export interface SEOMetaData {
 	ogImage?: string
 	canonical?: string
 	noindex?: boolean
-	structuredData?: object
 }
