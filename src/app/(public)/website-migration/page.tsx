@@ -95,7 +95,8 @@ const comparisons = [
 	{
 		feature: 'Monthly cost',
 		managed: '$200-$1,500/mo',
-		hudson: '$0-$97/mo'
+		// No dollar figure: support is optional and priced per project.
+		hudson: 'No required monthly fee'
 	},
 	{
 		feature: 'Own your website',

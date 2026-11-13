@@ -58,7 +58,7 @@ You pull real project data into each city page. Show before and after shots from
 
 I build booking automation directly into city pages using embedded calendars and payment deposit systems. A prospect in Arlington sees your availability, picks a time slot and pays a screening fee before the estimate visit. That single change cuts no-shows and gives your dispatch team a clean pipeline to forecast. You can map those deposits straight into Salesforce or HubSpot and track them against your monthly revenue targets.
 
-Use a [cost estimator](/tools/cost-estimator) to generate accurate local pricing ranges that update when material costs shift. Prospects stay engaged longer when they see transparent numbers instead of a generic request quote button. I track scroll depth and click heatmaps to verify that visitors actually read your service breakdowns before booking. When the data shows half your traffic dropping off at the pricing section, you know exactly where to rewrite or restructure.
+Consider a simple cost estimator on your service pages so prospects see typical price ranges for the job; my [website cost estimator](/tools/cost-estimator) shows the format. Prospects stay engaged longer when they see transparent numbers instead of a generic request quote button. I track scroll depth and click heatmaps to verify that visitors actually read your service breakdowns before booking. When the data shows half your traffic dropping off at the pricing section, you know exactly where to rewrite or restructure.
 
 ## Run it like an operations pipeline, not a campaign
 

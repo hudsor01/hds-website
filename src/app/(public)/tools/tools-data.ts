@@ -85,13 +85,13 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Website Cost Estimator',
 		description:
-			'Pick the features your business needs and get a real ballpark for your site, no sales call required. Same pricing logic I quote DFW clients.',
+			'Pick the features your business needs and see what a site like that typically costs on the market. A planning ballpark, not a quote: I price every project after a free call.',
 		href: TOOL_ROUTES.COST_ESTIMATOR,
 		Icon: Calculator,
 		benefits: [
-			'Transparent pricing breakdown',
+			'Typical market cost range',
 			'Timeline estimates',
-			'Feature-based pricing'
+			'Cost by feature'
 		],
 		cta: 'Estimate Cost',
 		category: 'website'
