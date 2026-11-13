@@ -21,11 +21,6 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 			'Maumelle',
 			'Sherwood'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -64,11 +59,6 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 			'Barling',
 			'Lavaca'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Fast, Modern Websites',
@@ -107,11 +97,6 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 			'Greenland',
 			'West Fork'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -150,11 +135,6 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 			'Lowell',
 			'Cave Springs'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -193,11 +173,6 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 			'Lake City',
 			'Paragould'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Healthcare Practice Sites',
@@ -236,11 +211,6 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 			'Highfill',
 			'Little Flock'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -279,11 +249,6 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 			'Fountain Lake',
 			'Mountain Pine'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Tourism & Hospitality Sites',

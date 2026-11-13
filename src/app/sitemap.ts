@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next'
 import { TOOLS } from '@/app/(public)/tools/tools-data'
 import { getAllPosts, getAuthors, getTags } from '@/lib/blog'
 import {
-	getAllCategorySlugs,
-	getAllPublishedArticles
+	getAllPublishedArticles,
+	getCategoriesWithCounts
 } from '@/lib/help-articles'
 import { getAllLocationSlugs } from '@/lib/locations'
 import { getShowcaseItems } from '@/lib/showcase'
@@ -84,12 +84,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 			priority: 0.7
 		},
 		{
-			url: `${SITE_URL}/help`,
-			lastModified: BUILD_TIME,
-			changeFrequency: 'monthly',
-			priority: 0.6
-		},
-		{
 			url: `${SITE_URL}/privacy`,
 			lastModified: BUILD_TIME,
 			changeFrequency: 'yearly',
@@ -122,14 +116,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		})
 	)
 
-	const helpCategoryPages: MetadataRoute.Sitemap = getAllCategorySlugs().map(
-		slug => ({
-			url: `${SITE_URL}/help/${slug}`,
+	// Help pages are listed only once they have content: an empty
+	// category (or a hub with no articles) is noindexed by its page.
+	const helpCategories = await getCategoriesWithCounts()
+	const helpCategoryPages: MetadataRoute.Sitemap = helpCategories
+		.filter(category => category.articleCount > 0)
+		.map(category => ({
+			url: `${SITE_URL}/help/${category.slug}`,
 			lastModified: BUILD_TIME,
-			changeFrequency: 'monthly',
+			changeFrequency: 'monthly' as const,
 			priority: 0.5
-		})
-	)
+		}))
+	const helpHubPage: MetadataRoute.Sitemap =
+		helpCategoryPages.length > 0
+			? [
+					{
+						url: `${SITE_URL}/help`,
+						lastModified: BUILD_TIME,
+						changeFrequency: 'monthly',
+						priority: 0.6
+					}
+				]
+			: []
 
 	let helpArticlePages: MetadataRoute.Sitemap = []
 	try {
@@ -188,6 +196,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		...staticPages,
 		...toolPages,
 		...locationPages,
+		...helpHubPage,
 		...helpCategoryPages,
 		...helpArticlePages,
 		...showcasePages,

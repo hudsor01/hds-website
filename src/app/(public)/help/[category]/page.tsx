@@ -69,10 +69,15 @@ export async function generateMetadata({
 		}
 	}
 
+	// An empty category is a thin page: keep it out of the index (and the
+	// sitemap) until it has an article. Following links stays on.
+	const articles = await getArticlesByCategory(category)
+
 	return {
 		title: `${categoryInfo.name} | Help Center | Hudson Digital Solutions`,
 		description: categoryInfo.metaDescription,
-		alternates: { canonical: `/help/${category}` }
+		alternates: { canonical: `/help/${category}` },
+		robots: { index: articles.length > 0, follow: true }
 	}
 }
 
