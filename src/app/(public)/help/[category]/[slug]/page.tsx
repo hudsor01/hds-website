@@ -17,11 +17,19 @@ import {
 	BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
+import { JsonLd } from '@/components/utilities/JsonLd'
 import {
 	getAdjacentArticles,
 	getArticleBySlug,
 	getCategoryBySlug
 } from '@/lib/help-articles'
+import {
+	BUSINESS_ID,
+	generateBreadcrumbSchema,
+	toJsonLdGraph
+} from '@/lib/seo-utils'
+
+const SITE_URL = 'https://hudsondigitalsolutions.com'
 
 interface PageProps {
 	params: Promise<{ category: string; slug: string }>
@@ -75,8 +83,31 @@ export default async function HelpArticlePage({ params }: PageProps) {
 		day: 'numeric'
 	})
 
+	const articleUrl = `${SITE_URL}/help/${category}/${slug}`
+
 	return (
 		<div className="min-h-screen bg-background">
+			<JsonLd
+				data={toJsonLdGraph([
+					{
+						'@type': 'TechArticle',
+						headline: article.title,
+						description: article.excerpt ?? undefined,
+						datePublished: article.created_at,
+						dateModified: article.updated_at,
+						url: articleUrl,
+						mainEntityOfPage: articleUrl,
+						author: { '@id': BUSINESS_ID },
+						publisher: { '@id': BUSINESS_ID }
+					},
+					generateBreadcrumbSchema([
+						{ name: 'Help Center', url: `${SITE_URL}/help` },
+						{ name: categoryInfo.name, url: `${SITE_URL}/help/${category}` },
+						{ name: article.title, url: articleUrl }
+					])
+				])}
+			/>
+
 			{/* Header / Breadcrumb */}
 			<div className="border-b border-border bg-background">
 				<div className="container-wide px-4 sm:px-6 py-6">

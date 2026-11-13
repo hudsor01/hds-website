@@ -21,11 +21,6 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 			'Norman',
 			'Moore'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -64,11 +59,6 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 			'Owasso',
 			'Jenks'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Fast, Modern Websites',
@@ -107,11 +97,6 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 			'Blanchard',
 			'Newcastle'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Restaurant Websites',
@@ -150,11 +135,6 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 			'Wagoner',
 			'Bixby'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'E-Commerce Websites',
@@ -193,11 +173,6 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 			'Arcadia',
 			'Piedmont'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Professional Services Sites',
@@ -236,11 +211,6 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 			'Fletcher',
 			'Medicine Park'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Healthcare Websites',
@@ -279,11 +249,6 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 			'Ripley',
 			'Glencoe'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',

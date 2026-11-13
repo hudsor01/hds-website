@@ -1,10 +1,10 @@
 /**
  * Location Data Tests
- * Tests location data functions and LocalBusiness schema generation
+ * Tests location data functions and Service schema generation
  */
 import { describe, expect, test } from 'bun:test'
 import {
-	generateLocalBusinessSchema,
+	generateLocationServiceSchema,
 	getAllLocationSlugs,
 	getLocationBySlug,
 	LOCATIONS
@@ -26,7 +26,6 @@ describe('Location Data', () => {
 				expect(location.description).toBeTruthy()
 				expect(location.metaDescription).toBeTruthy()
 				expect(location.neighborhoods.length).toBeGreaterThan(0)
-				expect(location.stats).toBeDefined()
 				expect(location.features.length).toBeGreaterThan(0)
 			}
 		})
@@ -218,66 +217,47 @@ describe('Location Data', () => {
 		})
 	})
 
-	describe('generateLocalBusinessSchema', () => {
-		test('generates valid LocalBusiness schema', () => {
+	describe('generateLocationServiceSchema', () => {
+		test('describes the service in the city, provided by the one business', () => {
 			const location = getLocationBySlug('dallas')
 			if (!location) {
 				throw new Error('Dallas location not found')
 			}
 
-			const schema = generateLocalBusinessSchema(location)
+			const schema = generateLocationServiceSchema(location)
 
 			expect(schema['@context']).toBe('https://schema.org')
-			expect(schema['@type']).toBe('LocalBusiness')
-			expect(schema.name).toBe('Hudson Digital Solutions')
+			expect(schema['@type']).toBe('Service')
 			expect(schema.url).toBe(
 				'https://hudsondigitalsolutions.com/locations/dallas'
 			)
+			expect(schema.provider).toEqual({
+				'@id': 'https://hudsondigitalsolutions.com/#localbusiness'
+			})
 		})
 
-		test('includes correct address structure', () => {
-			const location = getLocationBySlug('houston')
-			if (!location) {
-				throw new Error('Houston location not found')
+		test('never claims an address in the target city', () => {
+			for (const location of LOCATIONS) {
+				const schema = generateLocationServiceSchema(location)
+				expect('address' in schema).toBe(false)
 			}
-
-			const schema = generateLocalBusinessSchema(location)
-			const address = schema.address as Record<string, string>
-
-			expect(address['@type']).toBe('PostalAddress')
-			expect(address.addressLocality).toBe('Houston')
-			expect(address.addressRegion).toBe('TX')
-			expect(address.addressCountry).toBe('US')
 		})
 
-		test('maps neighborhoods to areaServed', () => {
+		test('serves the city first, then its neighborhoods', () => {
 			const location = getLocationBySlug('austin')
 			if (!location) {
 				throw new Error('Austin location not found')
 			}
 
-			const schema = generateLocalBusinessSchema(location)
-			const areas = schema.areaServed as Array<Record<string, string>>
+			const [city, ...areas] = generateLocationServiceSchema(location)
+				.areaServed as Array<Record<string, unknown>>
 
-			expect(areas.length).toBe(location.neighborhoods.length)
-			expect(areas[0]?.['@type']).toBe('City')
-			// Each neighborhood should be mapped to a City entry
-			for (let i = 0; i < location.neighborhoods.length; i++) {
-				expect(areas[i]?.name).toBe(location.neighborhoods[i])
-			}
-		})
-
-		test('includes social media links', () => {
-			const location = getLocationBySlug('dallas')
-			if (!location) {
-				throw new Error('Dallas location not found')
-			}
-
-			const schema = generateLocalBusinessSchema(location)
-			const sameAs = schema.sameAs as string[]
-
-			expect(sameAs).toBeInstanceOf(Array)
-			expect(sameAs.length).toBeGreaterThan(0)
+			expect(city).toMatchObject({
+				'@type': 'City',
+				name: 'Austin',
+				containedInPlace: { '@type': 'State', name: 'Texas' }
+			})
+			expect(areas.map(area => area.name)).toEqual(location.neighborhoods)
 		})
 	})
 })

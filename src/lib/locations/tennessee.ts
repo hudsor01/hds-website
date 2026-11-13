@@ -21,11 +21,6 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 			'Franklin',
 			'Brentwood'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -64,11 +59,6 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 			'Bartlett',
 			'Southaven'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Fast, Modern Websites',
@@ -107,11 +97,6 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 			'Oak Ridge',
 			'Maryville'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Fast, Modern Websites',
@@ -150,11 +135,6 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 			'Signal Mountain',
 			'Ooltewah'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Fast, Modern Websites',
@@ -193,11 +173,6 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 			'Oak Grove',
 			'Springfield'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -236,11 +211,6 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 			'La Vergne',
 			'Eagleville'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',

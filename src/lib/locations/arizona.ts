@@ -21,11 +21,6 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			'Glendale',
 			'Paradise Valley'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -64,11 +59,6 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			'South Tucson',
 			'Vail'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Professional Websites',
@@ -107,11 +97,6 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			'Queen Creek',
 			'Gold Canyon'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Professional Websites',
@@ -150,11 +135,6 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			'McCormick Ranch',
 			'Kierland'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Premium Brand Websites',
@@ -193,11 +173,6 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			'Chandler Heights',
 			'Queen Creek'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -236,11 +211,6 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			'Williams',
 			'Winslow'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -279,11 +249,6 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			'Kyrene Corridor',
 			'Warner Ranch'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Fast, Modern Websites',

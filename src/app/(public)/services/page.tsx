@@ -138,7 +138,7 @@ export default function ServicesPage() {
 							Proven Results
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Before I built websites, I spent about ten years in revenue
+							Before I built websites, I spent nearly a decade in revenue
 							operations running Salesforce, Power BI and HubSpot. I bring that
 							same focus on outcomes here: done right, on time, no technical
 							runaround.

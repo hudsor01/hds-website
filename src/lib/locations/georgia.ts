@@ -21,11 +21,6 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			'Marietta',
 			'Alpharetta'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -64,11 +59,6 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			'Richmond Hill',
 			'Hinesville'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Tourism & Hospitality Sites',
@@ -107,11 +97,6 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			'Grovetown',
 			'Aiken'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Healthcare Practice Sites',
@@ -150,11 +135,6 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			'Fortson',
 			'Ellerslie'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -193,11 +173,6 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			'Byron',
 			'Centerville'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Healthcare Practice Sites',
@@ -236,11 +211,6 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			'Watkinsville',
 			'Oconee County'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Restaurant Websites',

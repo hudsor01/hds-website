@@ -21,11 +21,6 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'Irving',
 			'Richardson'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'E-Commerce Websites',
@@ -64,11 +59,6 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'Katy',
 			'Sugar Land'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Energy Sector Websites',
@@ -107,11 +97,6 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'Cedar Park',
 			'Georgetown'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Fast Website Launch',
@@ -150,11 +135,6 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'New Braunfels',
 			'Boerne'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -193,11 +173,6 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'Weatherford',
 			'Keller'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Local Business Websites',
@@ -236,11 +211,6 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'Socorro',
 			'Las Cruces'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Bilingual Websites',
@@ -279,11 +249,6 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'Dalworthington Gardens',
 			'Kennedale'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Entertainment Websites',
@@ -322,11 +287,6 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'Robstown',
 			'Rockport'
 		],
-		stats: {
-			businesses: '10+',
-			projects: '40+',
-			satisfaction: '100%'
-		},
 		features: [
 			{
 				title: 'Tourism Websites',

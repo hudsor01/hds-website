@@ -3,12 +3,6 @@ interface LocationFeature {
 	description: string
 }
 
-interface LocationStats {
-	businesses: string
-	projects: string
-	satisfaction: string
-}
-
 export interface LocationData {
 	slug: string
 	city: string
@@ -18,6 +12,5 @@ export interface LocationData {
 	description: string
 	metaDescription: string
 	neighborhoods: string[]
-	stats: LocationStats
 	features: LocationFeature[]
 }

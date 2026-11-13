@@ -94,9 +94,9 @@ export default function Footer() {
 									Websites built like revenue systems for DFW small businesses.
 								</p>
 								<p className="text-xs text-muted-foreground">
-									I spent ten years in revenue operations before I built sites.
-									I treat your website the same way: a system that turns the
-									reputation you&apos;ve earned into booked customers.
+									I spent nearly a decade in revenue operations before I built
+									sites. I treat your website the same way: a system that turns
+									the reputation you&apos;ve earned into booked customers.
 								</p>
 							</div>
 

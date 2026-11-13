@@ -15,11 +15,19 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getCategoriesWithCounts } from '@/lib/help-articles'
 
-export const metadata: Metadata = {
-	alternates: { canonical: '/help' },
-	title: 'Help Center | Hudson Digital Solutions',
-	description:
-		'Browse the Hudson Digital Solutions help center for answers to common questions, step-by-step guides for our free tools, billing details, and account support.'
+export async function generateMetadata(): Promise<Metadata> {
+	// With no published articles the hub is a list of empty categories:
+	// keep it out of the index (and the sitemap) until one exists.
+	const categories = await getCategoriesWithCounts()
+	const hasArticles = categories.some(category => category.articleCount > 0)
+
+	return {
+		alternates: { canonical: '/help' },
+		title: 'Help Center | Hudson Digital Solutions',
+		description:
+			'Browse the Hudson Digital Solutions help center for answers to common questions, step-by-step guides for our free tools, billing details and account support.',
+		robots: { index: hasArticles, follow: true }
+	}
 }
 
 const ICON_MAP: Record<string, React.ReactNode> = {
