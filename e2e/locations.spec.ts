@@ -9,50 +9,54 @@
  * Full SEO verification and structured data tests are out of scope.
  */
 
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 test.describe('Locations Index', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/locations')
-    await page.waitForLoadState('networkidle')
-  })
+	test.beforeEach(async ({ page }) => {
+		await page.goto('/locations')
+		await page.waitForLoadState('networkidle')
+	})
 
-  test('should display locations page heading', async ({ page }) => {
-    await expect(page.locator('h1')).toBeVisible()
-  })
+	test('should display locations page heading', async ({ page }) => {
+		await expect(page.locator('h1')).toBeVisible()
+	})
 
-  test('should display at least 11 state section headings', async ({ page }) => {
-    const stateSections = page.locator('h2')
-    const count = await stateSections.count()
-    expect(count).toBeGreaterThanOrEqual(11)
-  })
+	test('should link every DFW city page', async ({ page }) => {
+		for (const slug of ['lewisville', 'dallas', 'fort-worth', 'arlington']) {
+			await expect(page.locator(`a[href="/locations/${slug}"]`)).toHaveCount(1)
+		}
+	})
 
-  test('should display at least 75 city links', async ({ page }) => {
-    const cityLinks = page.locator('a[href^="/locations/"]')
-    const count = await cityLinks.count()
-    expect(count).toBeGreaterThanOrEqual(75)
-  })
-
-  test('should display a CTA link to /contact', async ({ page }) => {
-    await expect(page.locator('a[href="/contact"]').first()).toBeVisible()
-  })
+	test('should display a CTA link to /contact', async ({ page }) => {
+		await expect(page.locator('a[href="/contact"]').first()).toBeVisible()
+	})
 })
 
 test.describe('Dallas Location Page', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/locations/dallas')
-    await page.waitForLoadState('networkidle')
-  })
+	test.beforeEach(async ({ page }) => {
+		await page.goto('/locations/dallas')
+		await page.waitForLoadState('networkidle')
+	})
 
-  test('should display Dallas content on the page', async ({ page }) => {
-    await expect(page.locator('body')).toContainText('Dallas')
-  })
+	test('should display Dallas content on the page', async ({ page }) => {
+		await expect(page.locator('body')).toContainText('Dallas')
+	})
 
-  test('should display a contact CTA', async ({ page }) => {
-    await expect(page.locator('a[href="/contact"]').first()).toBeVisible()
-  })
+	test('should display a contact CTA', async ({ page }) => {
+		await expect(page.locator('a[href="/contact"]').first()).toBeVisible()
+	})
 
-  test('should not show a 404 error', async ({ page }) => {
-    await expect(page.locator('body')).not.toContainText(/not found/i)
-  })
+	test('should not show a 404 error', async ({ page }) => {
+		await expect(page.locator('body')).not.toContainText(/not found/i)
+	})
+})
+
+test('a retired out-of-area city page redirects to /locations', async ({
+	page
+}) => {
+	const response = await page.goto('/locations/phoenix')
+	expect(response?.url()).toMatch(/\/locations$/)
+	expect(response?.request().redirectedFrom()?.url()).toMatch(
+		/\/locations\/phoenix$/
+	)
 })

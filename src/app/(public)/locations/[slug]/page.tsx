@@ -29,6 +29,11 @@ interface LocationPageProps {
 // Sarah Mitchell / Marcus Holt copy as about + services pages. The
 // admin/testimonials CRUD seeds real rows when available.
 
+// Every served city is prerendered. "not-found" matching makes any other
+// slug a hard 404 instead of a 200 soft 404 (see blog/[slug]/page.tsx).
+// Retired city slugs never get here: next.config.ts redirects them.
+export const unstable_paramMatching = { slug: 'not-found' }
+
 export function generateStaticParams() {
 	return getAllLocationSlugs().map(slug => ({ slug }))
 }

@@ -1,5 +1,6 @@
 import { withSentryConfig } from '@sentry/nextjs/config'
 import type { NextConfig } from 'next'
+import { RETIRED_LOCATION_SLUGS } from './src/lib/locations/retired'
 
 const nextConfig: NextConfig = {
 	output: 'standalone',
@@ -43,7 +44,13 @@ const nextConfig: NextConfig = {
 				source: '/blog/case-study-ink37-local-service-website',
 				destination: '/showcase',
 				permanent: false
-			}
+			},
+			// Out-of-area city pages, retired for good (see the file's note).
+			...RETIRED_LOCATION_SLUGS.map(slug => ({
+				source: `/locations/${slug}`,
+				destination: '/locations',
+				permanent: true
+			}))
 		]
 	},
 
