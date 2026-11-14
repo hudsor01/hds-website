@@ -1,93 +1,41 @@
+/**
+ * Testimonials Page
+ * Shows only reviews real clients submitted (via /testimonials/submit or a
+ * request link) and the owner published in /admin/testimonials. Review and
+ * AggregateRating JSON-LD render only when such reviews exist. With none,
+ * the page says so honestly and stays out of the index.
+ */
+
 import { ArrowRight, MessageCircle, Star } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { JsonLd } from '@/components/utilities/JsonLd'
 import { buildMetadata } from '@/lib/seo-config'
+import { generateReviewSchema, toJsonLdGraph } from '@/lib/seo-utils'
+import { getApprovedTestimonials } from '@/lib/testimonials'
 
-export const metadata: Metadata = buildMetadata({
-	title: 'Client Testimonials | Hudson Digital Solutions',
-	description:
-		'Real results from DFW small businesses I have built websites for. See how a site built as a revenue system turned local reputations into booked work.',
-	path: '/testimonials'
-})
+export async function generateMetadata(): Promise<Metadata> {
+	const testimonials = await getApprovedTestimonials()
+	return buildMetadata({
+		title: 'Client Reviews | Hudson Digital Solutions',
+		description:
+			'Reviews from Dallas-Fort Worth small business owners I have built websites for, published in their own words after the project.',
+		path: '/testimonials',
+		// An empty review page is thin content: index it once a real
+		// review is published.
+		noindex: testimonials.length === 0
+	})
+}
 
-const testimonials = [
-	{
-		id: 1,
-		name: 'Michael Chen',
-		company: 'Riverside Plumbing Co.',
-		role: 'Owner',
-		content:
-			'Hudson Digital Solutions delivered beyond our expectations. They built us a website and booking system that doubled our inbound leads within 60 days.',
-		rating: 5,
-		service: 'Business Website',
-		highlight: '2x More Leads'
-	},
-	{
-		id: 2,
-		name: 'Sarah Johnson',
-		company: 'E-Commerce Plus',
-		role: 'CEO',
-		content:
-			'Our new online store loads fast and finally looks the part. Conversions jumped 60% in the first quarter.',
-		rating: 5,
-		service: 'E-Commerce Website',
-		highlight: '60% More Sales'
-	},
-	{
-		id: 3,
-		name: 'David Martinez',
-		company: 'Wellness App Co',
-		role: 'Product Manager',
-		content:
-			'From first call to a live website in just eight weeks. The whole process was smooth and the quality was exceptional.',
-		rating: 5,
-		service: 'Website Design & Development',
-		highlight: '8 Week Launch'
-	},
-	{
-		id: 4,
-		name: 'Emily Thompson',
-		company: 'FinTech Solutions',
-		role: 'Founder',
-		content:
-			'Professional, reliable, and a pleasure to work with. They understood our vision and built a website we are proud to send people to.',
-		rating: 5,
-		service: 'Website Design & Development',
-		highlight: 'On Time, On Budget'
-	},
-	{
-		id: 5,
-		name: 'Lisa Park',
-		company: 'Revenue Rocket',
-		role: 'Operations Manager',
-		content:
-			'Our website does the explaining now. Customers find what they need and book online instead of calling. Our team has hours back every week.',
-		rating: 5,
-		service: 'Website + Booking',
-		highlight: 'Hours Saved Weekly'
-	},
-	{
-		id: 6,
-		name: 'James Wilson',
-		company: 'Partner Connect',
-		role: 'CEO',
-		content:
-			'Excellent communication throughout the project. They delivered a polished website that brings in exactly the kind of clients we want.',
-		rating: 5,
-		service: 'Website Design & Development',
-		highlight: 'Better Leads'
-	}
-]
-
-const StarRating = ({ rating }: { rating: number }) => {
+function StarRating({ rating }: { rating: number }) {
 	return (
 		<div
 			className="flex gap-1"
 			role="img"
 			aria-label={`Rated ${rating} out of 5 stars`}
 		>
-			{[...Array(5)].map((_, i) => (
+			{Array.from({ length: 5 }, (_, i) => (
 				<Star
 					key={i}
 					aria-hidden="true"
@@ -98,9 +46,14 @@ const StarRating = ({ rating }: { rating: number }) => {
 	)
 }
 
-export default function TestimonialsPage() {
+export default async function TestimonialsPage() {
+	const testimonials = await getApprovedTestimonials()
+	const reviewSchema = generateReviewSchema(testimonials)
+
 	return (
 		<div className="min-h-screen bg-background">
+			{reviewSchema.length > 0 && <JsonLd data={toJsonLdGraph(reviewSchema)} />}
+
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
@@ -113,118 +66,80 @@ export default function TestimonialsPage() {
 				/>
 				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						Client Results
+						Client Reviews
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
-						Real Results. Real Clients.
+						What Clients Say
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						You do not have to take my word for it. Here is what DFW owners got
-						after I rebuilt their website to actually pull in work.
+						Every review here comes from a business owner I built a website for,
+						published in their own words.
 					</p>
 				</div>
 			</section>
 
-			{/* Stats Bar */}
+			{/* Reviews */}
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
-						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
-							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
-							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
-								1-4 wks
-							</div>
-							<div className="text-xs text-muted-foreground">
-								First Delivery
-							</div>
-						</div>
-						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
-							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
-							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
-								Growing
-							</div>
-							<div className="text-xs text-muted-foreground">
-								Projects Delivered
-							</div>
-						</div>
-						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
-							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
-							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
-								Proven
-							</div>
-							<div className="text-xs text-muted-foreground">Track Record</div>
-						</div>
-						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
-							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
-							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
-								2 hr
-							</div>
-							<div className="text-xs text-muted-foreground">Response Time</div>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			{/* Testimonials Grid */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide">
-					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Testimonials
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							What My Clients Say
-						</h2>
-						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Each one is a local business owner whose website finally matches
-							the reputation they earned the hard way.
-						</p>
-					</div>
-
-					<div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none md:grid-cols-2 lg:grid-cols-3 gap-6 scrollbar-hide">
-						{testimonials.map(testimonial => (
-							<div
-								key={testimonial.id}
-								className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors snap-center shrink-0 w-[90vw] md:w-auto"
-							>
-								{/* Rating */}
-								<div className="mb-4">
-									<StarRating rating={testimonial.rating} />
-								</div>
-
-								{/* Highlight Label */}
-								<div className="mb-6">
-									<span className="px-3 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-semibold">
-										{testimonial.highlight}
-									</span>
-								</div>
-
-								{/* Quote */}
-								<div className="mb-6">
-									<MessageCircle
-										className="w-8 h-8 text-accent/30 mb-3"
-										aria-hidden="true"
-									/>
-									<p className="text-sm text-muted-foreground leading-relaxed">
-										&ldquo;{testimonial.content}&rdquo;
-									</p>
-								</div>
-
-								{/* Client Info */}
-								<div className="border-t border-border pt-6">
-									<div className="font-semibold text-foreground text-sm">
-										{testimonial.name}
+					{testimonials.length > 0 ? (
+						<ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+							{testimonials.map(testimonial => (
+								<li
+									key={testimonial.id}
+									className="rounded-xl border border-border bg-surface-raised p-8 flex flex-col"
+								>
+									<div className="mb-4">
+										<StarRating rating={testimonial.rating} />
 									</div>
-									<div className="text-xs text-muted-foreground mt-0.5">
-										{testimonial.role} at {testimonial.company}
+									<blockquote className="mb-6 flex-grow">
+										<MessageCircle
+											className="w-8 h-8 text-accent/30 mb-3"
+											aria-hidden="true"
+										/>
+										<p className="text-sm text-muted-foreground leading-relaxed">
+											&ldquo;{testimonial.content}&rdquo;
+										</p>
+									</blockquote>
+									<div className="border-t border-border pt-6">
+										<div className="font-semibold text-foreground text-sm">
+											{testimonial.client_name}
+										</div>
+										{(testimonial.role || testimonial.company) && (
+											<div className="text-xs text-muted-foreground mt-0.5">
+												{[testimonial.role, testimonial.company]
+													.filter(Boolean)
+													.join(', ')}
+											</div>
+										)}
 									</div>
-									<div className="text-xs text-accent mt-2">
-										{testimonial.service}
-									</div>
-								</div>
+								</li>
+							))}
+						</ul>
+					) : (
+						<div className="max-w-2xl mx-auto rounded-xl border border-border bg-surface-raised p-10 text-center">
+							<h2 className="text-h3 text-foreground mb-3">
+								Reviews Are On the Way
+							</h2>
+							<p className="text-muted-foreground leading-relaxed mb-8">
+								I only publish reviews from real clients, so this page fills in
+								as projects wrap up. Until then, the work speaks for itself in
+								the showcase.
+							</p>
+							<div className="flex flex-col sm:flex-row gap-3 justify-center">
+								<Button asChild variant="accent" size="lg">
+									<Link href="/showcase">
+										See My Work
+										<ArrowRight className="w-4 h-4" aria-hidden="true" />
+									</Link>
+								</Button>
+								<Button asChild variant="outline" size="lg">
+									<Link href="/testimonials/submit">
+										Worked With Me? Leave a Review
+									</Link>
+								</Button>
 							</div>
-						))}
-					</div>
+						</div>
+					)}
 				</div>
 			</section>
 
@@ -238,23 +153,20 @@ export default function TestimonialsPage() {
 						/>
 						<div className="relative z-10">
 							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
-								Want to be my next{' '}
-								<span className="text-accent">success story?</span>
+								Ready for a website that{' '}
+								<span className="text-accent">brings in work?</span>
 							</h2>
-
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Let us build you a website that books work instead of collecting
-								dust. Tell me about your business and I will map out a plan.
+								Book a free 30-minute website plan call. You get the timeline
+								and a real price, then you decide from there.
 							</p>
-
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">
 								<Button asChild variant="accent" size="xl">
 									<Link href="/contact">
 										Get My Free Website Plan
-										<ArrowRight className="w-5 h-5" />
+										<ArrowRight className="w-5 h-5" aria-hidden="true" />
 									</Link>
 								</Button>
-
 								<Button
 									asChild
 									variant="outline"

@@ -23,7 +23,7 @@
  */
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { requireAdminSession } from '@/lib/admin/auth'
 import { formDataToObject } from '@/lib/admin/form-data'
@@ -64,7 +64,7 @@ export async function createTestimonialAction(
 			errors: { _form: 'Could not create. Please try again.' }
 		}
 	}
-	revalidatePath('/admin/testimonials')
+	refreshPublicTestimonials()
 	redirect(`/admin/testimonials/${newId}/edit`)
 }
 
@@ -83,7 +83,7 @@ export async function updateTestimonialAction(
 		if (!row) {
 			return { ok: false, errors: { _form: 'Testimonial not found.' } }
 		}
-		revalidatePath('/admin/testimonials')
+		refreshPublicTestimonials()
 		revalidatePath(`/admin/testimonials/${id}/edit`)
 		return { ok: true, id: row.id }
 	} catch (e) {
@@ -104,7 +104,7 @@ export async function deleteTestimonialAction(
 		redirect('/admin/testimonials')
 	}
 	await deleteTestimonial(id)
-	revalidatePath('/admin/testimonials')
+	refreshPublicTestimonials()
 	redirect('/admin/testimonials')
 }
 
@@ -117,5 +117,15 @@ export async function toggleTestimonialPublishedAction(
 		redirect('/admin/testimonials')
 	}
 	await toggleTestimonialPublished(id)
+	refreshPublicTestimonials()
+}
+
+/**
+ * Every mutation can change what /testimonials shows (and its Review
+ * JSON-LD), so expire the public cache along with the admin list. Without
+ * this a newly published review stayed hidden for hours.
+ */
+function refreshPublicTestimonials(): void {
 	revalidatePath('/admin/testimonials')
+	updateTag('testimonials-approved')
 }
