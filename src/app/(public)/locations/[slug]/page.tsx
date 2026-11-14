@@ -14,6 +14,7 @@ import {
 	getAllLocationSlugs,
 	getLocationBySlug
 } from '@/lib/locations'
+import { buildMetadata } from '@/lib/seo-config'
 import {
 	generateBreadcrumbSchema,
 	generateLocalBusinessSchema,
@@ -45,17 +46,12 @@ export async function generateMetadata({
 		}
 	}
 
-	return {
+	return buildMetadata({
 		title: `Website Design in ${location.city}, ${location.stateCode} | Hudson Digital`,
 		description: location.metaDescription,
-		openGraph: {
-			title: `Website Design in ${location.city}, ${location.stateCode}`,
-			description: location.metaDescription
-		},
-		alternates: {
-			canonical: `https://hudsondigitalsolutions.com/locations/${location.slug}`
-		}
-	}
+		path: `/locations/${location.slug}`,
+		socialTitle: `Website Design in ${location.city}, ${location.stateCode}`
+	})
 }
 
 export default async function LocationPage({ params }: LocationPageProps) {

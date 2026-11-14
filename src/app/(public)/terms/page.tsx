@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
+import { buildMetadata } from '@/lib/seo-config'
 import { formatCalendarDate } from '@/lib/utils'
 
-export const metadata: Metadata = {
-	alternates: { canonical: '/terms' },
+export const metadata: Metadata = buildMetadata({
 	title: 'Terms of Service | Hudson Digital Solutions',
 	description:
 		'Read the Terms of Service for Hudson Digital Solutions. Understand your rights and obligations when using our website and services.',
-	robots: 'index, follow'
-}
+	path: '/terms'
+})
 
 // Hardcoded authored date instead of `formatCalendarDate(new Date())` — the
 // runtime form could render a UTC date one day ahead of the user's

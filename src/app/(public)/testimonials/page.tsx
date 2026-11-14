@@ -2,13 +2,14 @@ import { ArrowRight, MessageCircle, Star } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { buildMetadata } from '@/lib/seo-config'
 
-export const metadata: Metadata = {
-	alternates: { canonical: '/testimonials' },
+export const metadata: Metadata = buildMetadata({
 	title: 'Client Testimonials | Hudson Digital Solutions',
 	description:
-		'Real results from DFW small businesses I have built websites for. See how a site built as a revenue system turned local reputations into booked work.'
-}
+		'Real results from DFW small businesses I have built websites for. See how a site built as a revenue system turned local reputations into booked work.',
+	path: '/testimonials'
+})
 
 const testimonials = [
 	{

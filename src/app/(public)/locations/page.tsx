@@ -8,18 +8,16 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { getLocationsByState } from '@/lib/locations'
+import { buildMetadata } from '@/lib/seo-config'
 
-export const metadata: Metadata = {
-	alternates: { canonical: '/locations' },
+export const metadata: Metadata = buildMetadata({
 	title: 'Service Locations | Hudson Digital Solutions',
 	description:
 		'I build websites that book jobs and take payments for small businesses across the US. Find local web design in Texas, Florida, Georgia and beyond.',
-	openGraph: {
-		title: 'Service Locations | Hudson Digital Solutions',
-		description:
-			'Websites that book jobs and take payments for small businesses across the US.'
-	}
-}
+	path: '/locations',
+	socialDescription:
+		'Websites that book jobs and take payments for small businesses across the US.'
+})
 
 export default function LocationsPage() {
 	const locationsByState = getLocationsByState()

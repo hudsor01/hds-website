@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { BlogPostCard } from '@/components/blog/BlogPostCard'
 import { BackLink } from '@/components/utilities/BackLink'
 import { getAuthorBySlug, getAuthors, getPostsByAuthor } from '@/lib/blog'
+import { buildMetadata } from '@/lib/seo-config'
 
 interface AuthorPageProps {
 	params: Promise<{ slug: string }>
@@ -22,15 +23,13 @@ export async function generateMetadata({
 		}
 	}
 
-	return {
+	return buildMetadata({
 		title: `${author.name} - Blog - Hudson Digital Solutions`,
 		description:
 			author.bio ||
-			`Read articles, guides, and insights written by ${author.name} on the Hudson Digital Solutions blog, covering web design, small business growth, and more.`,
-		alternates: {
-			canonical: `https://hudsondigitalsolutions.com/blog/author/${author.slug}`
-		}
-	}
+			`Read articles, guides and insights written by ${author.name} on the Hudson Digital Solutions blog about web design and small business growth.`,
+		path: `/blog/author/${author.slug}`
+	})
 }
 
 // Unknown slugs are a hard 404, not a streamed soft 404 (see blog/[slug]).

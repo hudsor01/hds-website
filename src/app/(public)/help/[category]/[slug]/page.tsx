@@ -23,6 +23,7 @@ import {
 	getArticleBySlug,
 	getCategoryBySlug
 } from '@/lib/help-articles'
+import { buildMetadata } from '@/lib/seo-config'
 import {
 	BUSINESS_ID,
 	generateBreadcrumbSchema,
@@ -54,12 +55,12 @@ export async function generateMetadata({
 		}
 	}
 
-	return {
+	return buildMetadata({
 		title: `${article.title} | Help Center | Hudson Digital Solutions`,
 		description:
 			article.excerpt || `Read about ${article.title} in our help center.`,
-		alternates: { canonical: `/help/${category}/${slug}` }
-	}
+		path: `/help/${category}/${slug}`
+	})
 }
 
 export default async function HelpArticlePage({ params }: PageProps) {

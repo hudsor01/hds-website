@@ -9,18 +9,18 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { buildMetadata } from '@/lib/seo-config'
 import ToolsCatalog from './ToolsCatalog'
 
-export const metadata: Metadata = {
-	alternates: { canonical: '/tools' },
+export const metadata: Metadata = buildMetadata({
 	title: 'Free Business Tools & Calculators | Hudson Digital Solutions',
 	description:
 		'Free tools I built for DFW small business owners. Run the numbers on ROI, generate invoices and contracts, format JSON, then check site performance.',
-	openGraph: {
-		title: 'Free Business Tools & Calculators',
-		description: 'Run the numbers before you spend a dollar on your website.'
-	}
-}
+	path: '/tools',
+	socialTitle: 'Free Business Tools & Calculators',
+	socialDescription:
+		'Run the numbers before you spend a dollar on your website.'
+})
 
 export default function ToolsPage() {
 	return (

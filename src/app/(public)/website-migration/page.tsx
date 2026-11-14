@@ -14,28 +14,17 @@ import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { ROUTES } from '@/lib/constants/routes'
+import { buildMetadata } from '@/lib/seo-config'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
 	title: 'Website Migration: Keep Your Rankings | Hudson Digital',
 	description:
 		'I move your DFW business to a website you own without losing Google rankings. I recover your domain, set up redirects, then build a faster site you keep.',
-	openGraph: {
-		title: 'Website Migration - Keep Your Rankings, Lose the Fees',
-		description:
-			'I move your site to a platform you own. No contracts, no monthly hostage fees.',
-		url: 'https://hudsondigitalsolutions.com/website-migration'
-	},
-	alternates: {
-		canonical: 'https://hudsondigitalsolutions.com/website-migration'
-	},
-	robots: {
-		index: true,
-		follow: true,
-		'max-snippet': -1,
-		'max-image-preview': 'large',
-		'max-video-preview': -1
-	}
-}
+	path: '/website-migration',
+	socialTitle: 'Website Migration - Keep Your Rankings, Lose the Fees',
+	socialDescription:
+		'I move your site to a platform you own. No contracts, no monthly hostage fees.'
+})
 
 const risks = [
 	{

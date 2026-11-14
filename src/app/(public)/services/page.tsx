@@ -6,40 +6,22 @@ import { ProcessSteps } from '@/components/ui/ProcessSteps'
 import { ServicesGrid } from '@/components/ui/ServicesGrid'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { SERVICES } from '@/lib/constants/services'
-import { SEO_CONFIG } from '@/lib/seo-config'
+import { buildMetadata } from '@/lib/seo-config'
 import {
 	generateLocalBusinessSchema,
 	generateServiceSchema,
 	toJsonLdGraph
 } from '@/lib/seo-utils'
 
-export const metadata: Metadata = {
-	title: SEO_CONFIG.services?.title || 'Services | Hudson Digital Solutions',
+export const metadata: Metadata = buildMetadata({
+	title: 'Small Business Website Design | Hudson Digital',
 	description:
-		SEO_CONFIG.services?.description ||
-		'I build fast, mobile-ready websites for Dallas-Fort Worth small businesses, plus booking and payments when you want them. Free plan, no obligation.',
-	openGraph: {
-		title:
-			SEO_CONFIG.services?.ogTitle ??
-			SEO_CONFIG.services?.title ??
-			'Services | Hudson Digital Solutions',
-		description:
-			SEO_CONFIG.services?.ogDescription ??
-			SEO_CONFIG.services?.description ??
-			'I build fast, mobile-ready websites for Dallas-Fort Worth small businesses, plus booking and payments when you want them. Free plan, no obligation.',
-		url: SEO_CONFIG.services?.canonical || ''
-	},
-	alternates: {
-		canonical: SEO_CONFIG.services?.canonical || ''
-	},
-	robots: {
-		index: true,
-		follow: true,
-		'max-snippet': -1,
-		'max-image-preview': 'large',
-		'max-video-preview': -1
-	}
-}
+		'Professional websites designed and built for small businesses: custom, mobile-ready, fast and easy to find on Google. Free website plan, no obligation.',
+	path: '/services',
+	socialTitle: 'Website Design for Small Businesses | Hudson Digital',
+	socialDescription:
+		'Professional websites built for small businesses: custom, fast, mobile-ready, built to bring in customers. Launched in weeks.'
+})
 
 interface Stat {
 	value: string

@@ -15,33 +15,15 @@ import { Button } from '@/components/ui/button'
 import { ExitIntentModal } from '@/components/utilities/ExitIntentModal'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes'
-import { SEO_CONFIG } from '@/lib/seo-config'
+import { buildMetadata } from '@/lib/seo-config'
 import { generateLocalBusinessSchema } from '@/lib/seo-utils'
 
-export const metadata: Metadata = {
-	title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
+export const metadata: Metadata = buildMetadata({
+	title: 'Dallas-Fort Worth Web Design | Hudson Digital',
 	description:
-		SEO_CONFIG.home?.description ??
-		'I build Dallas-Fort Worth small businesses fast websites with local SEO and booking that turn your reputation into booked, paying customers.',
-	openGraph: {
-		title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
-		description:
-			SEO_CONFIG.home?.description ??
-			'I build Dallas-Fort Worth small businesses fast websites with local SEO and booking that turn your reputation into booked, paying customers.',
-		url: SEO_CONFIG.home?.canonical ?? 'https://hudsondigitalsolutions.com'
-	},
-	twitter: {
-		card: 'summary_large_image',
-		title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
-		description:
-			SEO_CONFIG.home?.description ??
-			'I build Dallas-Fort Worth small businesses fast websites with local SEO and booking that turn your reputation into booked, paying customers.'
-	},
-	alternates: {
-		canonical:
-			SEO_CONFIG.home?.canonical ?? 'https://hudsondigitalsolutions.com'
-	}
-}
+		'Professional website design for small businesses in Dallas-Fort Worth. We build the website your business has earned: fast, mobile-ready, built to convert.',
+	path: '/'
+})
 
 const websiteOutcomes = [
 	{

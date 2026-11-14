@@ -9,6 +9,7 @@ import {
 	getTags,
 	getTagsWithCounts
 } from '@/lib/blog'
+import { buildMetadata } from '@/lib/seo-config'
 
 interface TagPageProps {
 	params: Promise<{ slug: string }>
@@ -27,15 +28,13 @@ export async function generateMetadata({
 		}
 	}
 
-	return {
+	return buildMetadata({
 		title: `${tag.name} - Blog - Hudson Digital Solutions`,
 		description:
 			tag.description ||
 			`Browse Hudson Digital Solutions blog articles tagged ${tag.name}, with practical guides and insights on web design and growing your small business online.`,
-		alternates: {
-			canonical: `https://hudsondigitalsolutions.com/blog/tag/${tag.slug}`
-		}
-	}
+		path: `/blog/tag/${tag.slug}`
+	})
 }
 
 // Unknown slugs are a hard 404, not a streamed soft 404 (see blog/[slug]).

@@ -22,6 +22,7 @@ import { getAllPosts, getPostBySlug, getPostsByTag } from '@/lib/blog'
 import { withHeadingIds } from '@/lib/blog-toc'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { getServiceForTags } from '@/lib/constants/services'
+import { buildMetadata } from '@/lib/seo-config'
 import {
 	BUSINESS_ID,
 	generateAuthorSchema,
@@ -75,45 +76,22 @@ export async function generateMetadata({
 		`${post.title}. Read this article on the Hudson Digital Solutions blog for practical web design and small business insights.`
 	)
 
-	return {
+	// A post's own feature_image wins; otherwise this route's
+	// opengraph-image.tsx renders a card with the post title.
+	return buildMetadata({
 		title: `${post.title} - Hudson Digital Solutions`,
 		description,
-		openGraph: {
-			title: post.title,
-			description,
-			type: 'article',
+		path: `/blog/${post.slug}`,
+		socialTitle: post.title,
+		images: post.feature_image ? [post.feature_image] : undefined,
+		segmentImage: true,
+		article: {
 			publishedTime: post.published_at,
+			modifiedTime: post.updated_at ?? post.published_at,
 			authors: [post.author?.name ?? 'Unknown'],
-			tags: post.tags?.map(tag => tag.name),
-			// Only set `images` when a custom feature_image exists. The key must
-			// be OMITTED entirely (not set to undefined) when absent: Next treats
-			// a present `images` key as "explicitly provided" and then does NOT
-			// auto-inject the file-based opengraph-image.tsx branded card, which
-			// left every post with no og:image (socials fell back to the page's
-			// author headshot).
-			...(post.feature_image
-				? {
-						images: [
-							{
-								url: post.feature_image,
-								width: 1200,
-								height: 630,
-								alt: post.title
-							}
-						]
-					}
-				: {})
-		},
-		twitter: {
-			card: 'summary_large_image',
-			title: post.title,
-			description,
-			...(post.feature_image ? { images: [post.feature_image] } : {})
-		},
-		alternates: {
-			canonical: `https://hudsondigitalsolutions.com/blog/${post.slug}`
+			tags: post.tags?.map(tag => tag.name)
 		}
-	}
+	})
 }
 
 // Every published post is prerendered at build. "not-found" matching is the

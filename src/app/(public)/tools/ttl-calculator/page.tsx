@@ -10,18 +10,17 @@
 import type { Metadata } from 'next'
 import { Calculator } from '@/components/calculators/Calculator'
 import { JsonLd } from '@/components/utilities/JsonLd'
+import { buildMetadata } from '@/lib/seo-config'
 
-export const metadata: Metadata = {
-	alternates: { canonical: '/tools/ttl-calculator' },
+export const metadata: Metadata = buildMetadata({
 	title: 'Texas TTL Calculator | Hudson Digital Solutions',
 	description:
 		'Calculate tax, title, license fees and monthly payments for vehicles in Texas. Free online calculator for car buyers and dealers.',
-	openGraph: {
-		title: 'Texas TTL Calculator',
-		description:
-			'Calculate tax, title, license fees and monthly payments for vehicles in Texas.'
-	}
-}
+	path: '/tools/ttl-calculator',
+	socialTitle: 'Texas TTL Calculator',
+	socialDescription:
+		'Calculate tax, title, license fees and monthly payments for vehicles in Texas.'
+})
 
 const ttlCalculatorSchema = {
 	'@context': 'https://schema.org',
