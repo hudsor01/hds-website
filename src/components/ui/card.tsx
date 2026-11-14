@@ -56,6 +56,8 @@ interface ServiceCardProps extends Omit<BaseCardProps, 'variant'> {
 	features: string[]
 	icon: ComponentType<SVGProps<SVGSVGElement>>
 	gradient?: string
+	/** Detail page the title links to. */
+	href?: string
 }
 
 // Pricing Card props
@@ -122,7 +124,8 @@ function Card(props: CardProps) {
 			description,
 			features,
 			icon,
-			gradient = 'bg-muted'
+			gradient = 'bg-muted',
+			href
 		} = props as ServiceCardProps
 
 		return (
@@ -146,7 +149,18 @@ function Card(props: CardProps) {
 						>
 							<Icon icon={icon} size="lg" className="text-foreground" />
 						</div>
-						<h3 className="text-h4 text-foreground">{title}</h3>
+						<h3 className="text-h4 text-foreground">
+							{href ? (
+								<Link
+									href={href}
+									className="hover:text-accent transition-colors"
+								>
+									{title}
+								</Link>
+							) : (
+								title
+							)}
+						</h3>
 					</div>
 
 					{/* Description */}

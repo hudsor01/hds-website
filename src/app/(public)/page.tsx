@@ -100,7 +100,7 @@ const solutions = [
 		stat: '$0',
 		statLabel: 'to make edits',
 		ctaLabel: "See What's Included",
-		ctaHref: `${ROUTES.SERVICES}#design-build`
+		ctaHref: `${ROUTES.SERVICES}/web-design`
 	}
 ]
 

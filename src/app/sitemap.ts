@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { TOOLS } from '@/app/(public)/tools/tools-data'
 import { getAllPosts, getAuthors, getTags } from '@/lib/blog'
+import { SERVICES } from '@/lib/constants/services'
 import {
 	getAllPublishedArticles,
 	getCategoriesWithCounts
@@ -27,6 +28,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 			changeFrequency: 'monthly',
 			priority: 0.9
 		},
+		...SERVICES.map(service => ({
+			url: `${SITE_URL}/services/${service.slug}`,
+			lastModified: BUILD_TIME,
+			changeFrequency: 'monthly' as const,
+			priority: 0.9
+		})),
 		{
 			url: `${SITE_URL}/showcase`,
 			lastModified: BUILD_TIME,

@@ -116,10 +116,10 @@ export function buildLlmsTxt({ services, tools, posts }: LlmsTxtInput): string {
 			'Services',
 			services.map(service => ({
 				title: service.title,
-				href: `/services#${service.anchorId}`,
-				// Features, not the card copy: the cards speak in first person,
+				href: `/services/${service.slug}`,
+				// What it includes, not the card copy: the cards speak in first person,
 				// which reads wrong in this third-person file.
-				description: `${service.features.join('; ')}.`
+				description: `${service.included.map(detail => detail.title).join('; ')}.`
 			}))
 		),
 		section('Key pages', KEY_PAGES),

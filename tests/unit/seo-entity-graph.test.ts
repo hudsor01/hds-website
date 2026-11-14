@@ -59,13 +59,13 @@ describe('entity graph', () => {
 		expect(generateContactPageSchema().about['@id']).toBe(BUSINESS_ID)
 	})
 
-	test('every service is provided by the business, anchored on /services and has no price claim', () => {
+	test('every service is provided by the business, points at its own page and has no price claim', () => {
 		for (const service of SERVICES) {
 			const node = generateServiceSchema(service)
 			expect(node['@type']).toBe('Service')
 			expect(node.provider['@id']).toBe(BUSINESS_ID)
 			expect(node.url).toBe(
-				`https://hudsondigitalsolutions.com/services#${service.anchorId}`
+				`https://hudsondigitalsolutions.com/services/${service.slug}`
 			)
 			expect('offers' in node).toBe(false)
 		}
@@ -175,7 +175,7 @@ describe('llms.txt', () => {
 	test('lists every service, tool and post, one line each', () => {
 		for (const service of SERVICES) {
 			expect(txt).toContain(
-				`[${service.title}](https://hudsondigitalsolutions.com/services#${service.anchorId})`
+				`[${service.title}](https://hudsondigitalsolutions.com/services/${service.slug})`
 			)
 		}
 		expect(txt).toContain(

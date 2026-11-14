@@ -39,7 +39,8 @@ export function ServicesGrid() {
 						variant="service"
 						title={service.title}
 						description={service.description}
-						features={service.features}
+						features={service.included.map(detail => detail.title)}
+						href={`/services/${service.slug}`}
 						icon={PRESENTATION[service.anchorId].icon}
 						gradient={PRESENTATION[service.anchorId].gradient}
 					/>
