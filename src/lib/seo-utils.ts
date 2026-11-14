@@ -1,7 +1,7 @@
 // Native SEO utilities - logic only, no data bloat
 
 import { BUSINESS_INFO } from '@/lib/constants/business'
-import type { Service } from '@/lib/constants/services'
+import type { Service, ServiceFaq } from '@/lib/constants/services'
 
 const SITE_URL = 'https://hudsondigitalsolutions.com'
 const LOGO_URL = `${SITE_URL}/HDS-Logo.webp`
@@ -194,16 +194,29 @@ export function generateServiceSchema(service: Service) {
 	return {
 		'@context': 'https://schema.org',
 		'@type': 'Service',
-		'@id': `${SITE_URL}/services#${service.anchorId}`,
+		'@id': `${SITE_URL}/services/${service.slug}#service`,
 		name: service.title,
 		serviceType: service.serviceType,
 		description: service.description,
-		url: `${SITE_URL}/services#${service.anchorId}`,
+		url: `${SITE_URL}/services/${service.slug}`,
 		provider: { '@id': BUSINESS_ID },
 		areaServed: {
 			'@type': 'AdministrativeArea',
 			name: 'Dallas-Fort Worth Metroplex'
 		}
+	}
+}
+
+/** A FAQPage node from visible question/answer pairs on the same page. */
+export function generateFaqSchema(faqs: readonly ServiceFaq[]) {
+	return {
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: faqs.map(faq => ({
+			'@type': 'Question',
+			name: faq.question,
+			acceptedAnswer: { '@type': 'Answer', text: faq.answer }
+		}))
 	}
 }
 
