@@ -63,3 +63,17 @@ test('/services links every service page', async ({ page }) => {
 		).toHaveCount(1)
 	}
 })
+
+test('a blog post shows a breadcrumb and links its related service', async ({
+	page
+}) => {
+	await page.goto('/blog/how-to-show-up-in-ai-search')
+	const breadcrumb = page.getByRole('navigation', { name: 'breadcrumb' })
+	await expect(breadcrumb.locator('a[href="/blog"]')).toBeVisible()
+	await expect(
+		page.getByRole('link', { name: 'See how it works' })
+	).toHaveAttribute(
+		'href',
+		/^\/services\/(web-design|local-seo|booking-payments)$/
+	)
+})

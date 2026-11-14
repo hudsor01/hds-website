@@ -237,3 +237,30 @@ export const SERVICES: readonly Service[] = [
 export function getServiceBySlug(slug: string): Service | undefined {
 	return SERVICES.find(service => service.slug === slug)
 }
+
+/**
+ * Which service a blog post funnels to, by tag. Checked in the post's tag
+ * order; posts with no mapped tag fall back to web design, since every post
+ * is about running a small business website.
+ */
+const TAG_TO_SERVICE: Record<string, Service['slug']> = {
+	'web-design': 'web-design',
+	'web-development': 'web-design',
+	'website-migration': 'web-design',
+	'website-performance': 'web-design',
+	seo: 'local-seo',
+	'local-marketing': 'local-seo',
+	'dallas-fort-worth': 'local-seo',
+	'business-automation': 'booking-payments',
+	'conversion-optimization': 'booking-payments'
+}
+
+export function getServiceForTags(tagSlugs: readonly string[]): Service {
+	const slug =
+		tagSlugs.map(tag => TAG_TO_SERVICE[tag]).find(Boolean) ?? 'web-design'
+	const service = getServiceBySlug(slug)
+	if (!service) {
+		throw new Error(`TAG_TO_SERVICE points at unknown service "${slug}"`)
+	}
+	return service
+}

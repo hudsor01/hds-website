@@ -5,6 +5,8 @@
 
 import type { Metadata } from 'next'
 import { JsonLd } from '@/components/utilities/JsonLd'
+import { FAQ_CATEGORIES } from '@/lib/constants/faqs'
+import { generateFaqSchema } from '@/lib/seo-utils'
 import FaqClient from './FaqClient'
 
 export const metadata: Metadata = {
@@ -38,50 +40,14 @@ export const metadata: Metadata = {
 	}
 }
 
-// FAQPage schema for featured snippets
-const faqSchema = {
-	'@context': 'https://schema.org',
-	'@type': 'FAQPage',
-	mainEntity: [
-		{
-			'@type': 'Question',
-			name: 'What website design services do you offer?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'I build websites for small businesses in Dallas-Fort Worth that bring in work: custom design, fast, mobile-first and built to show up on Google. Once your site is live, I wire in booking, payments and customer follow-up so the leads it generates turn into paying customers.'
-			}
-		},
-		{
-			'@type': 'Question',
-			name: 'How much does it cost to build a website?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'Every project is priced to what it actually takes: page count, features and timeline. I give you a real price on a free website plan call, once I know what your project needs. For a rough market ballpark before we talk, try the free Cost Estimator. No surprise line items later.'
-			}
-		},
-		{
-			'@type': 'Question',
-			name: 'What is your typical project timeline?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'Depends on scope. A simple site runs 1 to 4 weeks. Add online store or booking and it is 8 to 12 weeks. Bigger builds with custom features and payment setup run 3 to 6 months. If you are on a deadline, I can put dedicated time on it and move faster.'
-			}
-		},
-		{
-			'@type': 'Question',
-			name: 'Do you offer monthly retainer packages?',
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: 'Yes. I keep sites running with monthly retainers: updates, security patches, performance checks, new features and priority support. It is for owners who want the site handled without hiring someone in-house. Reach out and I will scope a package to what your business actually needs.'
-			}
-		}
-	]
-}
-
 export default function FAQPage() {
 	return (
 		<>
-			<JsonLd data={faqSchema} />
+			<JsonLd
+				data={generateFaqSchema(
+					FAQ_CATEGORIES.flatMap(category => category.questions)
+				)}
+			/>
 			<FaqClient />
 		</>
 	)

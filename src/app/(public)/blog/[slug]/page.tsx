@@ -1,4 +1,4 @@
-import { Calendar, Clock, Tag } from 'lucide-react'
+import { ArrowRight, Calendar, Clock, Tag } from 'lucide-react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,13 +8,25 @@ import { BlogPostContent } from '@/components/blog/BlogPostContent'
 import { BlogTableOfContents } from '@/components/blog/BlogTableOfContents'
 import { ReadingProgress } from '@/components/blog/ReadingProgress'
 import { RelatedPosts } from '@/components/blog/RelatedPosts'
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
-import { BackLink } from '@/components/utilities/BackLink'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { getAllPosts, getPostBySlug, getPostsByTag } from '@/lib/blog'
 import { withHeadingIds } from '@/lib/blog-toc'
 import { BUSINESS_INFO } from '@/lib/constants/business'
-import { BUSINESS_ID, generateAuthorSchema } from '@/lib/seo-utils'
+import { getServiceForTags } from '@/lib/constants/services'
+import {
+	BUSINESS_ID,
+	generateAuthorSchema,
+	generateBreadcrumbSchema
+} from '@/lib/seo-utils'
 import { formatCalendarDate } from '@/lib/utils'
 
 interface BlogPostPageProps {
@@ -171,29 +183,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 		}
 	}
 
-	const breadcrumbSchema = {
-		'@context': 'https://schema.org',
-		'@type': 'BreadcrumbList',
-		itemListElement: [
-			{
-				'@type': 'ListItem',
-				position: 1,
-				name: 'Home',
-				item: 'https://hudsondigitalsolutions.com'
-			},
-			{
-				'@type': 'ListItem',
-				position: 2,
-				name: 'Blog',
-				item: 'https://hudsondigitalsolutions.com/blog'
-			},
-			{
-				'@type': 'ListItem',
-				position: 3,
-				name: post.title
-			}
-		]
-	}
+	const breadcrumbSchema = generateBreadcrumbSchema([
+		{ name: 'Home', url: SITE_URL },
+		{ name: 'Blog', url: `${SITE_URL}/blog` },
+		{ name: post.title, url: canonicalUrl }
+	])
+
+	// Every post funnels to the service it is about, so the blog passes
+	// readers (and link equity) to the pages that sell.
+	const relatedService = getServiceForTags(tags.map(tag => tag.slug))
 
 	// Headings drive the table of contents; ids here match those injected by
 	// BlogPostContent (same deterministic slugify over the same headings).
@@ -205,7 +203,39 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 			<JsonLd data={blogPostingSchema} />
 			<JsonLd data={breadcrumbSchema} />
 
-			<BackLink href="/blog" label="Back to Blog" />
+			<div className="container-wide px-4 sm:px-6 py-8">
+				<Breadcrumb className="mx-auto max-w-5xl">
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink asChild>
+								<Link
+									href="/"
+									className="text-muted-foreground hover:text-foreground transition-colors"
+								>
+									Home
+								</Link>
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbLink asChild>
+								<Link
+									href="/blog"
+									className="text-muted-foreground hover:text-foreground transition-colors"
+								>
+									Blog
+								</Link>
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem className="min-w-0">
+							<BreadcrumbPage className="text-foreground line-clamp-1">
+								{post.title}
+							</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</div>
 
 			{/* Article Header */}
 			<article className="pb-16">
@@ -303,6 +333,30 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 								</div>
 							</aside>
 						)}
+					</div>
+				</div>
+
+				{/* Related service */}
+				<div className="container-wide py-8">
+					<div className="mx-auto max-w-5xl">
+						<aside className="max-w-3xl rounded-xl border border-border bg-surface-raised p-8">
+							<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">
+								Related Service
+							</p>
+							<h2 className="text-h4 text-foreground mb-2">
+								{relatedService.title}
+							</h2>
+							<p className="text-muted-foreground leading-relaxed mb-4">
+								{relatedService.description}
+							</p>
+							<Link
+								href={`/services/${relatedService.slug}`}
+								className="inline-flex items-center gap-1 text-accent hover:underline"
+							>
+								See how it works
+								<ArrowRight className="h-4 w-4" aria-hidden="true" />
+							</Link>
+						</aside>
 					</div>
 				</div>
 
