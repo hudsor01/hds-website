@@ -8,7 +8,7 @@
 		"dev:https": "command bun run scripts/blog/build.ts && cross-env HTTPS=true next dev",
 		"build": "command bun run scripts/blog/build.ts && next build --webpack",
 		"start": "next start",
-		"lint": "biome check src/",
+		"lint": "biome check src/ scripts/gsc",
 		"lint:fix": "biome check src/ --write",
 		"format": "biome format --write src/",
 		"typecheck": "command bun run scripts/blog/build.ts && tsc --noEmit",

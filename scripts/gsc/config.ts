@@ -6,9 +6,12 @@
 /** Env var (and repo secret) holding the service-account JSON key. */
 export const SECRET_ENV = 'GSC_SERVICE_ACCOUNT_JSON'
 
-/** Search Console property and the origin inspected URLs are built on (D3). */
+/**
+ * Search Console property and the origin inspected URLs are built on (D3).
+ * The origin is the site's own SITE_URL, so the two cannot drift (IN-12).
+ */
 export const SITE_URL = 'sc-domain:hudsondigitalsolutions.com'
-export const SITE_ORIGIN = 'https://hudsondigitalsolutions.com'
+export { SITE_URL as SITE_ORIGIN } from '@/lib/seo-config'
 
 /** OAuth token endpoint: JWT `aud` and the only POST target (D1, D15 C3). */
 export const TOKEN_URL = 'https://oauth2.googleapis.com/token'
