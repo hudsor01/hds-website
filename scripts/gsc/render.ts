@@ -6,6 +6,7 @@
  */
 import {
 	BODY_BYTE_CAP,
+	BRAND_TERMS,
 	LOOKBACK_DAYS,
 	MAX_INSPECTIONS,
 	PROBE_DAYS,
@@ -274,7 +275,7 @@ function brandSection(model: ReportModel): string[] {
 	const { clicks, impressions, rowLimitHit } = model.brand
 	const parts = [
 		[
-			`Brand queries matching hudson digital or hudsondigital: ${plural(clicks, 'click', 'clicks')}, ${plural(impressions, 'impression', 'impressions')}.`
+			`Brand queries matching ${BRAND_TERMS.join(' or ')}: ${plural(clicks, 'click', 'clicks')}, ${plural(impressions, 'impression', 'impressions')}.`
 		]
 	]
 	if (rowLimitHit) {

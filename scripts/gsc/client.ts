@@ -15,7 +15,8 @@ import {
 	INSPECT_URL,
 	INSPECTION_SPACING_MS,
 	MAX_ATTEMPTS,
-	SC_PROPERTY
+	SC_PROPERTY,
+	SECRET_ENV
 } from './config'
 import { GscApiError } from './errors'
 import { BUDGET_MESSAGE, sendWithRetry } from './retry'
@@ -118,7 +119,7 @@ function errorMessage(
 		case 'scope':
 			return 'Search Console rejected the token scope. This is a bug in scripts/gsc/auth.ts.'
 		case 'auth':
-			return 'Search Console rejected the access token (HTTP 401). Check GSC_SERVICE_ACCOUNT_JSON and run again.'
+			return `Search Console rejected the access token (HTTP 401). Check ${SECRET_ENV} and run again.`
 		case 'retry':
 			return httpStatus === null
 				? `${label} failed: network error.`

@@ -51,7 +51,13 @@ export const ROW_LIMIT = 25_000
 export const STRIKING_MIN = 5
 export const STRIKING_MAX = 20
 export const STRIKING_MAX_ROWS = 50
-export const BRAND_RE = /hudson digital|hudsondigital/i
+/**
+ * True-brand query terms (04-brand.md). BRAND_RE matches them and the Brand
+ * section names them, from this one list (IN-03). Plain words only: they
+ * are joined into the regex unescaped.
+ */
+export const BRAND_TERMS = ['hudson digital', 'hudsondigital'] as const
+export const BRAND_RE = new RegExp(BRAND_TERMS.join('|'), 'i')
 
 /** Rendered issue body cap in UTF-8 bytes (D15 C9). */
 export const BODY_BYTE_CAP = 60_000
