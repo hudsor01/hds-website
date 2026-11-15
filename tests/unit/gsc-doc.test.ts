@@ -1,13 +1,19 @@
 /**
  * The setup doc's troubleshooting table must cover every line the weekly
- * report can print on failure (WR-05, AUTO-06). Each authored message is
- * produced by driving the real code path with injected fakes, then matched
- * against the table's error-line cells, where <placeholder> stands for any
- * text. A new message without a doc row fails this test.
+ * report can print on failure (WR-05, AUTO-06). Three checks keep it honest:
+ * - Each authored message is produced by driving the real code path with
+ *   injected fakes and must match exactly one error-line row. Placeholders
+ *   compile to narrow patterns, so a generic row cannot stand in for a
+ *   deleted specific one.
+ * - Every row must match at least one driven message (no stale rows).
+ * - Every message literal in scripts/gsc (found by parsing the source) must
+ *   be produced by at least one driven message, so a new message that
+ *   nobody drives here fails the test.
  */
 import { describe, expect, test } from 'bun:test'
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import * as ts from 'typescript'
 import { countCommaBeforeAnd } from '../../scripts/blog/voice'
 import {
 	buildAssertion,
@@ -34,13 +40,36 @@ import {
 } from './gsc-fixtures'
 
 const DOC_PATH = join(import.meta.dir, '../../docs/gsc-weekly-report-setup.md')
+const GSC_DIR = join(import.meta.dir, '../../scripts/gsc')
+// render.ts builds the issue body, not error lines.
+const NON_MESSAGE_FILES = new Set(['render.ts'])
 const CLIENT_EMAIL = 'gsc-report@hds-test.iam.gserviceaccount.com'
 const LABELS = ['Search Analytics request', 'URL Inspection request']
 const ROW_RE = /^\| `(.+?)` \|/
-const PLACEHOLDER_RE = /<[a-z_]+>/g
+const PLACEHOLDER_SPLIT_RE = /(<[a-z_]+>)/
+const SUBSTITUTION = '\u0000'
+
+/** What each doc placeholder may stand for. Narrow on purpose (WR-01). */
+const PLACEHOLDERS: Record<string, string> = {
+	'<n>': '\\d+',
+	'<request>': '(?:Search Analytics|URL Inspection) request',
+	'<error>': '[a-z_]+',
+	'<code>': '[a-z_]+',
+	'<fields>': '[^ ,]+(?:, [^ ,]+)*',
+	'<client_email>': '[^ @]+@[^ ]+'
+}
+
+function escapeRegex(text: string): string {
+	return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+interface DocRow {
+	cell: string
+	pattern: RegExp
+}
 
 /** Error-line cells of the Part E table, as anchored regexes. */
-function docPatterns(): RegExp[] {
+function docRows(): DocRow[] {
 	const doc = readFileSync(DOC_PATH, 'utf8')
 	const part = doc.slice(
 		doc.indexOf('## Part E - Troubleshooting'),
@@ -52,11 +81,95 @@ function docPatterns(): RegExp[] {
 			return []
 		}
 		const pattern = cell
-			.split(PLACEHOLDER_RE)
-			.map(piece => piece.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-			.join('.+')
-		return [new RegExp(`^${pattern}$`)]
+			.split(PLACEHOLDER_SPLIT_RE)
+			.map(piece => {
+				if (!PLACEHOLDER_SPLIT_RE.test(piece)) {
+					return escapeRegex(piece)
+				}
+				const placeholder = PLACEHOLDERS[piece]
+				if (placeholder === undefined) {
+					throw new Error(`doc row uses an unknown placeholder ${piece}`)
+				}
+				return placeholder
+			})
+			.join('')
+		return [{ cell, pattern: new RegExp(`^${pattern}$`) }]
 	})
+}
+
+interface SourceTemplate {
+	text: string
+	pattern: RegExp
+	literalLength: number
+}
+
+/** A literal reads as a printed line: a sentence, or the usage line. */
+function isMessageLiteral(text: string): boolean {
+	return text.includes(' ') && (text.endsWith('.') || text.startsWith('usage:'))
+}
+
+/**
+ * Every string and template literal in scripts/gsc that reads as a printed
+ * line, with each ${...} substitution as a wildcard.
+ */
+function sourceTemplates(): SourceTemplate[] {
+	const texts = new Set<string>()
+	for (const file of readdirSync(GSC_DIR)) {
+		if (!file.endsWith('.ts') || NON_MESSAGE_FILES.has(file)) {
+			continue
+		}
+		const source = ts.createSourceFile(
+			file,
+			readFileSync(join(GSC_DIR, file), 'utf8'),
+			ts.ScriptTarget.Latest,
+			true
+		)
+		const visit = (node: ts.Node): void => {
+			if (
+				ts.isStringLiteral(node) ||
+				ts.isNoSubstitutionTemplateLiteral(node)
+			) {
+				texts.add(node.text)
+				return
+			}
+			if (ts.isTemplateExpression(node)) {
+				texts.add(
+					node.head.text +
+						node.templateSpans
+							.map(span => SUBSTITUTION + span.literal.text)
+							.join('')
+				)
+				return
+			}
+			ts.forEachChild(node, visit)
+		}
+		visit(source)
+	}
+	return [...texts].filter(isMessageLiteral).map(text => {
+		const pieces = text.split(SUBSTITUTION)
+		return {
+			text: pieces.join('${...}'),
+			pattern: new RegExp(`^${pieces.map(escapeRegex).join('.+?')}$`),
+			literalLength: pieces.join('').length
+		}
+	})
+}
+
+/** The most specific source template a message matches, if any. */
+function templateOf(
+	message: string,
+	templates: SourceTemplate[]
+): SourceTemplate | undefined {
+	let best: SourceTemplate | undefined
+	for (const template of templates) {
+		if (
+			template.pattern.test(message) &&
+			(best === undefined || template.literalLength > best.literalLength)
+		) {
+			best = template
+		}
+	}
+	return best
 }
 
 function messageOf(fn: () => unknown): string {
@@ -188,20 +301,67 @@ async function clientMessages(): Promise<string[]> {
 	return messages
 }
 
+async function allMessages(): Promise<string[]> {
+	return [
+		...(await authMessages()),
+		...(await clientMessages()),
+		allInspectionsFailedMessage(3),
+		POSTS_UNREADABLE,
+		UNEXPECTED,
+		USAGE
+	]
+}
+
 describe('setup doc troubleshooting table', () => {
-	test('has a row for every authored error line', async () => {
-		const patterns = docPatterns()
-		expect(patterns.length).toBeGreaterThan(20)
-		const messages = [
-			...(await authMessages()),
-			...(await clientMessages()),
-			allInspectionsFailedMessage(3),
-			POSTS_UNREADABLE,
-			UNEXPECTED,
-			USAGE
-		]
-		const missing = messages.filter(m => !patterns.some(p => p.test(m)))
-		expect(missing).toEqual([])
+	test('every authored error line matches exactly one row', async () => {
+		const rows = docRows()
+		expect(rows.length).toBeGreaterThan(20)
+		const unmatched = (await allMessages()).flatMap(message => {
+			const hits = rows.filter(row => row.pattern.test(message))
+			return hits.length === 1
+				? []
+				: [{ message, rows: hits.map(row => row.cell) }]
+		})
+		expect(unmatched).toEqual([])
+	})
+
+	test('every row matches at least one authored error line', async () => {
+		const messages = await allMessages()
+		const stale = docRows()
+			.filter(row => !messages.some(message => row.pattern.test(message)))
+			.map(row => row.cell)
+		expect(stale).toEqual([])
+	})
+
+	test('every message literal in scripts/gsc is driven by this test', async () => {
+		const templates = sourceTemplates()
+		expect(templates.length).toBeGreaterThan(20)
+		const messages = await allMessages()
+		const driven = new Set(messages.map(m => templateOf(m, templates)?.text))
+		const undriven = templates
+			.filter(template => !driven.has(template.text))
+			.map(template => template.text)
+		expect(undriven).toEqual([])
+		const unknown = messages.filter(m => templateOf(m, templates) === undefined)
+		expect(unknown).toEqual([])
+	})
+
+	test('a generic row cannot stand in for a specific one', () => {
+		const generic = docRows().find(
+			row => row.cell === '<request> failed with HTTP <n>.'
+		)
+		expect(generic).toBeDefined()
+		for (const specific of [
+			'Search Analytics request failed with HTTP 503 after 3 attempts.',
+			'Token request failed with HTTP 403 (access_denied).',
+			'Token request failed with HTTP 403.',
+			'Anything at all failed with HTTP whatever.'
+		]) {
+			expect(generic?.pattern.test(specific)).toBe(false)
+		}
+		expect(
+			generic?.pattern.test('URL Inspection request failed with HTTP 400.')
+		).toBe(true)
 	})
 
 	test('has a catch-all row', () => {
