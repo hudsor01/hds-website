@@ -1,0 +1,198 @@
+/**
+ * Search Console HTTP client for the weekly report: Google error
+ * classification and a bounded retry transport (D7, D8, D15 C1).
+ *
+ * Every thrown message is authored here from the error kind, HTTP status and
+ * client_email. Google's error.message (it embeds the project number and can
+ * echo request data), response bodies, request bodies and the access token
+ * never reach a message (D2, AUTO-06). Requests are strictly sequential.
+ */
+import { z } from 'zod'
+import { BASE_BACKOFF_MS, MAX_ATTEMPTS, SITE_URL } from './config'
+import { GscApiError } from './errors'
+import { retryAfterMs } from './retry'
+import type { ErrorKind, GscContext } from './types'
+
+const ReasonListSchema = z
+	.array(z.object({ reason: z.string().optional() }))
+	.optional()
+
+// Modern envelope (/v1/urlInspection) carries details[].reason; legacy
+// (webmasters/v3) carries errors[].reason. Both are read.
+const GoogleErrorSchema = z.object({
+	error: z.object({
+		code: z.number().optional(),
+		status: z.string().optional(),
+		details: ReasonListSchema,
+		errors: ReasonListSchema
+	})
+})
+
+const DISABLED_REASONS = new Set(['SERVICE_DISABLED', 'accessNotConfigured'])
+const SCOPE_REASON = 'ACCESS_TOKEN_SCOPE_INSUFFICIENT'
+const QUOTA_REASONS = new Set([
+	'quotaExceeded',
+	'dailyLimitExceeded',
+	'RESOURCE_QUOTA_EXCEEDED'
+])
+const RATE_REASONS = new Set([
+	'rateLimitExceeded',
+	'userRateLimitExceeded',
+	'RATE_LIMIT_EXCEEDED'
+])
+
+function googleReasons(body: unknown): string[] {
+	const parsed = GoogleErrorSchema.safeParse(body)
+	if (!parsed.success) {
+		return []
+	}
+	const { details, errors } = parsed.data.error
+	return [...(details ?? []), ...(errors ?? [])]
+		.map(entry => entry.reason)
+		.filter((reason): reason is string => typeof reason === 'string')
+}
+
+/**
+ * Classifies a non-2xx Google response by its parsed reason first, because
+ * 403 is overloaded: rate limits, quota, a disabled API, a bad scope and
+ * missing property access all share it (D15 C1).
+ */
+export function classifyGoogleError(status: number, body: unknown): ErrorKind {
+	const reasons = googleReasons(body)
+	if (reasons.some(reason => DISABLED_REASONS.has(reason))) {
+		return 'disabled'
+	}
+	if (reasons.includes(SCOPE_REASON)) {
+		return 'scope'
+	}
+	if (reasons.some(reason => QUOTA_REASONS.has(reason))) {
+		return 'quota'
+	}
+	if (
+		status === 429 ||
+		status >= 500 ||
+		reasons.some(reason => RATE_REASONS.has(reason))
+	) {
+		return 'retry'
+	}
+	if (status === 401) {
+		return 'auth'
+	}
+	if (status === 403) {
+		return 'no_access'
+	}
+	return 'other'
+}
+
+/** One actionable line per kind (D8, D15 C1). */
+function errorMessage(
+	kind: ErrorKind,
+	label: string,
+	httpStatus: number | null,
+	clientEmail: string,
+	attempts: number
+): string {
+	switch (kind) {
+		case 'no_access':
+			return `${clientEmail} has no access to ${SITE_URL}. Add it in Search Console > Settings > Users and permissions as Restricted. If it is already Restricted and inspection still fails, change it to Full.`
+		case 'disabled':
+			return `The Google Search Console API is not enabled. Enable the Google Search Console API on the Cloud project that owns ${clientEmail}.`
+		case 'quota':
+			return 'Search Console quota exceeded. The next weekly run will retry.'
+		case 'scope':
+			return 'Search Console rejected the token scope. This is a bug in scripts/gsc/auth.ts.'
+		case 'auth':
+			return 'Search Console rejected the access token (HTTP 401). Check GSC_SERVICE_ACCOUNT_JSON and run again.'
+		case 'retry':
+			return httpStatus === null
+				? `${label} failed: network error.`
+				: `${label} failed with HTTP ${httpStatus} after ${attempts} attempts.`
+		case 'other':
+			return `${label} failed with HTTP ${httpStatus}.`
+	}
+}
+
+/** Body text parsed as JSON; undefined when unreadable or not JSON. */
+async function readJson(res: Response): Promise<unknown> {
+	let text: string
+	try {
+		text = await res.text()
+	} catch {
+		return undefined
+	}
+	try {
+		return JSON.parse(text)
+	} catch {
+		return undefined
+	}
+}
+
+/**
+ * POSTs a JSON payload with the bearer token. Retries 429, 5xx, rate-reason
+ * 403 and network errors up to MAX_ATTEMPTS with Retry-After or 1 s, 2 s
+ * backoff on the injected clock; every other failure throws at once (D7).
+ */
+export async function requestWithRetry(
+	ctx: GscContext,
+	url: string,
+	payload: unknown,
+	label: string
+): Promise<unknown> {
+	const init: RequestInit = {
+		method: 'POST',
+		headers: {
+			authorization: `Bearer ${ctx.accessToken}`,
+			'content-type': 'application/json'
+		},
+		body: JSON.stringify(payload)
+	}
+
+	// null status means the last attempt failed with a network error.
+	let lastStatus: number | null = null
+
+	for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+		let res: Response | undefined
+		try {
+			res = await ctx.fetchFn(url, init)
+		} catch {
+			res = undefined
+		}
+
+		let waitMs: number | undefined
+		if (res === undefined) {
+			lastStatus = null
+		} else {
+			const body = await readJson(res)
+			if (res.ok) {
+				if (body === undefined) {
+					throw new GscApiError(
+						`${label} returned an unexpected response.`,
+						'other',
+						res.status
+					)
+				}
+				return body
+			}
+			const kind = classifyGoogleError(res.status, body)
+			if (kind !== 'retry') {
+				throw new GscApiError(
+					errorMessage(kind, label, res.status, ctx.clientEmail, attempt),
+					kind,
+					res.status
+				)
+			}
+			lastStatus = res.status
+			waitMs = retryAfterMs(res.headers.get('retry-after'), ctx.clock.now())
+		}
+
+		if (attempt < MAX_ATTEMPTS) {
+			await ctx.clock.sleep(waitMs ?? BASE_BACKOFF_MS * 2 ** (attempt - 1))
+		}
+	}
+
+	throw new GscApiError(
+		errorMessage('retry', label, lastStatus, ctx.clientEmail, MAX_ATTEMPTS),
+		'retry',
+		lastStatus
+	)
+}
