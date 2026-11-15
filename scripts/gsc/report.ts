@@ -15,7 +15,7 @@ import { writeFileSync } from 'node:fs'
 import { CONTENT_DIR } from '../blog/lib'
 import { fetchAccessToken, parseCredential } from './auth'
 import { createInspector, queryAnalytics } from './client'
-import { PROBE_ROW_LIMIT, ROW_LIMIT, SECRET_ENV } from './config'
+import { PROBE_ROW_LIMIT, ROW_LIMIT, RUN_BUDGET_MS, SECRET_ENV } from './config'
 import { GscApiError, GscSetupError } from './errors'
 import { renderReport } from './render'
 import {
@@ -32,7 +32,8 @@ import type {
 	GscContext,
 	InspectedPost,
 	RecentPost,
-	ReportModel
+	ReportModel,
+	Transport
 } from './types'
 
 export interface RunDeps {
@@ -73,14 +74,15 @@ export async function run(deps: RunDeps): Promise<number> {
 
 	try {
 		const runStartMs = deps.clock.now()
-		const cred = parseCredential(deps.env[SECRET_ENV])
-		const accessToken = await fetchAccessToken(cred, {
-			fetchFn: deps.fetchFn,
-			clock: deps.clock
-		})
-		const ctx: GscContext = {
+		const transport: Transport = {
 			fetchFn: deps.fetchFn,
 			clock: deps.clock,
+			deadlineMs: runStartMs + RUN_BUDGET_MS
+		}
+		const cred = parseCredential(deps.env[SECRET_ENV])
+		const accessToken = await fetchAccessToken(cred, transport)
+		const ctx: GscContext = {
+			...transport,
 			accessToken,
 			clientEmail: cred.client_email
 		}

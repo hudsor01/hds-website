@@ -13,9 +13,15 @@ export interface Clock {
 	sleep(ms: number): Promise<void>
 }
 
-export interface GscContext {
+/** What every network call needs: fetch, clock and the run deadline. */
+export interface Transport {
 	fetchFn: FetchFn
 	clock: Clock
+	/** clock.now() value past which no request starts and no wait begins. */
+	deadlineMs: number
+}
+
+export interface GscContext extends Transport {
 	accessToken: string
 	clientEmail: string
 }
@@ -27,6 +33,7 @@ export type ErrorKind =
 	| 'scope'
 	| 'no_access'
 	| 'auth'
+	| 'budget'
 	| 'other'
 
 export interface IndexStatus {

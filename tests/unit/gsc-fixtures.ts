@@ -7,6 +7,9 @@ import { generateKeyPairSync } from 'node:crypto'
 import { TOKEN_URL } from '../../scripts/gsc/config'
 import type { FetchFn } from '../../scripts/gsc/types'
 
+/** deadlineMs for tests that do not exercise the run budget. */
+export const NO_DEADLINE = Number.POSITIVE_INFINITY
+
 export interface FakeClock {
 	now(): number
 	sleep(ms: number): Promise<void>

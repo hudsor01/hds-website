@@ -26,6 +26,15 @@ export const MAX_ATTEMPTS = 3
 export const BASE_BACKOFF_MS = 1000
 export const MAX_RETRY_AFTER_MS = 60_000
 
+/**
+ * Time limits: one request is aborted (and retried as a network error) after
+ * REQUEST_TIMEOUT_MS; the whole run stops at RUN_BUDGET_MS, well inside the
+ * workflow's timeout-minutes: 10, so a stall or a Retry-After storm still
+ * ends with an authored line (WR-01).
+ */
+export const REQUEST_TIMEOUT_MS = 30_000
+export const RUN_BUDGET_MS = 7 * 60_000
+
 /** Recent-post window in days (D4). */
 export const LOOKBACK_DAYS = 30
 

@@ -1,6 +1,7 @@
 /**
  * Tests for scripts/gsc/client.ts: Google error classification, the bounded
- * retry transport, and the fixed operator messages (D7, D8, D15 C1). Fetch and
+ * retry transport with its timeout and run budget, and the fixed operator
+ * messages (D7, D8, D15 C1, WR-01). Fetch and
  * clock are injected, so retries and backoff run with zero real waiting.
  */
 import { describe, expect, test } from 'bun:test'
@@ -14,13 +15,15 @@ import {
 } from '../../scripts/gsc/client'
 import { ANALYTICS_URL, INSPECT_URL } from '../../scripts/gsc/config'
 import { GscApiError } from '../../scripts/gsc/errors'
+import { BUDGET_MESSAGE } from '../../scripts/gsc/retry'
 import type { GscContext } from '../../scripts/gsc/types'
 import {
 	createFakeFetch,
 	type FakeCall,
 	type FakeClock,
 	fakeClock,
-	jsonResponse
+	jsonResponse,
+	NO_DEADLINE
 } from './gsc-fixtures'
 
 const ACCESS_TOKEN = 'ya29.client-test-token-should-never-appear'
@@ -81,6 +84,7 @@ function makeCtx(
 	const ctx: GscContext = {
 		fetchFn: fake.fetchFn,
 		clock,
+		deadlineMs: NO_DEADLINE,
 		accessToken: ACCESS_TOKEN,
 		clientEmail: CLIENT_EMAIL
 	}
@@ -260,6 +264,7 @@ describe('requestWithRetry', () => {
 				throw new TypeError(`fetch failed ${ACCESS_TOKEN}`)
 			},
 			clock,
+			deadlineMs: NO_DEADLINE,
 			accessToken: ACCESS_TOKEN,
 			clientEmail: CLIENT_EMAIL
 		}
@@ -284,6 +289,7 @@ describe('requestWithRetry', () => {
 				return jsonResponse({ ok: 1 })
 			},
 			clock,
+			deadlineMs: NO_DEADLINE,
 			accessToken: ACCESS_TOKEN,
 			clientEmail: CLIENT_EMAIL
 		}
@@ -380,6 +386,120 @@ describe('requestWithRetry', () => {
 		expect(error.httpStatus).toBe(200)
 		expect(error.message).toBe(`${LABEL} returned an unexpected response.`)
 		expect(calls).toHaveLength(1)
+	})
+
+	test('every attempt gets its own unaborted timeout signal', async () => {
+		const clock = fakeClock()
+		const signals: Array<AbortSignal | null | undefined> = []
+		const ctx: GscContext = {
+			fetchFn: async (_url, init) => {
+				signals.push(init.signal)
+				return signals.length < 3
+					? jsonResponse(modernError(503), 503)
+					: jsonResponse({ ok: 1 })
+			},
+			clock,
+			deadlineMs: NO_DEADLINE,
+			accessToken: ACCESS_TOKEN,
+			clientEmail: CLIENT_EMAIL
+		}
+		await requestWithRetry(ctx, ANALYTICS_URL, PAYLOAD, LABEL)
+		expect(signals).toHaveLength(3)
+		for (const signal of signals) {
+			expect(signal).toBeInstanceOf(AbortSignal)
+			expect(signal?.aborted).toBe(false)
+		}
+		expect(new Set(signals).size).toBe(3)
+	})
+
+	test('a timed-out request retries and then fails as a network error', async () => {
+		const clock = fakeClock()
+		let calls = 0
+		const ctx: GscContext = {
+			fetchFn: async () => {
+				calls++
+				throw new DOMException('The operation timed out.', 'TimeoutError')
+			},
+			clock,
+			deadlineMs: NO_DEADLINE,
+			accessToken: ACCESS_TOKEN,
+			clientEmail: CLIENT_EMAIL
+		}
+		const error = await expectApiError(ctx)
+		expect(error.kind).toBe('retry')
+		expect(error.httpStatus).toBeNull()
+		expect(error.message).toBe(`${LABEL} failed: network error.`)
+		expect(calls).toBe(3)
+		expect(clock.sleeps).toEqual([1000, 2000])
+	})
+
+	test('a timeout then 200 recovers', async () => {
+		const clock = fakeClock()
+		let calls = 0
+		const ctx: GscContext = {
+			fetchFn: async () => {
+				calls++
+				if (calls === 1) {
+					throw new DOMException('The operation timed out.', 'TimeoutError')
+				}
+				return jsonResponse({ ok: 1 })
+			},
+			clock,
+			deadlineMs: NO_DEADLINE,
+			accessToken: ACCESS_TOKEN,
+			clientEmail: CLIENT_EMAIL
+		}
+		expect(await requestWithRetry(ctx, ANALYTICS_URL, PAYLOAD, LABEL)).toEqual({
+			ok: 1
+		})
+		expect(clock.sleeps).toEqual([1000])
+	})
+
+	test('a body that cannot be read retries as a network error', async () => {
+		const clock = fakeClock()
+		let calls = 0
+		const ctx: GscContext = {
+			fetchFn: async () => {
+				calls++
+				if (calls === 1) {
+					const res = jsonResponse({ ok: 1 })
+					res.text = () => Promise.reject(new Error('stream reset'))
+					return res
+				}
+				return jsonResponse({ ok: 2 })
+			},
+			clock,
+			deadlineMs: NO_DEADLINE,
+			accessToken: ACCESS_TOKEN,
+			clientEmail: CLIENT_EMAIL
+		}
+		expect(await requestWithRetry(ctx, ANALYTICS_URL, PAYLOAD, LABEL)).toEqual({
+			ok: 2
+		})
+		expect(calls).toBe(2)
+		expect(clock.sleeps).toEqual([1000])
+	})
+
+	test('a wait that would pass the deadline throws the budget error', async () => {
+		const { ctx, clock, calls } = makeCtx(() =>
+			jsonResponse(modernError(503), 503)
+		)
+		ctx.deadlineMs = clock.now() + 2500
+		const error = await expectApiError(ctx)
+		expect(error.kind).toBe('budget')
+		expect(error.httpStatus).toBeNull()
+		expect(error.message).toBe(BUDGET_MESSAGE)
+		expect(calls).toHaveLength(2)
+		expect(clock.sleeps).toEqual([1000])
+		expect(clock.now()).toBeLessThan(ctx.deadlineMs)
+	})
+
+	test('no request starts once the deadline has passed', async () => {
+		const { ctx, clock, calls } = makeCtx(() => jsonResponse({ ok: 1 }))
+		ctx.deadlineMs = clock.now()
+		const error = await expectApiError(ctx)
+		expect(error.kind).toBe('budget')
+		expect(calls).toHaveLength(0)
 	})
 
 	test('no message echoes the request body', async () => {
@@ -542,6 +662,7 @@ describe('createInspector', () => {
 				throw new TypeError('fetch failed')
 			},
 			clock,
+			deadlineMs: NO_DEADLINE,
 			accessToken: ACCESS_TOKEN,
 			clientEmail: CLIENT_EMAIL
 		}
@@ -606,6 +727,7 @@ describe('createInspector', () => {
 				},
 				sleep: clock.sleep
 			},
+			deadlineMs: NO_DEADLINE,
 			accessToken: ACCESS_TOKEN,
 			clientEmail: CLIENT_EMAIL
 		}
@@ -613,6 +735,17 @@ describe('createInspector', () => {
 			RangeError
 		)
 		expect(nowCalls).toBe(2)
+	})
+
+	test('the budget error fails the run instead of a per-URL outcome', async () => {
+		const { ctx, clock, calls } = inspectCtx(() =>
+			jsonResponse(modernError(503), 503, { 'retry-after': '60' })
+		)
+		ctx.deadlineMs = clock.now() + 30_000
+		const error = await expectRejection(createInspector(ctx)(POST_URL))
+		expect(error.kind).toBe('budget')
+		expect(error.message).toBe(BUDGET_MESSAGE)
+		expect(calls).toHaveLength(1)
 	})
 
 	test('consecutive inspections are spaced 200 ms; the first never sleeps', async () => {

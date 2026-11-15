@@ -14,8 +14,8 @@ import {
 	type ServiceAccount
 } from '../../scripts/gsc/auth'
 import { SCOPE, TOKEN_URL } from '../../scripts/gsc/config'
-import { GscSetupError } from '../../scripts/gsc/errors'
-import { retryAfterMs } from '../../scripts/gsc/retry'
+import { GscApiError, GscSetupError } from '../../scripts/gsc/errors'
+import { BUDGET_MESSAGE, retryAfterMs } from '../../scripts/gsc/retry'
 import {
 	collectPemBodyLines,
 	createFakeFetch,
@@ -23,6 +23,7 @@ import {
 	fakeClock,
 	jsonResponse,
 	makeKeyPair,
+	NO_DEADLINE,
 	serviceAccountJson
 } from './gsc-fixtures'
 
@@ -345,7 +346,11 @@ describe('fetchAccessToken', () => {
 	test('POSTs the JWT bearer grant once to TOKEN_URL and returns the token', async () => {
 		const clock = fakeClock()
 		const { fetchFn, calls } = tokenSequence([okToken()])
-		const token = await fetchAccessToken(cred, { fetchFn, clock })
+		const token = await fetchAccessToken(cred, {
+			fetchFn,
+			clock,
+			deadlineMs: NO_DEADLINE
+		})
 		expect(token).toBe(ACCESS_TOKEN)
 		expect(calls).toHaveLength(1)
 		const call = calls[0]
@@ -364,7 +369,11 @@ describe('fetchAccessToken', () => {
 
 	test('never fetches token_uri from the secret', async () => {
 		const { fetchFn, calls } = tokenSequence([okToken()])
-		await fetchAccessToken(cred, { fetchFn, clock: fakeClock() })
+		await fetchAccessToken(cred, {
+			fetchFn,
+			clock: fakeClock(),
+			deadlineMs: NO_DEADLINE
+		})
 		expect(calls.map(c => c.url)).toEqual([TOKEN_URL])
 	})
 
@@ -377,7 +386,7 @@ describe('fetchAccessToken', () => {
 			)
 		])
 		const error = await captureAsync(() =>
-			fetchAccessToken(cred, { fetchFn, clock })
+			fetchAccessToken(cred, { fetchFn, clock, deadlineMs: NO_DEADLINE })
 		)
 		expect(error.message).toBe(revokedLine('invalid_grant'))
 		expect(calls).toHaveLength(1)
@@ -397,7 +406,11 @@ describe('fetchAccessToken', () => {
 			)
 		])
 		const error = await captureAsync(() =>
-			fetchAccessToken(cred, { fetchFn, clock: fakeClock() })
+			fetchAccessToken(cred, {
+				fetchFn,
+				clock: fakeClock(),
+				deadlineMs: NO_DEADLINE
+			})
 		)
 		expect(error.message).toBe(CLOCK_LINE)
 		expectNoSecrets(error.message, calls)
@@ -409,7 +422,7 @@ describe('fetchAccessToken', () => {
 			jsonResponse({ error: 'disabled_client' }, 401)
 		])
 		const error = await captureAsync(() =>
-			fetchAccessToken(cred, { fetchFn, clock })
+			fetchAccessToken(cred, { fetchFn, clock, deadlineMs: NO_DEADLINE })
 		)
 		expect(error.message).toBe(DISABLED_LINE)
 		expect(calls).toHaveLength(1)
@@ -423,7 +436,7 @@ describe('fetchAccessToken', () => {
 			new Response(null, { status: 403 })
 		])
 		const error = await captureAsync(() =>
-			fetchAccessToken(cred, { fetchFn, clock })
+			fetchAccessToken(cred, { fetchFn, clock, deadlineMs: NO_DEADLINE })
 		)
 		expect(error.message).toBe('Token request failed with HTTP 403.')
 		expect(calls).toHaveLength(1)
@@ -434,7 +447,7 @@ describe('fetchAccessToken', () => {
 		const clock = fakeClock()
 		const { fetchFn, calls } = tokenSequence([jsonResponse({})])
 		const error = await captureAsync(() =>
-			fetchAccessToken(cred, { fetchFn, clock })
+			fetchAccessToken(cred, { fetchFn, clock, deadlineMs: NO_DEADLINE })
 		)
 		expect(error.message).toBe(
 			'Token response did not include an access token.'
@@ -451,7 +464,7 @@ describe('fetchAccessToken', () => {
 			new Response('oops', { status: 500 })
 		])
 		const error = await captureAsync(() =>
-			fetchAccessToken(cred, { fetchFn, clock })
+			fetchAccessToken(cred, { fetchFn, clock, deadlineMs: NO_DEADLINE })
 		)
 		expect(error.message).toBe('Token request failed with HTTP 500.')
 		expect(calls).toHaveLength(3)
@@ -463,7 +476,7 @@ describe('fetchAccessToken', () => {
 		const clock = fakeClock()
 		const { fetchFn, calls } = tokenSequence(['network', 'network', 'network'])
 		const error = await captureAsync(() =>
-			fetchAccessToken(cred, { fetchFn, clock })
+			fetchAccessToken(cred, { fetchFn, clock, deadlineMs: NO_DEADLINE })
 		)
 		expect(error.message).toBe(NETWORK_LINE)
 		expect(calls).toHaveLength(3)
@@ -478,7 +491,9 @@ describe('fetchAccessToken', () => {
 			new Response('', { status: 503 }),
 			okToken()
 		])
-		expect(await fetchAccessToken(cred, { fetchFn, clock })).toBe(ACCESS_TOKEN)
+		expect(
+			await fetchAccessToken(cred, { fetchFn, clock, deadlineMs: NO_DEADLINE })
+		).toBe(ACCESS_TOKEN)
 		expect(calls).toHaveLength(3)
 		expect(clock.sleeps).toEqual([1000, 2000])
 	})
@@ -489,7 +504,9 @@ describe('fetchAccessToken', () => {
 			jsonResponse({ error: 'rate_limited' }, 429),
 			okToken()
 		])
-		expect(await fetchAccessToken(cred, { fetchFn, clock })).toBe(ACCESS_TOKEN)
+		expect(
+			await fetchAccessToken(cred, { fetchFn, clock, deadlineMs: NO_DEADLINE })
+		).toBe(ACCESS_TOKEN)
 		expect(calls).toHaveLength(2)
 		expect(clock.sleeps).toEqual([1000])
 	})
@@ -497,7 +514,9 @@ describe('fetchAccessToken', () => {
 	test('network, network, 200 retries and returns the token', async () => {
 		const clock = fakeClock()
 		const { fetchFn, calls } = tokenSequence(['network', 'network', okToken()])
-		expect(await fetchAccessToken(cred, { fetchFn, clock })).toBe(ACCESS_TOKEN)
+		expect(
+			await fetchAccessToken(cred, { fetchFn, clock, deadlineMs: NO_DEADLINE })
+		).toBe(ACCESS_TOKEN)
 		expect(calls).toHaveLength(3)
 		expect(clock.sleeps).toEqual([1000, 2000])
 	})
@@ -508,7 +527,9 @@ describe('fetchAccessToken', () => {
 			new Response('', { status: 429, headers: { 'retry-after': '3' } }),
 			okToken()
 		])
-		expect(await fetchAccessToken(cred, { fetchFn, clock })).toBe(ACCESS_TOKEN)
+		expect(
+			await fetchAccessToken(cred, { fetchFn, clock, deadlineMs: NO_DEADLINE })
+		).toBe(ACCESS_TOKEN)
 		expect(calls).toHaveLength(2)
 		expect(clock.sleeps).toEqual([3000])
 	})
@@ -518,12 +539,35 @@ describe('fetchAccessToken', () => {
 			new Response('', { status: 503 }),
 			okToken()
 		])
-		await fetchAccessToken(cred, { fetchFn, clock: fakeClock() })
+		await fetchAccessToken(cred, {
+			fetchFn,
+			clock: fakeClock(),
+			deadlineMs: NO_DEADLINE
+		})
 		const assertions = calls.map(c =>
 			new URLSearchParams(c.body).get('assertion')
 		)
 		expect(assertions).toHaveLength(2)
 		expect(assertions[0]).toBe(assertions[1] ?? '')
+	})
+
+	test('a passed run deadline stops the token call before any request', async () => {
+		const { fetchFn, calls } = createFakeFetch(() =>
+			jsonResponse({ access_token: ACCESS_TOKEN })
+		)
+		const clock = fakeClock(NOW)
+		let caught: unknown
+		try {
+			await fetchAccessToken(cred, { fetchFn, clock, deadlineMs: NOW })
+		} catch (error) {
+			caught = error
+		}
+		if (!(caught instanceof GscApiError)) {
+			throw new Error('expected GscApiError')
+		}
+		expect(caught.kind).toBe('budget')
+		expect(caught.message).toBe(BUDGET_MESSAGE)
+		expect(calls).toHaveLength(0)
 	})
 })
 

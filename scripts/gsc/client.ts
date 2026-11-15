@@ -18,7 +18,7 @@ import {
 	SITE_URL
 } from './config'
 import { GscApiError } from './errors'
-import { sendWithRetry } from './retry'
+import { BUDGET_MESSAGE, sendWithRetry } from './retry'
 import type {
 	AnalyticsQuery,
 	AnalyticsRow,
@@ -120,6 +120,8 @@ function errorMessage(
 			return httpStatus === null
 				? `${label} failed: network error.`
 				: `${label} failed with HTTP ${httpStatus} after ${MAX_ATTEMPTS} attempts.`
+		case 'budget':
+			return BUDGET_MESSAGE
 		case 'other':
 			return `${label} failed with HTTP ${httpStatus}.`
 	}
@@ -127,8 +129,9 @@ function errorMessage(
 
 /**
  * POSTs a JSON payload with the bearer token. Retries 429, 5xx, rate-reason
- * 403 and network errors up to MAX_ATTEMPTS with Retry-After or 1 s, 2 s
- * backoff on the injected clock; every other failure throws at once (D7).
+ * 403, network errors and timeouts up to MAX_ATTEMPTS with Retry-After or
+ * 1 s, 2 s backoff on the injected clock; every other failure throws at once
+ * (D7). Past the run deadline it throws the budget error (WR-01).
  */
 export async function requestWithRetry(
 	ctx: GscContext,

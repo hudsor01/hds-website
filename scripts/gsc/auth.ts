@@ -13,7 +13,7 @@ import { z } from 'zod'
 import { SCOPE, SECRET_ENV, TOKEN_URL } from './config'
 import { GscSetupError } from './errors'
 import { sendWithRetry } from './retry'
-import type { Clock, FetchFn } from './types'
+import type { Transport } from './types'
 
 const PEM_RE =
 	/^-----BEGIN PRIVATE KEY-----\n[\s\S]+\n-----END PRIVATE KEY-----\n?$/
@@ -140,13 +140,13 @@ export function mapTokenError(status: number, body: unknown): string {
 
 /**
  * Exchanges a signed JWT for an access token. The token is returned in
- * memory only and never logged. 429, 5xx and network errors retry up to
- * MAX_ATTEMPTS with Retry-After or exponential backoff; every other non-2xx
- * fails at once (D7).
+ * memory only and never logged. 429, 5xx, network errors and timeouts retry
+ * up to MAX_ATTEMPTS with Retry-After or exponential backoff; every other
+ * non-2xx fails at once (D7). The run deadline applies (WR-01).
  */
 export async function fetchAccessToken(
 	cred: ServiceAccount,
-	deps: { fetchFn: FetchFn; clock: Clock }
+	deps: Transport
 ): Promise<string> {
 	// One assertion covers every retry: its 3600 s lifetime outlasts them.
 	const assertion = buildAssertion(cred, deps.clock.now())

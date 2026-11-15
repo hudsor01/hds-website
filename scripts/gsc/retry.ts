@@ -1,10 +1,18 @@
 /**
  * The bounded retry transport shared by the token call (auth.ts) and the
- * Search Console calls (client.ts): Retry-After parsing, JSON body reading
- * and the attempt loop. Single definition (D7).
+ * Search Console calls (client.ts): Retry-After parsing, JSON body reading,
+ * the per-request timeout, the run budget and the attempt loop. Single
+ * definition (D7, WR-01).
  */
-import { BASE_BACKOFF_MS, MAX_ATTEMPTS, MAX_RETRY_AFTER_MS } from './config'
-import type { Clock, FetchFn } from './types'
+import {
+	BASE_BACKOFF_MS,
+	MAX_ATTEMPTS,
+	MAX_RETRY_AFTER_MS,
+	REQUEST_TIMEOUT_MS,
+	RUN_BUDGET_MS
+} from './config'
+import { GscApiError } from './errors'
+import type { Transport } from './types'
 
 /**
  * Milliseconds to wait from a Retry-After header: integer seconds or an
@@ -33,19 +41,20 @@ export function retryAfterMs(
 	return Math.min(delta, MAX_RETRY_AFTER_MS)
 }
 
-/** Body text parsed as JSON; undefined when unreadable or not JSON. */
-export async function readJson(res: Response): Promise<unknown> {
-	let text: string
-	try {
-		text = await res.text()
-	} catch {
-		return undefined
-	}
+/** Body text parsed as JSON; undefined when it is not JSON. */
+function parseJson(text: string): unknown {
 	try {
 		return JSON.parse(text)
 	} catch {
 		return undefined
 	}
+}
+
+/** The one line printed when the run hits RUN_BUDGET_MS (WR-01). */
+export const BUDGET_MESSAGE = `Run stopped at its ${RUN_BUDGET_MS / 60_000} minute time budget because Google is slow or throttling requests. The issue was left unchanged. Re-run the workflow later.`
+
+function budgetError(): GscApiError {
+	return new GscApiError(BUDGET_MESSAGE, 'budget', null)
 }
 
 /**
@@ -60,13 +69,16 @@ export type RetryResult<T> =
 	| { ok: false; status: number | null; body: unknown }
 
 /**
- * Sends the request up to MAX_ATTEMPTS times. Network errors always retry;
- * a response retries only when onResponse returns done: false. Waits use
- * Retry-After or 1 s, 2 s backoff on the injected clock. status null in the
- * failure means the last attempt failed with a network error.
+ * Sends the request up to MAX_ATTEMPTS times. Each attempt is aborted after
+ * REQUEST_TIMEOUT_MS. A network error, a timeout or an unreadable body
+ * always retries; a response retries only when onResponse returns
+ * done: false. Waits use Retry-After or 1 s, 2 s backoff on the injected
+ * clock. No attempt starts and no wait begins past deps.deadlineMs: that
+ * throws the budget error instead. status null in the failure means the last
+ * attempt failed with a network error.
  */
 export async function sendWithRetry<T>(
-	deps: { fetchFn: FetchFn; clock: Clock },
+	deps: Transport,
 	url: string,
 	init: RequestInit,
 	onResponse: (res: Response, body: unknown) => AttemptVerdict<T>
@@ -75,9 +87,18 @@ export async function sendWithRetry<T>(
 	let lastBody: unknown
 
 	for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+		if (deps.clock.now() >= deps.deadlineMs) {
+			throw budgetError()
+		}
+
 		let res: Response | undefined
+		let text = ''
 		try {
-			res = await deps.fetchFn(url, init)
+			res = await deps.fetchFn(url, {
+				...init,
+				signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS)
+			})
+			text = await res.text()
 		} catch {
 			res = undefined
 		}
@@ -87,7 +108,7 @@ export async function sendWithRetry<T>(
 			lastStatus = null
 			lastBody = undefined
 		} else {
-			const body = await readJson(res)
+			const body = parseJson(text)
 			const verdict = onResponse(res, body)
 			if (verdict.done) {
 				return { ok: true, value: verdict.value }
@@ -98,7 +119,11 @@ export async function sendWithRetry<T>(
 		}
 
 		if (attempt < MAX_ATTEMPTS) {
-			await deps.clock.sleep(waitMs ?? BASE_BACKOFF_MS * 2 ** (attempt - 1))
+			const delay = waitMs ?? BASE_BACKOFF_MS * 2 ** (attempt - 1)
+			if (deps.clock.now() + delay >= deps.deadlineMs) {
+				throw budgetError()
+			}
+			await deps.clock.sleep(delay)
 		}
 	}
 

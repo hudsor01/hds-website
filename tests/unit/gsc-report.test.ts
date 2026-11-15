@@ -16,8 +16,15 @@ import {
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { ANALYTICS_URL, INSPECT_URL, TOKEN_URL } from '../../scripts/gsc/config'
+import {
+	ANALYTICS_URL,
+	INSPECT_URL,
+	REQUEST_TIMEOUT_MS,
+	RUN_BUDGET_MS,
+	TOKEN_URL
+} from '../../scripts/gsc/config'
 import { type RunDeps, run } from '../../scripts/gsc/report'
+import { BUDGET_MESSAGE } from '../../scripts/gsc/retry'
 import {
 	collectPemBodyLines,
 	createFakeFetch,
@@ -65,6 +72,7 @@ interface ScenarioOptions {
 	env?: Record<string, string | undefined>
 	argv?: string[]
 	writeFile?: RunDeps['writeFile']
+	clock?: FakeClock
 }
 
 let privateKey: string
@@ -204,7 +212,7 @@ function router(routes: Routes): (call: FakeCall) => Response {
 
 async function scenario(options: ScenarioOptions = {}): Promise<RunResult> {
 	const { fetchFn, calls } = createFakeFetch(router(options.routes ?? {}))
-	const clock = fakeClock()
+	const clock = options.clock ?? fakeClock()
 	const out: string[] = []
 	const err: string[] = []
 	const files: Array<{ path: string; data: string }> = []
@@ -523,6 +531,27 @@ describe('run setup failures', () => {
 		const result = await scenario()
 		expect(expectFailure(result)).toBe(POSTS_LINE)
 		expect(inspectCalls(result)).toEqual([])
+	})
+
+	test('stalls plus a Retry-After storm stop at the run budget with one line', async () => {
+		writeHappyPosts()
+		const clock = fakeClock()
+		const start = clock.now()
+		const result = await scenario({
+			clock,
+			routes: {
+				inspect: () => {
+					// Each inspection stalls until the request timeout, then 503s.
+					clock.advance(REQUEST_TIMEOUT_MS)
+					return jsonResponse({}, 503, { 'retry-after': '60' })
+				}
+			}
+		})
+		expect(expectFailure(result)).toBe(`gsc-report: ${BUDGET_MESSAGE}\n`)
+		expect(inspectCalls(result).length).toBeGreaterThan(0)
+		expect(clock.now() - start).toBeLessThanOrEqual(
+			RUN_BUDGET_MS + REQUEST_TIMEOUT_MS
+		)
 	})
 
 	test('an unknown error prints a fixed line that withholds its message', async () => {
