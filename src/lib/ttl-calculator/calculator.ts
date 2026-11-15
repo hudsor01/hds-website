@@ -43,7 +43,7 @@ export const COUNTY_FEES: CountyFees = {
 }
 
 // Texas state fees (TxDMV "Register Your Vehicle" and Fee Chart 1C, 2026)
-const TEXAS_SALES_TAX_RATE = 0.0625
+export const TEXAS_SALES_TAX_RATE = 0.0625
 const BASE_REGISTRATION_FEE = 50.75 // 6,000 lbs or less
 const PROCESSING_FEE = 4.75
 const INSURANCE_VERIFICATION_FEE = 1.0 // TexasSure

@@ -24,12 +24,12 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-	title: 'Dallas-Fort Worth Web Design | Hudson Digital',
+	title: 'Hudson Digital Solutions | Dallas-Fort Worth Web Design',
 	description:
 		'Professional website design and development for small businesses. Fast, mobile-ready websites built to turn visitors into customers.',
 	metadataBase: new URL('https://hudsondigitalsolutions.com'),
 	openGraph: {
-		title: 'Dallas-Fort Worth Web Design | Hudson Digital',
+		title: 'Hudson Digital Solutions | Dallas-Fort Worth Web Design',
 		description:
 			'Professional website design and development for small businesses. Fast, mobile-ready websites built to turn visitors into customers.',
 		url: 'https://hudsondigitalsolutions.com',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: 'summary_large_image',
-		title: 'Dallas-Fort Worth Web Design | Hudson Digital',
+		title: 'Hudson Digital Solutions | Dallas-Fort Worth Web Design',
 		description:
 			'Professional website design and development for small businesses. Fast, mobile-ready websites built to turn visitors into customers.'
 	},

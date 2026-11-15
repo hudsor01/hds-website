@@ -2,7 +2,7 @@
 title: How to Leave Thryv Without Losing Your Google Rankings
 slug: how-to-leave-thryv-without-losing-rankings
 excerpt: >-
-  Leaving Thryv? Here is how I keep your local Google rankings: export your data, map every URL to a 301 redirect, then rebuild on a site you own.
+  Leaving Thryv? Here is how I keep your local Google rankings: export your data, map every URL to a 301 redirect, then rebuild the site so it brings in leads.
 targetKeyword: leave thryv
 pillar: 6
 tags:
@@ -44,7 +44,7 @@ Thryv’s native integrations are shallow. They push data one way and hope it st
 
 ## The Migration Playbook That Keeps Rankings Intact
 
-You cannot rush this process. I break the migration into phases so your revenue stream never stops flowing while we rebuild the engine under the hood.
+You cannot rush this process. I break the migration into phases so your revenue stream never stops flowing while I rebuild the engine under the hood.
 
 - Audit every live URL and map it to a new destination page that preserves keyword intent and content depth
 - Export all existing schema markup and rewrite it for the new platform using structured data best practices
@@ -59,6 +59,6 @@ I run Screaming Frog through every staging URL to catch broken links, redirect l
 
 ## Why Your Next Platform Has to Actually Move Numbers
 
-Leaving thryv is only the first step. The real work starts when you treat your website as a revenue system instead of a digital business card. I help Dallas-Fort Worth businesses replace bloated all-in-one platforms with lean stacks that track attribution, automate follow-up and scale without bleeding cash. You can see exactly how our build process maps to your forecast targets by checking out [our services](/services). I also recommend running a quick projection before you commit to a new tech stack. Use our [performance calculator](/tools/performance-calculator) to model your current cost per acquisition against the projected conversion lift from a properly wired automation pipeline. The numbers usually tell you exactly how fast your new site pays for itself.
+Leaving thryv is only the first step. The real work starts when you treat your website as a revenue system instead of a digital business card. I help Dallas-Fort Worth businesses replace bloated all-in-one platforms with lean stacks that track attribution, automate follow-up and scale without bleeding cash. You can see exactly how my build process maps to your forecast targets by checking out [my services](/services). I also recommend running a quick projection before you commit to a new tech stack. Use my [performance calculator](/tools/performance-calculator) to model your current cost per acquisition against the projected conversion lift from a properly wired automation pipeline. The numbers usually tell you exactly how fast your new site pays for itself.
 
-I do not believe in guesswork when you are managing payroll, equipment payments and local competition. You need a clear view of your pipeline, a reliable routing system for inbound leads and a website that actually converts traffic into booked appointments. If you are ready to map out your platform exit, preserve your search rankings and rebuild a revenue machine that tracks every dollar, reach out. I will review your current attribution setup and show you exactly where the leaks are hiding. Book a time on our calendar through [contact us](/contact) and we will get your migration plan running before the next billing cycle hits. Leave thryv on your terms and build a system that actually scales.
+I do not believe in guesswork when you are managing payroll, equipment payments and local competition. You need a clear view of your pipeline, a reliable routing system for inbound leads and a website that actually converts traffic into booked appointments. If you are ready to map out your platform exit, preserve your search rankings and rebuild a revenue machine that tracks every dollar, reach out. I will review your current attribution setup and show you exactly where the leaks are hiding. Book a time on my calendar through [the contact page](/contact) and I will get your migration plan running before the next billing cycle hits. Leave thryv on your terms and build a system that actually scales.

@@ -17,7 +17,7 @@ readingTime: 0
 bodyFormat: markdown
 ---
 
-Can AI automation save your business 20 hours a week? Sometimes, yes. But here's the part the hype skips: most of those hours don't come from AI at all. They come from boring, rules-based automation that's been around for years, like a form that drops a lead straight into your CRM or a reminder text that goes out the day before an appointment. AI earns its keep on a narrower set of jobs. Knowing which is which is the difference between getting your week back and paying for a chatbot nobody trusts.
+If you want to automate business processes, AI automation is the part everyone talks about. Here's the part the hype skips: most of the hours you get back don't come from AI at all. They come from boring, rules-based automation that's been around for years, like a form that drops a lead straight into your CRM or a reminder text that goes out the day before an appointment. AI earns its keep on a narrower set of jobs. Knowing which is which is the difference between getting your week back and paying for a chatbot nobody trusts.
 
 I spent nearly a decade in revenue operations before I started building websites, working inside Salesforce, HubSpot, Power BI and Workato. The lesson that stuck: you can't automate what you haven't measured. So before we talk tools, let's find the hours.
 
@@ -105,10 +105,10 @@ The return is the number from your time log. Hours saved times the hourly cost o
 
 Start with one workflow, not ten. Pick the top row, automate it, then check the log again after 30 days. Did the hours actually drop? Did anything break? That second measurement is the one most businesses skip. It's also the one that tells you whether to keep going.
 
-## So, Can You Get 20 Hours Back?
+## How Many Hours Can You Get Back?
 
 If your time log shows 20 hours of repetitive admin, a mix of plain automation and targeted AI can win back a big share of it. If it shows six, you'll get some of that six back. That's still worth doing. What you shouldn't do is start from the 20 and work backward. Start from your own week.
 
-That's how we approach automation at Hudson Digital Solutions. We find the hours, wire up the rules-based pieces first, add AI only where a judgment call is slowing you down and make sure someone gets an alert when anything stops. You can see the full scope on our [services page](/services). Our [workflow automation tools guide](/blog/workflow-automation-tools-small-business) compares the platforms in more detail.
+That's how I approach automation at Hudson Digital Solutions. I find the hours, wire up the rules-based pieces first, add AI only where a judgment call is slowing you down and make sure someone gets an alert when anything stops. You can see the full scope on my [services page](/services). My [workflow automation tools guide](/blog/workflow-automation-tools-small-business) compares the platforms in more detail.
 
 If you've got a time log, or just a gut feeling about where your week goes, [send me a note through the contact page](/contact). I'll tell you which pieces are worth automating and which ones aren't.
