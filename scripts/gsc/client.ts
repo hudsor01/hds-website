@@ -1,6 +1,8 @@
 /**
  * Search Console HTTP client for the weekly report: Google error
- * classification and a bounded retry transport (D7, D8, D15 C1).
+ * classification, a bounded retry transport, serialized and spaced URL
+ * Inspection, and Search Analytics queries, each response validated with Zod
+ * (D5, D6, D7, D8, D11, D15 C1).
  *
  * Every thrown message is authored here from the error kind, HTTP status and
  * client_email. Google's error.message (it embeds the project number and can
@@ -8,10 +10,23 @@
  * never reach a message (D2, AUTO-06). Requests are strictly sequential.
  */
 import { z } from 'zod'
-import { BASE_BACKOFF_MS, MAX_ATTEMPTS, SITE_URL } from './config'
+import {
+	ANALYTICS_URL,
+	BASE_BACKOFF_MS,
+	INSPECT_URL,
+	INSPECTION_SPACING_MS,
+	MAX_ATTEMPTS,
+	SITE_URL
+} from './config'
 import { GscApiError } from './errors'
 import { retryAfterMs } from './retry'
-import type { ErrorKind, GscContext } from './types'
+import type {
+	AnalyticsQuery,
+	AnalyticsRow,
+	ErrorKind,
+	GscContext,
+	InspectionOutcome
+} from './types'
 
 const ReasonListSchema = z
 	.array(z.object({ reason: z.string().optional() }))
@@ -195,4 +210,113 @@ export async function requestWithRetry(
 		'retry',
 		lastStatus
 	)
+}
+
+// Every field is an optional string, never a strict enum: Google adds and
+// reserves enum values, and one new value must not fail the whole run (D11).
+const IndexStatusSchema = z.object({
+	verdict: z.string().optional(),
+	coverageState: z.string().optional(),
+	lastCrawlTime: z.string().optional(),
+	googleCanonical: z.string().optional(),
+	userCanonical: z.string().optional(),
+	pageFetchState: z.string().optional(),
+	robotsTxtState: z.string().optional(),
+	indexingState: z.string().optional()
+})
+
+export const InspectResponseSchema = z.object({
+	inspectionResult: z.object({
+		inspectionResultLink: z.string().optional(),
+		indexStatusResult: IndexStatusSchema.optional()
+	})
+})
+
+// Google omits rows when the window has no data.
+export const AnalyticsResponseSchema = z.object({
+	rows: z
+		.array(
+			z.object({
+				keys: z.array(z.string()),
+				clicks: z.number(),
+				impressions: z.number(),
+				ctr: z.number(),
+				position: z.number()
+			})
+		)
+		.optional()
+})
+
+/**
+ * Returns a serialized inspector: each call starts at least
+ * INSPECTION_SPACING_MS after the previous one on the injected clock (D7).
+ * Retryable or unclassified failures become a per-URL outcome so the report
+ * can flag them (D5); access, disabled, scope, auth and quota errors throw
+ * and fail the run (D8).
+ */
+export function createInspector(
+	ctx: GscContext
+): (url: string) => Promise<InspectionOutcome> {
+	let lastStart: number | undefined
+
+	return async (url: string): Promise<InspectionOutcome> => {
+		if (lastStart !== undefined) {
+			await ctx.clock.sleep(
+				Math.max(0, lastStart + INSPECTION_SPACING_MS - ctx.clock.now())
+			)
+		}
+		lastStart = ctx.clock.now()
+
+		let body: unknown
+		try {
+			body = await requestWithRetry(
+				ctx,
+				INSPECT_URL,
+				{ inspectionUrl: url, siteUrl: SITE_URL },
+				'URL Inspection request'
+			)
+		} catch (error) {
+			// Only our own GscApiError (authored message) is inspected; anything
+			// else is rethrown untouched for the top-level handler.
+			if (
+				error instanceof GscApiError &&
+				(error.kind === 'retry' || error.kind === 'other')
+			) {
+				return { ok: false, httpStatus: error.httpStatus }
+			}
+			throw error
+		}
+
+		const parsed = InspectResponseSchema.safeParse(body)
+		if (!parsed.success) {
+			return { ok: false, httpStatus: 200 }
+		}
+		return { ok: true, status: parsed.data.inspectionResult.indexStatusResult }
+	}
+}
+
+/**
+ * Runs one Search Analytics query. No data state or search type field: the
+ * API default is final web data (D6). Any failure throws, because a report
+ * without striking distance is broken.
+ */
+export async function queryAnalytics(
+	ctx: GscContext,
+	query: AnalyticsQuery
+): Promise<AnalyticsRow[]> {
+	const body = await requestWithRetry(
+		ctx,
+		ANALYTICS_URL,
+		query,
+		'Search Analytics request'
+	)
+	const parsed = AnalyticsResponseSchema.safeParse(body)
+	if (!parsed.success) {
+		throw new GscApiError(
+			'Search Analytics request returned an unexpected response.',
+			'other',
+			200
+		)
+	}
+	return parsed.data.rows ?? []
 }

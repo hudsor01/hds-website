@@ -4,13 +4,21 @@
  * clock are injected, so retries and backoff run with zero real waiting.
  */
 import { describe, expect, test } from 'bun:test'
-import { classifyGoogleError, requestWithRetry } from '../../scripts/gsc/client'
-import { ANALYTICS_URL } from '../../scripts/gsc/config'
+import {
+	AnalyticsResponseSchema,
+	classifyGoogleError,
+	createInspector,
+	InspectResponseSchema,
+	queryAnalytics,
+	requestWithRetry
+} from '../../scripts/gsc/client'
+import { ANALYTICS_URL, INSPECT_URL } from '../../scripts/gsc/config'
 import { GscApiError } from '../../scripts/gsc/errors'
 import type { GscContext } from '../../scripts/gsc/types'
 import {
 	createFakeFetch,
 	type FakeCall,
+	type FakeClock,
 	fakeClock,
 	jsonResponse
 } from './gsc-fixtures'
@@ -56,14 +64,17 @@ function legacyError(code: number, reason?: string): unknown {
 	}
 }
 
-function makeCtx(handler: (call: FakeCall, index: number) => Response) {
+function makeCtx(
+	handler: (call: FakeCall, index: number, clock: FakeClock) => Response,
+	expectedUrl: string = ANALYTICS_URL
+) {
 	const clock = fakeClock()
 	let index = 0
 	const fake = createFakeFetch(call => {
-		if (call.url !== ANALYTICS_URL) {
+		if (call.url !== expectedUrl) {
 			throw new Error(`unexpected fetch ${call.url}`)
 		}
-		const res = handler(call, index)
+		const res = handler(call, index, clock)
 		index++
 		return res
 	})
@@ -77,10 +88,17 @@ function makeCtx(handler: (call: FakeCall, index: number) => Response) {
 }
 
 /** Runs requestWithRetry and returns the GscApiError it must throw. */
-async function expectApiError(ctx: GscContext): Promise<GscApiError> {
+function expectApiError(ctx: GscContext): Promise<GscApiError> {
+	return expectRejection(requestWithRetry(ctx, ANALYTICS_URL, PAYLOAD, LABEL))
+}
+
+/** Awaits a promise that must reject with a leak-free GscApiError. */
+async function expectRejection(
+	promise: Promise<unknown>
+): Promise<GscApiError> {
 	let caught: unknown
 	try {
-		await requestWithRetry(ctx, ANALYTICS_URL, PAYLOAD, LABEL)
+		await promise
 	} catch (error) {
 		caught = error
 	}
@@ -368,5 +386,375 @@ describe('requestWithRetry', () => {
 		const { ctx } = makeCtx(() => jsonResponse(modernError(403), 403))
 		const error = await expectApiError(ctx)
 		expect(error.message).not.toContain(PAYLOAD.startDate)
+	})
+})
+
+const POST_URL = 'https://hudsondigitalsolutions.com/blog/test-post'
+
+function inspection(indexStatusResult?: Record<string, string>): unknown {
+	return {
+		inspectionResult: {
+			inspectionResultLink: 'https://search.google.com/search-console/inspect',
+			...(indexStatusResult === undefined ? {} : { indexStatusResult })
+		}
+	}
+}
+
+const PASS_STATUS = {
+	verdict: 'PASS',
+	coverageState: 'Submitted and indexed',
+	lastCrawlTime: '2026-11-14T03:12:45.123456789Z',
+	googleCanonical: POST_URL,
+	userCanonical: POST_URL,
+	pageFetchState: 'SUCCESSFUL',
+	robotsTxtState: 'ALLOWED',
+	indexingState: 'INDEXING_ALLOWED'
+}
+
+function inspectCtx(
+	handler: (call: FakeCall, index: number, clock: FakeClock) => Response
+) {
+	return makeCtx(handler, INSPECT_URL)
+}
+
+describe('createInspector', () => {
+	test('POSTs the inspection URL and property in the JSON body', async () => {
+		const { ctx, calls } = inspectCtx(() =>
+			jsonResponse(inspection(PASS_STATUS))
+		)
+		await createInspector(ctx)(POST_URL)
+		expect(calls).toHaveLength(1)
+		expect(calls[0]?.url).toBe(INSPECT_URL)
+		expect(calls[0]?.method).toBe('POST')
+		expect(calls[0]?.headers.get('authorization')).toBe(
+			`Bearer ${ACCESS_TOKEN}`
+		)
+		expect(JSON.parse(calls[0]?.body ?? '')).toEqual({
+			inspectionUrl: POST_URL,
+			siteUrl: 'sc-domain:hudsondigitalsolutions.com'
+		})
+	})
+
+	test('PASS response returns the index status fields', async () => {
+		const { ctx } = inspectCtx(() => jsonResponse(inspection(PASS_STATUS)))
+		const outcome = await createInspector(ctx)(POST_URL)
+		expect(outcome).toEqual({ ok: true, status: PASS_STATUS })
+	})
+
+	test('NEUTRAL crawled-not-indexed has no googleCanonical', async () => {
+		const { ctx } = inspectCtx(() =>
+			jsonResponse(
+				inspection({
+					verdict: 'NEUTRAL',
+					coverageState: 'Crawled - currently not indexed',
+					lastCrawlTime: '2026-11-10T08:00:00Z',
+					userCanonical: POST_URL
+				})
+			)
+		)
+		const outcome = await createInspector(ctx)(POST_URL)
+		expect(outcome.ok).toBe(true)
+		if (!outcome.ok) {
+			throw new Error('expected ok')
+		}
+		expect(outcome.status?.verdict).toBe('NEUTRAL')
+		expect(outcome.status?.coverageState).toBe(
+			'Crawled - currently not indexed'
+		)
+		expect(outcome.status?.googleCanonical).toBeUndefined()
+	})
+
+	test('URL unknown to Google parses without crawl time or canonicals', async () => {
+		const { ctx } = inspectCtx(() =>
+			jsonResponse(
+				inspection({
+					verdict: 'NEUTRAL',
+					coverageState: 'URL is unknown to Google'
+				})
+			)
+		)
+		expect(await createInspector(ctx)(POST_URL)).toEqual({
+			ok: true,
+			status: { verdict: 'NEUTRAL', coverageState: 'URL is unknown to Google' }
+		})
+	})
+
+	test('canonical mismatch keeps the Google canonical', async () => {
+		const other = 'https://hudsondigitalsolutions.com/blog/other-post'
+		const { ctx } = inspectCtx(() =>
+			jsonResponse(inspection({ ...PASS_STATUS, googleCanonical: other }))
+		)
+		const outcome = await createInspector(ctx)(POST_URL)
+		if (!outcome.ok) {
+			throw new Error('expected ok')
+		}
+		expect(outcome.status?.googleCanonical).toBe(other)
+		expect(outcome.status?.userCanonical).toBe(POST_URL)
+	})
+
+	test('missing indexStatusResult returns ok with undefined status', async () => {
+		const { ctx } = inspectCtx(() => jsonResponse({ inspectionResult: {} }))
+		expect(await createInspector(ctx)(POST_URL)).toEqual({
+			ok: true,
+			status: undefined
+		})
+	})
+
+	test('an unknown verdict value is accepted as a string', async () => {
+		const { ctx } = inspectCtx(() =>
+			jsonResponse(inspection({ verdict: 'BRAND_NEW_VALUE' }))
+		)
+		expect(await createInspector(ctx)(POST_URL)).toEqual({
+			ok: true,
+			status: { verdict: 'BRAND_NEW_VALUE' }
+		})
+	})
+
+	test('a body that fails the schema is a failed inspection (HTTP 200)', async () => {
+		const { ctx } = inspectCtx(() => jsonResponse({ foo: 1 }))
+		expect(await createInspector(ctx)(POST_URL)).toEqual({
+			ok: false,
+			httpStatus: 200
+		})
+	})
+
+	test('a non-JSON 200 body is a failed inspection (HTTP 200)', async () => {
+		const { ctx } = inspectCtx(() => new Response('not json', { status: 200 }))
+		expect(await createInspector(ctx)(POST_URL)).toEqual({
+			ok: false,
+			httpStatus: 200
+		})
+	})
+
+	test('503 three times returns a failed outcome instead of throwing', async () => {
+		const { ctx, calls } = inspectCtx(() => jsonResponse(modernError(503), 503))
+		expect(await createInspector(ctx)(POST_URL)).toEqual({
+			ok: false,
+			httpStatus: 503
+		})
+		expect(calls).toHaveLength(3)
+	})
+
+	test('network errors three times return httpStatus null', async () => {
+		const clock = fakeClock()
+		const ctx: GscContext = {
+			fetchFn: async () => {
+				throw new TypeError('fetch failed')
+			},
+			clock,
+			accessToken: ACCESS_TOKEN,
+			clientEmail: CLIENT_EMAIL
+		}
+		expect(await createInspector(ctx)(POST_URL)).toEqual({
+			ok: false,
+			httpStatus: null
+		})
+	})
+
+	test('a 404 returns a failed outcome with that status', async () => {
+		const { ctx, calls } = inspectCtx(() => jsonResponse(modernError(404), 404))
+		expect(await createInspector(ctx)(POST_URL)).toEqual({
+			ok: false,
+			httpStatus: 404
+		})
+		expect(calls).toHaveLength(1)
+	})
+
+	test('plain 403 throws no_access and fails the run', async () => {
+		const { ctx, calls } = inspectCtx(() => jsonResponse(modernError(403), 403))
+		const error = await expectRejection(createInspector(ctx)(POST_URL))
+		expect(error.kind).toBe('no_access')
+		expect(error.message).toBe(NO_ACCESS_LINE)
+		expect(calls).toHaveLength(1)
+	})
+
+	test('403 quotaExceeded throws quota', async () => {
+		const { ctx } = inspectCtx(() =>
+			jsonResponse(legacyError(403, 'quotaExceeded'), 403)
+		)
+		const error = await expectRejection(createInspector(ctx)(POST_URL))
+		expect(error.kind).toBe('quota')
+	})
+
+	test('403 SERVICE_DISABLED and 401 throw', async () => {
+		const disabled = inspectCtx(() =>
+			jsonResponse(modernError(403, 'SERVICE_DISABLED'), 403)
+		)
+		expect(
+			(await expectRejection(createInspector(disabled.ctx)(POST_URL))).kind
+		).toBe('disabled')
+		const auth = inspectCtx(() => jsonResponse(modernError(401), 401))
+		expect(
+			(await expectRejection(createInspector(auth.ctx)(POST_URL))).kind
+		).toBe('auth')
+	})
+
+	test('an error that is not a GscApiError is rethrown unchanged', async () => {
+		const clock = fakeClock()
+		let nowCalls = 0
+		const ctx: GscContext = {
+			// A 503 makes requestWithRetry read the clock for Retry-After, which
+			// throws inside the inspector's try block.
+			fetchFn: async () => jsonResponse(modernError(503), 503),
+			clock: {
+				now: () => {
+					nowCalls++
+					if (nowCalls > 1) {
+						throw new RangeError('clock broke')
+					}
+					return clock.now()
+				},
+				sleep: clock.sleep
+			},
+			accessToken: ACCESS_TOKEN,
+			clientEmail: CLIENT_EMAIL
+		}
+		await expect(createInspector(ctx)(POST_URL)).rejects.toBeInstanceOf(
+			RangeError
+		)
+		expect(nowCalls).toBe(2)
+	})
+
+	test('consecutive inspections are spaced 200 ms; the first never sleeps', async () => {
+		const { ctx, clock, calls } = inspectCtx(() =>
+			jsonResponse(inspection(PASS_STATUS))
+		)
+		const inspect = createInspector(ctx)
+		await inspect(POST_URL)
+		expect(clock.sleeps).toEqual([])
+		await inspect(POST_URL)
+		await inspect(POST_URL)
+		expect(clock.sleeps).toEqual([200, 200])
+		expect(calls).toHaveLength(3)
+	})
+
+	test('fetch latency counts toward the spacing', async () => {
+		const { ctx, clock } = inspectCtx((_call, _i, fakeTime) => {
+			fakeTime.advance(50)
+			return jsonResponse(inspection(PASS_STATUS))
+		})
+		const inspect = createInspector(ctx)
+		await inspect(POST_URL)
+		await inspect(POST_URL)
+		await inspect(POST_URL)
+		expect(clock.sleeps).toEqual([150, 150])
+	})
+
+	test('a slow inspection needs no extra wait before the next', async () => {
+		const { ctx, clock } = inspectCtx((_call, _i, fakeTime) => {
+			fakeTime.advance(500)
+			return jsonResponse(inspection(PASS_STATUS))
+		})
+		const inspect = createInspector(ctx)
+		await inspect(POST_URL)
+		await inspect(POST_URL)
+		expect(clock.sleeps).toEqual([0])
+	})
+
+	test('InspectResponseSchema rejects a body without inspectionResult', () => {
+		expect(InspectResponseSchema.safeParse({ foo: 1 }).success).toBe(false)
+		expect(
+			InspectResponseSchema.safeParse(inspection(PASS_STATUS)).success
+		).toBe(true)
+	})
+})
+
+const ENCODED_ANALYTICS_URL =
+	'https://searchconsole.googleapis.com/webmasters/v3/sites/sc-domain%3Ahudsondigitalsolutions.com/searchAnalytics/query'
+
+const QUERY = {
+	startDate: '2026-10-17',
+	endDate: '2026-11-13',
+	dimensions: ['query', 'page'] as Array<'date' | 'query' | 'page'>,
+	rowLimit: 25_000
+}
+
+describe('queryAnalytics', () => {
+	test('POSTs to the encoded sc-domain path without dataState', async () => {
+		const { ctx, calls } = makeCtx(() => jsonResponse({ rows: [] }))
+		await queryAnalytics(ctx, QUERY)
+		expect(ANALYTICS_URL).toBe(ENCODED_ANALYTICS_URL)
+		expect(calls).toHaveLength(1)
+		expect(calls[0]?.url).toBe(ENCODED_ANALYTICS_URL)
+		expect(calls[0]?.method).toBe('POST')
+		expect(calls[0]?.headers.get('authorization')).toBe(
+			`Bearer ${ACCESS_TOKEN}`
+		)
+		const body: unknown = JSON.parse(calls[0]?.body ?? '')
+		expect(body).toEqual({
+			startDate: '2026-10-17',
+			endDate: '2026-11-13',
+			dimensions: ['query', 'page'],
+			rowLimit: 25_000
+		})
+		expect(body).not.toHaveProperty('dataState')
+		expect(body).not.toHaveProperty('type')
+	})
+
+	test('a response without rows returns an empty list', async () => {
+		const { ctx } = makeCtx(() =>
+			jsonResponse({ responseAggregationType: 'byPage' })
+		)
+		expect(await queryAnalytics(ctx, QUERY)).toEqual([])
+	})
+
+	test('rows parse to AnalyticsRow values', async () => {
+		const rows = [
+			{
+				keys: ['dfw web design', 'https://hudsondigitalsolutions.com/blog/a'],
+				clicks: 3,
+				impressions: 120,
+				ctr: 0.025,
+				position: 8.4
+			},
+			{
+				keys: ['nextjs seo', 'https://hudsondigitalsolutions.com/blog/b'],
+				clicks: 0,
+				impressions: 40,
+				ctr: 0,
+				position: 14
+			}
+		]
+		const { ctx } = makeCtx(() =>
+			jsonResponse({ rows, responseAggregationType: 'byPage' })
+		)
+		expect(await queryAnalytics(ctx, QUERY)).toEqual(rows)
+	})
+
+	test('a malformed body throws an unexpected response error', async () => {
+		const { ctx } = makeCtx(() =>
+			jsonResponse({ rows: [{ keys: ['x'], clicks: 'many' }] })
+		)
+		const error = await expectRejection(queryAnalytics(ctx, QUERY))
+		expect(error.kind).toBe('other')
+		expect(error.httpStatus).toBe(200)
+		expect(error.message).toBe(
+			'Search Analytics request returned an unexpected response.'
+		)
+	})
+
+	test('503 three times throws retry and fails the run', async () => {
+		const { ctx, calls } = makeCtx(() => jsonResponse(modernError(503), 503))
+		const error = await expectRejection(queryAnalytics(ctx, QUERY))
+		expect(error.kind).toBe('retry')
+		expect(error.httpStatus).toBe(503)
+		expect(error.message).toBe(
+			'Search Analytics request failed with HTTP 503 after 3 attempts.'
+		)
+		expect(calls).toHaveLength(3)
+	})
+
+	test('a plain 403 throws the access line', async () => {
+		const { ctx } = makeCtx(() => jsonResponse(legacyError(403), 403))
+		const error = await expectRejection(queryAnalytics(ctx, QUERY))
+		expect(error.kind).toBe('no_access')
+		expect(error.message).toBe(NO_ACCESS_LINE)
+	})
+
+	test('AnalyticsResponseSchema treats rows as optional', () => {
+		expect(AnalyticsResponseSchema.safeParse({}).success).toBe(true)
+		expect(
+			AnalyticsResponseSchema.safeParse({ rows: [{ keys: [] }] }).success
+		).toBe(false)
 	})
 })
