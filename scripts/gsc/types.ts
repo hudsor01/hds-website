@@ -2,10 +2,10 @@
  * Shared contracts for the Search Console weekly report. Types only, no
  * runtime code. ReportModel deliberately has no credential field so render
  * code can never reach key material (AUTO-06). Response shapes are inferred
- * from the client.ts Zod schemas through type-only imports (IN-08).
+ * from the schemas.ts Zod schemas through type-only imports (IN-08, IN-09).
  */
 import type { z } from 'zod'
-import type { AnalyticsRowSchema, IndexStatusSchema } from './client'
+import type { AnalyticsRowSchema, IndexStatusSchema } from './schemas'
 
 /** Injected fetch so tests never touch the network. */
 export type FetchFn = (url: string, init: RequestInit) => Promise<Response>

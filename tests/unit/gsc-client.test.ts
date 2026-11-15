@@ -6,16 +6,18 @@
  */
 import { describe, expect, test } from 'bun:test'
 import {
-	AnalyticsResponseSchema,
 	classifyGoogleError,
 	createInspector,
-	InspectResponseSchema,
 	queryAnalytics,
 	requestWithRetry
 } from '../../scripts/gsc/client'
 import { ANALYTICS_URL, INSPECT_URL } from '../../scripts/gsc/config'
 import { GscApiError } from '../../scripts/gsc/errors'
 import { BUDGET_MESSAGE } from '../../scripts/gsc/retry'
+import {
+	AnalyticsResponseSchema,
+	InspectResponseSchema
+} from '../../scripts/gsc/schemas'
 import type { GscContext } from '../../scripts/gsc/types'
 import {
 	createFakeFetch,

@@ -19,6 +19,7 @@ import {
 } from './config'
 import { GscApiError } from './errors'
 import { BUDGET_MESSAGE, sendWithRetry } from './retry'
+import { AnalyticsResponseSchema, InspectResponseSchema } from './schemas'
 import type {
 	AnalyticsQuery,
 	AnalyticsRow,
@@ -183,40 +184,6 @@ export async function requestWithRetry(
 		result.status
 	)
 }
-
-// Every field is an optional string, never a strict enum: Google adds and
-// reserves enum values. One new value must not fail the whole run (D11).
-// types.ts derives IndexStatus and AnalyticsRow from these schemas (IN-08).
-export const IndexStatusSchema = z.object({
-	verdict: z.string().optional(),
-	coverageState: z.string().optional(),
-	lastCrawlTime: z.string().optional(),
-	googleCanonical: z.string().optional(),
-	userCanonical: z.string().optional(),
-	pageFetchState: z.string().optional(),
-	robotsTxtState: z.string().optional(),
-	indexingState: z.string().optional()
-})
-
-export const InspectResponseSchema = z.object({
-	inspectionResult: z.object({
-		inspectionResultLink: z.string().optional(),
-		indexStatusResult: IndexStatusSchema.optional()
-	})
-})
-
-export const AnalyticsRowSchema = z.object({
-	keys: z.array(z.string()),
-	clicks: z.number(),
-	impressions: z.number(),
-	ctr: z.number(),
-	position: z.number()
-})
-
-// Google omits rows when the window has no data.
-export const AnalyticsResponseSchema = z.object({
-	rows: z.array(AnalyticsRowSchema).optional()
-})
 
 /**
  * Returns a serialized inspector: each call starts at least
