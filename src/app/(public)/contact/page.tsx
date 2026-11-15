@@ -3,23 +3,22 @@ import type { Metadata } from 'next'
 import dynamic from 'next/dynamic'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { BUSINESS_INFO } from '@/lib/constants/business'
+import { buildMetadata } from '@/lib/seo-config'
 import {
 	generateContactPageSchema,
 	generateLocalBusinessSchema,
 	toJsonLdGraph
 } from '@/lib/seo-utils'
 
-export const metadata: Metadata = {
-	alternates: { canonical: '/contact' },
+export const metadata: Metadata = buildMetadata({
 	title: 'Get a Free Website Plan | Hudson Digital Solutions',
 	description:
 		"Tell me about your business and I'll map the website it needs: pages, timeline and a real price. Free 30-minute call. No pitch. I reply in 2 hours.",
-	openGraph: {
-		title: 'Free Website Plan in 30 Minutes | Hudson Digital',
-		description:
-			'A free 30-minute call where I map the website your business needs: pages, timeline and price. No pitch. I reply within 2 hours.'
-	}
-}
+	path: '/contact',
+	socialTitle: 'Free Website Plan in 30 Minutes | Hudson Digital',
+	socialDescription:
+		'A free 30-minute call where I map the website your business needs: pages, timeline and price. No pitch. I reply within 2 hours.'
+})
 
 function ContactFormSkeleton() {
 	return (

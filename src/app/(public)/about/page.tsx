@@ -16,7 +16,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { BUSINESS_INFO } from '@/lib/constants/business'
-import { SEO_CONFIG } from '@/lib/seo-config'
+import { buildMetadata } from '@/lib/seo-config'
 import {
 	generateAboutPageSchema,
 	generateFounderSchema,
@@ -25,38 +25,14 @@ import {
 } from '@/lib/seo-utils'
 
 // Next.js 15: SSR meta for SEO/TTFB
-export const metadata: Metadata = {
-	title: SEO_CONFIG.about?.title || 'About Hudson Digital Solutions',
+export const metadata: Metadata = buildMetadata({
+	title: 'Web Designer Who Gets Small Business | Hudson Digital',
 	description:
-		SEO_CONFIG.about?.description || 'Learn about Hudson Digital Solutions',
-	openGraph: {
-		title:
-			SEO_CONFIG.about?.ogTitle ??
-			SEO_CONFIG.about?.title ??
-			'About Hudson Digital Solutions',
-		description:
-			SEO_CONFIG.about?.ogDescription ??
-			SEO_CONFIG.about?.description ??
-			'Learn about Hudson Digital Solutions',
-		url: SEO_CONFIG.about?.canonical || '',
-		images: [
-			{
-				url: SEO_CONFIG.about?.ogImage ?? '',
-				alt: SEO_CONFIG.about?.title || 'About Hudson Digital Solutions'
-			}
-		]
-	},
-	alternates: {
-		canonical: SEO_CONFIG.about?.canonical || ''
-	},
-	robots: {
-		index: true,
-		follow: true,
-		'max-snippet': -1,
-		'max-image-preview': 'large',
-		'max-video-preview': -1
-	}
-}
+		'I spent nearly a decade in revenue operations before building websites. Now I build DFW small businesses a site that brings in real customers.',
+	path: '/about',
+	socialDescription:
+		'Former revenue operations operator who builds DFW small businesses a website that brings in real customers instead of sitting there as a brochure.'
+})
 
 // Hardcoded "Sarah Mitchell" + "Marcus Holt" testimonials were dropped
 // per audit #256 — they predate the DB-backed admin/testimonials CRUD

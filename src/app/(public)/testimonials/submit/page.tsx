@@ -5,15 +5,17 @@
 
 import type { Metadata } from 'next'
 import { TestimonialForm } from '@/components/testimonials/TestimonialForm'
+import { buildMetadata } from '@/lib/seo-config'
 
-export const metadata: Metadata = {
-	title: 'Submit a Testimonial | Hudson Digital Solutions',
-	description:
-		'Share your experience working with Hudson Digital Solutions. Your feedback helps us improve and helps others make informed decisions.',
+export const metadata: Metadata = buildMetadata({
 	// Transactional form with no informational content. Keep it out of the
 	// index (mirrors /unsubscribe and /auth/*) but let it pass link equity.
-	robots: { index: false, follow: true }
-}
+	title: 'Submit a Testimonial | Hudson Digital Solutions',
+	description:
+		'Share your experience working with Hudson Digital Solutions. Your review helps other business owners decide. I read every one before it goes live.',
+	path: '/testimonials/submit',
+	noindex: true
+})
 
 export default function PublicTestimonialPage() {
 	return (
@@ -28,8 +30,8 @@ export default function PublicTestimonialPage() {
 						Share Your Experience
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						We value your feedback! Your testimonial helps us improve and helps
-						others learn about our services.
+						Thanks for working with me. Tell other business owners what it was
+						like, in your own words. I read every review before it goes live.
 					</p>
 				</div>
 			</section>

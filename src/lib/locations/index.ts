@@ -1,39 +1,18 @@
 /**
  * Location Data
- * Dynamic location pages for SEO and local marketing across the US
+ * Service-area pages for the Dallas-Fort Worth cities the business serves
+ * in person. Out-of-area pages were retired; see ./retired.ts.
  */
 
 import { BUSINESS_ID } from '@/lib/seo-utils'
 
-import { ARIZONA_LOCATIONS } from './arizona'
-import { ARKANSAS_LOCATIONS } from './arkansas'
-import { COLORADO_LOCATIONS } from './colorado'
-import { FLORIDA_LOCATIONS } from './florida'
-import { GEORGIA_LOCATIONS } from './georgia'
-import { LOUISIANA_LOCATIONS } from './louisiana'
-import { NEW_MEXICO_LOCATIONS } from './new-mexico'
-import { NORTH_CAROLINA_LOCATIONS } from './north-carolina'
-import { OKLAHOMA_LOCATIONS } from './oklahoma'
-import { TENNESSEE_LOCATIONS } from './tennessee'
-import { TEXAS_LOCATIONS } from './texas'
+import { DFW_LOCATIONS } from './dfw'
 
 export type { LocationData } from './types'
 
 import type { LocationData } from './types'
 
-export const LOCATIONS: LocationData[] = [
-	...TEXAS_LOCATIONS,
-	...LOUISIANA_LOCATIONS,
-	...OKLAHOMA_LOCATIONS,
-	...ARIZONA_LOCATIONS,
-	...NEW_MEXICO_LOCATIONS,
-	...ARKANSAS_LOCATIONS,
-	...GEORGIA_LOCATIONS,
-	...COLORADO_LOCATIONS,
-	...TENNESSEE_LOCATIONS,
-	...NORTH_CAROLINA_LOCATIONS,
-	...FLORIDA_LOCATIONS
-]
+export const LOCATIONS: LocationData[] = DFW_LOCATIONS
 
 /**
  * Get all location slugs for static generation
@@ -47,23 +26,6 @@ export function getAllLocationSlugs(): string[] {
  */
 export function getLocationBySlug(slug: string): LocationData | undefined {
 	return LOCATIONS.find(location => location.slug === slug)
-}
-
-/**
- * Get all locations grouped by state name
- */
-export function getLocationsByState(): Record<string, LocationData[]> {
-	return LOCATIONS.reduce(
-		(acc, location) => {
-			const state = location.state
-			if (!acc[state]) {
-				acc[state] = []
-			}
-			acc[state].push(location)
-			return acc
-		},
-		{} as Record<string, LocationData[]>
-	)
 }
 
 /**

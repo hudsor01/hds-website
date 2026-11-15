@@ -8,6 +8,7 @@ import {
 } from '@/lib/help-articles'
 import { getAllLocationSlugs } from '@/lib/locations'
 import { getShowcaseItems } from '@/lib/showcase'
+import { getApprovedTestimonials } from '@/lib/testimonials'
 
 const SITE_URL = 'https://hudsondigitalsolutions.com'
 // Captured once per build so every static URL shares one fresh lastmod
@@ -85,12 +86,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 			priority: 0.8
 		},
 		{
-			url: `${SITE_URL}/testimonials`,
-			lastModified: BUILD_TIME,
-			changeFrequency: 'weekly',
-			priority: 0.7
-		},
-		{
 			url: `${SITE_URL}/privacy`,
 			lastModified: BUILD_TIME,
 			changeFrequency: 'yearly',
@@ -161,6 +156,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		// DB unavailable at build time — help articles omitted from sitemap
 	}
 
+	// /testimonials is noindexed until a real review is published, so it
+	// is listed only from then on.
+	const testimonialsPage: MetadataRoute.Sitemap =
+		(await getApprovedTestimonials()).length > 0
+			? [
+					{
+						url: `${SITE_URL}/testimonials`,
+						lastModified: BUILD_TIME,
+						changeFrequency: 'weekly',
+						priority: 0.7
+					}
+				]
+			: []
+
 	let showcasePages: MetadataRoute.Sitemap = []
 	try {
 		const items = await getShowcaseItems()
@@ -206,6 +215,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		...helpHubPage,
 		...helpCategoryPages,
 		...helpArticlePages,
+		...testimonialsPage,
 		...showcasePages,
 		...blogPages,
 		...tagPages,

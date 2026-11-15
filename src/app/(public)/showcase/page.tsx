@@ -4,22 +4,17 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { buildMetadata } from '@/lib/seo-config'
 import { getShowcaseItems } from '@/lib/showcase'
 
 // Caching handled at data-layer level (src/lib/showcase.ts uses 'use cache'
 // + cacheLife). Page-level revalidate is incompatible with cacheComponents.
-export const metadata: Metadata = {
-	alternates: { canonical: '/showcase' },
+export const metadata: Metadata = buildMetadata({
 	title: 'Showcase | Hudson Digital Solutions',
 	description:
 		'Websites I built for DFW small businesses that turn traffic into booked jobs and paid invoices. See the work, the numbers and how it gets done.',
-	openGraph: {
-		title: 'Showcase | Hudson Digital Solutions',
-		description:
-			'Websites I built for DFW small businesses that turn traffic into booked jobs and paid invoices. See the work, the numbers and how it gets done.',
-		type: 'website'
-	}
-}
+	path: '/showcase'
+})
 
 // Async component for dynamic showcase data
 async function ShowcaseProjects() {

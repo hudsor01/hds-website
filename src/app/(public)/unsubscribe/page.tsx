@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
+import { buildMetadata } from '@/lib/seo-config'
 import { UnsubscribeForm } from './UnsubscribeForm'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
 	title: 'Unsubscribe | Hudson Digital Solutions',
 	description:
 		'Unsubscribe from Hudson Digital Solutions email communications.',
-	robots: { index: false, follow: false }
-}
+	path: '/unsubscribe',
+	noindex: true
+})
 
 interface UnsubscribePageProps {
 	searchParams: Promise<{ email?: string; token?: string }>

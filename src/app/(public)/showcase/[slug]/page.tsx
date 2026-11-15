@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/breadcrumb'
 import { CTASection } from '@/components/utilities/CTASection'
 import { JsonLd } from '@/components/utilities/JsonLd'
+import { buildMetadata } from '@/lib/seo-config'
 import {
 	BUSINESS_ID,
 	generateBreadcrumbSchema,
@@ -58,35 +59,15 @@ export async function generateMetadata({
 	}
 
 	const typeLabel = isDetailedShowcase(item) ? 'Case Study' : 'Project'
-	const pageTitle = `${item.title} | ${typeLabel}`
-	const ogImage = item.ogImageUrl ?? '/HDS-Logo.webp'
+	const socialTitle = `${item.title} | ${typeLabel}`
 
-	return {
-		title: pageTitle,
+	return buildMetadata({
+		title: `${socialTitle} | Hudson Digital Solutions`,
 		description: item.description,
-		openGraph: {
-			title: pageTitle,
-			description: item.description,
-			images: [
-				{
-					url: ogImage,
-					width: 1200,
-					height: 630,
-					alt: item.title
-				}
-			],
-			type: 'article'
-		},
-		twitter: {
-			card: 'summary_large_image',
-			title: pageTitle,
-			description: item.description,
-			images: [ogImage]
-		},
-		alternates: {
-			canonical: `/showcase/${slug}`
-		}
-	}
+		path: `/showcase/${slug}`,
+		socialTitle,
+		images: item.ogImageUrl ? [item.ogImageUrl] : undefined
+	})
 }
 
 // Synchronous: the parent already awaited and notFound()'d on miss,

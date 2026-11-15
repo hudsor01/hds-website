@@ -2,6 +2,7 @@
 
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import type { Service, ServiceFaq } from '@/lib/constants/services'
+import type { Testimonial } from '@/types/testimonials'
 
 const SITE_URL = 'https://hudsondigitalsolutions.com'
 const LOGO_URL = `${SITE_URL}/HDS-Logo.webp`
@@ -218,6 +219,48 @@ export function generateFaqSchema(faqs: readonly ServiceFaq[]) {
 			acceptedAnswer: { '@type': 'Answer', text: faq.answer }
 		}))
 	}
+}
+
+/**
+ * Review nodes for published client testimonials plus the business node
+ * carrying their AggregateRating. Only ever fed rows a client submitted and
+ * the owner approved; never call it with placeholder copy. Returns no nodes
+ * for an empty list, so there is no rating claim without reviews.
+ */
+export function generateReviewSchema(
+	testimonials: readonly Testimonial[]
+): Record<string, unknown>[] {
+	if (testimonials.length === 0) {
+		return []
+	}
+	const total = testimonials.reduce((sum, t) => sum + t.rating, 0)
+	const ratingValue = Math.round((total / testimonials.length) * 10) / 10
+
+	return [
+		{
+			...generateLocalBusinessSchema(),
+			aggregateRating: {
+				'@type': 'AggregateRating',
+				ratingValue,
+				reviewCount: testimonials.length,
+				bestRating: 5,
+				worstRating: 1
+			}
+		},
+		...testimonials.map(t => ({
+			'@type': 'Review',
+			itemReviewed: { '@id': BUSINESS_ID },
+			author: { '@type': 'Person', name: t.client_name },
+			reviewRating: {
+				'@type': 'Rating',
+				ratingValue: t.rating,
+				bestRating: 5,
+				worstRating: 1
+			},
+			reviewBody: t.content,
+			datePublished: t.created_at.slice(0, 10)
+		}))
+	]
 }
 
 /**

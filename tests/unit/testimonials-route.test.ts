@@ -50,7 +50,16 @@ function mockTestimonialsLib() {
 	mock.module('@/lib/testimonials', () => ({
 		updateTestimonialStatus: updateTestimonialStatusMock,
 		deleteTestimonial: deleteTestimonialMock,
-		deleteTestimonialRequest: deleteTestimonialRequestMock
+		deleteTestimonialRequest: deleteTestimonialRequestMock,
+		// Not under test here, but other suites (sitemap, /testimonials)
+		// import them in the same process.
+		getTestimonialRequestByToken: mock(async () => null),
+		createTestimonialRequest: mock(async () => null),
+		getTestimonialRequests: mock(async () => []),
+		markRequestSubmitted: mock(async () => false),
+		submitTestimonial: mock(async () => null),
+		getAllTestimonials: mock(async () => []),
+		getApprovedTestimonials: mock(async () => [])
 	}))
 }
 
@@ -58,7 +67,10 @@ function authHeaders(): Record<string, string> {
 	return { authorization: `Bearer ${VALID_ADMIN_SECRET}` }
 }
 
-function makePatch(id: string, body: unknown): [NextRequest, { params: Promise<{ id: string }> }] {
+function makePatch(
+	id: string,
+	body: unknown
+): [NextRequest, { params: Promise<{ id: string }> }] {
 	const req = new NextRequest(`http://localhost/api/testimonials/${id}`, {
 		method: 'PATCH',
 		body: JSON.stringify(body),
@@ -154,10 +166,7 @@ describe('BUG-03 testimonials/[id] HTTP contract', () => {
 			const { DELETE } = await import(
 				'@/app/api/testimonials/requests/[id]/route'
 			)
-			const [req, ctx] = makeDelete(
-				'/api/testimonials/requests',
-				'not-a-uuid'
-			)
+			const [req, ctx] = makeDelete('/api/testimonials/requests', 'not-a-uuid')
 			const res = await DELETE(req, ctx)
 			expect(res.status).toBe(400)
 			expect(deleteTestimonialRequestMock).not.toHaveBeenCalled()

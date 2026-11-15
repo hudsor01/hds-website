@@ -4,19 +4,18 @@
  */
 
 import type { Metadata } from 'next'
+import { buildMetadata } from '@/lib/seo-config'
 import { ROICalculatorClient } from './ROICalculatorClient'
 
-export const metadata: Metadata = {
-	alternates: { canonical: '/tools/roi-calculator' },
+export const metadata: Metadata = buildMetadata({
 	title: 'ROI Calculator | Hudson Digital Solutions',
 	description:
 		'Calculate how much additional revenue you could generate by improving your website conversion rate. Free ROI calculator for businesses.',
-	openGraph: {
-		title: 'ROI Calculator',
-		description:
-			'Calculate potential revenue increase from website optimization.'
-	}
-}
+	path: '/tools/roi-calculator',
+	socialTitle: 'ROI Calculator',
+	socialDescription:
+		'Calculate potential revenue increase from website optimization.'
+})
 
 export default function ROICalculatorPage() {
 	return <ROICalculatorClient />

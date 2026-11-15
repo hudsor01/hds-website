@@ -4,18 +4,17 @@
  */
 
 import type { Metadata } from 'next'
+import { buildMetadata } from '@/lib/seo-config'
 import PerformanceCalculatorClient from './PerformanceCalculatorClient'
 
-export const metadata: Metadata = {
-	alternates: { canonical: '/tools/performance-calculator' },
+export const metadata: Metadata = buildMetadata({
 	title: 'Performance Savings Calculator | Hudson Digital Solutions',
 	description:
 		'Analyze how website load times affect your revenue. Calculate potential savings from performance optimization with our free calculator.',
-	openGraph: {
-		title: 'Performance Savings Calculator',
-		description: 'Calculate revenue lost due to slow website load times.'
-	}
-}
+	path: '/tools/performance-calculator',
+	socialTitle: 'Performance Savings Calculator',
+	socialDescription: 'Calculate revenue lost due to slow website load times.'
+})
 
 export default function PerformanceCalculatorPage() {
 	return <PerformanceCalculatorClient />

@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { getPostsByTag } from '@/lib/blog'
 import { getServiceBySlug, SERVICES } from '@/lib/constants/services'
+import { buildMetadata } from '@/lib/seo-config'
 import {
 	generateBreadcrumbSchema,
 	generateFaqSchema,
@@ -54,17 +55,11 @@ export async function generateMetadata({
 		return {}
 	}
 
-	const url = `${SITE_URL}/services/${service.slug}`
-	return {
+	return buildMetadata({
 		title: service.metaTitle,
 		description: service.metaDescription,
-		openGraph: {
-			title: service.metaTitle,
-			description: service.metaDescription,
-			url
-		},
-		alternates: { canonical: url }
-	}
+		path: `/services/${service.slug}`
+	})
 }
 
 export default async function ServicePage({ params }: ServicePageProps) {

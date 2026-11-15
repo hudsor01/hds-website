@@ -30,6 +30,7 @@ import {
 	getArticlesByCategory,
 	getCategoryBySlug
 } from '@/lib/help-articles'
+import { buildMetadata } from '@/lib/seo-config'
 
 interface PageProps {
 	params: Promise<{ category: string }>
@@ -73,12 +74,12 @@ export async function generateMetadata({
 	// sitemap) until it has an article. Following links stays on.
 	const articles = await getArticlesByCategory(category)
 
-	return {
+	return buildMetadata({
 		title: `${categoryInfo.name} | Help Center | Hudson Digital Solutions`,
 		description: categoryInfo.metaDescription,
-		alternates: { canonical: `/help/${category}` },
-		robots: { index: articles.length > 0, follow: true }
-	}
+		path: `/help/${category}`,
+		noindex: articles.length === 0
+	})
 }
 
 export default async function HelpCategoryPage({ params }: PageProps) {

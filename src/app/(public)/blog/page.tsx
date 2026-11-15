@@ -7,29 +7,14 @@ import { BlogPostCardSkeleton } from '@/components/blog/BlogPostCardSkeleton'
 import { TagList } from '@/components/blog/TagList'
 import { Button } from '@/components/ui/button'
 import { getFeaturedPosts, getPosts, getTagsWithCounts } from '@/lib/blog'
+import { buildMetadata } from '@/lib/seo-config'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
 	title: 'Small Business Web Design Blog | Hudson Digital',
 	description:
-		'Practical insights on websites, getting found on Google, and growing a small business online, from Hudson Digital Solutions.',
-	openGraph: {
-		title: 'Small Business Web Design Blog | Hudson Digital',
-		description:
-			'Practical insights on websites, getting found on Google, and growing a small business online, from the team at Hudson Digital Solutions.',
-		url: 'https://hudsondigitalsolutions.com/blog',
-		images: [
-			{
-				url: '/HDS-Logo.webp',
-				width: 1200,
-				height: 630,
-				alt: 'Hudson Digital Solutions Blog'
-			}
-		]
-	},
-	alternates: {
-		canonical: 'https://hudsondigitalsolutions.com/blog'
-	}
-}
+		'Practical insights on websites, getting found on Google and growing a small business online, from Hudson Digital Solutions.',
+	path: '/blog'
+})
 
 // Each data-driven section is its own async server component behind its own
 // Suspense boundary. Blog data is compiled in at build time, so all of them

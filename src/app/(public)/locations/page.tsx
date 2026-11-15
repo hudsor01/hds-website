@@ -1,34 +1,26 @@
 /**
  * Locations Index Page
- * Lists all 75 service area cities grouped by state
+ * The Dallas-Fort Worth cities served in person, plus a pointer for
+ * everyone else (remote work).
  */
 
 import { ArrowRight, MapPin } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { getLocationsByState } from '@/lib/locations'
+import { LOCATIONS } from '@/lib/locations'
+import { buildMetadata } from '@/lib/seo-config'
 
-export const metadata: Metadata = {
-	alternates: { canonical: '/locations' },
-	title: 'Service Locations | Hudson Digital Solutions',
+export const metadata: Metadata = buildMetadata({
+	title: 'Dallas-Fort Worth Service Areas | Hudson Digital Solutions',
 	description:
-		'I build websites that book jobs and take payments for small businesses across the US. Find local web design in Texas, Florida, Georgia and beyond.',
-	openGraph: {
-		title: 'Service Locations | Hudson Digital Solutions',
-		description:
-			'Websites that book jobs and take payments for small businesses across the US.'
-	}
-}
+		'Web design from a Lewisville studio for small businesses across Dallas-Fort Worth: Lewisville, Dallas, Fort Worth, Arlington and the cities around them.',
+	path: '/locations',
+	socialDescription:
+		'Web design from a Lewisville studio for small businesses across Dallas-Fort Worth.'
+})
 
 export default function LocationsPage() {
-	const locationsByState = getLocationsByState()
-	const states = Object.keys(locationsByState).sort()
-	const totalCities = Object.values(locationsByState).reduce(
-		(sum, cities) => sum + cities.length,
-		0
-	)
-
 	return (
 		<div className="min-h-screen bg-background">
 			{/* Hero Section */}
@@ -46,11 +38,11 @@ export default function LocationsPage() {
 						Service Locations
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
-						Building Websites for Businesses Across the US
+						Web Design Across Dallas-Fort Worth
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						{totalCities} cities across {states.length} states. Find a web
-						designer who works near you.
+						I am based in Lewisville and work in person with small businesses
+						across the DFW metroplex.
 					</p>
 				</div>
 			</section>
@@ -58,30 +50,27 @@ export default function LocationsPage() {
 			{/* Locations Grid */}
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="space-y-12">
-						{states.map(state => (
-							<div key={state}>
-								<h2 className="text-h3 text-foreground border-b border-border pb-3 mb-6">
-									{state}
-								</h2>
-								<div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-									{(locationsByState[state] ?? []).map(location => (
-										<Link
-											key={location.slug}
-											href={`/locations/${location.slug}`}
-											className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-accent/10 hover:text-accent border border-transparent hover:border-accent/20"
-										>
-											<MapPin
-												className="h-4 w-4 shrink-0 text-accent"
-												aria-hidden="true"
-											/>
-											{location.city}
-										</Link>
-									))}
-								</div>
-							</div>
+					<ul className="grid gap-4 sm:grid-cols-2 max-w-3xl mx-auto">
+						{LOCATIONS.map(location => (
+							<li key={location.slug}>
+								<Link
+									href={`/locations/${location.slug}`}
+									className="group flex h-full flex-col rounded-xl border border-border bg-surface-raised p-6 transition-colors hover:border-accent"
+								>
+									<span className="flex items-center gap-2 text-h4 text-foreground group-hover:text-accent transition-colors">
+										<MapPin
+											className="h-5 w-5 shrink-0 text-accent"
+											aria-hidden="true"
+										/>
+										{location.city}, {location.stateCode}
+									</span>
+									<span className="mt-2 text-sm text-muted-foreground leading-relaxed">
+										{location.neighborhoods.slice(0, 4).join(', ')} and nearby
+									</span>
+								</Link>
+							</li>
 						))}
-					</div>
+					</ul>
 				</div>
 			</section>
 
@@ -95,16 +84,15 @@ export default function LocationsPage() {
 						/>
 						<div className="relative z-10">
 							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
-								Don&apos;t see your city?
+								Outside North Texas?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								I work with clients remotely across the entire US. Tell me what
-								you&apos;re building and I&apos;ll tell you how I&apos;d
-								approach it.
+								I work with clients remotely too. Tell me what you&apos;re
+								building and I&apos;ll tell you how I&apos;d approach it.
 							</p>
 							<Button asChild variant="accent" size="xl">
 								<Link href="/contact">
-									Contact Us
+									Get My Free Website Plan
 									<ArrowRight className="w-4 h-4" />
 								</Link>
 							</Button>
