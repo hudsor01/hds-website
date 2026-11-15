@@ -24,9 +24,9 @@ I spent nearly a decade in revenue operations before I ever touched web design. 
 
 Picture a typical DFW service business. Say you run a roofing company in Plano with Google Ads targeting storm damage. The ad lands on a homepage with seven menu items, three dropdowns and a pop up collecting emails. A big share of that paid traffic drops off before it ever sees pricing or a booking link. That is not a bad product problem. It is a navigation architecture failure.
 
-When I audit a site, I measure drop off at the third click. If more than forty percent of users leave before reaching a call to action, I rebuild the menu structure. We strip filler pages like history and team bios from the primary bar. We move them to a footer or separate about path. The goal is always the same. Reduce friction, increase velocity, track every step in HubSpot or Salesforce.
+When I audit a site, I measure drop off at the third click. If more than forty percent of users leave before reaching a call to action, I rebuild the menu structure. I strip filler pages like history and team bios from the primary bar. I move them to a footer or separate about path. The goal is always the same. Reduce friction, increase velocity, track every step in HubSpot or Salesforce.
 
-I also run a simple calculation on the back end. Take your monthly traffic, multiply it by your current conversion rate and subtract what it could be with a streamlined path. The gap is pure revenue leakage. We plug those holes by aligning menu labels with actual buyer intent. Prospects do not search for company culture. They search for emergency repair, pricing transparency and same day service.
+I also run a simple calculation on the back end. Take your monthly traffic, multiply it by your current conversion rate and subtract what it could be with a streamlined path. The gap is pure revenue leakage. I plug those holes by aligning menu labels with actual buyer intent. Prospects do not search for company culture. They search for emergency repair, pricing transparency and same day service.
 
 ## Your menu is a conversion pipeline, not a brochure
 
@@ -34,7 +34,7 @@ I do not design menus for aesthetics. I engineer them to route traffic, capture 
 
 A navigation structure that ignores attribution is just a digital signpost with no destination tracking. I map each menu item to a specific pipeline stage. Awareness links point to educational content or comparison guides. Consideration links route to case studies, pricing tiers, or vendor partnerships. Conversion links drop users directly into a booking calendar or quote request form. I measure the time between menu click and CRM entry. If it crosses four hours, the path is too long or the form asks for too much information upfront.
 
-We treat navigation as a dynamic routing table, not static HTML. I use Workato to listen for menu clicks, tag the session with intent labels and push that data into Salesforce or HubSpot. The CRM then assigns territory reps in DFW, triggers automated SMS follow ups within three minutes and updates deal stages based on which service category drove the visit. The menu becomes a lead routing system that actually moves revenue forward.
+I treat navigation as a dynamic routing table, not static HTML. I use Workato to listen for menu clicks, tag the session with intent labels and push that data into Salesforce or HubSpot. The CRM then assigns territory reps in DFW, triggers automated SMS follow ups within three minutes and updates deal stages based on which service category drove the visit. The menu becomes a lead routing system that actually moves revenue forward.
 
 ### Map labels to the questions buyers actually ask
 
@@ -49,17 +49,17 @@ Here is how I structure the primary bar for a typical local business:
 
 Each dropdown item links to a dedicated landing page with a clear header, a single primary button and structured data. I do not send traffic to generic service hubs that force users to click again. Every menu item ends a journey or pushes it directly toward booking.
 
-I track this with UTM parameters and event tracking in Power BI. When a user clicks Commercial HVAC Repair, I tag the session, measure time to scroll depth and log form starts. If the click rate on that menu item stays below fifteen percent of total traffic, I know we are mislabeling or underdelivering on the landing page. We adjust until the path matches buyer expectations.
+I track this with UTM parameters and event tracking in Power BI. When a user clicks Commercial HVAC Repair, I tag the session, measure time to scroll depth and log form starts. If the click rate on that menu item stays below fifteen percent of total traffic, I know I am mislabeling or underdelivering on the landing page. I adjust until the path matches buyer expectations.
 
 ### Bake automation into the navigation flow
 
-A clean menu means nothing if it does not pass data to your CRM. I build navigation that captures intent the moment a user interacts with it. When someone clicks a service dropdown, we fire an invisible tracking pixel that logs the interest to HubSpot. If they stay on site for six seconds or more, we serve a contextual quiz or booking widget instead of a generic contact form.
+A clean menu means nothing if it does not pass data to your CRM. I build navigation that captures intent the moment a user interacts with it. When someone clicks a service dropdown, I fire an invisible tracking pixel that logs the interest to HubSpot. If they stay on site for six seconds or more, I serve a contextual quiz or booking widget instead of a generic contact form.
 
 This is where most small businesses fail. They treat navigation as static HTML and ignore the pipeline behind it. I wire every primary link to a Workato flow that updates deal stages, assigns territory reps in DFW and triggers automated SMS follow ups within three minutes. The menu becomes a lead routing system.
 
-We also use dynamic navigation rules based on referral source. Traffic from local SEO pages sees Same Day Service highlighted in the primary bar. Paid search traffic gets Get a Quote pushed to the top right with contrasting color. Retargeting visitors see their previously clicked service category pinned to the left side of the menu. Personalization is not a luxury, it is attribution hygiene.
+I also use dynamic navigation rules based on referral source. Traffic from local SEO pages sees Same Day Service highlighted in the primary bar. Paid search traffic gets Get a Quote pushed to the top right with contrasting color. Retargeting visitors see their previously clicked service category pinned to the left side of the menu. Personalization is not a luxury, it is attribution hygiene.
 
-I run cost comparisons across implementations. A basic WordPress menu costs nothing beyond theme licensing. Adding event tracking, dynamic rules and CRM sync usually adds two to four hours of engineering time plus tool subscriptions. The return hits immediately because we stop paying for unqualified traffic and start routing buyers to the right rep. I use our internal [cost estimator](/tools/cost-estimator) to model these numbers before we write a single line of code.
+I run cost comparisons across implementations. A basic WordPress menu costs nothing beyond theme licensing. Adding event tracking, dynamic rules and CRM sync usually adds two to four hours of engineering time plus tool subscriptions. The return hits immediately because you stop paying for unqualified traffic and start routing buyers to the right rep. I use my internal [cost estimator](/tools/cost-estimator) to model these numbers before I write a single line of code.
 
 ### Optimize for thumb reach and local search behavior
 
@@ -67,26 +67,26 @@ For most local service businesses, the majority of site traffic comes from phone
 
 In the DFW market, local intent drives a big share of service business traffic. Customers want to know you operate in their city before they waste time calling. I embed a location selector directly into the navigation flow, not as an afterthought on a contact page. Users tap Find Locations, see a map with service radius and click straight to the city specific landing page. That path cuts down on phone tag and sends callers to the page that actually answers their question.
 
-I also strip secondary navigation on mobile. Breadcrumbs, tag clouds and archive lists disappear from the primary flow. They clutter the viewport and dilute conversion focus. We keep only service categories, booking links and contact actions visible. The rest lives in a collapsible footer that expands only when users scroll past the fold.
+I also strip secondary navigation on mobile. Breadcrumbs, tag clouds and archive lists disappear from the primary flow. They clutter the viewport and dilute conversion focus. I keep only service categories, booking links and contact actions visible. The rest lives in a collapsible footer that expands only when users scroll past the fold.
 
-We test every mobile menu against Core Web Vitals and interaction depth. If navigation links delay first input by more than one hundred milliseconds, we rewrite the CSS and defer non critical scripts. Speed is not a vanity metric for menus. It directly impacts Google rankings and bounce rates on cellular networks across Collin and Denton counties.
+I test every mobile menu against Core Web Vitals and interaction depth. If navigation links delay first input by more than one hundred milliseconds, I rewrite the CSS and defer non critical scripts. Speed is not a vanity metric for menus. It directly impacts Google rankings and bounce rates on cellular networks across Collin and Denton counties.
 
 ### Track click paths, not just page views
 
-Most agencies hand you a screenshot of a pretty menu and call it done. I deliver a dashboard showing click distribution, drop off points and revenue attribution per navigation item. We pull raw click data from Hotjar or Microsoft Clarity, match it to HubSpot deal stages and visualize the path in Power BI. Every menu label gets a conversion score.
+Most agencies hand you a screenshot of a pretty menu and call it done. I deliver a dashboard showing click distribution, drop off points and revenue attribution per navigation item. I pull raw click data from Hotjar or Microsoft Clarity, match it to HubSpot deal stages and visualize the path in Power BI. Every menu label gets a conversion score.
 
-I flag items that generate traffic but zero pipeline movement. If About Us gets five hundred clicks a month and produces no qualified leads, we either reposition it or replace it with a trust builder like customer video testimonials or partner certifications. Navigation should never serve ego metrics. It serves business outcomes.
+I flag items that generate traffic but zero pipeline movement. If About Us gets five hundred clicks a month and produces no qualified leads, I either reposition it or replace it with a trust builder like customer video testimonials or partner certifications. Navigation should never serve ego metrics. It serves business outcomes.
 
-We run quarterly navigation audits with A/B tests on label copy, dropdown depth and call to action placement. I usually test three variations per menu section over fourteen days. The winner gets pushed live based on signed deal velocity, not vanity clicks. We document everything so the client can replicate the process without us.
+I run quarterly navigation audits with A/B tests on label copy, dropdown depth and call to action placement. I usually test three variations per menu section over fourteen days. The winner gets pushed live based on signed deal velocity, not vanity clicks. I document everything so the client can replicate the process without me.
 
-You can model your own navigation ROI before we touch a single page. Our [roi calculator](/tools/roi-calculator) takes your current traffic, conversion rate and average deal size to show exactly what a streamlined navigation structure returns. The math always favors fixing the top of the funnel first. If your current site sends most visitors to dead ends, you are paying for traffic that never had a chance to convert.
+You can model your own navigation ROI before I touch a single page. My [roi calculator](/tools/roi-calculator) takes your current traffic, conversion rate and average deal size to show exactly what a streamlined navigation structure returns. The math always favors fixing the top of the funnel first. If your current site sends most visitors to dead ends, you are paying for traffic that never had a chance to convert.
 
 ### Build navigation that scales with your pipeline
 
 I do not design menus for aesthetics. I engineer them to route traffic, capture data and accelerate closed won deals. Every link has a purpose, every dropdown serves intent and every click feeds your CRM. That same systems thinking is how I scaled a partner network 2,200% and hit 95% forecast accuracy in revenue operations. It applies to small business websites too.
 
-If you run a service company in Dallas, Fort Worth, Frisco, or Plano, your website should function like a sales floor. Visitors walk in, see exactly what you offer, know your pricing tier and book a call without guessing. We build that architecture using the same stack I used in revenue operations: HubSpot for tracking, Workato for automation, Power BI for reporting and structured data to keep search engines aligned. You can see exactly how our architecture maps to your sales cycle when you review [our services](/services) and implementation timelines.
+If you run a service company in Dallas, Fort Worth, Frisco, or Plano, your website should function like a sales floor. Visitors walk in, see exactly what you offer, know your pricing tier and book a call without guessing. I build that architecture using the same stack I used in revenue operations: HubSpot for tracking, Workato for automation, Power BI for reporting and structured data to keep search engines aligned. You can see exactly how my architecture maps to your sales cycle when you review [my services](/services) and implementation timelines.
 
-I take on a limited number of navigation and conversion audits each quarter because deep work requires focus, not volume. We start with a full site crawl, map your current click paths against pipeline data and deliver a prioritized rebuild plan. You get clear metrics on what to fix first, exact tool recommendations and a timeline that matches your sales cycle.
+I take on a limited number of navigation and conversion audits each quarter because deep work requires focus, not volume. I start with a full site crawl, map your current click paths against pipeline data and deliver a prioritized rebuild plan. You get clear metrics on what to fix first, exact tool recommendations and a timeline that matches your sales cycle.
 
-Ready to stop leaking revenue through broken menus? Book a navigation audit and pipeline review at [contact](/contact). We will map your current traffic flow, identify the exact points causing drop off and show you how to turn every click into a booked appointment.
+Ready to stop leaking revenue through broken menus? Book a navigation audit and pipeline review at [contact](/contact). I will map your current traffic flow, identify the exact points causing drop off and show you how to turn every click into a booked appointment.

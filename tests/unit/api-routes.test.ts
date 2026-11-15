@@ -102,7 +102,7 @@ describe('Newsletter Subscribe API', () => {
 
 		expect(response.status).toBe(200)
 		expect(data.success).toBe(true)
-		expect(data.message).toBe("You're already on our list!")
+		expect(data.message).toBe("You're already on the list!")
 	})
 
 	it('should return 500 when database insert fails', async () => {

@@ -79,7 +79,7 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 		return (
 			<FormSuccessMessage
 				title="Thank you"
-				message="Form submitted successfully, we will get back to you soon"
+				message="Form submitted successfully, I will get back to you soon"
 				actionLabel="Send another message"
 				onAction={handleReset}
 			/>

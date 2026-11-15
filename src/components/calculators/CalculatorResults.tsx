@@ -154,7 +154,7 @@ export function CalculatorResults({
 						</Button>
 
 						<p className="text-xs text-muted-foreground">
-							We&apos;ll never spam you. Unsubscribe anytime.
+							I&apos;ll never spam you. Unsubscribe anytime.
 						</p>
 					</form>
 				</Card>
@@ -179,7 +179,7 @@ export function CalculatorResults({
 					Want to improve these numbers?
 				</h4>
 				<p className="mb-heading text-sm text-muted-foreground">
-					Let&apos;s discuss how we can help you achieve better results.
+					Let&apos;s discuss how I can help you achieve better results.
 				</p>
 				<Button asChild>
 					<Link href="/contact">Schedule Free Consultation</Link>

@@ -155,8 +155,8 @@ async function ShowcaseProjects() {
 								Want your business on this page?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-8 max-w-xl mx-auto">
-								Book a free 30-minute call. We map out your pages, a timeline,
-								and a flat price. No sales pitch, just a plan.
+								Book a free 30-minute call. I map out your pages, a timeline and
+								a flat price. No sales pitch, just a plan.
 							</p>
 							<Button asChild variant="accent" size="xl">
 								<Link href="/contact">

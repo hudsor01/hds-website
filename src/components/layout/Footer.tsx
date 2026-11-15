@@ -21,8 +21,8 @@ const footerLinks = {
 		{ name: 'Showcase', href: ROUTES.SHOWCASE }
 	],
 	company: [
-		{ name: 'About Us', href: ROUTES.ABOUT },
-		{ name: 'Our Process', href: `${ROUTES.SERVICES}#process` },
+		{ name: 'About', href: ROUTES.ABOUT },
+		{ name: 'My Process', href: `${ROUTES.SERVICES}#process` },
 		{ name: 'Contact', href: ROUTES.CONTACT }
 	],
 	// Resources column added so the hub pages that no other nav/footer
@@ -258,7 +258,7 @@ export default function Footer() {
 											'transition-smooth group',
 											'focus-ring'
 										)}
-										aria-label={`Follow us on ${social.name} (opens in new tab)`}
+										aria-label={`Follow me on ${social.name} (opens in new tab)`}
 									>
 										{social.icon}
 									</a>

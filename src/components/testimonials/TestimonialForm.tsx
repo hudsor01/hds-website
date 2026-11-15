@@ -100,7 +100,7 @@ export function TestimonialForm({
 			<div className="py-12">
 				<FormSuccessMessage
 					title="Thank You!"
-					message="Your testimonial has been submitted successfully. We appreciate you taking the time to share your feedback!"
+					message="Your testimonial has been submitted successfully. I appreciate you taking the time to share your feedback!"
 				/>
 			</div>
 		)
@@ -238,7 +238,7 @@ export function TestimonialForm({
 					onChange={e => handleChange('content', e.target.value)}
 					rows={5}
 					className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground"
-					placeholder="Tell us about your experience working with Hudson Digital Solutions..."
+					placeholder="Tell me about your experience working with Hudson Digital Solutions..."
 					required
 					minLength={20}
 				/>

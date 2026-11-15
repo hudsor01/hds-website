@@ -3,7 +3,7 @@ title: Paystub Basics Every Small Employer Should Know
 slug: paystub-basics-for-small-employers
 excerpt: >-
   Small employers in DFW need accurate paystubs to stay compliant. The basics,
-  how to automate the workflow and cut payroll errors with our free calculator.
+  how to automate the workflow and cut payroll errors with my free calculator.
 targetKeyword: paystub
 pillar: 9
 tags:
@@ -75,8 +75,8 @@ The paystub becomes a diagnostic tool instead of an administrative chore. Track 
 
 ## Tools and Next Steps
 
-You do not need a degree in accounting to get this right. You need a quick way to check the math and a disciplined workflow. Our paystub calculator takes hourly rate, hours, overtime, pay frequency and filing status and estimates federal income tax, Social Security and Medicare for each pay period. Texas has no state income tax, so for a DFW employee that covers the main withholding lines. I use it as a sanity check before a payroll run hits the bank account. If your processor's numbers land far from the estimate, look at the W-4 setup and deduction codes before anyone gets paid.
+You do not need a degree in accounting to get this right. You need a quick way to check the math and a disciplined workflow. My paystub calculator takes hourly rate, hours, overtime, pay frequency and filing status and estimates federal income tax, Social Security and Medicare for each pay period. Texas has no state income tax, so for a DFW employee that covers the main withholding lines. I use it as a sanity check before a payroll run hits the bank account. If your processor's numbers land far from the estimate, look at the W-4 setup and deduction codes before anyone gets paid.
 
-[Try our free paystub calculator](/tools/paystub-calculator) on your next payroll run. The tool runs in your browser, requires no login and prints a clean breakdown you can hold up against your processor's numbers. It is an estimate, not a replacement for your payroll platform, so treat a big gap as a reason to dig in. I recommend testing it against three recent pay cycles to spot discrepancies before they compound.
+[Try my free paystub calculator](/tools/paystub-calculator) on your next payroll run. The tool runs in your browser, requires no login and prints a clean breakdown you can hold up against your processor's numbers. It is an estimate, not a replacement for your payroll platform, so treat a big gap as a reason to dig in. I recommend testing it against three recent pay cycles to spot discrepancies before they compound.
 
-Building a compliant payroll system takes time, but the payoff shows up in reduced admin load and fewer compliance headaches. I help Dallas-Fort Worth businesses connect their CRM, timesheets and accounting software into a single revenue engine. You can see how we structure client workflows in our [services overview](/services). When you are ready to replace manual paystubs with an automated system that tracks every deduction and delivers complete audit readiness, [reach out through our contact page](/contact). We will map your current setup, identify the friction points and deploy a payroll automation stack that runs itself. Your team gets accurate paystubs on time, your books stay clean and you finally stop wasting hours guessing at tax math.
+Building a compliant payroll system takes time, but the payoff shows up in reduced admin load and fewer compliance headaches. I help Dallas-Fort Worth businesses connect their CRM, timesheets and accounting software into a single revenue engine. You can see how I structure client workflows in my [services overview](/services). When you are ready to replace manual paystubs with an automated system that tracks every deduction and delivers complete audit readiness, [reach out through my contact page](/contact). I will map your current setup, identify the friction points and deploy a payroll automation stack that runs itself. Your team gets accurate paystubs on time, your books stay clean and you finally stop wasting hours guessing at tax math.

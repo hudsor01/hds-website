@@ -85,7 +85,7 @@ export default function ServicesPage() {
 							size="xl"
 							className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
 						>
-							<Link href="#process">See Our Process</Link>
+							<Link href="#process">See My Process</Link>
 						</Button>
 					</div>
 				</div>

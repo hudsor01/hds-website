@@ -34,7 +34,7 @@ const variantConfig = {
 function NewsletterSignupContent({
 	variant = 'inline',
 	title = 'Get Expert Insights',
-	description = 'Practical, no-fluff advice on websites and getting your small business found online, sent only when we publish something worth reading. Unsubscribe anytime.'
+	description = 'Practical, no-fluff advice on websites and getting your small business found online, sent only when I publish something worth reading. Unsubscribe anytime.'
 }: Omit<NewsletterSignupProps, 'dynamic'>) {
 	const mutation = useNewsletterSubscription()
 
@@ -173,7 +173,7 @@ function NewsletterSignupContent({
 					)}
 
 					<p className="mt-3 text-xs text-muted-foreground">
-						No spam. Unsubscribe anytime. We respect your privacy.
+						No spam. Unsubscribe anytime. I respect your privacy.
 					</p>
 				</form>
 			</div>
@@ -287,7 +287,7 @@ function NewsletterSignupContent({
 					)}
 
 					<p className="mt-3 text-xs text-muted-foreground">
-						No spam. Unsubscribe anytime. We respect your privacy.
+						No spam. Unsubscribe anytime. I respect your privacy.
 					</p>
 				</form>
 			</div>
@@ -399,7 +399,7 @@ function NewsletterSignupContent({
 						)}
 
 						<p className="text-xs text-muted-foreground">
-							No spam. Unsubscribe anytime. We respect your privacy.
+							No spam. Unsubscribe anytime. I respect your privacy.
 						</p>
 					</form>
 				</div>

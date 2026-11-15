@@ -3,7 +3,7 @@ title: Google Business Profile Not Showing Up? Here Is Why
 slug: why-google-business-profile-not-showing-up
 excerpt: >-
   Fix your Google Business Profile not showing issues with a data-driven
-  approach. We map visibility to revenue using automation and local SEO.
+  approach. I map visibility to revenue using automation and local SEO.
 targetKeyword: google business profile not showing
 pillar: 3
 tags:
@@ -44,7 +44,7 @@ Reviews are not vanity metrics. They are behavioral signals that tell Google how
 
 You do not need to buy reviews or ask friends to post them. That strategy burns your profile fast when Google detects unnatural patterns. You automate the request at the moment of service completion, route positive feedback to your public listing and pull negative feedback into a ticketing system for immediate resolution. Google and every prospect reading your profile can see whether you reply, how fast you reply and how your ratings are spread. Handle feedback like an operations team, not a marketing afterthought.
 
-## What We Track and Automate
+## What I Track and Automate
 
 I measure local search performance the same way I measured pipeline accuracy before I built websites. You need clear inputs, consistent outputs and a feedback loop that adjusts your strategy weekly. Here is the exact setup I deploy for Dallas-Fort Worth businesses:
 
@@ -55,7 +55,7 @@ I measure local search performance the same way I measured pipeline accuracy bef
 - Click and call tracking tied to UTM parameters so you know which map impressions convert to booked jobs
 - Weekly Power BI report showing impression share, click through rate and cost per qualified lead versus industry benchmarks
 
-You can run the numbers yourself before you hand over the keys. Use our [performance calculator](/tools/performance-calculator) to estimate how much revenue a slow website costs you once local searchers click through from your profile. The math changes fast when you stop guessing and start tracking actual attribution.
+You can run the numbers yourself before you hand over the keys. Use my [performance calculator](/tools/performance-calculator) to estimate how much revenue a slow website costs you once local searchers click through from your profile. The math changes fast when you stop guessing and start tracking actual attribution.
 
 ### Attribution, Automation and Forecast Accuracy
 
@@ -67,6 +67,6 @@ Automation removes the guesswork from maintenance. Directory updates, review req
 
 Your local search presence should drive predictable pipeline, not random clicks. I treat every profile as a revenue node that feeds your booking system and closes deals. When you fix the data mismatches, align your categories with actual service demand and automate the feedback loop, visibility stops being a mystery. It becomes a measurable input in your growth model.
 
-We build this framework for DFW businesses that want reliable lead flow instead of monthly marketing reports full of impressions. You get clear attribution, automated maintenance and weekly performance reviews that tie local search directly to closed revenue. If you want to see exactly how much visibility is costing you and what it will take to recover it, run the numbers first. Pull our [cost estimator](/tools/cost-estimator) to size the investment, then book a working session with our team. We map your current data gaps, rebuild your automation and get you back into the local pack where qualified buyers actually look.
+I build this framework for DFW businesses that want reliable lead flow instead of monthly marketing reports full of impressions. You get clear attribution, automated maintenance and weekly performance reviews that tie local search directly to closed revenue. If you want to see exactly how much visibility is costing you and what it will take to recover it, run the numbers first. Pull my [cost estimator](/tools/cost-estimator) to size the investment, then book a working session with me. I map your current data gaps, rebuild your automation and get you back into the local pack where qualified buyers actually look.
 
-Book a strategy call at [contact](/contact) and we will show you the exact workflow that turns local search visibility into forecasted revenue.
+Book a strategy call at [contact](/contact) and I will show you the exact workflow that turns local search visibility into forecasted revenue.

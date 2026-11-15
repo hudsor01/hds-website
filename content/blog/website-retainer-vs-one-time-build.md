@@ -111,7 +111,7 @@ Some retainers quietly flip this around. The developer registers the domain unde
 
 Check your own setup with the steps in [who owns your website and domain](/blog/who-owns-your-website-and-domain). If you need to move a domain out of someone else's account, [transfer it safely](/blog/how-to-transfer-your-domain-safely) so your email and rankings don't break in the process.
 
-Put ownership in the contract. One clear sentence works: the client owns the domain, content and site code with full access on request or at cancellation. If you need a starting point, our free [contract generator](/tools/contract-generator) gives you a solid draft to adapt. [Service contracts every small business needs](/blog/service-contracts-every-small-business-needs) covers what else belongs in one.
+Put ownership in the contract. One clear sentence works: the client owns the domain, content and site code with full access on request or at cancellation. If you need a starting point, my free [contract generator](/tools/contract-generator) gives you a solid draft to adapt. [Service contracts every small business needs](/blog/service-contracts-every-small-business-needs) covers what else belongs in one.
 
 ## How I Help Owners Decide
 

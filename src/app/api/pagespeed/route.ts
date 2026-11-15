@@ -162,7 +162,7 @@ async function handlePageSpeed(request: NextRequest) {
 			// knows to add or rotate PAGESPEED_API_KEY.
 			if (response.status === 429) {
 				return errorResponse(
-					'Rate limit hit on the PageSpeed API. Try again in a minute, or contact us if it keeps happening.',
+					'Rate limit hit on the PageSpeed API. Try again in a minute, or contact me if it keeps happening.',
 					429
 				)
 			}
@@ -214,7 +214,7 @@ async function handlePageSpeed(request: NextRequest) {
 		// tool honest when the upstream is simply slow (audit #236).
 		if (err.name === 'TimeoutError' || err.name === 'AbortError') {
 			return errorResponse(
-				'PageSpeed took too long to analyze that URL. Slow sites can exceed our budget. Try again, or run a Lighthouse audit in your browser DevTools instead.',
+				'PageSpeed took too long to analyze that URL. Slow sites can exceed the time budget. Try again, or run a Lighthouse audit in your browser DevTools instead.',
 				504
 			)
 		}

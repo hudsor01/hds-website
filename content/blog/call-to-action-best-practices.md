@@ -45,7 +45,7 @@ Many service owners fall into the lead magnet trap. They offer a free PDF or a d
 
 I recommend a hybrid approach for most DFW service sites but the booking flow always takes priority. Place your primary call to action above the fold and repeat it at every logical break in the page. Use sticky mobile headers that never let a prospect scroll past your Schedule Service or Get Emergency Help button. Removing form fields and adding a direct calendar embed that syncs with your team's real time availability is one of the fastest conversion wins on a service site.
 
-If you are unsure how much a properly automated booking flow actually returns on your ad spend, run the numbers before you commit to another marketing tactic. You can estimate your projected revenue and cost per acquisition in under two minutes with our free tool. [Try our calculator now](/tools/roi-calculator) to see where your current setup leaves money on the table.
+If you are unsure how much a properly automated booking flow actually returns on your ad spend, run the numbers before you commit to another marketing tactic. You can estimate your projected revenue and cost per acquisition in under two minutes with my free tool. [Try my calculator now](/tools/roi-calculator) to see where your current setup leaves money on the table.
 
 ## Measuring What Matters Before You Automate
 Automation without measurement just speeds up mistakes. Connect five different platforms without a tracking plan and you lose attribution the first time the data pipeline breaks or the CRM fails to update. You must establish your tracking foundation before you install a single Zap or Workato flow. Start with three core metrics that actually predict revenue: cost per qualified lead, show rate and close rate. Everything else is vanity noise.
@@ -68,11 +68,11 @@ Track these specific data points to keep your forecasting models honest:
 * Appointment show rate and no show frequency
 * Closed deal value per landing page or campaign
 
-Run your current metrics through [our free tool](/tools/roi-calculator) before you commit to another marketing tactic. The math will tell you exactly which buttons need revision and which ones are already driving revenue.
+Run your current metrics through [my free tool](/tools/roi-calculator) before you commit to another marketing tactic. The math will tell you exactly which buttons need revision and which ones are already driving revenue.
 
 ## Your Next Step in the System
 You do not need a complete website overhaul to fix your conversion problem. Start by mapping your current visitor journey and identifying where friction kills momentum. Replace vague buttons with specific action steps that match buyer intent. Connect your forms to a CRM and verify every tracking parameter works before you scale ad spend. The mathematics of forecasting only work when the data is clean and the pathways are direct.
 
-I help DFW service businesses build websites that actually function as revenue engines instead of digital business cards. We install tracking foundations, automate booking flows and align your site architecture with your sales pipeline so you can forecast accurately and scale without guesswork. If you want to see exactly how your current setup performs or need a clear roadmap for fixing broken attribution, let us map it out together. [Book a system audit call](/contact) and we will show you where your revenue is leaking.
+I help DFW service businesses build websites that actually function as revenue engines instead of digital business cards. I install tracking foundations, automate booking flows and align your site architecture with your sales pipeline so you can forecast accurately and scale without guesswork. If you want to see exactly how your current setup performs or need a clear roadmap for fixing broken attribution, let's map it out together. [Book a system audit call](/contact) and I will show you where your revenue is leaking.
 
 Your site should work as hard as your technicians do. Treat every click like a pipeline stage, measure the output and automate the rest. The numbers will tell you exactly what to build next.

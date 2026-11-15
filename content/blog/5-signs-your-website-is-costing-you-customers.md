@@ -66,7 +66,7 @@ CLS is the easiest one to picture. That's the button that moves right as someone
 
 Run your homepage and your most important service page through Google's PageSpeed Insights. Look at the field data section at the top first, because that is what real visitors experienced. The lab score below it is a simulation. If your site has a Google Search Console account, the Core Web Vitals report there shows which groups of pages pass and which fail.
 
-If you want to see what a slow page might be costing you in dollars, plug your numbers into our [website performance calculator](/tools/performance-calculator). For a plain-English breakdown of what each metric means and what usually causes a bad score, read [Core Web Vitals explained for small business](/blog/core-web-vitals-explained-for-small-business).
+If you want to see what a slow page might be costing you in dollars, plug your numbers into my [website performance calculator](/tools/performance-calculator). For a plain-English breakdown of what each metric means and what usually causes a bad score, read [Core Web Vitals explained for small business](/blog/core-web-vitals-explained-for-small-business).
 
 ## Sign 4: Nobody Can Tell What You Do in Five Seconds
 
@@ -104,7 +104,7 @@ Real photos of your crew, your work and your shop do more for trust than any bad
 
 Here's what ties these together. In every case, the business owner couldn't see the problem. The form failed silently. The mobile drop-off never showed up anywhere. The slow pages never produced an error. The site just underperformed while nobody had a number to point to.
 
-That is the revenue operations lesson I keep coming back to. When I was working in Salesforce and Power BI, the leaks we fixed were the ones we could measure. The 2,200% partner growth, the 95% forecast accuracy, the $3.7M in revenue tied to forecasting work: none of that came from guessing. It came from knowing where every lead came from and where it went.
+That is the revenue operations lesson I keep coming back to. When I was working in Salesforce and Power BI, the leaks I fixed were the ones I could measure. The 2,200% partner growth, the 95% forecast accuracy, the $3.7M in revenue tied to forecasting work: none of that came from guessing. It came from knowing where every lead came from and where it went.
 
 Your website deserves the same visibility, even at small-business scale. At minimum, that means:
 

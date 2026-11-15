@@ -26,7 +26,7 @@ const PAGE_ENTRIES: readonly PaletteEntry[] = [
 		description: 'Website design, SEO, booking and payments',
 		href: ROUTES.SERVICES,
 		group: 'Pages',
-		keywords: ['offerings', 'what we do']
+		keywords: ['offerings', 'what I do']
 	},
 	{
 		id: 'page:showcase',
@@ -94,7 +94,7 @@ const PAGE_ENTRIES: readonly PaletteEntry[] = [
 	{
 		id: 'page:locations',
 		label: 'Locations',
-		description: 'Service areas we cover',
+		description: 'Service areas I cover',
 		href: ROUTES.LOCATIONS,
 		group: 'Pages',
 		keywords: ['areas', 'cities', 'regions']

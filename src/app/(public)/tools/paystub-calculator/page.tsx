@@ -10,11 +10,11 @@ import PaystubCalculatorClient from './PaystubCalculatorClient'
 export const metadata: Metadata = buildMetadata({
 	title: 'Paystub Calculator | Hudson Digital Solutions',
 	description:
-		'Estimate 2025 payroll tax breakdowns with our free paystub calculator. Federal tax for all filers and state income tax for CA, NY, IL, PA, and MA.',
+		'Estimate 2025 payroll tax breakdowns with this free paystub calculator. Federal tax for all filers and state income tax for CA, NY, IL, PA, and MA.',
 	path: '/tools/paystub-calculator',
 	socialTitle: 'Paystub Calculator',
 	socialDescription:
-		'Estimate 2025 payroll tax breakdowns with our free paystub calculator.'
+		'Estimate 2025 payroll tax breakdowns with this free paystub calculator.'
 })
 
 export default function PaystubCalculatorPage() {

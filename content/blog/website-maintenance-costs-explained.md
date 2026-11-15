@@ -18,7 +18,7 @@ readingTime: 0
 bodyFormat: markdown
 ---
 
-Most business owners treat their site like a digital billboard until the SSL expires and sales drop to zero. I spent nearly a decade running revenue operations with HubSpot, Workato and Power BI before I ever wrote a line of frontend code. That background changed how I look at every single page we build for Dallas-Fort Worth companies. You do not pay for a website maintenance cost to keep lights on. You pay it to keep your attribution models clean, your booking engine functional and your forecast honest.
+Most business owners treat their site like a digital billboard until the SSL expires and sales drop to zero. I spent nearly a decade running revenue operations with HubSpot, Workato and Power BI before I ever wrote a line of frontend code. That background changed how I look at every single page I build for Dallas-Fort Worth companies. You do not pay for a website maintenance cost to keep lights on. You pay it to keep your attribution models clean, your booking engine functional and your forecast honest.
 
 ## What Actually Drives The Number
 The number on an invoice usually comes down to three buckets that most agencies bury in fine print. I strip those out upfront because hidden fees destroy margins faster than a broken tracking pixel. You need transparent line items that tie directly to pipeline velocity and conversion stability.
@@ -27,7 +27,7 @@ Hosting and infrastructure sit at the base. A cheap shared server looks like a b
 
 Security patches and compliance updates run second. On WordPress, a core update can break a plugin if nobody tests it in a staging environment first. Automated regression tests in a CI/CD pipeline should run before anything touches production. Paying a developer to fix a broken checkout flow after an untested update costs far more than running those tests upfront. You get a verified patch cycle that documents every change in a version control log so your team can roll back instantly if something fails.
 
-Content updates and performance tuning occupy the third bucket. You need fresh blog posts for local SEO, new service pages for expanding into Plano or Frisco and updated pricing tables that actually match your current rates. I build the editorial calendar into our project management tool and tie each update to a conversion goal in HubSpot. You track page velocity, bounce rate and form submissions instead of guessing whether the site feels current. The operational cost for this tier depends on how many pages you push monthly and whether you require custom design work or template-driven layouts.
+Content updates and performance tuning occupy the third bucket. You need fresh blog posts for local SEO, new service pages for expanding into Plano or Frisco and updated pricing tables that actually match your current rates. I build the editorial calendar into my project management tool and tie each update to a conversion goal in HubSpot. You track page velocity, bounce rate and form submissions instead of guessing whether the site feels current. The operational cost for this tier depends on how many pages you push monthly and whether you require custom design work or template-driven layouts.
 
 A properly maintained small business site needs a monthly budget that covers the stack, the backups that actually restore correctly and the monitoring alerts that fire before your customers notice a single error. If a quote looks too cheap to cover all three, ask which one is getting skipped.
 
@@ -40,10 +40,10 @@ The second metric is conversion rate stability. When plugins bloat your theme or
 
 The third metric is lead routing efficiency. Your website only matters if the inquiry lands in the right pipeline stage with accurate source attribution. Map every form field to a HubSpot property and verify the webhook payload matches your CRM schema before it goes live. Mismatched fields kill attribution and force your sales team to chase dead ends. Track webhook success rates weekly and treat any drop as something to patch right away.
 
-You should expect a maintenance report that shows these metrics rather than just a list of completed tasks. I attach Power BI snapshots to our monthly reviews so you can see exactly how each dollar spent moves the needle on booked calls and qualified opportunities.
+You should expect a maintenance report that shows these metrics rather than just a list of completed tasks. I attach Power BI snapshots to my monthly reviews so you can see exactly how each dollar spent moves the needle on booked calls and qualified opportunities.
 
 ### The Automation Threshold
-Automation eats repetitive work until there is nothing left to do manually. I automate the boring stuff so my team can focus on architecture and conversion paths that actually drive revenue. You get predictable costs and faster turnaround without paying premium rates for routine checks.
+Automation eats repetitive work until there is nothing left to do manually. I automate the boring stuff so I can focus on architecture and conversion paths that actually drive revenue. You get predictable costs and faster turnaround without paying premium rates for routine checks.
 
 Backups should run automatically on a schedule with incremental snapshots kept long enough to roll back a bad week. Test a restore every month to prove the data is recoverable and log when you did it. A backup nobody has ever restored is a guess. Trusting it means gambling with your entire digital asset. Encrypted cloud storage for those snapshots is a small line item next to that risk.
 
@@ -60,7 +60,7 @@ Paying for unused features drives cost straight up without delivering value. You
 
 Ignoring mobile optimization hurts your local search rankings and inflates support costs. Google indexes the mobile version of your site first, so a phone layout with tiny touch targets or overlapping buttons is the version it judges. Run automated accessibility scans weekly and fix viewport issues before they compound into user frustration. A broken mobile checkout leaks sales every day it stays broken, so fixing it is one of the cheapest wins in any maintenance plan.
 
-Skipping structured data markup forces search engines to guess your service area and pricing tiers. I build schema templates into our deployment pipeline so every new page publishes with the correct LocalBusiness or Service markup automatically. You give Google what it needs for local packs and rich snippets without begging for manual directory updates. That reduces your reliance on paid lead sources and keeps your organic traffic pipeline healthy through seasonal shifts in the Dallas-Fort Worth market.
+Skipping structured data markup forces search engines to guess your service area and pricing tiers. I build schema templates into my deployment pipeline so every new page publishes with the correct LocalBusiness or Service markup automatically. You give Google what it needs for local packs and rich snippets without begging for manual directory updates. That reduces your reliance on paid lead sources and keeps your organic traffic pipeline healthy through seasonal shifts in the Dallas-Fort Worth market.
 
 Here is what I strip out of every maintenance contract that does not belong in it:
 - Monthly graphic design revisions for assets you can update yourself through a simple CMS editor
@@ -68,7 +68,7 @@ Here is what I strip out of every maintenance contract that does not belong in i
 - Redesigns disguised as maintenance when the underlying architecture is sound and conversion-ready
 - Unmonitored server resources that sit idle during off-peak hours and still bill you flat monthly rates
 
-You keep the budget tight by auditing what actually moves your metrics. I run a quarterly efficiency review and reallocate funds toward the channels that generate consistent pipeline velocity. For a rough build and maintenance number to hold quotes against, run your project through [our free cost estimator](/tools/cost-estimator).
+You keep the budget tight by auditing what actually moves your metrics. I run a quarterly efficiency review and reallocate funds toward the channels that generate consistent pipeline velocity. For a rough build and maintenance number to hold quotes against, run your project through [my free cost estimator](/tools/cost-estimator).
 
 ## How To Build A Maintenance Plan That Scales
 Scaling a website requires the same discipline I used to scale a partner network by 2,200 percent. You do not throw money at problems after they break. You build systems that prevent breaks in the first place and track every variable that influences revenue. The process starts with inventory, moves through automation and ends with continuous attribution reviews.
@@ -79,4 +79,4 @@ Set explicit performance thresholds and tie them to budget triggers. I define ac
 
 Review attribution monthly instead of hoping the site performs on autopilot. I pull UTM parameters, form submissions and booking confirmations into a single dashboard that ties directly to your sales pipeline. You see exactly which pages drive revenue and which ones drain resources without converting. I adjust the maintenance focus accordingly so your budget follows performance rather than tradition. The data tells you where to invest and where to cut without any guesswork or agency fluff.
 
-If you want a starting number before you compare quotes, try [our cost estimator](/tools/cost-estimator). Pick your project type, page count and features and it gives you a build cost range and a timeline. Turn on maintenance and it adds a monthly maintenance estimate. Cheap maintenance has a way of turning into expensive downtime. I build systems that protect conversion paths and keep your forecast tied to reality. When you are ready to map out a maintenance plan that actually scales with your revenue goals, book a planning call through [our contact page](/contact). We will audit your stack, align it with your pipeline and give you a clear roadmap for predictable growth.
+If you want a starting number before you compare quotes, try [my cost estimator](/tools/cost-estimator). Pick your project type, page count and features and it gives you a build cost range and a timeline. Turn on maintenance and it adds a monthly maintenance estimate. Cheap maintenance has a way of turning into expensive downtime. I build systems that protect conversion paths and keep your forecast tied to reality. When you are ready to map out a maintenance plan that actually scales with your revenue goals, book a planning call through [my contact page](/contact). I will audit your stack, align it with your pipeline and give you a clear roadmap for predictable growth.

@@ -90,7 +90,7 @@ export function CalculatorResults({
 
 			<Section style={BODY_SECTION_STYLE}>
 				<Text style={{ fontSize: '16px', marginBottom: '20px', margin: 0 }}>
-					Thank you for using our {calculatorName}! Here&apos;s a summary of
+					Thank you for using the {calculatorName}! Here&apos;s a summary of
 					your results:
 				</Text>
 

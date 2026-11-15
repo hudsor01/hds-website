@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
 	return buildMetadata({
 		title: 'Help Center | Hudson Digital Solutions',
 		description:
-			'Browse the Hudson Digital Solutions help center for answers to common questions, step-by-step guides for our free tools, billing details and account support.',
+			'Browse the Hudson Digital Solutions help center for answers to common questions, step-by-step guides for the free tools, billing details and account support.',
 		path: '/help',
 		noindex: !hasArticles
 	})
@@ -59,11 +59,11 @@ export default async function HelpCenterPage() {
 						Help Center
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
-						How can we help you?
+						How can I help?
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-8">
-						Find answers to common questions, learn how to use our tools, and
-						get the support you need.
+						Find answers to common questions, learn how to use the tools and get
+						the support you need.
 					</p>
 				</div>
 			</section>
@@ -123,7 +123,7 @@ export default async function HelpCenterPage() {
 							Can&apos;t find what you&apos;re looking for?
 						</h2>
 						<p className="text-sm text-muted-foreground mb-8 leading-relaxed">
-							We&apos;re here to help. Reach out and we&apos;ll get back to you
+							I&apos;m here to help. Reach out and I&apos;ll get back to you
 							within 2 hours during business hours.
 						</p>
 						<Link

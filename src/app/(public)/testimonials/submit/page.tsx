@@ -45,7 +45,7 @@ export default function PublicTestimonialPage() {
 						</div>
 
 						<p className="text-sm text-muted-foreground text-center mt-content-block">
-							By submitting, you agree that your testimonial may be used on our
+							By submitting, you agree that your testimonial may be used on my
 							website and marketing materials.
 						</p>
 					</div>

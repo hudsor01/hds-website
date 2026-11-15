@@ -33,7 +33,7 @@ Your headline must mirror the exact search query or ad promise. If someone click
 
 Trust signals need to be local and verifiable. I put your Texas license numbers, Google Business Profile ratings and specific neighborhood service areas directly into the fold. DFW buyers want proof you show up on time and fix the problem without upselling unnecessary parts. Generic badges mean nothing. Real metrics move money.
 
-The conversion path must be frictionless and tracked from day one. Here is exactly what I require on every page we build:
+The conversion path must be frictionless and tracked from day one. Here is exactly what I require on every page I build:
 - One primary call to action with zero navigation distractions
 - Form fields that match the minimum data needed to qualify a lead
 - UTM parameters and hidden source tracking injected automatically
@@ -58,13 +58,13 @@ Heatmapping tools show me where visitors hover, click and abandon. If they scrol
 
 Picture a dental practice in Plano testing versions of its emergency visit page. One version leads with a live availability calendar and drops a form field nobody needs. The design stays identical. Only the flow changes. The test tells you whether that flow books more procedures. When I scaled a partner network 2,200%, I hit ninety-five percent forecast accuracy because the data feeding the forecast was clean. That is how you predict monthly revenue instead of guessing.
 
-You can run this iteration process yourself or let a team handle the technical heavy lifting. Either way, you need visibility into your actual performance metrics before you commit to another month of ad spend. I built a free calculator that takes your monthly visitors, average order value and conversion rate and estimates how much revenue slow load times cost you. [Try our free tool](/tools/performance-calculator) and run your numbers before you sign another retainer.
+You can run this iteration process yourself or let a team handle the technical heavy lifting. Either way, you need visibility into your actual performance metrics before you commit to another month of ad spend. I built a free calculator that takes your monthly visitors, average order value and conversion rate and estimates how much revenue slow load times cost you. [Try my free tool](/tools/performance-calculator) and run your numbers before you sign another retainer.
 
 Small business owners in DFW have no margin for wasted spend. Every dollar that bounces off a slow page or confuses a prospect is money you cannot recover. I treat landing pages like revenue engines that require calibration, maintenance and precise tuning. When you align your messaging with your tracking infrastructure, the entire funnel tightens up.
 
 ## Stop Guessing and Start Measuring
 Your website should work as hard as your best sales rep. It needs to capture intent, verify qualification and route prospects without friction. For most home service companies the first fixes are page load speed, stripped down form fields and proper attribution. The work is straightforward if you have the right systems in place.
 
-I do not sell pretty layouts that look good on a monitor and fail under real traffic. I build performance focused pages that integrate with your CRM, track every conversion event and feed clean data into your forecasting models. If you want to stop burning budget on pages that do not convert, let us look at your current setup. [Book a strategy call](/contact) and we will map out exactly what needs to change.
+I do not sell pretty layouts that look good on a monitor and fail under real traffic. I build performance focused pages that integrate with your CRM, track every conversion event and feed clean data into your forecasting models. If you want to stop burning budget on pages that do not convert, let me look at your current setup. [Book a strategy call](/contact) and I will map out exactly what needs to change.
 
-You already know your traffic is there. The gap is between the click and the cash flow. Fix that gap with landing page optimization that treats your site like a revenue system instead of a static brochure. Run the numbers, tighten your tracking and let the data show you where your acquisition costs can come down. [Try our free tool](/tools/performance-calculator) to see where you are leaving money on the table, then reach out if you want a team that builds pages designed to perform.
+You already know your traffic is there. The gap is between the click and the cash flow. Fix that gap with landing page optimization that treats your site like a revenue system instead of a static brochure. Run the numbers, tighten your tracking and let the data show you where your acquisition costs can come down. [Try my free tool](/tools/performance-calculator) to see where you are leaving money on the table, then reach out if you want someone who builds pages designed to perform.

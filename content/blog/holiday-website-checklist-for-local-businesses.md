@@ -95,7 +95,7 @@ The usual holiday culprits:
 
 Fix the image first. It's almost always the image.
 
-If you want to put a dollar figure on what slow pages cost you, plug your numbers into our free [performance calculator](/tools/performance-calculator). It's a fast way to decide whether a speed fix is worth paying for before your busiest month.
+If you want to put a dollar figure on what slow pages cost you, plug your numbers into my free [performance calculator](/tools/performance-calculator). It's a fast way to decide whether a speed fix is worth paying for before your busiest month.
 
 ## 5. Test Every Form and Every Phone Number
 

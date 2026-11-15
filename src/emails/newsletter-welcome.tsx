@@ -23,7 +23,7 @@ const LIST_STYLE = {
 export function NewsletterWelcome({ unsubscribeUrl }: NewsletterWelcomeProps) {
 	return (
 		<BrandLayout preview="Welcome to Hudson Digital Solutions">
-			<BrandHeading level={1}>Welcome to Our Newsletter!</BrandHeading>
+			<BrandHeading level={1}>Welcome to the Newsletter!</BrandHeading>
 
 			<Text style={BODY_TEXT_STYLE}>
 				Thank you for subscribing to Hudson Digital Solutions newsletter.
@@ -42,7 +42,7 @@ export function NewsletterWelcome({ unsubscribeUrl }: NewsletterWelcomeProps) {
 				</ul>
 			</Section>
 
-			<Text style={BODY_TEXT_STYLE}>Stay tuned for our next edition!</Text>
+			<Text style={BODY_TEXT_STYLE}>Stay tuned for the next edition!</Text>
 
 			<BrandFooter unsubscribeUrl={unsubscribeUrl} />
 		</BrandLayout>
