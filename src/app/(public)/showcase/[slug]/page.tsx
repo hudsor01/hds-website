@@ -19,7 +19,11 @@ import {
 } from '@/components/ui/breadcrumb'
 import { CTASection } from '@/components/utilities/CTASection'
 import { JsonLd } from '@/components/utilities/JsonLd'
-import { generateBreadcrumbSchema } from '@/lib/seo-utils'
+import {
+	BUSINESS_ID,
+	generateBreadcrumbSchema,
+	toJsonLdGraph
+} from '@/lib/seo-utils'
 import {
 	getAllShowcaseSlugs,
 	getShowcaseBySlug,
@@ -396,32 +400,36 @@ export default async function ShowcaseDetailPage({
 
 	const SITE_URL = 'https://hudsondigitalsolutions.com'
 
+	const pageUrl = `${SITE_URL}/showcase/${slug}`
+	// Built by the business entity (shared @id), and pointing at the live
+	// site, so the case study attaches to the same graph as the rest of the
+	// site and parsers can see the work is real.
 	const creativeWork = {
-		'@context': 'https://schema.org',
 		'@type': 'CreativeWork',
+		'@id': `${pageUrl}#work`,
 		name: item.title,
 		description: item.description,
+		abstract: item.results ?? undefined,
 		image: item.ogImageUrl ?? item.imageUrl ?? undefined,
-		author: {
-			'@type': 'Organization',
-			name: 'Hudson Digital Solutions',
-			url: SITE_URL
-		},
+		creator: { '@id': BUSINESS_ID },
+		author: { '@id': BUSINESS_ID },
+		...(item.externalLink && { sameAs: item.externalLink }),
+		keywords:
+			item.technologies.length > 0 ? item.technologies.join(', ') : undefined,
 		datePublished: (item.publishedAt ?? item.createdAt)?.toISOString(),
 		dateModified: item.updatedAt?.toISOString(),
-		url: `${SITE_URL}/showcase/${slug}`
+		url: pageUrl
 	}
 
 	const breadcrumb = generateBreadcrumbSchema([
 		{ name: 'Home', url: SITE_URL },
 		{ name: 'Showcase', url: `${SITE_URL}/showcase` },
-		{ name: item.title, url: `${SITE_URL}/showcase/${slug}` }
+		{ name: item.title, url: pageUrl }
 	])
 
 	return (
 		<>
-			<JsonLd data={creativeWork} />
-			<JsonLd data={breadcrumb} />
+			<JsonLd data={toJsonLdGraph([creativeWork, breadcrumb])} />
 			<div className="min-h-screen bg-background">
 				{/* Breadcrumb */}
 				<div className="py-8 px-4 sm:px-6">

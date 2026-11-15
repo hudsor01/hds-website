@@ -5,7 +5,13 @@
  */
 
 import { describe, expect, test } from 'bun:test'
-import { getServiceBySlug, SERVICES } from '@/lib/constants/services'
+import { getAllPosts } from '@/lib/blog'
+import { FAQ_CATEGORIES } from '@/lib/constants/faqs'
+import {
+	getServiceBySlug,
+	getServiceForTags,
+	SERVICES
+} from '@/lib/constants/services'
 import { generateFaqSchema } from '@/lib/seo-utils'
 
 const DASH = /[–—]/
@@ -72,6 +78,44 @@ describe('SERVICES', () => {
 			expect(node.mainEntity[0]?.acceptedAnswer.text).toBe(
 				service.faqs[0]?.answer
 			)
+		}
+	})
+})
+
+describe('getServiceForTags', () => {
+	test('maps a post to the service its first mapped tag is about', () => {
+		expect(getServiceForTags(['seo']).slug).toBe('local-seo')
+		expect(
+			getServiceForTags(['small-business', 'business-automation']).slug
+		).toBe('booking-payments')
+		expect(getServiceForTags(['web-development']).slug).toBe('web-design')
+	})
+
+	test('falls back to web design when no tag maps', () => {
+		expect(getServiceForTags([]).slug).toBe('web-design')
+		expect(getServiceForTags(['business']).slug).toBe('web-design')
+	})
+
+	test('every published post resolves to a service', async () => {
+		for (const post of await getAllPosts()) {
+			expect(getServiceForTags(post.tags.map(tag => tag.slug))).toBeDefined()
+		}
+	})
+})
+
+describe('FAQ_CATEGORIES', () => {
+	const questions = FAQ_CATEGORIES.flatMap(category => category.questions)
+
+	test('the FAQPage schema carries every visible question', () => {
+		const node = generateFaqSchema(questions)
+		expect(node.mainEntity).toHaveLength(questions.length)
+		expect(questions.length).toBeGreaterThanOrEqual(10)
+	})
+
+	test('answers make no price claim and use no dashes', () => {
+		for (const { question, answer } of questions) {
+			expect(`${question} ${answer}`).not.toMatch(PRICE)
+			expect(`${question} ${answer}`).not.toMatch(DASH)
 		}
 	})
 })
