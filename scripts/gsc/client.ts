@@ -217,9 +217,10 @@ export const AnalyticsResponseSchema = z.object({
 /**
  * Returns a serialized inspector: each call starts at least
  * INSPECTION_SPACING_MS after the previous one on the injected clock (D7).
- * Retryable or unclassified failures become a per-URL outcome so the report
- * can flag them (D5); access, disabled, scope, auth and quota errors throw
- * and fail the run (D8).
+ * Only a failure that exhausted its retries becomes a per-URL outcome so the
+ * report can flag it (D5). Every other error throws and fails the run (D8):
+ * access, disabled, scope, auth, quota, budget and any other 4xx, which is a
+ * request bug that would hit every URL the same way (WR-02).
  */
 export function createInspector(
 	ctx: GscContext
@@ -245,10 +246,7 @@ export function createInspector(
 		} catch (error) {
 			// Only our own GscApiError (authored message) is inspected; anything
 			// else is rethrown untouched for the top-level handler.
-			if (
-				error instanceof GscApiError &&
-				(error.kind === 'retry' || error.kind === 'other')
-			) {
+			if (error instanceof GscApiError && error.kind === 'retry') {
 				return { ok: false, httpStatus: error.httpStatus }
 			}
 			throw error

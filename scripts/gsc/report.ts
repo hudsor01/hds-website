@@ -53,6 +53,11 @@ const POSTS_UNREADABLE =
 const UNEXPECTED =
 	'unexpected error (details withheld so no credential can leak).'
 
+/** Every inspection failing is an outage, not a report (D8, WR-02). */
+export function allInspectionsFailedMessage(n: number): string {
+	return `Every URL Inspection request failed (${n} of ${n}). The issue was left unchanged. Re-run the workflow later.`
+}
+
 /** Reads the post list; any parse or fs failure becomes one fixed line. */
 function recentPosts(
 	dir: string,
@@ -120,6 +125,13 @@ export async function run(deps: RunDeps): Promise<number> {
 		// Strictly one at a time: the inspector spaces calls (D7).
 		for (const post of recent.posts) {
 			posts.push(toInspectedPost(post, await inspect(post.url)))
+		}
+		if (posts.length > 0 && posts.every(p => !p.outcome.ok)) {
+			throw new GscApiError(
+				allInspectionsFailedMessage(posts.length),
+				'retry',
+				null
+			)
 		}
 
 		const model: ReportModel = {

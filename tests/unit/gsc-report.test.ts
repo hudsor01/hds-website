@@ -522,6 +522,28 @@ describe('run setup failures', () => {
 		expect(inspectCalls(result)).toHaveLength(1)
 	})
 
+	test('every inspection failing after retries fails the run and writes nothing', async () => {
+		writeHappyPosts()
+		const result = await scenario({
+			routes: { inspect: () => googleError(503) }
+		})
+		expect(expectFailure(result)).toBe(
+			'gsc-report: Every URL Inspection request failed (3 of 3). The issue was left unchanged. Re-run the workflow later.\n'
+		)
+		expect(inspectCalls(result)).toHaveLength(9)
+	})
+
+	test('an inspection 400 fails the run at once instead of flagging every URL', async () => {
+		writeHappyPosts()
+		const result = await scenario({
+			routes: { inspect: () => googleError(400) }
+		})
+		expect(expectFailure(result)).toBe(
+			'gsc-report: URL Inspection request failed with HTTP 400.\n'
+		)
+		expect(inspectCalls(result)).toHaveLength(1)
+	})
+
 	test('a malformed post prints a fixed line and inspects nothing', async () => {
 		writePost('good-post', '2026-11-10')
 		writeFileSync(

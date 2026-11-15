@@ -638,12 +638,13 @@ describe('createInspector', () => {
 		})
 	})
 
-	test('a non-JSON 200 body is a failed inspection (HTTP 200)', async () => {
+	test('a non-JSON 200 body throws and fails the run', async () => {
 		const { ctx } = inspectCtx(() => new Response('not json', { status: 200 }))
-		expect(await createInspector(ctx)(POST_URL)).toEqual({
-			ok: false,
-			httpStatus: 200
-		})
+		const error = await expectRejection(createInspector(ctx)(POST_URL))
+		expect(error.kind).toBe('other')
+		expect(error.message).toBe(
+			'URL Inspection request returned an unexpected response.'
+		)
 	})
 
 	test('503 three times returns a failed outcome instead of throwing', async () => {
@@ -672,14 +673,21 @@ describe('createInspector', () => {
 		})
 	})
 
-	test('a 404 returns a failed outcome with that status', async () => {
-		const { ctx, calls } = inspectCtx(() => jsonResponse(modernError(404), 404))
-		expect(await createInspector(ctx)(POST_URL)).toEqual({
-			ok: false,
-			httpStatus: 404
-		})
-		expect(calls).toHaveLength(1)
-	})
+	test.each([400, 404])(
+		'a %i throws other and fails the run without retrying',
+		async status => {
+			const { ctx, calls } = inspectCtx(() =>
+				jsonResponse(modernError(status), status)
+			)
+			const error = await expectRejection(createInspector(ctx)(POST_URL))
+			expect(error.kind).toBe('other')
+			expect(error.httpStatus).toBe(status)
+			expect(error.message).toBe(
+				`URL Inspection request failed with HTTP ${status}.`
+			)
+			expect(calls).toHaveLength(1)
+		}
+	)
 
 	test('plain 403 throws no_access and fails the run', async () => {
 		const { ctx, calls } = inspectCtx(() => jsonResponse(modernError(403), 403))
