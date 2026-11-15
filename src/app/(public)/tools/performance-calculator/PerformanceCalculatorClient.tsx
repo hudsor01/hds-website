@@ -346,7 +346,7 @@ export default function PerformanceCalculatorClient() {
 			{/* Performance Tips */}
 			<div className="space-y-content border-t border-border pt-8">
 				<h3 className="text-lg font-semibold text-foreground">
-					How We Optimize Performance
+					How I Optimize Performance
 				</h3>
 
 				<div className="space-y-3">

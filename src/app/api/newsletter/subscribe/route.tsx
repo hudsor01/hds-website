@@ -57,7 +57,7 @@ async function handleNewsletterSubscribe(request: NextRequest) {
 		}
 
 		if (existing && existing.status === 'active') {
-			return successResponse(undefined, "You're already on our list!")
+			return successResponse(undefined, "You're already on the list!")
 		}
 
 		// Insert or update subscriber (upsert on email)

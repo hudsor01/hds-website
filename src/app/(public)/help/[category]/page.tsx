@@ -156,8 +156,8 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 								No articles yet
 							</h2>
 							<p className="text-sm text-muted-foreground">
-								We&apos;re working on adding content to this category. Check
-								back soon!
+								I&apos;m working on adding content to this category. Check back
+								soon!
 							</p>
 						</div>
 					) : (

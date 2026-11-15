@@ -46,7 +46,7 @@ const HELP_CATEGORIES: Omit<HelpCategory, 'articleCount'>[] = [
 	{
 		slug: 'tools',
 		name: 'Tools & Calculators',
-		description: 'Learn how to use our free tools.',
+		description: 'Learn how to use the free tools.',
 		metaDescription:
 			'Learn how to use the free Hudson Digital Solutions tools and calculators with clear, step-by-step guides covering inputs, results, and common questions.',
 		icon: 'Wrench'
@@ -72,7 +72,7 @@ const HELP_CATEGORIES: Omit<HelpCategory, 'articleCount'>[] = [
 		name: 'FAQs',
 		description: 'Frequently asked questions.',
 		metaDescription:
-			'Browse frequently asked questions about Hudson Digital Solutions, covering our services, web design process, pricing, timelines, and how to get started.',
+			'Browse frequently asked questions about Hudson Digital Solutions, covering my services, web design process, pricing, timelines and how to get started.',
 		icon: 'HelpCircle'
 	}
 ]

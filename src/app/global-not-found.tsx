@@ -34,7 +34,7 @@ export default function GlobalNotFound() {
 							href="/contact"
 							className="px-6 py-3 bg-transparent text-primary rounded-lg font-semibold inline-block border-2 border-primary no-underline"
 						>
-							Contact Us
+							Contact
 						</Link>
 					</div>
 
@@ -57,7 +57,7 @@ export default function GlobalNotFound() {
 								Showcase
 							</Link>
 							<Link href="/about" className="text-primary text-sm no-underline">
-								About Us
+								About
 							</Link>
 							<Link href="/blog" className="text-primary text-sm no-underline">
 								Blog

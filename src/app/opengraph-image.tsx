@@ -65,7 +65,7 @@ export default async function OGImage() {
 						lineHeight: 1.3
 					}}
 				>
-					We build small businesses the website their reputation deserves.
+					I build small businesses the website their reputation deserves.
 				</div>
 			</div>
 

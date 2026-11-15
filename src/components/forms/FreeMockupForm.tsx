@@ -63,7 +63,7 @@ function FreeMockupFormInner({ className = '' }: { className?: string }) {
 		return (
 			<FormSuccessMessage
 				title="Request received"
-				message="Your free mockup request is in. We will review your business and send your custom website mockup shortly. Check your email for a confirmation."
+				message="Your free mockup request is in. I will review your business and send your custom website mockup shortly. Check your email for a confirmation."
 				actionLabel="Submit another"
 				onAction={handleReset}
 			/>

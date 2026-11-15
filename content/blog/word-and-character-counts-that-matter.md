@@ -3,7 +3,7 @@ title: 'Word Counter: Counts That Actually Matter'
 slug: word-and-character-counts-that-matter
 excerpt: >-
   DFW businesses waste budget on guesswork. Learn how to measure page length,
-  automate copy edits and tie word counts to revenue using our free tool.
+  automate copy edits and tie word counts to revenue using my free tool.
 targetKeyword: word counter
 pillar: 10
 tags:
@@ -37,9 +37,9 @@ Your word count also affects your SEO architecture in a measurable way. Search e
 
 ## How I Actually Use a Word Counter in Client Work
 
-I bring every new DFW client into the same measurement discipline I used in revenue operations, where I scaled a partner network by 2,200 percent. First we map the visitor journey. Second we install tracking on every critical element. Third we measure copy length against conversion drop-off points. I run the numbers through Power BI and build a simple dashboard that flags pages exceeding or falling short of target word counts.
+I bring every new DFW client into the same measurement discipline I used in revenue operations, where I scaled a partner network by 2,200 percent. First I map the visitor journey. Second I install tracking on every critical element. Third I measure copy length against conversion drop-off points. I run the numbers through Power BI and build a simple dashboard that flags pages exceeding or falling short of target word counts.
 
-When I review a homepage with an owner, I read the copy out loud while we watch the analytics. I count sentences. I flag redundant claims. I cut anything that does not support a booking action or a quote request. We then adjust the layout, rebuild the hero section and retest. I repeat this cycle until the page hits the target range and the conversion rate stabilizes.
+When I review a homepage with an owner, I read the copy out loud while we watch the analytics. I count sentences. I flag redundant claims. I cut anything that does not support a booking action or a quote request. I then adjust the layout, rebuild the hero section and retest. I repeat this cycle until the page hits the target range and the conversion rate stabilizes.
 
 The same measurement process works for content partnerships. If partner or referral pages feed your pipeline, track which ones drive qualified leads and which ones just add noise. Measure their length, track the referral traffic and cut the pages that fail to move prospects forward. Cleaner attribution follows.
 
@@ -61,7 +61,7 @@ Measurement means nothing without automation. I connect your word count benchmar
 
 I also tie copy length to attribution models. When a visitor lands on a 40-word hero section versus a 120-word hero section, I track which version generates more qualified opportunities. I feed those results into forecasting dashboards and adjust next month's content production accordingly. It is the same forecasting discipline behind the $3.7 million I drove in revenue operations, applied to DFW businesses that want to scale without guessing.
 
-The cost of this setup is minimal compared to wasted ad spend and missed leads. I charge for the build once, then you own the dashboard. You get weekly reports that show exactly which pages hit their word count targets, which ones need edits and what the impact was on conversion paths. If you run an affiliate channel, partner tracking can feed the same dashboard so we can measure partner content length against referral conversion rates.
+The cost of this setup is minimal compared to wasted ad spend and missed leads. I charge for the build once, then you own the dashboard. You get weekly reports that show exactly which pages hit their word count targets, which ones need edits and what the impact was on conversion paths. If you run an affiliate channel, partner tracking can feed the same dashboard so I can measure partner content length against referral conversion rates.
 
 ### What This Looks Like for DFW Businesses
 
@@ -73,8 +73,8 @@ Any lift comes from measuring copy length, cutting filler and routing data corre
 
 You do not need more blog posts or vague advice on content strategy. You need a system that measures your copy, flags the waste and routes qualified visitors straight to your booking flow. I build that system for DFW businesses and I track every metric back to revenue outcomes. If you want to see how your current pages stack up against conversion targets, start by measuring them yourself.
 
-[Try our free tool](/tools/word-counter) and paste your homepage or service page copy into it. Check the word count, compare it to the benchmarks I outlined above and note which sections run long. Cut the fluff, adjust your layout and watch your conversion path tighten.
+[Try my free tool](/tools/word-counter) and paste your homepage or service page copy into it. Check the word count, compare it to the benchmarks I outlined above and note which sections run long. Cut the fluff, adjust your layout and watch your conversion path tighten.
 
 If you want me to audit your current site, build the tracking dashboards and automate the feedback loop for your team, let's talk. I will review your existing pages, map your visitor journey and design a measurement system that aligns copy length with forecast accuracy.
 
-[Contact me today](/contact) to schedule a quick call and see exactly how we can turn your website into a predictable revenue engine.
+[Contact me today](/contact) to schedule a quick call and see exactly how I can turn your website into a predictable revenue engine.

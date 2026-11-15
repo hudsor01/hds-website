@@ -85,7 +85,7 @@ On the site itself, put a few real reviews on each treatment page. A review abou
 
 ## Local SEO for a Dental Website With More Than One Office
 
-If you have one office, your site needs consistent name, address and phone details everywhere, a fully built Google Business Profile and structured data that tells search engines you're a dental practice. Schema.org has a specific `Dentist` type for this. You can build the markup with our free [schema generator](/tools/schema-generator) in a few minutes.
+If you have one office, your site needs consistent name, address and phone details everywhere, a fully built Google Business Profile and structured data that tells search engines you're a dental practice. Schema.org has a specific `Dentist` type for this. You can build the markup with my free [schema generator](/tools/schema-generator) in a few minutes.
 
 If you have two or more offices, each one needs its own location page. Not a single page with three addresses stacked at the bottom. A practice with offices in McKinney and Southlake should have a McKinney page and a Southlake page, each with its own address, hours, phone number, map, providers who work there and parking or access notes. Each location page links to its own Google Business Profile. That's how you show up in the local map results for each city instead of only the one closest to your main office.
 

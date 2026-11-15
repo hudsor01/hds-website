@@ -38,7 +38,7 @@ const DEFAULT_COMPANY = {
 	companyEmail: BUSINESS_INFO.email,
 	companyPhone: '',
 	companyDescription:
-		'Hudson Digital Solutions is a Texas-based web design agency that builds professional websites for small businesses. We design, build, and launch the website your business needs to turn its reputation into booked customers.'
+		'Hudson Digital Solutions is a Texas-based web design agency that builds professional websites for small businesses. I design, build and launch the website your business needs to turn its reputation into booked customers.'
 }
 
 const formatDateForInput = (date: Date): string => {

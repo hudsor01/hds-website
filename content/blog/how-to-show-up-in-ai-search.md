@@ -78,7 +78,7 @@ The short version for most service businesses:
 
 The rule that trips people up: the markup must match what is visible on the page. If your schema says you open at 7 a.m. and your page says 8 a.m., you just created the exact contradiction you were trying to fix.
 
-You don't need a developer to get started. Our free [schema generator](/tools/schema-generator) builds valid LocalBusiness JSON-LD from a short form. Paste it into your site's head, then confirm it with Google's Rich Results Test.
+You don't need a developer to get started. My free [schema generator](/tools/schema-generator) builds valid LocalBusiness JSON-LD from a short form. Paste it into your site's head, then confirm it with Google's Rich Results Test.
 
 ## Write Pages That Answer First
 

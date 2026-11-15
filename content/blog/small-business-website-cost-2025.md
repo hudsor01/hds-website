@@ -30,7 +30,7 @@ Most quotes you'll get fall into one of these buckets.
 
 - **DIY builder (Wix, Squarespace and similar):** no build fee, a monthly plan in the tens of dollars, plus every hour you spend building and fixing it yourself. Cheapest on paper. Most expensive in time.
 - **Freelancer template build:** usually low thousands. You get a theme with your logo and copy dropped in. Quality varies wildly from person to person.
-- **Small studio custom build:** this is where we sit. Our own [cost estimator](/tools/cost-estimator) starts a landing page at $2,000, a full business website at $5,000 and an e-commerce store at $10,000, before features.
+- **Small studio custom build:** this is where I sit. My [cost estimator](/tools/cost-estimator) shows the typical market range for a landing page, a full business website or an e-commerce store, before features. I give you a real price on a call once I know what you need.
 - **Full-service agency:** often well into five figures, sometimes more. You're paying for strategy sessions, account managers and layers of review.
 
 If you want the side-by-side on who you hire rather than what you buy, I broke that down in [agency vs freelancer vs DIY](/blog/agency-vs-freelancer-vs-diy-website-cost).
@@ -55,13 +55,13 @@ Photos fall in the same bucket. Real photos of your crew, your trucks and your f
 
 ### Integrations and Automation
 
-This is where small business website cost jumps. It's also where the money earns its keep. Our estimator prices a booking system at $3,500, payment processing at $3,000 and advanced contact forms at $800. Those numbers look big next to a plain contact form. Then you count what the plain form costs you.
+This is where small business website cost jumps. It's also where the money earns its keep. A booking system, payment processing and advanced contact forms each add to the typical market range in my estimator. Those additions look big next to a plain contact form. Then you count what the plain form costs you.
 
 A plain form emails someone. That someone has to read it, retype it into a CRM or spreadsheet and remember to call back. Every handoff is a place a lead can die. A form wired straight into HubSpot or Salesforce creates the record, assigns it and starts the follow-up without a human touching it. I built that kind of plumbing for years in Workato. It's the same job on a smaller scale.
 
 ### Tracking and Attribution
 
-If your site can't tell you which page or which ad produced a lead, you can't tell which marketing dollars work. Proper setup means conversion events on every form, call button and booking, with source data passed into your CRM. Our estimator lists advanced analytics at $1,200. Cheap builds skip it almost every time. You won't notice until you're spending real money on ads and can't explain the results.
+If your site can't tell you which page or which ad produced a lead, you can't tell which marketing dollars work. Proper setup means conversion events on every form, call button and booking, with source data passed into your CRM. Advanced analytics adds to the typical market range in my estimator. Cheap builds skip it almost every time. You won't notice until you're spending real money on ads and can't explain the results.
 
 ## The Ongoing Costs Nobody Quotes
 
@@ -82,7 +82,7 @@ Some providers sell the website as part of a monthly bundle with listings, revie
 
 On a lot of these platforms you rent the site. Cancel and the design, the content and sometimes the domain setup stay behind. You start over and risk losing the rankings you spent years building. Before you sign any bundle, ask one question in writing: if I cancel, what do I keep? If the answer is vague, assume the answer is nothing.
 
-If you're already stuck on one of these platforms, we handle the move with your rankings intact. Our [website migration](/website-migration) page explains how that works.
+If you're already stuck on one of these platforms, I handle the move with your rankings intact. My [website migration](/website-migration) page explains how that works.
 
 ## How to Tell If the Price Is Worth It
 
@@ -90,7 +90,7 @@ Stop comparing website quotes to each other. Compare them to what a customer is 
 
 Here's the math I'd run. Say an average job is worth $1,500 to you and your site produces four extra booked jobs a month because the forms work, the tracking works and follow-up happens automatically. That's $6,000 a month in new revenue. A $7,000 build pays for itself in under two months. Now flip it. If the cheapest option loses even one job a month to a broken form or a slow page, it's costing you more than the price difference.
 
-Your numbers will be different. Plug your own average job value and close rate into our [ROI calculator](/tools/roi-calculator) and see where the break-even sits. That's the same discipline I used forecasting pipeline in revenue operations, where I drove $3.7M through forecasting work: tie the spend to the revenue it produces or don't spend it.
+Your numbers will be different. Plug your own average job value and close rate into my [ROI calculator](/tools/roi-calculator) and see where the break-even sits. That's the same discipline I used forecasting pipeline in revenue operations, where I drove $3.7M through forecasting work: tie the spend to the revenue it produces or don't spend it.
 
 ## Questions to Ask Before You Sign
 
@@ -120,6 +120,6 @@ For a deeper planning walkthrough, see [how to set a website budget](/blog/how-t
 
 ## Get a Real Number for Your Business
 
-Ranges only go so far. Your number depends on your pages, your integrations and what you need the site to do once it's live. Run your scope through our [free cost estimator](/tools/cost-estimator) for a starting figure in two minutes.
+Ranges only go so far. Your number depends on your pages, your integrations and what you need the site to do once it's live. Run your scope through my [free cost estimator](/tools/cost-estimator) for a starting figure in two minutes.
 
-When you want a quote built around your actual sales process, [reach out through our contact page](/contact). I'll ask what a lead is worth and where it should go, then price the site around that answer.
+When you want a quote built around your actual sales process, [reach out through my contact page](/contact). I'll ask what a lead is worth and where it should go, then price the site around that answer.

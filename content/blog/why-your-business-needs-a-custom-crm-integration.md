@@ -129,7 +129,7 @@ Don't build on faith. Measure these before you start, then again a month after l
 - **Speed to lead**, from form submission to first contact.
 - **Report agreement**, whether CRM revenue matches accounting revenue.
 
-Put a dollar figure on the hours and the late invoices and the business case usually writes itself. Our [ROI calculator](/tools/roi-calculator) helps you run the numbers on your own business.
+Put a dollar figure on the hours and the late invoices and the business case usually writes itself. My [ROI calculator](/tools/roi-calculator) helps you run the numbers on your own business.
 
 ## Start With One Flow
 

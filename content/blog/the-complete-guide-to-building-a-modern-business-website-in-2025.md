@@ -98,7 +98,7 @@ Keep the form short while you're at it. Name, phone, a short message. Every extr
 
 You don't need an agency to get the fundamentals right:
 
-- A unique title tag and meta description on every page. Our [meta tag generator](/tools/meta-tag-generator) previews how they'll look in search results.
+- A unique title tag and meta description on every page. My [meta tag generator](/tools/meta-tag-generator) previews how they'll look in search results.
 - One H1 per page that matches what the page is about.
 - LocalBusiness structured data with your name, address, phone, hours and service area. The [schema generator](/tools/schema-generator) builds it for you. [LocalBusiness schema](/blog/localbusiness-schema-help-google-find-you) explains why it matters.
 - An XML sitemap submitted in Google Search Console.
@@ -128,6 +128,6 @@ Then put maintenance on the calendar: software updates, backups, uptime monitori
 
 ## Where to Start
 
-If you're planning a build now, get a realistic read on scope before you talk to anyone. Our [website cost estimator](/tools/cost-estimator) walks you through the features you need and what drives the price.
+If you're planning a build now, get a realistic read on scope before you talk to anyone. My [website cost estimator](/tools/cost-estimator) walks you through the features you need and what drives the price.
 
 And if you'd rather hand the whole sequence to someone who builds sites as revenue systems, with the domain in your name, the tracking wired up and the leads landing in your CRM from day one, [get in touch](/contact). Tell me what the site needs to produce and I'll tell you how I'd build it.

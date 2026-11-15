@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 	alternates: { canonical: '/free-mockup' },
 	title: 'Free Website Mockup for Your Business | Hudson Digital Solutions',
 	description:
-		'See your new website before you pay anything. We design a free custom mockup for Dallas-Fort Worth small businesses, no cost and no obligation.',
+		'See your new website before you pay anything. I design a free custom mockup for Dallas-Fort Worth small businesses, no cost and no obligation.',
 	openGraph: {
 		title: 'See Your New Website Before You Pay | Hudson Digital',
 		description:
@@ -26,16 +26,16 @@ const BENEFITS = [
 
 const STEPS = [
 	{
-		title: 'Tell us about your business',
+		title: 'Tell me about your business',
 		body: 'Share your name, your business, and your current online presence. It takes about 30 seconds.'
 	},
 	{
-		title: 'We design your free mockup',
-		body: 'We create a custom website mockup built around your business and the reputation you have earned.'
+		title: 'I design your free mockup',
+		body: 'I create a custom website mockup built around your business and the reputation you have earned.'
 	},
 	{
 		title: 'You decide',
-		body: 'Love it? We build it. Not a fit? Keep the mockup, no pressure.'
+		body: 'Love it? I build it. Not a fit? Keep the mockup, no pressure.'
 	}
 ]
 
@@ -106,7 +106,7 @@ export default function FreeMockupPage() {
 							</h1>
 							<p className="mt-4 text-lead text-muted-foreground">
 								You have earned a great local reputation. But if customers
-								cannot find you online, they book a competitor instead. We will
+								cannot find you online, they book a competitor instead. I will
 								design a free custom mockup of your website, no cost and no
 								obligation, so you can see exactly how your business could look
 								online.
@@ -151,7 +151,7 @@ export default function FreeMockupPage() {
 								Request your free mockup
 							</h2>
 							<p className="mt-2 mb-6 text-sm text-muted-foreground">
-								We reply within 2 hours during business hours.
+								I reply within 2 hours during business hours.
 							</p>
 							<FreeMockupForm />
 						</div>

@@ -22,7 +22,7 @@ Finding a web designer in Dallas-Fort Worth is easy. Finding the right one is wh
 
 I spent nearly a decade in revenue operations before I built websites. I worked inside Salesforce, HubSpot, Power BI and Workato. The habit that stuck with me is simple: judge a system by what it does after go-live. A website is a system.
 
-I'll be upfront. Hudson Digital Solutions is one option on your list. These are the questions I'd ask if I were hiring someone. Run them on every shop you talk to. Us included.
+I'll be upfront. Hudson Digital Solutions is one option on your list. These are the questions I'd ask if I were hiring someone. Run them on every shop you talk to. Me included.
 
 ## Start With Ownership, Not the Portfolio
 

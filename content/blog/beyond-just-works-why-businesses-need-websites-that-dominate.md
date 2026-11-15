@@ -19,7 +19,7 @@ readingTime: 0
 bodyFormat: markdown
 ---
 
-Most small-business websites work. They load, they look fine on a phone and the contact form sends an email somewhere. That is the floor, not the goal. A website that generates leads does a different job: it turns a stranger into a phone call, a booked appointment or a quote request. Then it tells you exactly where that person came from. I spent nearly a decade in revenue operations running Salesforce, HubSpot and Power BI before I built my first client site. In that world nobody asked whether the CRM "worked." We asked what it produced. Your website deserves the same question.
+Most small-business websites work. They load, they look fine on a phone and the contact form sends an email somewhere. That is the floor, not the goal. A website that generates leads does a different job: it turns a stranger into a phone call, a booked appointment or a quote request. Then it tells you exactly where that person came from. I spent nearly a decade in revenue operations running Salesforce, HubSpot and Power BI before I built my first client site. In that world nobody asked whether the CRM "worked." I asked what it produced. Your website deserves the same question.
 
 ## What "Just Works" Actually Means
 
@@ -38,7 +38,7 @@ The other problem is that "just works" is invisible. You can't see the visitor w
 
 ## The Question I Ask Instead
 
-In revenue operations, every opportunity in Salesforce had a source. If a deal closed, we could trace it back to the campaign, the partner or the form that started it. That discipline is how I got to 95% forecast accuracy and helped scale a partner network by 2,200%. Nothing about it was magic. It was clean data going in, so the numbers coming out could be trusted.
+In revenue operations, every opportunity in Salesforce had a source. If a deal closed, I could trace it back to the campaign, the partner or the form that started it. That discipline is how I got to 95% forecast accuracy and helped scale a partner network by 2,200%. Nothing about it was magic. It was clean data going in, so the numbers coming out could be trusted.
 
 So when I look at a small-business site, I skip the design opinions and ask three things:
 
@@ -66,7 +66,7 @@ Every field you add is a reason to quit. Ask only what you need to call them bac
 
 Speed is the one thing visitors never praise and always punish. Google measures it with Core Web Vitals: Largest Contentful Paint should land within 2.5 seconds, Interaction to Next Paint at 200 milliseconds or less and Cumulative Layout Shift at 0.1 or less. Those thresholds aren't arbitrary. They line up with the point where people start to feel the wait.
 
-Slow small-business sites usually aren't slow because of hosting. They're slow because of oversized photos, a page builder loading scripts for features you don't use and a pile of third-party widgets. [Core Web Vitals explained for small business](/blog/core-web-vitals-explained-for-small-business) walks through each metric in plain terms. You can also run your numbers through our [performance calculator](/tools/performance-calculator) to see what a faster page might be worth.
+Slow small-business sites usually aren't slow because of hosting. They're slow because of oversized photos, a page builder loading scripts for features you don't use and a pile of third-party widgets. [Core Web Vitals explained for small business](/blog/core-web-vitals-explained-for-small-business) walks through each metric in plain terms. You can also run your numbers through my [performance calculator](/tools/performance-calculator) to see what a faster page might be worth.
 
 ### It records what happened
 
@@ -112,7 +112,7 @@ Some sites need a weekend of fixes. Compressing images, rewriting the headline, 
 
 Other sites are built on a foundation that fights you. If every edit requires a developer, if the platform won't let you add tracking or schema or if the site was assembled from a template that loads a pile of code you'll never use, patching it costs more over time than replacing it. The [signs you need a website redesign](/blog/signs-you-need-a-website-redesign) post covers how to tell which side of that line you're on.
 
-Either way, decide with numbers. Our [ROI calculator](/tools/roi-calculator) lets you plug in your average job value and close rate to see what a few extra leads a month are worth. For a lot of service businesses, a few extra jobs a month go a long way toward covering the cost of doing it right.
+Either way, decide with numbers. My [ROI calculator](/tools/roi-calculator) lets you plug in your average job value and close rate to see what a few extra leads a month are worth. For a lot of service businesses, a few extra jobs a month go a long way toward covering the cost of doing it right.
 
 ## Where to Start
 

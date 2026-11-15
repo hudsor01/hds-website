@@ -115,7 +115,7 @@ The most expensive mistake is jumping straight to `p=reject` after reading a sca
 
 ### 1. Inventory every sender
 
-List every service that sends email as your domain. Inbox provider, invoicing, CRM, booking, payment receipts, website forms, newsletter. If you create quotes or invoices with a tool like our free [invoice generator](/tools/invoice-generator) and email them from your own inbox, that's covered by your inbox provider. If an app sends them for you, that app goes on the list.
+List every service that sends email as your domain. Inbox provider, invoicing, CRM, booking, payment receipts, website forms, newsletter. If you create quotes or invoices with a tool like my free [invoice generator](/tools/invoice-generator) and email them from your own inbox, that's covered by your inbox provider. If an app sends them for you, that app goes on the list.
 
 ### 2. Publish one clean SPF record
 

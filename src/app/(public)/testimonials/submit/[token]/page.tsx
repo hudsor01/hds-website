@@ -43,7 +43,7 @@ export async function generateMetadata({
 	return {
 		title: 'Share Your Feedback | Hudson Digital Solutions',
 		description:
-			'Thank you for working with us. Please share your experience with Hudson Digital Solutions.',
+			'Thank you for working with me. Please share your experience with Hudson Digital Solutions.',
 		robots
 	}
 }
@@ -85,7 +85,7 @@ async function TokenContent({ token }: { token: string }) {
 						</h1>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
 							Thank you! You&apos;ve already submitted your testimonial using
-							this link. We appreciate your feedback!
+							this link. I appreciate your feedback!
 						</p>
 					</div>
 				</section>
@@ -108,7 +108,7 @@ async function TokenContent({ token }: { token: string }) {
 						</h1>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
 							This testimonial link has expired. If you&apos;d still like to
-							share your feedback, please contact us for a new link.
+							share your feedback, please contact me for a new link.
 						</p>
 						<div className="mt-8">
 							<Link
@@ -136,9 +136,9 @@ async function TokenContent({ token }: { token: string }) {
 						Thank You, {request.client_name}!
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						We&apos;d love to hear about your experience
+						I&apos;d love to hear about your experience
 						{request.project_name && ` working on ${request.project_name}`}.
-						Your feedback means a lot to us!
+						Your feedback means a lot to me!
 					</p>
 				</div>
 			</section>
@@ -156,7 +156,7 @@ async function TokenContent({ token }: { token: string }) {
 						</div>
 
 						<p className="text-sm text-muted-foreground text-center mt-content-block">
-							By submitting, you agree that your testimonial may be used on our
+							By submitting, you agree that your testimonial may be used on my
 							website and marketing materials.
 						</p>
 					</div>

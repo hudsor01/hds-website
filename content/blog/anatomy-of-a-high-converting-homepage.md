@@ -21,7 +21,7 @@ Your homepage is either printing money or setting it on fire and most Dallas bus
 
 ## The Revenue System Mindset
 
-Most agencies sell you a brochure. I sell you an intake valve. When I started building websites, I carried over the exact same systems thinking that drove my forecasting work. Every visitor is a lead in motion. The page must move them from awareness to booking or checkout without friction, missing data or guesswork. I track three metrics on day one. Click depth to the primary button, form abandonment rate and routing success into CRM. If any of those numbers drop below acceptable thresholds, I rebuild the flow before we launch.
+Most agencies sell you a brochure. I sell you an intake valve. When I started building websites, I carried over the exact same systems thinking that drove my forecasting work. Every visitor is a lead in motion. The page must move them from awareness to booking or checkout without friction, missing data or guesswork. I track three metrics on day one. Click depth to the primary button, form abandonment rate and routing success into CRM. If any of those numbers drop below acceptable thresholds, I rebuild the flow before I launch.
 
 ### Above The Fold
 
@@ -47,13 +47,13 @@ Building a site that actually moves revenue requires upfront discipline. What a 
 
 ## Run Your Own Numbers Before You Build
 
-You can map out the structure until you are blue in the face, but guessing at your current conversion rate wastes time. I built a simple calculator that takes your traffic numbers, average order value and current booking rate to show exactly where the revenue is sitting on the table. [Try our free tool](/tools/roi-calculator). Plug in your Dallas traffic volume and see what a two point five percent lift actually means for your bottom line. The math is brutal but fair. 
+You can map out the structure until you are blue in the face, but guessing at your current conversion rate wastes time. I built a simple calculator that takes your traffic numbers, average order value and current booking rate to show exactly where the revenue is sitting on the table. [Try my free tool](/tools/roi-calculator). Plug in your Dallas traffic volume and see what a two point five percent lift actually means for your bottom line. The math is brutal but fair. 
 
-Plenty of small business owners skip this step. They buy a new site, dump it online and then wonder why the phone does not ring. The homepage is only as strong as the tracking behind it. [Run your own numbers with our ROI calculator](/tools/roi-calculator) before we touch a single line of code. You will immediately see whether your current setup is leaking bookings or capturing them efficiently. The output tells you exactly where to focus your budget.
+Plenty of small business owners skip this step. They buy a new site, dump it online and then wonder why the phone does not ring. The homepage is only as strong as the tracking behind it. [Run your own numbers with my ROI calculator](/tools/roi-calculator) before I touch a single line of code. You will immediately see whether your current setup is leaking bookings or capturing them efficiently. The output tells you exactly where to focus your budget.
 
 ### Implementation Checklist
 
-I do not hand off a site and walk away. We implement the tracking, audit the routing and run a conversion test for fourteen days before you go live. Here is what I require from every client to keep the system tight:
+I do not hand off a site and walk away. I implement the tracking, audit the routing and run a conversion test for fourteen days before you go live. Here is what I require from every client to keep the system tight:
 
 - Exact offer wording and pricing structure approved in writing before design starts
 - CRM pipeline stages mapped to homepage actions before development begins
@@ -63,4 +63,4 @@ I do not hand off a site and walk away. We implement the tracking, audit the rou
 
 ## Close the Loop
 
-A high-converting homepage is not a marketing expense. It is the intake valve for your entire revenue engine. Treat it like one and you will see forecast accuracy climb, lead response time drop and close rates stabilize. I build these systems for Dallas-Fort Worth operators who want predictability over guesswork. Let us map your funnel, wire the tracking and ship a page that actually books appointments or processes payments. [Book a strategy call with us](/contact) and we will run your current traffic through the calculator together.
+A high-converting homepage is not a marketing expense. It is the intake valve for your entire revenue engine. Treat it like one and you will see forecast accuracy climb, lead response time drop and close rates stabilize. I build these systems for Dallas-Fort Worth operators who want predictability over guesswork. Let me map your funnel, wire the tracking and ship a page that actually books appointments or processes payments. [Book a strategy call with me](/contact) and we will run your current traffic through the calculator together.

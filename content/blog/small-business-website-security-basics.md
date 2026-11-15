@@ -98,14 +98,14 @@ I'm not here to bash WordPress. It runs a huge share of the web. A well-run Word
 
 The risk is the plugin-heavy pattern. Every feature becomes another piece of third-party code running on your server with access to your database. Updates depend on someone remembering to log in. Plugins sometimes conflict, so people stop updating to avoid breaking things. That's how a site drifts two years behind.
 
-We build on Next.js because it changes the shape of the risk:
+I build on Next.js because it changes the shape of the risk:
 
 - There's no public `/wp-admin` login page for bots to hammer.
 - Most pages are prebuilt and served from a global network, so there's no database query firing for every visitor.
-- Contact forms post to code we wrote and review, not a plugin from a marketplace.
+- Contact forms post to code I wrote and review, not a plugin from a marketplace.
 - Updates get tested in a preview build before they reach production instead of clicked live on the real site.
 
-No stack gets a pass, though. Next.js projects have dependencies too and those need updating. A modern framework shrinks the attack surface. It doesn't remove the need for someone to own security. I go deeper on the tradeoffs in [why we build on Next.js, not WordPress](/blog/why-we-build-on-nextjs-not-wordpress).
+No stack gets a pass, though. Next.js projects have dependencies too and those need updating. A modern framework shrinks the attack surface. It doesn't remove the need for someone to own security. I go deeper on the tradeoffs in [why I build on Next.js, not WordPress](/blog/why-we-build-on-nextjs-not-wordpress).
 
 ## Who Should Own It
 

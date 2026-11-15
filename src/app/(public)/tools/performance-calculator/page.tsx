@@ -10,7 +10,7 @@ import PerformanceCalculatorClient from './PerformanceCalculatorClient'
 export const metadata: Metadata = buildMetadata({
 	title: 'Performance Savings Calculator | Hudson Digital Solutions',
 	description:
-		'Analyze how website load times affect your revenue. Calculate potential savings from performance optimization with our free calculator.',
+		'Analyze how website load times affect your revenue. Calculate potential savings from performance optimization with this free calculator.',
 	path: '/tools/performance-calculator',
 	socialTitle: 'Performance Savings Calculator',
 	socialDescription: 'Calculate revenue lost due to slow website load times.'

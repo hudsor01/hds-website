@@ -2,7 +2,7 @@
 title: 'CRM Automation: Stop Losing Leads in Your Inbox'
 slug: crm-automation-stop-losing-leads
 excerpt: >-
-  Stop losing leads to slow follow ups. We build crm automation that routes,
+  Stop losing leads to slow follow ups. I build crm automation that routes,
   scores and closes your Dallas small business leads on autopilot while you
   sleep.
 targetKeyword: crm automation
@@ -36,9 +36,9 @@ You can calculate exactly how much this costs you by looking at your current clo
 
 ### Routing Rules That Actually Work
 
-I do not build custom code for every routing rule unless the business requires it. We use HubSpot workflows, Workato connectors and native Salesforce triggers to move data without writing spaghetti scripts. The goal is predictable latency under thirty seconds from form submission to sales rep notification. You set the rules once, you test them in staging and you let the system run while you focus on closing.
+I do not build custom code for every routing rule unless the business requires it. I use HubSpot workflows, Workato connectors and native Salesforce triggers to move data without writing spaghetti scripts. The goal is predictable latency under thirty seconds from form submission to sales rep notification. You set the rules once, you test them in staging and you let the system run while you focus on closing.
 
-Here is how we structure the routing logic for DFW service businesses:
+Here is how I structure the routing logic for DFW service businesses:
 - Geo-fence submissions by zip code and route to the designated territory manager
 - Score leads based on form fields like budget range, project timeline and service category
 - Trigger SMS alerts when a high score lead submits outside business hours so on call staff can follow up at seven AM
@@ -51,7 +51,7 @@ Clean routing data is the same foundation I used to hit ninety five percent fore
 
 Attribution is where most small businesses fail. They throw money at Facebook ads and local SEO then wonder why the pipeline looks thin in October. I learned this while scaling a partner network two thousand two hundred percent. The secret was tracking the full journey from first click to signed contract. You need to know which channels deliver high quality leads and which ones just generate vanity form fills.
 
-We connect your website forms to a central crm automation hub that tags every submission with UTM parameters, device type and referral source. I then pipe that data into Power BI where we build dashboards showing response time distribution, lead velocity and win rate by source. You get a live view of your sales funnel instead of waiting for end of month accounting reports. When you see that Instagram ads bring in fifty leads but only three book calls, you shift budget to the channel that actually closes, say Google Local Services at thirty percent.
+I connect your website forms to a central crm automation hub that tags every submission with UTM parameters, device type and referral source. I then pipe that data into Power BI where I build dashboards showing response time distribution, lead velocity and win rate by source. You get a live view of your sales funnel instead of waiting for end of month accounting reports. When you see that Instagram ads bring in fifty leads but only three book calls, you shift budget to the channel that actually closes, say Google Local Services at thirty percent.
 
 ### Data Hygiene and Decay Math
 
@@ -63,12 +63,12 @@ The forecasting work I did in revenue operations proved that accurate attributio
 
 ### Building It Without Breaking Your Stack
 
-You do not need a seven figure budget to implement this. A Denton landscaping company can run complete lead routing and scoring at a fraction of enterprise software costs. We use existing CRM platforms, lightweight API connectors and pre-built workflow templates to keep implementation lean. The actual build usually takes two weeks. You start seeing cleaned pipelines within the first month.
+You do not need a seven figure budget to implement this. A Denton landscaping company can run complete lead routing and scoring at a fraction of enterprise software costs. I use existing CRM platforms, lightweight API connectors and pre-built workflow templates to keep implementation lean. The actual build usually takes two weeks. You start seeing cleaned pipelines within the first month.
 
-Pricing depends on your current tech stack and how many touchpoints need syncing. If you already use HubSpot or Salesforce, we map your existing fields and build the automation layer on top. If you run a lean operation with just a website and a calendar tool, we stand up a lightweight CRM instance and wire it directly to your booking system. You can use the tool on our site to estimate your baseline implementation cost before we scope the project. [Run a quick cost estimate here](/tools/cost-estimator) to see the numbers.
+Pricing depends on your current tech stack and how many touchpoints need syncing. If you already use HubSpot or Salesforce, I map your existing fields and build the automation layer on top. If you run a lean operation with just a website and a calendar tool, I stand up a lightweight CRM instance and wire it directly to your booking system. You can use the tool on my site to estimate your baseline implementation cost before I scope the project. [Run a quick cost estimate here](/tools/cost-estimator) to see the numbers.
 
 The real return comes from reduced labor overhead and higher close rates. Count the hours your team spends each week copying form fills into spreadsheets and chasing follow ups. Once crm automation handles routing, scoring and follow up sequences, those hours go back to revenue generating activities. Add the missed leads you recover and run the ROI math on your own numbers.
 
-I treat every website I build as a revenue engine from day one. You get clean forms, instant routing, automated scoring and full attribution baked into the foundation instead of bolted on as an afterthought. Your sales team stops playing email tag and starts closing deals with the speed your market demands. [Our services](/services) cover design, local SEO and automation, so every touchpoint feeds your pipeline correctly.
+I treat every website I build as a revenue engine from day one. You get clean forms, instant routing, automated scoring and full attribution baked into the foundation instead of bolted on as an afterthought. Your sales team stops playing email tag and starts closing deals with the speed your market demands. [My services](/services) cover design, local SEO and automation, so every touchpoint feeds your pipeline correctly.
 
-If you want to stop bleeding leads through slow follow ups and start tracking every dollar that moves through your pipeline, we will map out your exact tech stack and build the automation layer. Reach out through [our contact page](/contact) and we will set up a technical scoping call to get your lead flow running on autopilot.
+If you want to stop bleeding leads through slow follow ups and start tracking every dollar that moves through your pipeline, I will map out your exact tech stack and build the automation layer. Reach out through [my contact page](/contact) and I will set up a technical scoping call to get your lead flow running on autopilot.

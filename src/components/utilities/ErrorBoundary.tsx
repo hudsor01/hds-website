@@ -89,16 +89,16 @@ export function DefaultErrorFallback({
 				body: JSON.stringify(errorReport)
 			})
 			if (res.ok) {
-				toast.success('Error report sent. Thanks for helping us fix this.')
+				toast.success('Error report sent. Thanks for helping me fix this.')
 			} else {
 				toast.error(
-					'Could not send the report. Copy the details below and email us.'
+					'Could not send the report. Copy the details below and email me.'
 				)
 			}
 		} catch (err) {
 			logger.error('[ErrorBoundary] Failed to report error', err)
 			toast.error(
-				'Could not send the report. Copy the details below and email us.'
+				'Could not send the report. Copy the details below and email me.'
 			)
 		} finally {
 			setSending(false)
@@ -116,8 +116,8 @@ export function DefaultErrorFallback({
 					</h2>
 
 					<p className="text-secondary-foreground mb-content-block">
-						We&apos;re sorry for the inconvenience. Please try refreshing the
-						page or contact us if the problem persists.
+						I&apos;m sorry for the inconvenience. Please try refreshing the page
+						or contact me if the problem persists.
 					</p>
 
 					{errorObj && (
@@ -184,7 +184,7 @@ export function DefaultErrorFallback({
 					</div>
 
 					<p className="text-sm text-muted-foreground mt-content-block">
-						Need help? Contact us at{' '}
+						Need help? Contact me at{' '}
 						<a href={`mailto:${BUSINESS_INFO.email}`} className="link-primary">
 							{BUSINESS_INFO.email}
 						</a>

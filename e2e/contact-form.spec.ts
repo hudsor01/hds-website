@@ -167,7 +167,7 @@ test.describe('Contact Form', () => {
 		})
 		await expect(
 			page.locator(
-				'text=Form submitted successfully, we will get back to you soon'
+				'text=Form submitted successfully, I will get back to you soon'
 			)
 		).toBeVisible()
 		await expect(page.locator('form')).not.toBeVisible()

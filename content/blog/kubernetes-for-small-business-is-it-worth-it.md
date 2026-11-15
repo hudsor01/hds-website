@@ -83,11 +83,11 @@ For most small businesses, here's the shape of a setup that covers everything ab
 
 ### Managed hosting for the website
 
-Platforms like Vercel, Netlify and Cloudflare deploy a modern site straight from a Git repository. Every change gets a preview link before it goes live. Scaling, HTTPS certificates, global caching and rollbacks are handled for you. This site runs on Next.js hosted on Vercel. I don't touch a server to ship an update. I explain why I build that way in [why we build on Next.js, not WordPress](/blog/why-we-build-on-nextjs-not-wordpress).
+Platforms like Vercel, Netlify and Cloudflare deploy a modern site straight from a Git repository. Every change gets a preview link before it goes live. Scaling, HTTPS certificates, global caching and rollbacks are handled for you. This site runs on Next.js hosted on Vercel. I don't touch a server to ship an update. I explain why I build that way in [why I build on Next.js, not WordPress](/blog/why-we-build-on-nextjs-not-wordpress).
 
 ### A managed database, only if you need one
 
-Most brochure-plus-lead-capture sites don't need a database of their own at all. When you do, a managed Postgres service handles backups, patching and scaling. We use Neon for this site. You pay for the database, not for someone to keep a database server alive.
+Most brochure-plus-lead-capture sites don't need a database of their own at all. When you do, a managed Postgres service handles backups, patching and scaling. I use Neon for this site. You pay for the database, not for someone to keep a database server alive.
 
 ### Automation for the business logic
 
@@ -126,4 +126,4 @@ If the answers are vague, or the last question gets a shrug, you have your answe
 
 Kubernetes is a serious tool for serious scale. For a typical DFW service business, it adds cost, complexity and risk without moving the numbers that matter: page speed, uptime, leads captured and leads followed up. Put that money into a fast site, clean tracking and automation that gets every lead into your CRM.
 
-Want to see what a right-sized build costs for your business? Run the numbers with our [website cost estimator](/tools/cost-estimator). If you've been pitched a complex hosting setup and want a straight second opinion, [reach out through our contact page](/contact) and I'll tell you what you actually need, even if the answer is "keep what you have."
+Want to see what a right-sized build costs for your business? Run the numbers with my [website cost estimator](/tools/cost-estimator). If you've been pitched a complex hosting setup and want a straight second opinion, [reach out through my contact page](/contact) and I'll tell you what you actually need, even if the answer is "keep what you have."

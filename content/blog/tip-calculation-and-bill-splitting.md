@@ -3,7 +3,7 @@ title: Tip Calculator and Bill Splitting Made Simple
 slug: tip-calculation-and-bill-splitting
 excerpt: >-
   How DFW businesses automate tip splitting and bill math for faster checkout
-  and higher turnover. Try our free tip calculator.
+  and higher turnover. Try my free tip calculator.
 targetKeyword: tip calculator
 pillar: 9
 tags:
@@ -33,9 +33,9 @@ When you audit your own location, look for three specific leaks that kill revenu
 
 ## The Tip Calculator That Actually Moves the Needle
 
-You do not need a complex platform to fix this. You need a fast, reliable tip calculator that your customers can trust and your staff can point to without explanation. I built our free tool at Hudson Digital Solutions specifically for operators who want to test the workflow before committing to a full integration. It handles standard percentages and custom tip percentages and splits the bill evenly for up to 20 people without forcing you to rewrite your entire payment flow. The point is not a pretty interface. It is reduced cognitive load and faster transaction completion. 
+You do not need a complex platform to fix this. You need a fast, reliable tip calculator that your customers can trust and your staff can point to without explanation. I built my free tool at Hudson Digital Solutions specifically for operators who want to test the workflow before committing to a full integration. It handles standard percentages and custom tip percentages and splits the bill evenly for up to 20 people without forcing you to rewrite your entire payment flow. The point is not a pretty interface. It is reduced cognitive load and faster transaction completion. 
 
-The usual question is how to roll this out without disrupting your current setup. The answer is simple. Put split options where your customers already look. Add them to your digital menu, mention them in your reservation confirmation email and surface them in your booking platform so guests know how the split works before they arrive. [Try our free tool](/tools/tip-calculator) to run your own numbers first. Then test a split option at a single location. Track the checkout time before and after deployment. If you see a real drop in friction, expand it across your other sites and route the performance data into your existing reporting stack.
+The usual question is how to roll this out without disrupting your current setup. The answer is simple. Put split options where your customers already look. Add them to your digital menu, mention them in your reservation confirmation email and surface them in your booking platform so guests know how the split works before they arrive. [Try my free tool](/tools/tip-calculator) to run your own numbers first. Then test a split option at a single location. Track the checkout time before and after deployment. If you see a real drop in friction, expand it across your other sites and route the performance data into your existing reporting stack.
 
 ## What to Automate First in Your Checkout Flow
 
@@ -47,7 +47,7 @@ You should not touch everything at once. I break automation into phases so you c
 - Build a Power BI dashboard that flags checkout delays and tracks tip variance
 - Automate post visit surveys only after the payment flow hits target speed
 
-Each step feeds into the next. You can start with just the first two and measure the change in throughput before you go further. A tool like Workato can wire these steps together because it handles the data mapping without a dedicated engineering team. You get predictable results instead of hoping your IT guy remembers to update the plugin next month. When you automate the checkout math, you stop losing revenue to manual errors and start capturing every dollar that should already be in your register. I outline the full stack we deploy across [our services](/services) so you can see exactly how each piece connects to your bottom line.
+Each step feeds into the next. You can start with just the first two and measure the change in throughput before you go further. A tool like Workato can wire these steps together because it handles the data mapping without a dedicated engineering team. You get predictable results instead of hoping your IT guy remembers to update the plugin next month. When you automate the checkout math, you stop losing revenue to manual errors and start capturing every dollar that should already be in your register. I outline the full stack I deploy across [my services](/services) so you can see exactly how each piece connects to your bottom line.
 
 ## Building the Back End That Supports Front of House Speed
 
@@ -57,6 +57,6 @@ Operators who skip the back end miss the bigger win. They fix the front of house
 
 ## Your Next Step for Faster Turnover
 
-You do not need to rebuild your entire operation to fix checkout math. You just need a reliable tip calculator, a clear measurement framework and the discipline to track what matters. Automating the split and routing confirmations straight into your CRM is not magic. It is revenue operations applied to the front door. If you want to run your own numbers before committing, [try our free tool](/tools/tip-calculator) and watch how it handles your exact split scenarios. Test it on a single floor first, track the time saved and scale only when the data supports it. 
+You do not need to rebuild your entire operation to fix checkout math. You just need a reliable tip calculator, a clear measurement framework and the discipline to track what matters. Automating the split and routing confirmations straight into your CRM is not magic. It is revenue operations applied to the front door. If you want to run your own numbers before committing, [try my free tool](/tools/tip-calculator) and watch how it handles your exact split scenarios. Test it on a single floor first, track the time saved and scale only when the data supports it. 
 
-When you are ready to wire this into your existing stack, we can map the integration, set up the tracking and deploy the automation across all of your locations. I do not sell templates. I build systems that track, measure and optimize revenue the same way I ran forecasting pipelines in revenue operations. You can [schedule a call with us](/contact) and we will audit your current checkout flow, show you the exact friction points and outline a deployment plan that fits your budget. Run the numbers, track the throughput and let the data tell you where to scale next.
+When you are ready to wire this into your existing stack, I can map the integration, set up the tracking and deploy the automation across all of your locations. I do not sell templates. I build systems that track, measure and optimize revenue the same way I ran forecasting pipelines in revenue operations. You can [schedule a call with me](/contact) and I will audit your current checkout flow, show you the exact friction points and outline a deployment plan that fits your budget. Run the numbers, track the throughput and let the data tell you where to scale next.

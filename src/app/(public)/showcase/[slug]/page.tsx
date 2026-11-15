@@ -166,7 +166,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 								{item.solution && (
 									<div>
 										<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-											Our Solution
+											The Solution
 										</h2>
 										<div className="rounded-xl border border-border bg-surface-raised p-8">
 											<p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
@@ -352,7 +352,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 
 			<CTASection
 				title="Want Results Like This?"
-				description="Let's discuss how we can help you achieve similar results for your business."
+				description="Let's discuss how I can help you achieve similar results for your business."
 			/>
 		</>
 	)
