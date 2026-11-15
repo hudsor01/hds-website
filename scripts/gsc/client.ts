@@ -1,7 +1,7 @@
 /**
  * Search Console HTTP client for the weekly report: Google error
  * classification, a bounded retry transport, serialized and spaced URL
- * Inspection, and Search Analytics queries, each response validated with Zod
+ * Inspection plus Search Analytics queries, each response validated with Zod
  * (D5, D6, D7, D8, D11, D15 C1).
  *
  * Every thrown message is authored here from the error kind, HTTP status and
@@ -213,7 +213,7 @@ export async function requestWithRetry(
 }
 
 // Every field is an optional string, never a strict enum: Google adds and
-// reserves enum values, and one new value must not fail the whole run (D11).
+// reserves enum values. One new value must not fail the whole run (D11).
 const IndexStatusSchema = z.object({
 	verdict: z.string().optional(),
 	coverageState: z.string().optional(),

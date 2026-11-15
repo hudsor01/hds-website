@@ -1,7 +1,7 @@
 /**
  * Markdown for the rolling "Search Console weekly report" issue body (D9).
  * Pure: takes a ReportModel and returns a string. Search queries and Google
- * strings go through mdCode so they cannot ping users or break tables, and the
+ * strings go through mdCode so they cannot ping users or break tables. The
  * body is held under BODY_BYTE_CAP with every dropped row counted (D15 C9).
  */
 import { BODY_BYTE_CAP } from './config'
