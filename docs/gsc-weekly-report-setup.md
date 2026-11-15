@@ -38,13 +38,20 @@ a GitHub secret and delete the local file. Claude never sees it.
    Console data for as long as it exists.
 
    **If key creation is blocked:** organizations created on or after
-   2024-05-03 enforce `iam.disableServiceAccountKeyCreation` (and
-   `iam.managed.disableServiceAccountKeyCreation`) by default. Pick one:
+   2024-05-03 enforce two constraints by default:
+   `iam.disableServiceAccountKeyCreation` and
+   `iam.managed.disableServiceAccountKeyCreation`. Either one blocks step 4.
+   Pick one:
 
-   - Override the policy for this project only: IAM and Admin >
-     Organization policies > open the policy > **Manage policy** >
-     **Override parent's policy** > **Not enforced** > **Set policy**. Then
-     retry step 4.
+   - Override both for this project only. This needs the **Organization
+     Policy Administrator** role (`roles/orgpolicy.policyAdmin`) on the
+     organization. Project Owner and Workspace super admin do not include it
+     by default; a super admin can grant it in IAM and Admin > IAM with the
+     organization (not the project) selected. Then select this project, open
+     IAM and Admin > Organization policies and repeat for each of the two
+     constraints that shows as enforced: open it > **Manage policy** >
+     **Override parent's policy** > **Not enforced** > **Set policy**. Retry
+     step 4 only after both are overridden.
    - Use a project that has no organization (for example one created under a
      personal Google account) and repeat steps 1 to 4 there.
 
@@ -92,12 +99,20 @@ a GitHub secret and delete the local file. Claude never sees it.
 
 ## Part D - Verify
 
-9. Run the workflow once and watch it:
+9. Run the workflow once, then watch that run by its id:
 
    ```bash
    gh workflow run gsc-weekly-report.yml --repo hudsor01/hds-website
-   gh run watch --repo hudsor01/hds-website
+   sleep 5
+   gh run list --workflow gsc-weekly-report.yml --repo hudsor01/hds-website --limit 1
+   run_id=$(gh run list --workflow gsc-weekly-report.yml --repo hudsor01/hds-website --limit 1 --json databaseId --jq '.[0].databaseId')
+   gh run watch "$run_id" --repo hudsor01/hds-website --exit-status
    ```
+
+   The short wait lets the new run appear. Check that the listed run is the
+   one you just started (event `workflow_dispatch`, started a few seconds
+   ago) before reading its result. Passing the id works in any shell, not
+   only an interactive one.
 
    Then confirm exactly one open report issue exists:
 
@@ -119,7 +134,13 @@ facts no Google doc states.
 ## Part E - Troubleshooting
 
 A failed run prints one line starting with `gsc-report:` in the Build report
-step log, leaves the issue untouched and fails red.
+step log, leaves the issue untouched and fails red. Each Google request times
+out after 30 s and retries up to 3 times. The whole run stops after 7
+minutes, inside the 10 minute job timeout, so a slow Google still ends with a
+line from this table.
+
+In the lines below, `<request>` is `Search Analytics request` or
+`URL Inspection request`; `<n>` is an HTTP status or a count.
 
 | Error line | Fix |
 |------------|-----|
@@ -130,9 +151,26 @@ step log, leaves the issue untouched and fails red.
 | `Token request rejected: the JWT time window is invalid. Check the runner clock; do not rotate the key.` | A clock problem, not a key problem. Re-run the workflow. Do not rotate the key. |
 | `Token request rejected (<error>): the key is revoked, deleted or from another project. Create a new JSON key and update GSC_SERVICE_ACCOUNT_JSON.` | Create a new key (step 4) and repeat step 7. |
 | `Token request rejected (disabled_client): the service account key is disabled. Re-enable it or create a new JSON key.` | Re-enable the key on the service account Keys tab, or create a new one and repeat step 7. |
-| `<client_email> has no access to sc-domain:hudsondigitalsolutions.com. Add it in Search Console > Settings > Users and permissions as Restricted. If it is already Restricted and inspection still fails, change it to Full.` | Do step 6. If the user is already Restricted, change the role to Full. |
+| `Token request rejected (invalid_scope): the requested scope is wrong. This is a bug in scripts/gsc/auth.ts.` | A code bug, not a key problem. Open an issue with the run link. Do not rotate the key. |
+| `Token request failed with HTTP <n> (<code>).` | Google refused the token request for a reason the script does not map. If `<n>` is 429 or 5xx, Google was busy: re-run later. Otherwise create a new key (step 4) and repeat step 7. |
+| `Token request failed with HTTP <n>.` | Same as the line above. |
+| `Token response did not include an access token.` | Google answered without a token. Re-run the workflow. If it repeats, open an issue with the run link. |
+| `Token request failed: network error.` | The runner could not reach Google in 3 attempts. Re-run the workflow. |
+| `<request> was denied: <client_email> has no access to sc-domain:hudsondigitalsolutions.com. Add it in Search Console > Settings > Users and permissions as Restricted. If it is already Restricted and this request still fails, change it to Full.` | Do step 6. If the user is already Restricted, change the role to Full. |
 | `The Google Search Console API is not enabled. Enable the Google Search Console API on the Cloud project that owns <client_email>.` | Do step 2 in the project named in the email domain. |
 | `Search Console quota exceeded. The next weekly run will retry.` | No action. The next Monday run retries. |
+| `Search Console rejected the token scope. This is a bug in scripts/gsc/auth.ts.` | A code bug, not a key problem. Open an issue with the run link. |
+| `Search Console rejected the access token (HTTP 401). Check GSC_SERVICE_ACCOUNT_JSON and run again.` | Re-run the workflow. If it repeats, create a new key (step 4) and repeat step 7. |
+| `Search Analytics request failed with HTTP <n> after 3 attempts.` | Google was down or throttling. Re-run the workflow later. |
+| `Search Analytics request failed: network error.` | The runner could not reach Google in 3 attempts. Re-run the workflow. |
+| `<request> failed with HTTP <n>.` | Google rejected the request itself (a 4xx), which is a code bug. Open an issue with the run link. |
+| `<request> returned an unexpected response.` | Google answered in a shape the script does not expect. Re-run the workflow. If it repeats, open an issue with the run link. |
+| `Every URL Inspection request failed (<n> of <n>). The issue was left unchanged. Re-run the workflow later.` | URL Inspection was down or throttling for the whole run. Re-run the workflow later. |
+| `Run stopped at its 7 minute time budget because Google is slow or throttling requests. The issue was left unchanged. Re-run the workflow later.` | Re-run the workflow later. If it repeats every week, open an issue with the run link. |
+| `Could not read the blog posts in content/blog. Run bun run blog:build locally to see which file fails.` | Run `bun run blog:build` locally, fix the post it names and merge the fix. |
+| `unexpected error (details withheld so no credential can leak).` | A bug or a runner failure. The details are withheld on purpose. Re-run the workflow. If it repeats, open an issue with the run link. |
+| `usage: bun run scripts/gsc/report.ts <output-file.md>` | The workflow called the script without an output path. Check the Build report step in `.github/workflows/gsc-weekly-report.yml`. |
+| Any other failure, including a run cancelled with no `gsc-report:` line | Re-run the workflow. If it fails the same way again, open an issue with the run link. |
 
 ## Part F - Rotate or revoke
 
@@ -169,6 +207,8 @@ Cloud console.
   - `POST https://searchconsole.googleapis.com/webmasters/v3/sites/sc-domain%3Ahudsondigitalsolutions.com/searchAnalytics/query`
 - Quotas: URL Inspection allows 2,000 requests per day and 600 per minute per
   property. The script caps each run at 150 inspections.
+- Time limits: each request times out after 30 s and the run stops after 7
+  minutes, inside the workflow's 10 minute `timeout-minutes`.
 - Official docs:
   - [Google OAuth 2.0 for service accounts](https://developers.google.com/identity/protocols/oauth2/service-account)
   - [Search Console API usage limits](https://developers.google.com/webmaster-tools/limits)

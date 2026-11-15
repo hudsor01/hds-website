@@ -47,10 +47,12 @@ export interface RunDeps {
 	writeFile(path: string, data: string): void
 }
 
-const USAGE = 'usage: bun run scripts/gsc/report.ts <output-file.md>'
-const POSTS_UNREADABLE =
+// Exported so tests/unit/gsc-doc.test.ts can check that the setup doc's
+// troubleshooting table covers every line the script can print (WR-05).
+export const USAGE = 'usage: bun run scripts/gsc/report.ts <output-file.md>'
+export const POSTS_UNREADABLE =
 	'Could not read the blog posts in content/blog. Run bun run blog:build locally to see which file fails.'
-const UNEXPECTED =
+export const UNEXPECTED =
 	'unexpected error (details withheld so no credential can leak).'
 
 /** Every inspection failing is an outage, not a report (D8, WR-02). */
