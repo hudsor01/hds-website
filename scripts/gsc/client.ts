@@ -254,7 +254,7 @@ export function createInspector(
 
 		const parsed = InspectResponseSchema.safeParse(body)
 		if (!parsed.success) {
-			return { ok: false, httpStatus: 200 }
+			return { ok: false, unexpectedResponse: true }
 		}
 		return { ok: true, status: parsed.data.inspectionResult.indexStatusResult }
 	}

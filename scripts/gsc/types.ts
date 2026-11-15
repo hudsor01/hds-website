@@ -47,10 +47,14 @@ export interface IndexStatus {
 	indexingState?: string
 }
 
-/** httpStatus null means the request failed with a network error. */
+/**
+ * httpStatus null means the request failed with a network error;
+ * unexpectedResponse means a 2xx body that failed the schema.
+ */
 export type InspectionOutcome =
 	| { ok: true; status: IndexStatus | undefined }
 	| { ok: false; httpStatus: number | null }
+	| { ok: false; unexpectedResponse: true }
 
 export interface AnalyticsRow {
 	keys: string[]

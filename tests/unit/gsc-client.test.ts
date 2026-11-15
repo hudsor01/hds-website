@@ -630,11 +630,11 @@ describe('createInspector', () => {
 		})
 	})
 
-	test('a body that fails the schema is a failed inspection (HTTP 200)', async () => {
+	test('a body that fails the schema is a failed inspection (unexpected response)', async () => {
 		const { ctx } = inspectCtx(() => jsonResponse({ foo: 1 }))
 		expect(await createInspector(ctx)(POST_URL)).toEqual({
 			ok: false,
-			httpStatus: 200
+			unexpectedResponse: true
 		})
 	})
 

@@ -158,10 +158,11 @@ describe('Needs attention', () => {
 			),
 			post('failed-post', { ok: false, httpStatus: 503 }, 4),
 			post('offline-post', { ok: false, httpStatus: null }, 5),
+			post('garbled-post', { ok: false, unexpectedResponse: true }, 6),
 			post('fine-post')
 		]
 		const body = section(
-			renderReport(model({ posts, totalRecent: 4 })),
+			renderReport(model({ posts, totalRecent: 5 })),
 			'## Needs attention'
 		)
 		expect(body).toContain(
@@ -173,6 +174,8 @@ describe('Needs attention', () => {
 		expect(body).toContain('| 2 | not indexed; Google canonical differs |')
 		expect(body).toContain('inspection failed (HTTP 503)')
 		expect(body).toContain('inspection failed (network error)')
+		expect(body).toContain('| 6 | inspection failed (unexpected response) |')
+		expect(body).not.toContain('HTTP 200')
 		expect(body).not.toContain('fine-post')
 	})
 

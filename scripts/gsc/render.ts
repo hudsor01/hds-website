@@ -98,10 +98,13 @@ function reasonText(reason: FlagReason, post: InspectedPost): string {
 	if (reason === 'canonical_mismatch') {
 		return 'Google canonical differs'
 	}
-	const httpStatus = post.outcome.ok ? null : post.outcome.httpStatus
-	return httpStatus === null
+	const { outcome } = post
+	if (outcome.ok || 'unexpectedResponse' in outcome) {
+		return 'inspection failed (unexpected response)'
+	}
+	return outcome.httpStatus === null
 		? 'inspection failed (network error)'
-		: `inspection failed (HTTP ${httpStatus})`
+		: `inspection failed (HTTP ${outcome.httpStatus})`
 }
 
 function needsRow(post: InspectedPost): string[] {

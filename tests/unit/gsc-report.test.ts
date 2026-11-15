@@ -379,6 +379,22 @@ describe('run happy path', () => {
 		expect(result.out[0]).not.toContain('INTERNAL_BODY_MARKER')
 	})
 
+	test('a schema-invalid inspection body is flagged as an unexpected response', async () => {
+		writeHappyPosts()
+		const result = await scenario({
+			routes: {
+				inspect: target =>
+					target === url('oldest-post')
+						? jsonResponse({ unrelated: true })
+						: inspectionResponse('PASS', target)
+			}
+		})
+		expect(result.code).toBe(0)
+		const body = result.files[0]?.data ?? ''
+		expect(body).toContain('inspection failed (unexpected response)')
+		expect(body).not.toContain('HTTP 200')
+	})
+
 	test('160 qualifying posts inspect the newest 150 and report 10 skipped', async () => {
 		const start = Date.parse('2026-11-16T00:00:00Z')
 		const slugs: string[] = []
