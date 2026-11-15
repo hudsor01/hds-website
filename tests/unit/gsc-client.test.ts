@@ -722,29 +722,33 @@ describe('createInspector', () => {
 
 	test('an error that is not a GscApiError is rethrown unchanged', async () => {
 		const clock = fakeClock()
-		let nowCalls = 0
+		const broken = new RangeError('sleep broke')
+		let calls = 0
 		const ctx: GscContext = {
-			// A 503 makes requestWithRetry read the clock for Retry-After, which
-			// throws inside the inspector's try block.
-			fetchFn: async () => jsonResponse(modernError(503), 503),
+			// A 503 makes requestWithRetry back off; the failing sleep throws a
+			// non-Gsc error inside the inspector's try block.
+			fetchFn: async () => {
+				calls++
+				return jsonResponse(modernError(503), 503)
+			},
 			clock: {
-				now: () => {
-					nowCalls++
-					if (nowCalls > 1) {
-						throw new RangeError('clock broke')
-					}
-					return clock.now()
-				},
-				sleep: clock.sleep
+				now: clock.now,
+				sleep: async () => {
+					throw broken
+				}
 			},
 			deadlineMs: NO_DEADLINE,
 			accessToken: ACCESS_TOKEN,
 			clientEmail: CLIENT_EMAIL
 		}
-		await expect(createInspector(ctx)(POST_URL)).rejects.toBeInstanceOf(
-			RangeError
-		)
-		expect(nowCalls).toBe(2)
+		let caught: unknown
+		try {
+			await createInspector(ctx)(POST_URL)
+		} catch (error) {
+			caught = error
+		}
+		expect(caught).toBe(broken)
+		expect(calls).toBe(1)
 	})
 
 	test('the budget error fails the run instead of a per-URL outcome', async () => {
