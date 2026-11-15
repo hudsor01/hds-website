@@ -15,7 +15,7 @@ import {
 	INSPECT_URL,
 	INSPECTION_SPACING_MS,
 	MAX_ATTEMPTS,
-	SITE_URL
+	SC_PROPERTY
 } from './config'
 import { GscApiError } from './errors'
 import { BUDGET_MESSAGE, sendWithRetry } from './retry'
@@ -110,7 +110,7 @@ function errorMessage(
 		case 'no_access':
 			// Names the call: the probe runs first, so a Search Analytics 403
 			// arrives before any inspection has run (IN-04).
-			return `${label} was denied: ${clientEmail} has no access to ${SITE_URL}. Add it in Search Console > Settings > Users and permissions as Restricted. If it is already Restricted and this request still fails, change it to Full.`
+			return `${label} was denied: ${clientEmail} has no access to ${SC_PROPERTY}. Add it in Search Console > Settings > Users and permissions as Restricted. If it is already Restricted and this request still fails, change it to Full.`
 		case 'disabled':
 			return `The Google Search Console API is not enabled. Enable the Google Search Console API on the Cloud project that owns ${clientEmail}.`
 		case 'quota':
@@ -212,7 +212,7 @@ export function createInspector(
 			body = await requestWithRetry(
 				ctx,
 				INSPECT_URL,
-				{ inspectionUrl: url, siteUrl: SITE_URL },
+				{ inspectionUrl: url, siteUrl: SC_PROPERTY },
 				'URL Inspection request'
 			)
 		} catch (error) {
