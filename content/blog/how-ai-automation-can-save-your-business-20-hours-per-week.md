@@ -1,9 +1,8 @@
 ---
-title: Can AI Automation Save Your Business 20 Hours a Week?
+title: 'AI Automation: How to Automate Business Processes'
 slug: how-ai-automation-can-save-your-business-20-hours-per-week
 excerpt: >-
-  Twenty hours a week is possible, but most of it comes from plain automation.
-  Here is where AI automation actually pays off and how to measure it first.
+  How to automate business processes and save hours every week: log your tasks first, automate the rule-based work, then add AI automation where it pays.
 targetKeyword: ai automation
 pillar: 5
 tags:

@@ -1,9 +1,8 @@
 ---
-title: 'Texas Tax Title and License: What a Vehicle Costs'
+title: 'Texas Tax Title and License: Fees and a Free Calculator'
 slug: texas-tax-title-license-vehicle-costs
 excerpt: >-
-  Break down Texas tax title and license costs for DFW fleets. Track fees,
-  automate renewals and forecast cash flow with our free calculator.
+  What tax title and license adds to a Texas vehicle: the 6.25% sales tax, title, registration and county fees. Run your own numbers in my free TTL calculator.
 targetKeyword: texas tax title and license
 pillar: 9
 tags:
