@@ -1,0 +1,97 @@
+name: Search Console weekly report
+
+# Builds a weekly Search Console report (scripts/gsc/report.ts) and writes it
+# into one rolling issue labeled gsc-report. Setup: docs/gsc-weekly-report-setup.md.
+# A failed report skips the upsert, so the existing issue is left untouched and
+# the run fails red (GitHub emails the operator).
+on:
+  schedule:
+    # Monday 12:00 UTC.
+    - cron: '0 12 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  report:
+    name: Build and post report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.14'
+
+      - name: Cache dependencies
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build report
+        id: report
+        env:
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+        run: |
+          summary=$(bun run scripts/gsc/report.ts "$RUNNER_TEMP/gsc-report.md")
+          echo "$summary"
+          flagged=$(printf '%s' "$summary" | grep -o 'flagged=[0-9]*' | cut -d= -f2)
+          echo "flagged=$flagged" >> "$GITHUB_OUTPUT"
+
+      - name: Upsert rolling issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          FLAGGED: ${{ steps.report.outputs.flagged }}
+        run: |
+          label='gsc-report'
+          title='Search Console weekly report'
+          body="$RUNNER_TEMP/gsc-report.md"
+          if [ ! -s "$body" ]; then
+            echo "::error::report file missing or empty"
+            exit 1
+          fi
+          gh label create "$label" --color 1D76DB --description 'Weekly Search Console report' --force > /dev/null
+          numbers=$(gh api "repos/$GH_REPO/issues?labels=$label&state=open&per_page=100" \
+            --jq "[.[] | select(.pull_request == null and .title == \"$title\") | .number] | sort | .[]")
+          count=$(printf '%s' "$numbers" | grep -c . || true)
+          if [ "$count" -eq 0 ]; then
+            url=$(gh issue create --title "$title" --label "$label" --assignee hudsor01 --body-file "$body")
+            number=${url##*/}
+          else
+            number=$(printf '%s\n' "$numbers" | head -n 1)
+            if [ "$count" -gt 1 ]; then
+              echo "::warning::$count open $label issues; updating #$number"
+            fi
+            gh issue edit "$number" --body-file "$body" > /dev/null
+          fi
+          if [ "$FLAGGED" -eq 1 ]; then
+            gh issue comment "$number" --body '1 URL needs attention, see the report above.' > /dev/null
+          elif [ "$FLAGGED" -gt 1 ]; then
+            gh issue comment "$number" --body "$FLAGGED URLs need attention, see the report above." > /dev/null
+          fi
+          echo "Updated issue #$number"
