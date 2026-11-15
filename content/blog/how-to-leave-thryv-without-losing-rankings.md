@@ -1,9 +1,8 @@
 ---
-title: How to Leave Thryv Without Losing Your Rankings
+title: How to Leave Thryv Without Losing Your Google Rankings
 slug: how-to-leave-thryv-without-losing-rankings
 excerpt: >-
-  Leave Thryv without tanking your local SEO rankings. We map your data, rebuild
-  your revenue system and protect your search visibility in DFW markets.
+  Leaving Thryv? Here is how I keep your local Google rankings: export your data, map every URL to a 301 redirect, then rebuild on a site you own.
 targetKeyword: leave thryv
 pillar: 6
 tags:

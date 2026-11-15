@@ -13,9 +13,9 @@ import { JsonLd } from '@/components/utilities/JsonLd'
 import { buildMetadata } from '@/lib/seo-config'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Texas TTL Calculator | Hudson Digital Solutions',
+	title: 'Texas TTL Calculator: Tax, Title and License | Hudson Digital',
 	description:
-		'Calculate tax, title, license fees and monthly payments for vehicles in Texas. Free online calculator for car buyers and dealers.',
+		'Free Texas TTL calculator for car buyers and dealers. Estimate the 6.25% sales tax, title, registration and county fees, plus a monthly payment.',
 	path: '/tools/ttl-calculator',
 	socialTitle: 'Texas TTL Calculator',
 	socialDescription:

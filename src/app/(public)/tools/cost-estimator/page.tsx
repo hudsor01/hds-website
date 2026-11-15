@@ -9,9 +9,9 @@ import { buildMetadata } from '@/lib/seo-config'
 import { CostEstimatorClient } from './CostEstimatorClient'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Website Cost Estimator | Hudson Digital Solutions',
+	title: 'Website Cost Estimator and Price Calculator | Hudson Digital',
 	description:
-		'See what a website like yours typically costs on the market, by type, pages, features and design. A planning ballpark for your budget, not a quote.',
+		'Free website cost calculator: get a website estimate by type, pages, features and design. It shows the typical market range for planning, not a quote.',
 	path: '/tools/cost-estimator',
 	socialTitle: 'Website Cost Estimator',
 	socialDescription:

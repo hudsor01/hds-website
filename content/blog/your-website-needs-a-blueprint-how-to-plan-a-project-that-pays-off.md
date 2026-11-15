@@ -1,9 +1,8 @@
 ---
-title: How to Plan a Website Project That Pays Off
+title: 'How to Plan a Website Project: An 8-Step Checklist'
 slug: your-website-needs-a-blueprint-how-to-plan-a-project-that-pays-off
 excerpt: >-
-  Learn how to plan a website project before the build: set the goal and
-  baseline, map pages and integrations, define done and give quotes one brief.
+  Plan a website project in 8 steps before you hire anyone: set a goal and baseline, map pages and integrations, define done and give every developer one brief.
 targetKeyword: plan a website project
 pillar: 8
 tags:
