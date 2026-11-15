@@ -135,7 +135,7 @@ facts no Google doc states.
 
 A failed run prints one line starting with `gsc-report:` in the Build report
 step log, leaves the issue untouched and fails red. Each Google request times
-out after 30 s and retries up to 3 times. The whole run stops after 7
+out after 30 s and retries up to 3 times. The whole run stops after 6
 minutes, inside the 10 minute job timeout, so a slow Google still ends with a
 line from this table.
 
@@ -166,7 +166,7 @@ In the lines below, `<request>` is `Search Analytics request` or
 | `<request> failed with HTTP <n>.` | Google rejected the request itself (a 4xx), which is a code bug. Open an issue with the run link. |
 | `<request> returned an unexpected response.` | Google answered in a shape the script does not expect. Re-run the workflow. If it repeats, open an issue with the run link. |
 | `Every URL Inspection request failed (<n> of <n>). The issue was left unchanged. Re-run the workflow later.` | URL Inspection was down or throttling for the whole run. Re-run the workflow later. |
-| `Run stopped at its 7 minute time budget because Google is slow or throttling requests. The issue was left unchanged. Re-run the workflow later.` | Re-run the workflow later. If it repeats every week, open an issue with the run link. |
+| `Run stopped at its 6 minute time budget because Google is slow or throttling requests. The issue was left unchanged. Re-run the workflow later.` | Re-run the workflow later. If it repeats every week, open an issue with the run link. |
 | `Could not read the blog posts in content/blog. Run bun run blog:build locally to see which file fails.` | Run `bun run blog:build` locally, fix the post it names and merge the fix. |
 | `unexpected error (details withheld so no credential can leak).` | A bug or a runner failure. The details are withheld on purpose. Re-run the workflow. If it repeats, open an issue with the run link. |
 | `usage: bun run scripts/gsc/report.ts <output-file.md>` | The workflow called the script without an output path. Check the Build report step in `.github/workflows/gsc-weekly-report.yml`. |
@@ -207,7 +207,7 @@ Cloud console.
   - `POST https://searchconsole.googleapis.com/webmasters/v3/sites/sc-domain%3Ahudsondigitalsolutions.com/searchAnalytics/query`
 - Quotas: URL Inspection allows 2,000 requests per day and 600 per minute per
   property. The script caps each run at 150 inspections.
-- Time limits: each request times out after 30 s and the run stops after 7
+- Time limits: each request times out after 30 s and the run stops after 6
   minutes, inside the workflow's 10 minute `timeout-minutes`.
 - Official docs:
   - [Google OAuth 2.0 for service accounts](https://developers.google.com/identity/protocols/oauth2/service-account)

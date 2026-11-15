@@ -33,12 +33,14 @@ export const MAX_RETRY_AFTER_MS = 60_000
 
 /**
  * Time limits: one request is aborted (and retried as a network error) after
- * REQUEST_TIMEOUT_MS; the whole run stops at RUN_BUDGET_MS, well inside the
+ * REQUEST_TIMEOUT_MS; the whole run stops at RUN_BUDGET_MS, inside the
  * workflow's timeout-minutes: 10, so a stall or a Retry-After storm still
- * ends with an authored line (WR-01).
+ * ends with an authored line (WR-01). The budget starts after checkout and
+ * install (up to about 1.5 min on a cache miss) and the last attempt can run
+ * REQUEST_TIMEOUT_MS past it, so 6 min leaves about 2 min of margin (IN-08).
  */
 export const REQUEST_TIMEOUT_MS = 30_000
-export const RUN_BUDGET_MS = 7 * 60_000
+export const RUN_BUDGET_MS = 6 * 60_000
 
 /** Recent-post window in days (D4). */
 export const LOOKBACK_DAYS = 30
