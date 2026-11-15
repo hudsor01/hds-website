@@ -19,9 +19,9 @@ import { buildMetadata } from '@/lib/seo-config'
 import { generateLocalBusinessSchema } from '@/lib/seo-utils'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Dallas-Fort Worth Web Design | Hudson Digital',
+	title: 'Hudson Digital Solutions | Dallas-Fort Worth Web Design',
 	description:
-		'Professional website design for small businesses in Dallas-Fort Worth. We build the website your business has earned: fast, mobile-ready, built to convert.',
+		'Dallas-Fort Worth web design from Hudson Digital Solutions. I build fast, mobile-ready websites for small businesses, made to turn visitors into leads.',
 	path: '/'
 })
 

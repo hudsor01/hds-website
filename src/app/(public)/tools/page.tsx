@@ -13,9 +13,9 @@ import { buildMetadata } from '@/lib/seo-config'
 import ToolsCatalog from './ToolsCatalog'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Free Business Tools & Calculators | Hudson Digital Solutions',
+	title: 'Free Business Calculators and Tools | Hudson Digital',
 	description:
-		'Free tools I built for DFW small business owners. Run the numbers on ROI, generate invoices and contracts, format JSON, then check site performance.',
+		'Free business calculators I built for small business owners: ROI, website cost, Texas TTL and paystub calculators, plus invoice and contract generators.',
 	path: '/tools',
 	socialTitle: 'Free Business Tools & Calculators',
 	socialDescription:

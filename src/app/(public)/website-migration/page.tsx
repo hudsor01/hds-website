@@ -17,9 +17,9 @@ import { ROUTES } from '@/lib/constants/routes'
 import { buildMetadata } from '@/lib/seo-config'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Website Migration: Keep Your Rankings | Hudson Digital',
+	title: 'SEO Website Migration Services in DFW | Hudson Digital',
 	description:
-		'I move your DFW business to a website you own without losing Google rankings. I recover your domain, set up redirects, then build a faster site you keep.',
+		'Website migration services for DFW businesses. I move you to a site you own without losing Google rankings: domain recovery, 301 redirects and a faster build.',
 	path: '/website-migration',
 	socialTitle: 'Website Migration - Keep Your Rankings, Lose the Fees',
 	socialDescription:
