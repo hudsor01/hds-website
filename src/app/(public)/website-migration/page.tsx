@@ -17,9 +17,9 @@ import { ROUTES } from '@/lib/constants/routes'
 import { buildMetadata } from '@/lib/seo-config'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'SEO Website Migration Services in DFW | Hudson Digital',
+	title: 'SEO Website Migration Services | Hudson Digital',
 	description:
-		'Website migration services for DFW businesses. I move you to a site you own without losing Google rankings: domain recovery, 301 redirects and a faster build.',
+		'Website migration services for small businesses. I move you to a site you own and protect your rankings with domain recovery, 301 redirects and a faster build.',
 	path: '/website-migration',
 	socialTitle: 'Website Migration - Keep Your Rankings, Lose the Fees',
 	socialDescription:
@@ -137,7 +137,7 @@ export default function WebsiteMigrationPage() {
 				name: 'Will I lose my Google rankings?',
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text: 'No. I set up proper 301 redirects, update your Google Business Profile, then submit fresh sitemaps. Most clients see better rankings within 30 days because the new site loads faster.'
+					text: 'Not if the move is done right. I map every old URL to a 301 redirect, update your Google Business Profile, then submit fresh sitemaps so Google carries your rankings over to the new site.'
 				}
 			},
 			{
