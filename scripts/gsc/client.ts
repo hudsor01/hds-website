@@ -12,14 +12,13 @@
 import { z } from 'zod'
 import {
 	ANALYTICS_URL,
-	BASE_BACKOFF_MS,
 	INSPECT_URL,
 	INSPECTION_SPACING_MS,
 	MAX_ATTEMPTS,
 	SITE_URL
 } from './config'
 import { GscApiError } from './errors'
-import { retryAfterMs } from './retry'
+import { sendWithRetry } from './retry'
 import type {
 	AnalyticsQuery,
 	AnalyticsRow,
@@ -104,8 +103,7 @@ function errorMessage(
 	kind: ErrorKind,
 	label: string,
 	httpStatus: number | null,
-	clientEmail: string,
-	attempts: number
+	clientEmail: string
 ): string {
 	switch (kind) {
 		case 'no_access':
@@ -121,24 +119,9 @@ function errorMessage(
 		case 'retry':
 			return httpStatus === null
 				? `${label} failed: network error.`
-				: `${label} failed with HTTP ${httpStatus} after ${attempts} attempts.`
+				: `${label} failed with HTTP ${httpStatus} after ${MAX_ATTEMPTS} attempts.`
 		case 'other':
 			return `${label} failed with HTTP ${httpStatus}.`
-	}
-}
-
-/** Body text parsed as JSON; undefined when unreadable or not JSON. */
-async function readJson(res: Response): Promise<unknown> {
-	let text: string
-	try {
-		text = await res.text()
-	} catch {
-		return undefined
-	}
-	try {
-		return JSON.parse(text)
-	} catch {
-		return undefined
 	}
 }
 
@@ -162,53 +145,34 @@ export async function requestWithRetry(
 		body: JSON.stringify(payload)
 	}
 
-	// null status means the last attempt failed with a network error.
-	let lastStatus: number | null = null
-
-	for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-		let res: Response | undefined
-		try {
-			res = await ctx.fetchFn(url, init)
-		} catch {
-			res = undefined
-		}
-
-		let waitMs: number | undefined
-		if (res === undefined) {
-			lastStatus = null
-		} else {
-			const body = await readJson(res)
-			if (res.ok) {
-				if (body === undefined) {
-					throw new GscApiError(
-						`${label} returned an unexpected response.`,
-						'other',
-						res.status
-					)
-				}
-				return body
-			}
-			const kind = classifyGoogleError(res.status, body)
-			if (kind !== 'retry') {
+	const result = await sendWithRetry<unknown>(ctx, url, init, (res, body) => {
+		if (res.ok) {
+			if (body === undefined) {
 				throw new GscApiError(
-					errorMessage(kind, label, res.status, ctx.clientEmail, attempt),
-					kind,
+					`${label} returned an unexpected response.`,
+					'other',
 					res.status
 				)
 			}
-			lastStatus = res.status
-			waitMs = retryAfterMs(res.headers.get('retry-after'), ctx.clock.now())
+			return { done: true, value: body }
 		}
-
-		if (attempt < MAX_ATTEMPTS) {
-			await ctx.clock.sleep(waitMs ?? BASE_BACKOFF_MS * 2 ** (attempt - 1))
+		const kind = classifyGoogleError(res.status, body)
+		if (kind !== 'retry') {
+			throw new GscApiError(
+				errorMessage(kind, label, res.status, ctx.clientEmail),
+				kind,
+				res.status
+			)
 		}
+		return { done: false }
+	})
+	if (result.ok) {
+		return result.value
 	}
-
 	throw new GscApiError(
-		errorMessage('retry', label, lastStatus, ctx.clientEmail, MAX_ATTEMPTS),
+		errorMessage('retry', label, result.status, ctx.clientEmail),
 		'retry',
-		lastStatus
+		result.status
 	)
 }
 

@@ -10,15 +10,9 @@
  */
 import { sign } from 'node:crypto'
 import { z } from 'zod'
-import {
-	BASE_BACKOFF_MS,
-	MAX_ATTEMPTS,
-	SCOPE,
-	SECRET_ENV,
-	TOKEN_URL
-} from './config'
+import { SCOPE, SECRET_ENV, TOKEN_URL } from './config'
 import { GscSetupError } from './errors'
-import { retryAfterMs } from './retry'
+import { sendWithRetry } from './retry'
 import type { Clock, FetchFn } from './types'
 
 const PEM_RE =
@@ -144,20 +138,6 @@ export function mapTokenError(status: number, body: unknown): string {
 	return `Token request failed with HTTP ${status}.`
 }
 
-async function readJson(res: Response): Promise<unknown> {
-	let text: string
-	try {
-		text = await res.text()
-	} catch {
-		return undefined
-	}
-	try {
-		return JSON.parse(text)
-	} catch {
-		return undefined
-	}
-}
-
 /**
  * Exchanges a signed JWT for an access token. The token is returned in
  * memory only and never logged. 429, 5xx and network errors retry up to
@@ -179,24 +159,11 @@ export async function fetchAccessToken(
 		}).toString()
 	}
 
-	// null status means the last attempt failed with a network error.
-	let lastStatus: number | null = null
-	let lastBody: unknown
-
-	for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-		let res: Response | undefined
-		try {
-			res = await deps.fetchFn(TOKEN_URL, init)
-		} catch {
-			res = undefined
-		}
-
-		let waitMs: number | undefined
-		if (res === undefined) {
-			lastStatus = null
-			lastBody = undefined
-		} else {
-			const body = await readJson(res)
+	const result = await sendWithRetry<string>(
+		deps,
+		TOKEN_URL,
+		init,
+		(res, body) => {
 			if (res.ok) {
 				const token = TokenSuccessSchema.safeParse(body)
 				if (!token.success) {
@@ -204,23 +171,19 @@ export async function fetchAccessToken(
 						'Token response did not include an access token.'
 					)
 				}
-				return token.data.access_token
+				return { done: true, value: token.data.access_token }
 			}
 			if (res.status !== 429 && res.status < 500) {
 				throw new GscSetupError(mapTokenError(res.status, body))
 			}
-			lastStatus = res.status
-			lastBody = body
-			waitMs = retryAfterMs(res.headers.get('retry-after'), deps.clock.now())
+			return { done: false }
 		}
-
-		if (attempt < MAX_ATTEMPTS) {
-			await deps.clock.sleep(waitMs ?? BASE_BACKOFF_MS * 2 ** (attempt - 1))
-		}
+	)
+	if (result.ok) {
+		return result.value
 	}
-
-	if (lastStatus === null) {
+	if (result.status === null) {
 		throw new GscSetupError('Token request failed: network error.')
 	}
-	throw new GscSetupError(mapTokenError(lastStatus, lastBody))
+	throw new GscSetupError(mapTokenError(result.status, result.body))
 }
