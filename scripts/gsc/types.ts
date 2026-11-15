@@ -110,6 +110,8 @@ export interface ReportModel {
 	skippedByCap: number
 	posts: InspectedPost[]
 	striking: { shown: StrikingRow[]; total: number }
+	/** The query,page rows hit ROW_LIMIT: striking distance may be cut. */
 	rowLimitHit: boolean
-	brand: { clicks: number; impressions: number } | null
+	/** rowLimitHit: the query rows hit ROW_LIMIT, so the sums may undercount. */
+	brand: { clicks: number; impressions: number; rowLimitHit: boolean } | null
 }

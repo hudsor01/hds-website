@@ -271,12 +271,18 @@ function brandSection(model: ReportModel): string[] {
 	if (!model.brand) {
 		return section(heading, [[NO_DATA]])
 	}
-	const { clicks, impressions } = model.brand
-	return section(heading, [
+	const { clicks, impressions, rowLimitHit } = model.brand
+	const parts = [
 		[
 			`Brand queries matching hudson digital or hudsondigital: ${plural(clicks, 'click', 'clicks')}, ${plural(impressions, 'impression', 'impressions')}.`
 		]
-	])
+	]
+	if (rowLimitHit) {
+		parts.push([
+			`These totals may be incomplete because the query list hit the ${count(ROW_LIMIT)} row limit.`
+		])
+	}
+	return section(heading, parts)
 }
 
 function compose(model: ReportModel, limits: Limits): string {

@@ -114,9 +114,11 @@ export async function run(deps: RunDeps): Promise<number> {
 				rowLimit: ROW_LIMIT
 			})
 			striking = strikingDistance(pageRows)
-			brand = brandTotals(queryRows)
-			rowLimitHit =
-				pageRows.length === ROW_LIMIT || queryRows.length === ROW_LIMIT
+			rowLimitHit = pageRows.length === ROW_LIMIT
+			brand = {
+				...brandTotals(queryRows),
+				rowLimitHit: queryRows.length === ROW_LIMIT
+			}
 		}
 
 		const recent = recentPosts(deps.contentDir, new Date(runStartMs))

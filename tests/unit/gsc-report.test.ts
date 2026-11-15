@@ -20,6 +20,7 @@ import {
 	ANALYTICS_URL,
 	INSPECT_URL,
 	REQUEST_TIMEOUT_MS,
+	ROW_LIMIT,
 	RUN_BUDGET_MS,
 	TOKEN_URL
 } from '../../scripts/gsc/config'
@@ -393,6 +394,27 @@ describe('run happy path', () => {
 		const body = result.files[0]?.data ?? ''
 		expect(body).toContain('inspection failed (unexpected response)')
 		expect(body).not.toContain('HTTP 200')
+	})
+
+	test('a query list at the row limit notes it under Brand only', async () => {
+		writeHappyPosts()
+		const queryRows = Array.from({ length: ROW_LIMIT }, (_, i) =>
+			analyticsRow([i === 0 ? 'hudson digital' : `query ${i}`], 9, 1)
+		)
+		const result = await scenario({
+			routes: { ...happyRoutes, query: () => jsonResponse({ rows: queryRows }) }
+		})
+		expect(result.code).toBe(0)
+		const body = result.files[0]?.data ?? ''
+		const brand = body.slice(body.indexOf('## Brand'))
+		const striking = body.slice(
+			body.indexOf('## Striking distance'),
+			body.indexOf('## Brand')
+		)
+		expect(brand).toContain(
+			'These totals may be incomplete because the query list hit the 25,000 row limit.'
+		)
+		expect(striking).not.toContain('row limit')
 	})
 
 	test('160 qualifying posts inspect the newest 150 and report 10 skipped', async () => {

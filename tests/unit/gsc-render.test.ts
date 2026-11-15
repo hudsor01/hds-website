@@ -76,7 +76,7 @@ function model(overrides: Partial<ReportModel> = {}): ReportModel {
 		],
 		striking: { shown: [strikingRow('ttl calculator texas')], total: 1 },
 		rowLimitHit: false,
-		brand: { clicks: 12, impressions: 340 },
+		brand: { clicks: 12, impressions: 340, rowLimitHit: false },
 		...overrides
 	}
 }
@@ -320,6 +320,25 @@ describe('Brand', () => {
 	})
 })
 
+describe('Brand row limit', () => {
+	test('says the totals may be incomplete when the query rows hit the limit', () => {
+		const body = section(
+			renderReport(
+				model({ brand: { clicks: 12, impressions: 340, rowLimitHit: true } })
+			),
+			'## Brand'
+		)
+		expect(lines(body)).toContain(
+			'These totals may be incomplete because the query list hit the 25,000 row limit.'
+		)
+	})
+
+	test('says nothing about the limit otherwise', () => {
+		const body = section(renderReport(model()), '## Brand')
+		expect(body).not.toContain('row limit')
+	})
+})
+
 describe('escaping', () => {
 	test('mdCode keeps untrusted text in one safe code span', () => {
 		expect(mdCode('@octocat | `x`\nnext')).toBe("`@octocat \\| 'x' next`")
@@ -396,7 +415,12 @@ describe('size cap', () => {
 describe('copy rules', () => {
 	test('template text has no dash, emoji or comma before and', () => {
 		const body = renderReport(
-			model({ totalRecent: 170, skippedByCap: 20, rowLimitHit: true })
+			model({
+				totalRecent: 170,
+				skippedByCap: 20,
+				rowLimitHit: true,
+				brand: { clicks: 1, impressions: 2, rowLimitHit: true }
+			})
 		)
 		const empty = renderReport(
 			model({
