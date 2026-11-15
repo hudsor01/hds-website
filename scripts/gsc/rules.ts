@@ -3,6 +3,7 @@
  * which to flag, the Pacific date window and the striking-distance and brand
  * filters. No network; files are read only through scripts/blog/lib.ts (D4).
  */
+import { z } from 'zod'
 import { isLive, listPostFiles, parsePost } from '../blog/lib'
 import {
 	BRAND_RE,
@@ -16,6 +17,7 @@ import {
 	STRIKING_MIN,
 	WINDOW_DAYS
 } from './config'
+import { GscApiError } from './errors'
 import type {
 	AnalyticsRow,
 	DateWindow,
@@ -29,12 +31,17 @@ import type {
 /** scheme, authority, raw path, raw query plus hash. */
 const URL_PARTS_RE = /^([A-Za-z][A-Za-z0-9+.-]*):\/\/([^/?#]*)([^?#]*)(.*)$/
 
-const PACIFIC_DATE = new Intl.DateTimeFormat('en-CA', {
+// Read through formatToParts: the shape of a locale's formatted string is a
+// CLDR convention that can change, the year/month/day parts are not (WR-03).
+const PACIFIC_DATE = new Intl.DateTimeFormat('en-US', {
 	timeZone: 'America/Los_Angeles',
 	year: 'numeric',
 	month: '2-digit',
 	day: '2-digit'
 })
+
+/** A Search Analytics calendar date: YYYY-MM-DD that is a real day. */
+export const SearchDateSchema = z.iso.date()
 
 /** The URL the post page emits as its canonical: no trailing slash (D3). */
 export function postUrl(slug: string): string {
@@ -121,7 +128,14 @@ export function toInspectedPost(
 
 /** Search Analytics dates are Pacific calendar days (YYYY-MM-DD). */
 export function pacificDate(ms: number): string {
-	return PACIFIC_DATE.format(new Date(ms))
+	const parts = PACIFIC_DATE.formatToParts(new Date(ms))
+	const part = (type: Intl.DateTimeFormatPartTypes): string =>
+		parts.find(p => p.type === type)?.value ?? ''
+	const ymd = `${part('year')}-${part('month')}-${part('day')}`
+	if (!SearchDateSchema.safeParse(ymd).success) {
+		throw new Error('Pacific date parts did not form YYYY-MM-DD')
+	}
+	return ymd
 }
 
 export function addDays(ymd: string, days: number): string {
@@ -139,12 +153,22 @@ export function probeRange(nowMs: number): DateWindow {
 /**
  * The analytics window ends on the latest date the probe returned and spans
  * WINDOW_DAYS inclusive. No probe data means no window, never today (C10).
+ * Every row's date key must be YYYY-MM-DD; anything else is an unexpected
+ * response, not a date to do arithmetic on (WR-03).
  */
 export function windowFromProbe(rows: AnalyticsRow[]): DateWindow | null {
 	let endDate: string | undefined
 	for (const r of rows) {
-		const date = r.keys[0]
-		if (date !== undefined && (endDate === undefined || date > endDate)) {
+		const parsed = SearchDateSchema.safeParse(r.keys[0])
+		if (!parsed.success) {
+			throw new GscApiError(
+				'Search Analytics request returned an unexpected response.',
+				'other',
+				200
+			)
+		}
+		const date = parsed.data
+		if (endDate === undefined || date > endDate) {
 			endDate = date
 		}
 	}

@@ -518,6 +518,19 @@ describe('run setup failures', () => {
 		expect(inspectCalls(result)).toEqual([])
 	})
 
+	test('a probe date that is not YYYY-MM-DD fails as an unexpected response', async () => {
+		writeHappyPosts()
+		const result = await scenario({
+			routes: {
+				probe: () => jsonResponse({ rows: [analyticsRow(['11/13/2026'])] })
+			}
+		})
+		expect(expectFailure(result)).toBe(
+			'gsc-report: Search Analytics request returned an unexpected response.\n'
+		)
+		expect(inspectCalls(result)).toEqual([])
+	})
+
 	test('a probe 403 SERVICE_DISABLED says to enable the API', async () => {
 		writeHappyPosts()
 		const result = await scenario({

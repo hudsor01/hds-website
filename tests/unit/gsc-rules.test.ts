@@ -8,6 +8,7 @@ import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { GscApiError } from '../../scripts/gsc/errors'
 import {
 	addDays,
 	brandTotals,
@@ -17,6 +18,7 @@ import {
 	pacificDate,
 	postUrl,
 	probeRange,
+	SearchDateSchema,
 	selectRecentPosts,
 	strikingDistance,
 	toInspectedPost,
@@ -339,9 +341,43 @@ describe('Pacific date window', () => {
 		})
 	})
 
-	test('windowFromProbe returns null with no rows or no date keys', () => {
+	test('windowFromProbe returns null with no rows', () => {
 		expect(windowFromProbe([])).toBeNull()
-		expect(windowFromProbe([row([])])).toBeNull()
+	})
+
+	test.each([
+		['a missing key', []],
+		['a US date', ['11/13/2026']],
+		['an impossible date', ['2026-02-30']],
+		['a timestamp', ['2026-11-13T00:00:00Z']]
+	])('windowFromProbe rejects %s as an unexpected response', (_name, keys) => {
+		const rows = [row(['2026-11-12']), row(keys)]
+		let caught: unknown
+		try {
+			windowFromProbe(rows)
+		} catch (error) {
+			caught = error
+		}
+		if (!(caught instanceof GscApiError)) {
+			throw new Error('expected GscApiError')
+		}
+		expect(caught.kind).toBe('other')
+		expect(caught.message).toBe(
+			'Search Analytics request returned an unexpected response.'
+		)
+	})
+
+	test('pacificDate always returns a real YYYY-MM-DD day', () => {
+		const start = Date.parse('2026-01-01T00:00:00Z')
+		for (let i = 0; i < 400; i++) {
+			const ms = start + i * 86_400_000 + (i % 24) * 3_600_000
+			const ymd = pacificDate(ms)
+			expect(SearchDateSchema.safeParse(ymd).success).toBe(true)
+			// Pacific time is 7 or 8 hours behind UTC.
+			const utcMinus8 = new Date(ms - 8 * 3_600_000).toISOString().slice(0, 10)
+			const utcMinus7 = new Date(ms - 7 * 3_600_000).toISOString().slice(0, 10)
+			expect([utcMinus8, utcMinus7]).toContain(ymd)
+		}
 	})
 })
 
