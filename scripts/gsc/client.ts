@@ -107,7 +107,9 @@ function errorMessage(
 ): string {
 	switch (kind) {
 		case 'no_access':
-			return `${clientEmail} has no access to ${SITE_URL}. Add it in Search Console > Settings > Users and permissions as Restricted. If it is already Restricted and inspection still fails, change it to Full.`
+			// Names the call: the probe runs first, so a Search Analytics 403
+			// arrives before any inspection has run (IN-04).
+			return `${label} was denied: ${clientEmail} has no access to ${SITE_URL}. Add it in Search Console > Settings > Users and permissions as Restricted. If it is already Restricted and this request still fails, change it to Full.`
 		case 'disabled':
 			return `The Google Search Console API is not enabled. Enable the Google Search Console API on the Cloud project that owns ${clientEmail}.`
 		case 'quota':

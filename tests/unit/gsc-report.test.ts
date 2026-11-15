@@ -534,7 +534,7 @@ describe('run setup failures', () => {
 		const result = await scenario({ routes: { probe: () => googleError(403) } })
 		const line = expectFailure(result)
 		expect(line).toContain(
-			`${CLIENT_EMAIL} has no access to sc-domain:hudsondigitalsolutions.com`
+			`Search Analytics request was denied: ${CLIENT_EMAIL} has no access to sc-domain:hudsondigitalsolutions.com`
 		)
 		expect(line).not.toContain('123456')
 		expect(inspectCalls(result)).toEqual([])
@@ -569,7 +569,9 @@ describe('run setup failures', () => {
 		const result = await scenario({
 			routes: { inspect: () => googleError(403) }
 		})
-		expect(expectFailure(result)).toContain(`${CLIENT_EMAIL} has no access to`)
+		expect(expectFailure(result)).toContain(
+			`URL Inspection request was denied: ${CLIENT_EMAIL} has no access to`
+		)
 		expect(inspectCalls(result)).toHaveLength(1)
 	})
 

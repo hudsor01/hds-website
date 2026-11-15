@@ -32,7 +32,9 @@ const GOOGLE_MESSAGE = 'Secret project 123456 detail'
 const LABEL = 'Search Analytics request'
 const PAYLOAD = { startDate: '2026-10-01', endDate: '2026-10-28' }
 
-const NO_ACCESS_LINE = `${CLIENT_EMAIL} has no access to sc-domain:hudsondigitalsolutions.com. Add it in Search Console > Settings > Users and permissions as Restricted. If it is already Restricted and inspection still fails, change it to Full.`
+function noAccessLine(label: string): string {
+	return `${label} was denied: ${CLIENT_EMAIL} has no access to sc-domain:hudsondigitalsolutions.com. Add it in Search Console > Settings > Users and permissions as Restricted. If it is already Restricted and this request still fails, change it to Full.`
+}
 const DISABLED_LINE = `The Google Search Console API is not enabled. Enable the Google Search Console API on the Cloud project that owns ${CLIENT_EMAIL}.`
 const QUOTA_LINE =
 	'Search Console quota exceeded. The next weekly run will retry.'
@@ -306,7 +308,7 @@ describe('requestWithRetry', () => {
 		const error = await expectApiError(ctx)
 		expect(error.kind).toBe('no_access')
 		expect(error.httpStatus).toBe(403)
-		expect(error.message).toBe(NO_ACCESS_LINE)
+		expect(error.message).toBe(noAccessLine(LABEL))
 		expect(calls).toHaveLength(1)
 		expect(clock.sleeps).toEqual([])
 	})
@@ -693,7 +695,7 @@ describe('createInspector', () => {
 		const { ctx, calls } = inspectCtx(() => jsonResponse(modernError(403), 403))
 		const error = await expectRejection(createInspector(ctx)(POST_URL))
 		expect(error.kind).toBe('no_access')
-		expect(error.message).toBe(NO_ACCESS_LINE)
+		expect(error.message).toBe(noAccessLine('URL Inspection request'))
 		expect(calls).toHaveLength(1)
 	})
 
@@ -889,7 +891,7 @@ describe('queryAnalytics', () => {
 		const { ctx } = makeCtx(() => jsonResponse(legacyError(403), 403))
 		const error = await expectRejection(queryAnalytics(ctx, QUERY))
 		expect(error.kind).toBe('no_access')
-		expect(error.message).toBe(NO_ACCESS_LINE)
+		expect(error.message).toBe(noAccessLine(LABEL))
 	})
 
 	test('AnalyticsResponseSchema treats rows as optional', () => {
