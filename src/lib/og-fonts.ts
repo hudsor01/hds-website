@@ -4,28 +4,30 @@ import { join } from 'node:path'
 /**
  * Hanken Grotesk (the site display font) as WOFF buffers for next/og
  * ImageResponse, so the social card title matches the website typography.
- * Satori supports woff/ttf/otf (NOT woff2). Read once at module load with
- * literal paths so Next file-tracing bundles them into the serverless
- * function; any importing route must use the Node.js runtime.
+ * Satori supports woff/ttf/otf (NOT woff2). Any importing route must use
+ * the Node.js runtime.
+ *
+ * Read lazily on first use for the same reason as getLogoDataUrl in
+ * ./og-logo.ts: a module-scope read runs wherever the module is imported,
+ * including page functions that do not ship public/.
  */
-const hanken600 = readFileSync(
-	join(process.cwd(), 'public/fonts/hanken-grotesk-600.woff')
-)
-const hanken700 = readFileSync(
-	join(process.cwd(), 'public/fonts/hanken-grotesk-700.woff')
-)
+interface OgFont {
+	name: string
+	data: Buffer
+	weight: 600 | 700
+	style: 'normal'
+}
 
-export const OG_FONTS = [
-	{
+let fonts: OgFont[] | undefined
+
+export function getOgFonts(): OgFont[] {
+	fonts ??= ([600, 700] as const).map(weight => ({
 		name: 'Hanken Grotesk',
-		data: hanken600,
-		weight: 600 as const,
+		data: readFileSync(
+			join(process.cwd(), `public/fonts/hanken-grotesk-${weight}.woff`)
+		),
+		weight,
 		style: 'normal' as const
-	},
-	{
-		name: 'Hanken Grotesk',
-		data: hanken700,
-		weight: 700 as const,
-		style: 'normal' as const
-	}
-]
+	}))
+	return fonts
+}

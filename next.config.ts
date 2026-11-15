@@ -8,6 +8,15 @@ const nextConfig: NextConfig = {
 	poweredByHeader: false,
 	trailingSlash: false,
 
+	// The next/og icon and blog card routes read these at render time
+	// (src/lib/og-logo.ts, og-fonts.ts). A function's trace only includes
+	// public/ files it statically reaches, and pages pull the icon modules in
+	// for metadata, so ship them with every function rather than relying on
+	// tracing to find a process.cwd() path.
+	outputFileTracingIncludes: {
+		'/**': ['./public/hds-logo-og.png', './public/fonts/hanken-grotesk-*.woff']
+	},
+
 	// Retired duplicate blog post (its file is an unpublished draft). Mirrors
 	// the vercel.json redirect so `next start` and the standalone Docker image
 	// keep the 308 too, now that unknown blog slugs simply 404.

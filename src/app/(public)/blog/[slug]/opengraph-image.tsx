@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 import { getAllPosts, getPostBySlug } from '@/lib/blog'
-import { OG_FONTS } from '@/lib/og-fonts'
-import { LOGO_DATA_URL } from '@/lib/og-logo'
+import { getOgFonts } from '@/lib/og-fonts'
+import { getLogoDataUrl } from '@/lib/og-logo'
 
 // One card per published post is prerendered at build, mirroring the sibling
 // page.tsx. Any other slug, e.g. a scanner probing
@@ -72,7 +72,11 @@ export default async function Image({
 				}}
 			>
 				{/* biome-ignore lint/performance/noImgElement: ImageResponse (Satori) requires a raw img element; next/image is unavailable in OG rendering. */}
-				<img src={LOGO_DATA_URL} height={46} alt="Hudson Digital Solutions" />
+				<img
+					src={getLogoDataUrl()}
+					height={46}
+					alt="Hudson Digital Solutions"
+				/>
 				<div style={{ display: 'flex', flexGrow: 1 }} />
 				{/* Eyebrow: accent dash + category label */}
 				<div
@@ -150,6 +154,6 @@ export default async function Image({
 				</div>
 			</div>
 		</div>,
-		{ ...size, fonts: OG_FONTS }
+		{ ...size, fonts: getOgFonts() }
 	)
 }

@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og'
-import { LOGO_DATA_URL } from '@/lib/og-logo'
+import { getLogoDataUrl } from '@/lib/og-logo'
 
 export const size = { width: 512, height: 512 }
 export const contentType = 'image/png'
@@ -17,7 +17,7 @@ export default function Icon512() {
 			}}
 		>
 			{/* biome-ignore lint/performance/noImgElement: ImageResponse (Satori) requires a raw img element. */}
-			<img src={LOGO_DATA_URL} width={456} alt="Hudson Digital Solutions" />
+			<img src={getLogoDataUrl()} width={456} alt="Hudson Digital Solutions" />
 		</div>,
 		{ ...size }
 	)
