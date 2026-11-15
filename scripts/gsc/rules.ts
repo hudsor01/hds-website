@@ -170,7 +170,7 @@ export function windowFromProbe(rows: AnalyticsRow[]): DateWindow | null {
 		if (!parsed.success) {
 			throw new GscApiError(
 				'Search Analytics request returned an unexpected response.',
-				'other',
+				'unexpected',
 				200
 			)
 		}

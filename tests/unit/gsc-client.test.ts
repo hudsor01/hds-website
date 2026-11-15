@@ -379,15 +379,27 @@ describe('requestWithRetry', () => {
 		expect(calls).toHaveLength(1)
 	})
 
-	test('a non-JSON 2xx body fails as an unexpected response', async () => {
-		const { ctx, calls } = makeCtx(
+	test('a non-JSON 2xx body retries, then fails as an unexpected response', async () => {
+		const { ctx, calls, clock } = makeCtx(
 			() => new Response(`<html>${GOOGLE_MESSAGE}</html>`, { status: 200 })
 		)
 		const error = await expectApiError(ctx)
-		expect(error.kind).toBe('other')
+		expect(error.kind).toBe('unexpected')
 		expect(error.httpStatus).toBe(200)
 		expect(error.message).toBe(`${LABEL} returned an unexpected response.`)
-		expect(calls).toHaveLength(1)
+		expect(error.message).not.toContain(GOOGLE_MESSAGE)
+		expect(calls).toHaveLength(3)
+		expect(clock.sleeps).toEqual([1000, 2000])
+	})
+
+	test('an empty 2xx body then JSON recovers', async () => {
+		const { ctx, calls } = makeCtx((_call, i) =>
+			i === 0 ? new Response('', { status: 200 }) : jsonResponse({ ok: 1 })
+		)
+		expect(await requestWithRetry(ctx, ANALYTICS_URL, PAYLOAD, LABEL)).toEqual({
+			ok: 1
+		})
+		expect(calls).toHaveLength(2)
 	})
 
 	test('every attempt gets its own unaborted timeout signal', async () => {
@@ -640,13 +652,15 @@ describe('createInspector', () => {
 		})
 	})
 
-	test('a non-JSON 200 body throws and fails the run', async () => {
-		const { ctx } = inspectCtx(() => new Response('not json', { status: 200 }))
-		const error = await expectRejection(createInspector(ctx)(POST_URL))
-		expect(error.kind).toBe('other')
-		expect(error.message).toBe(
-			'URL Inspection request returned an unexpected response.'
+	test('a non-JSON 200 body on every attempt is a failed inspection (unexpected response)', async () => {
+		const { ctx, calls } = inspectCtx(
+			() => new Response('not json', { status: 200 })
 		)
+		expect(await createInspector(ctx)(POST_URL)).toEqual({
+			ok: false,
+			unexpectedResponse: true
+		})
+		expect(calls).toHaveLength(3)
 	})
 
 	test('503 three times returns a failed outcome instead of throwing', async () => {
@@ -873,7 +887,7 @@ describe('queryAnalytics', () => {
 			jsonResponse({ rows: [{ keys: ['x'], clicks: 'many' }] })
 		)
 		const error = await expectRejection(queryAnalytics(ctx, QUERY))
-		expect(error.kind).toBe('other')
+		expect(error.kind).toBe('unexpected')
 		expect(error.httpStatus).toBe(200)
 		expect(error.message).toBe(
 			'Search Analytics request returned an unexpected response.'

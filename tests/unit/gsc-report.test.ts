@@ -396,6 +396,25 @@ describe('run happy path', () => {
 		expect(body).not.toContain('HTTP 200')
 	})
 
+	test('a non-JSON inspection body flags that URL instead of failing the run', async () => {
+		writeHappyPosts()
+		const result = await scenario({
+			routes: {
+				inspect: target =>
+					target === url('oldest-post')
+						? new Response('<html>INTERNAL_BODY_MARKER</html>', {
+								status: 200
+							})
+						: inspectionResponse('PASS', target)
+			}
+		})
+		expect(result.code).toBe(0)
+		const body = result.files[0]?.data ?? ''
+		expect(body).toContain('inspection failed (unexpected response)')
+		expect(body).not.toContain('INTERNAL_BODY_MARKER')
+		expect(result.out[0]).toContain('inspected=3 flagged=1 ')
+	})
+
 	test('a query list at the row limit notes it under Brand only', async () => {
 		writeHappyPosts()
 		const queryRows = Array.from({ length: ROW_LIMIT }, (_, i) =>

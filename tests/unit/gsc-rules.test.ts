@@ -374,7 +374,7 @@ describe('Pacific date window', () => {
 		if (!(caught instanceof GscApiError)) {
 			throw new Error('expected GscApiError')
 		}
-		expect(caught.kind).toBe('other')
+		expect(caught.kind).toBe('unexpected')
 		expect(caught.message).toBe(
 			'Search Analytics request returned an unexpected response.'
 		)

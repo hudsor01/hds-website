@@ -124,6 +124,8 @@ function errorMessage(
 				: `${label} failed with HTTP ${httpStatus} after ${MAX_ATTEMPTS} attempts.`
 		case 'budget':
 			return BUDGET_MESSAGE
+		case 'unexpected':
+			return `${label} returned an unexpected response.`
 		case 'other':
 			return `${label} failed with HTTP ${httpStatus}.`
 	}
@@ -131,9 +133,11 @@ function errorMessage(
 
 /**
  * POSTs a JSON payload with the bearer token. Retries 429, 5xx, rate-reason
- * 403, network errors and timeouts up to MAX_ATTEMPTS with Retry-After or
- * 1 s, 2 s backoff on the injected clock; every other failure throws at once
- * (D7). Past the run deadline it throws the budget error (WR-01).
+ * 403, network errors, timeouts and a 2xx body that is not JSON up to
+ * MAX_ATTEMPTS with Retry-After or 1 s, 2 s backoff on the injected clock;
+ * every other failure throws at once (D7). A 2xx that is still not JSON
+ * after the last attempt throws kind unexpected, like a body that fails its
+ * schema (IN-01). Past the run deadline it throws the budget error (WR-01).
  */
 export async function requestWithRetry(
 	ctx: GscContext,
@@ -152,14 +156,9 @@ export async function requestWithRetry(
 
 	const result = await sendWithRetry<unknown>(ctx, url, init, (res, body) => {
 		if (res.ok) {
-			if (body === undefined) {
-				throw new GscApiError(
-					`${label} returned an unexpected response.`,
-					'other',
-					res.status
-				)
-			}
-			return { done: true, value: body }
+			// A garbled 2xx (empty, or an intermediary's HTML page) is as
+			// transient as an unreadable body, so it retries too (IN-01).
+			return body === undefined ? { done: false } : { done: true, value: body }
 		}
 		const kind = classifyGoogleError(res.status, body)
 		if (kind !== 'retry') {
@@ -174,9 +173,13 @@ export async function requestWithRetry(
 	if (result.ok) {
 		return result.value
 	}
+	const kind: ErrorKind =
+		result.status !== null && result.status >= 200 && result.status < 300
+			? 'unexpected'
+			: 'retry'
 	throw new GscApiError(
-		errorMessage('retry', label, result.status, ctx.clientEmail),
-		'retry',
+		errorMessage(kind, label, result.status, ctx.clientEmail),
+		kind,
 		result.status
 	)
 }
@@ -218,10 +221,11 @@ export const AnalyticsResponseSchema = z.object({
 /**
  * Returns a serialized inspector: each call starts at least
  * INSPECTION_SPACING_MS after the previous one on the injected clock (D7).
- * Only a failure that exhausted its retries becomes a per-URL outcome so the
- * report can flag it (D5). Every other error throws and fails the run (D8):
- * access, disabled, scope, auth, quota, budget and any other 4xx, which is a
- * request bug that would hit every URL the same way (WR-02).
+ * Only a failure that exhausted its retries or a 2xx body the client cannot
+ * use becomes a per-URL outcome so the report can flag it (D5, IN-01). Every
+ * other error throws and fails the run (D8): access, disabled, scope, auth,
+ * quota, budget and any other 4xx, which is a request bug that would hit
+ * every URL the same way (WR-02).
  */
 export function createInspector(
 	ctx: GscContext
@@ -249,6 +253,9 @@ export function createInspector(
 			// else is rethrown untouched for the top-level handler.
 			if (error instanceof GscApiError && error.kind === 'retry') {
 				return { ok: false, httpStatus: error.httpStatus }
+			}
+			if (error instanceof GscApiError && error.kind === 'unexpected') {
+				return { ok: false, unexpectedResponse: true }
 			}
 			throw error
 		}
@@ -280,7 +287,7 @@ export async function queryAnalytics(
 	if (!parsed.success) {
 		throw new GscApiError(
 			'Search Analytics request returned an unexpected response.',
-			'other',
+			'unexpected',
 			200
 		)
 	}

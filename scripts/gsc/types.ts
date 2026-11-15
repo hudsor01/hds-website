@@ -37,6 +37,7 @@ export type ErrorKind =
 	| 'no_access'
 	| 'auth'
 	| 'budget'
+	| 'unexpected'
 	| 'other'
 
 /** Derived from the Zod schema that validates it: one source of truth. */
@@ -44,7 +45,8 @@ export type IndexStatus = z.infer<typeof IndexStatusSchema>
 
 /**
  * httpStatus null means the request failed with a network error;
- * unexpectedResponse means a 2xx body that failed the schema.
+ * unexpectedResponse means a 2xx body that was not JSON after every attempt
+ * or failed the schema.
  */
 export type InspectionOutcome =
 	| { ok: true; status: IndexStatus | undefined }
