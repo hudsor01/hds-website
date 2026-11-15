@@ -183,7 +183,8 @@ export async function requestWithRetry(
 
 // Every field is an optional string, never a strict enum: Google adds and
 // reserves enum values. One new value must not fail the whole run (D11).
-const IndexStatusSchema = z.object({
+// types.ts derives IndexStatus and AnalyticsRow from these schemas (IN-08).
+export const IndexStatusSchema = z.object({
 	verdict: z.string().optional(),
 	coverageState: z.string().optional(),
 	lastCrawlTime: z.string().optional(),
@@ -201,19 +202,17 @@ export const InspectResponseSchema = z.object({
 	})
 })
 
+export const AnalyticsRowSchema = z.object({
+	keys: z.array(z.string()),
+	clicks: z.number(),
+	impressions: z.number(),
+	ctr: z.number(),
+	position: z.number()
+})
+
 // Google omits rows when the window has no data.
 export const AnalyticsResponseSchema = z.object({
-	rows: z
-		.array(
-			z.object({
-				keys: z.array(z.string()),
-				clicks: z.number(),
-				impressions: z.number(),
-				ctr: z.number(),
-				position: z.number()
-			})
-		)
-		.optional()
+	rows: z.array(AnalyticsRowSchema).optional()
 })
 
 /**

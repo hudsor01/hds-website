@@ -1,8 +1,11 @@
 /**
  * Shared contracts for the Search Console weekly report. Types only, no
  * runtime code. ReportModel deliberately has no credential field so render
- * code can never reach key material (AUTO-06).
+ * code can never reach key material (AUTO-06). Response shapes are inferred
+ * from the client.ts Zod schemas through type-only imports (IN-08).
  */
+import type { z } from 'zod'
+import type { AnalyticsRowSchema, IndexStatusSchema } from './client'
 
 /** Injected fetch so tests never touch the network. */
 export type FetchFn = (url: string, init: RequestInit) => Promise<Response>
@@ -36,16 +39,8 @@ export type ErrorKind =
 	| 'budget'
 	| 'other'
 
-export interface IndexStatus {
-	verdict?: string
-	coverageState?: string
-	lastCrawlTime?: string
-	googleCanonical?: string
-	userCanonical?: string
-	pageFetchState?: string
-	robotsTxtState?: string
-	indexingState?: string
-}
+/** Derived from the Zod schema that validates it: one source of truth. */
+export type IndexStatus = z.infer<typeof IndexStatusSchema>
 
 /**
  * httpStatus null means the request failed with a network error;
@@ -56,13 +51,7 @@ export type InspectionOutcome =
 	| { ok: false; httpStatus: number | null }
 	| { ok: false; unexpectedResponse: true }
 
-export interface AnalyticsRow {
-	keys: string[]
-	clicks: number
-	impressions: number
-	ctr: number
-	position: number
-}
+export type AnalyticsRow = z.infer<typeof AnalyticsRowSchema>
 
 export interface AnalyticsQuery {
 	startDate: string
