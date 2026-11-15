@@ -135,7 +135,7 @@ facts no Google doc states.
 
 A failed run prints one line starting with `gsc-report:` in the Build report
 step log, leaves the issue untouched and fails red. Each Google request times
-out after 30 s and retries up to 3 times. The whole run stops after 6
+out after 30 s and is tried up to 3 times. The whole run stops after 6
 minutes, inside the 10 minute job timeout, so a slow Google still ends with a
 line from this table.
 
