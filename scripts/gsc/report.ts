@@ -130,12 +130,10 @@ export async function run(deps: RunDeps): Promise<number> {
 		for (const post of recent.posts) {
 			posts.push(toInspectedPost(post, await inspect(post.url)))
 		}
+		// A setup-level failure, not an API error: no single request or status
+		// caused it, and kind retry would read as a per-URL outcome (IN-02).
 		if (posts.length > 0 && posts.every(p => !p.outcome.ok)) {
-			throw new GscApiError(
-				allInspectionsFailedMessage(posts.length),
-				'retry',
-				null
-			)
+			throw new GscSetupError(allInspectionsFailedMessage(posts.length))
 		}
 
 		const model: ReportModel = {
