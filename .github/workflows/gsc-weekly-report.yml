@@ -66,6 +66,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
+          ASSIGNEE: ${{ github.repository_owner }}
           FLAGGED: ${{ steps.report.outputs.flagged }}
         run: |
           label='gsc-report'
@@ -80,7 +81,7 @@ jobs:
             --jq "[.[] | select(.pull_request == null and .title == \"$title\") | .number] | sort | .[]")
           count=$(printf '%s' "$numbers" | grep -c . || true)
           if [ "$count" -eq 0 ]; then
-            url=$(gh issue create --title "$title" --label "$label" --assignee hudsor01 --body-file "$body")
+            url=$(gh issue create --title "$title" --label "$label" --assignee "$ASSIGNEE" --body-file "$body")
             number=${url##*/}
           else
             number=$(printf '%s\n' "$numbers" | head -n 1)
