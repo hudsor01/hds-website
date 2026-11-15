@@ -148,7 +148,7 @@ function sourceTemplates(): SourceTemplate[] {
 	return [...texts].filter(isMessageLiteral).map(text => {
 		const pieces = text.split(SUBSTITUTION)
 		return {
-			text: pieces.join('${...}'),
+			text: pieces.join('<expr>'),
 			pattern: new RegExp(`^${pieces.map(escapeRegex).join('.+?')}$`),
 			literalLength: pieces.join('').length
 		}
