@@ -54,15 +54,19 @@ export function daysSince(publishedAt: string, now: Date): number {
 }
 
 /**
- * Live posts dated within the last LOOKBACK_DAYS, newest first with a slug
- * tie-break, capped at MAX_INSPECTIONS (D4, D7). total counts every
+ * Live posts dated within the last LOOKBACK_DAYS (0 to LOOKBACK_DAYS whole
+ * days since publish), newest first with a slug tie-break, capped at
+ * MAX_INSPECTIONS (D4, D7). The cutoff is a UTC calendar date, so the run's
+ * time of day never drops the oldest day (IN-02). total counts every
  * qualifying post; skipped is how many the cap left out.
  */
 export function selectRecentPosts(
 	dir: string,
 	now: Date
 ): { posts: RecentPost[]; total: number; skipped: number } {
-	const since = now.getTime() - LOOKBACK_DAYS * DAY_MS
+	const since = Date.parse(
+		addDays(now.toISOString().slice(0, 10), -LOOKBACK_DAYS)
+	)
 	const recent = listPostFiles(dir)
 		.map(file => parsePost(file, dir))
 		.filter(p => isLive(p.data, now) && Date.parse(p.data.publishedAt) >= since)
@@ -144,10 +148,13 @@ export function addDays(ymd: string, days: number): string {
 	return date.toISOString().slice(0, 10)
 }
 
-/** Date-grouped probe range: the last PROBE_DAYS Pacific days (D15 C10). */
+/**
+ * Date-grouped probe range: the last PROBE_DAYS Pacific days, today
+ * included, both ends inclusive (D15 C10, IN-01).
+ */
 export function probeRange(nowMs: number): DateWindow {
 	const today = pacificDate(nowMs)
-	return { startDate: addDays(today, -PROBE_DAYS), endDate: today }
+	return { startDate: addDays(today, -(PROBE_DAYS - 1)), endDate: today }
 }
 
 /**

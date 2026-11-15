@@ -8,6 +8,7 @@ import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { LOOKBACK_DAYS, PROBE_DAYS } from '../../scripts/gsc/config'
 import { GscApiError } from '../../scripts/gsc/errors'
 import {
 	addDays,
@@ -142,6 +143,17 @@ describe('selectRecentPosts', () => {
 		})
 		expect(posts.map(p => p.daysSincePublish)).toEqual([0, 6, 30])
 	})
+
+	test.each(['2026-11-16T12:00:00Z', '2026-11-16T23:59:00Z'])(
+		'the 30 day window keeps day 30 at %s, the scheduled run time',
+		at => {
+			writePost({ slug: 'thirty-days', publishedAt: '2026-10-17' })
+			writePost({ slug: 'thirty-one-days', publishedAt: '2026-10-16' })
+			const posts = selectRecentPosts(dir, new Date(at)).posts
+			expect(posts.map(p => p.slug)).toEqual(['thirty-days'])
+			expect(posts[0]?.daysSincePublish).toBe(LOOKBACK_DAYS)
+		}
+	)
 
 	test('a post dated today shows 0 days late in the UTC day', () => {
 		writePost({ slug: 'today', publishedAt: '2026-11-16' })
@@ -326,11 +338,12 @@ describe('Pacific date window', () => {
 		expect(addDays('2026-12-31', 1)).toBe('2027-01-01')
 	})
 
-	test('probeRange spans the last 10 Pacific days', () => {
-		expect(probeRange(Date.parse('2026-11-16T12:00:00Z'))).toEqual({
-			startDate: '2026-11-06',
-			endDate: '2026-11-16'
-		})
+	test('probeRange spans exactly the last 10 Pacific days', () => {
+		const range = probeRange(Date.parse('2026-11-16T12:00:00Z'))
+		expect(range).toEqual({ startDate: '2026-11-07', endDate: '2026-11-16' })
+		const days =
+			(Date.parse(range.endDate) - Date.parse(range.startDate)) / 86_400_000 + 1
+		expect(days).toBe(PROBE_DAYS)
 	})
 
 	test('windowFromProbe ends on the latest date with data', () => {
