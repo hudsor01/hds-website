@@ -81,8 +81,13 @@ jobs:
             --jq "[.[] | select(.pull_request == null and .title == \"$title\") | .number] | sort | .[]")
           count=$(printf '%s' "$numbers" | grep -c . || true)
           if [ "$count" -eq 0 ]; then
-            url=$(gh issue create --title "$title" --label "$label" --assignee "$ASSIGNEE" --body-file "$body")
+            url=$(gh issue create --title "$title" --label "$label" --body-file "$body")
             number=${url##*/}
+            # Assigning notifies the owner. An org owner is not assignable, so a
+            # failed assignment only warns: the issue already exists.
+            if ! gh issue edit "$number" --add-assignee "$ASSIGNEE" > /dev/null; then
+              echo "::warning::could not assign $ASSIGNEE to #$number"
+            fi
           else
             number=$(printf '%s\n' "$numbers" | head -n 1)
             if [ "$count" -gt 1 ]; then
