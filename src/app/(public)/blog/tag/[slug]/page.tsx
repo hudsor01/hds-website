@@ -28,12 +28,17 @@ export async function generateMetadata({
 		}
 	}
 
+	// A tag with no live post is a thin page the sitemap leaves out: keep it
+	// out of the index until a post is live. Following links stays on.
+	const posts = await getPostsByTag(tag.slug)
+
 	return buildMetadata({
 		title: `${tag.name} - Blog - Hudson Digital Solutions`,
 		description:
 			tag.description ||
 			`Browse Hudson Digital Solutions blog articles tagged ${tag.name}, with practical guides and insights on web design and growing your small business online.`,
-		path: `/blog/tag/${tag.slug}`
+		path: `/blog/tag/${tag.slug}`,
+		noindex: posts.length === 0
 	})
 }
 

@@ -23,12 +23,17 @@ export async function generateMetadata({
 		}
 	}
 
+	// An author with no live post is a thin page the sitemap leaves out:
+	// keep it out of the index until a post is live. Following links stays on.
+	const posts = await getPostsByAuthor(author.slug)
+
 	return buildMetadata({
 		title: `${author.name} - Blog - Hudson Digital Solutions`,
 		description:
 			author.bio ||
 			`Read articles, guides and insights written by ${author.name} on the Hudson Digital Solutions blog about web design and small business growth.`,
-		path: `/blog/author/${author.slug}`
+		path: `/blog/author/${author.slug}`,
+		noindex: posts.length === 0
 	})
 }
 

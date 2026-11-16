@@ -144,8 +144,10 @@ describe('PAGE_DATES', () => {
 		expect(pageDate('/terms').toISOString().startsWith('2026-05-28')).toBe(true)
 	})
 
-	it('dates the empty dallas-fort-worth tag from the commit that defined it', () => {
-		expect(PAGE_DATES['/blog/tag/dallas-fort-worth']).toBe('2026-11-08')
+	it('holds no blog listing: those are dated by their posts', () => {
+		expect(
+			Object.keys(PAGE_DATES).filter(path => path.startsWith('/blog'))
+		).toEqual([])
 	})
 })
 
@@ -187,6 +189,21 @@ function lastmodOf(entries: SitemapEntry[], path: string): string {
 
 function hasPath(entries: SitemapEntry[], path: string): boolean {
 	return entries.some(e => pathOf(e.url) === path)
+}
+
+// Taxonomy entries with at least one live post: the only ones listed.
+async function populatedTagSlugs(): Promise<string[]> {
+	const posts = await getAllPosts()
+	return (await getTags())
+		.map(tag => tag.slug)
+		.filter(slug => posts.some(post => post.tags.some(t => t.slug === slug)))
+}
+
+async function populatedAuthorSlugs(): Promise<string[]> {
+	const posts = await getAllPosts()
+	return (await getAuthors())
+		.map(author => author.slug)
+		.filter(slug => posts.some(post => post.author.slug === slug))
 }
 
 // Minimal sources: no DB rows, two real services, one post so /blog (which
@@ -307,12 +324,11 @@ describe('sitemap no-DB URL set', () => {
 			...TOOLS.map(tool => tool.href),
 			...getAllLocationSlugs().map(slug => `/locations/${slug}`),
 			...(await getAllPosts()).map(post => `/blog/${post.slug}`),
-			...(await getTags()).map(tag => `/blog/tag/${tag.slug}`),
-			...(await getAuthors()).map(author => `/blog/author/${author.slug}`)
+			...(await populatedTagSlugs()).map(slug => `/blog/tag/${slug}`),
+			...(await populatedAuthorSlugs()).map(slug => `/blog/author/${slug}`)
 		].map(path => (path === '/' ? SITE_URL : `${SITE_URL}${path}`))
 
 		expect([...urls].sort()).toEqual([...expected].sort())
-		expect(urls).toContain(`${SITE_URL}/blog/tag/dallas-fort-worth`)
 		expect(urls).toContain(SITE_URL)
 		expect(urls).not.toContain(`${SITE_URL}/`)
 	})
@@ -322,8 +338,8 @@ describe('sitemap no-DB URL set', () => {
 		const count = (section: SitemapSection) =>
 			entries.filter(e => e.section === section).length
 		const posts = await getAllPosts()
-		const tags = await getTags()
-		const authors = await getAuthors()
+		const tags = await populatedTagSlugs()
+		const authors = await populatedAuthorSlugs()
 
 		expect(count('services')).toBe(2 + SERVICES.length)
 		expect(count('locations')).toBe(1 + getAllLocationSlugs().length)
@@ -479,19 +495,16 @@ describe('sitemap lastmod', () => {
 		)
 	})
 
-	it('dates an empty tag from PAGE_DATES', () => {
+	it('leaves out a tag and an author with no live post instead of throwing', () => {
 		const entries = buildSitemapEntries(
-			fixtureSources({ tagSlugs: ['dallas-fort-worth'] })
+			fixtureSources({
+				tagSlugs: ['no-posts-yet'],
+				authorSlugs: ['richard-hudson', 'guest']
+			})
 		)
-		expect(lastmodOf(entries, '/blog/tag/dallas-fort-worth')).toBe(
-			'2026-11-08T00:00:00.000Z'
-		)
-	})
-
-	it('throws naming an empty tag that has no PAGE_DATES entry', () => {
-		expect(() =>
-			buildSitemapEntries(fixtureSources({ tagSlugs: ['no-posts-yet'] }))
-		).toThrow(/\/blog\/tag\/no-posts-yet/)
+		expect(hasPath(entries, '/blog/tag/no-posts-yet')).toBe(false)
+		expect(hasPath(entries, '/blog/author/guest')).toBe(false)
+		expect(hasPath(entries, '/blog/author/richard-hudson')).toBe(true)
 	})
 
 	it('dates a service page by its newest related post when that is newer', () => {

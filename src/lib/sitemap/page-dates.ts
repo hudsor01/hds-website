@@ -1,6 +1,6 @@
 /**
  * Sitemap lastmod for hand-authored pages: static, legal, service, location
- * and tool pages, plus the one blog listing that has no post to date it.
+ * and tool pages. Blog listings are dated by their posts, never from here.
  *
  * Each value is the UTC calendar date of the page's last significant
  * visible-content change: on-page copy, H1, title or description, displayed
@@ -64,12 +64,7 @@ export const PAGE_DATES = {
 	'/tools/proposal-generator': '2026-11-15',
 	'/tools/json-formatter': '2026-05-30',
 	'/tools/comma-separator': '2026-05-30',
-	'/tools/word-counter': '2026-05-30',
-
-	// Blog tag fallback: used only while the tag has no live post (the date
-	// the tag was defined). Its only post publishes 2026-12-10; after that
-	// the sitemap dates the tag from its newest post and this entry can go.
-	'/blog/tag/dallas-fort-worth': '2026-11-08'
+	'/tools/word-counter': '2026-05-30'
 } as const satisfies Record<string, string>
 
 /**

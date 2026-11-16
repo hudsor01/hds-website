@@ -12,8 +12,9 @@
  *
  * Every lastmod is a real content date, never the build or request time:
  * - post: its publishedAt (there is no updated date in the frontmatter)
- * - /blog, tag and author pages: the newest post the listing shows; an empty
- *   listing falls back to its PAGE_DATES entry (and throws without one)
+ * - /blog, tag and author pages: the newest post the listing shows. A tag
+ *   or author with no live post is left out (its page is noindexed); /blog
+ *   with no post at all throws, since that is a content build bug
  * - service detail: the later of its PAGE_DATES entry and the newest post in
  *   its blogTag, because the page renders those related posts
  * - /showcase: the later of its PAGE_DATES entry and the newest item it lists
@@ -182,9 +183,6 @@ export function buildSitemapEntries(sources: SitemapSources): SitemapEntry[] {
 	}))
 	const newestPost = (include: (post: (typeof posts)[number]) => boolean) =>
 		newest(posts.filter(include).map(post => post.date))
-	// A listing shows posts, so it changed when its newest post appeared.
-	const listingDate = (path: string, date: Date | undefined) =>
-		date ?? pageDate(path)
 
 	const showcaseItems = sources.showcase.flatMap(item => {
 		const date = datedOrDrop('showcase item', item.slug, [
@@ -271,13 +269,11 @@ export function buildSitemapEntries(sources: SitemapSources): SitemapEntry[] {
 			0.8
 		),
 		entry('/faq', 'core', pageDate('/faq'), 'monthly', 0.7),
+		// /blog has no PAGE_DATES entry, so pageDate throws if no post is live.
 		entry(
 			'/blog',
 			'blog',
-			listingDate(
-				'/blog',
-				newestPost(() => true)
-			),
+			newestPost(() => true) ?? pageDate('/blog'),
 			'weekly',
 			0.8
 		),
@@ -318,31 +314,19 @@ export function buildSitemapEntries(sources: SitemapSources): SitemapEntry[] {
 		...posts.map(post =>
 			entry(`/blog/${post.slug}`, 'blog', post.date, 'monthly', 0.7)
 		),
-		...sources.tagSlugs.map(slug => {
-			const path = `/blog/tag/${slug}`
-			return entry(
-				path,
-				'blog',
-				listingDate(
-					path,
-					newestPost(post => post.tagSlugs.includes(slug))
-				),
-				'weekly',
-				0.5
-			)
+		// A tag or author with no live post has nothing to date it by and its
+		// page is noindexed, so it is listed only once a post is live.
+		...sources.tagSlugs.flatMap(slug => {
+			const date = newestPost(post => post.tagSlugs.includes(slug))
+			return date
+				? [entry(`/blog/tag/${slug}`, 'blog', date, 'weekly', 0.5)]
+				: []
 		}),
-		...sources.authorSlugs.map(slug => {
-			const path = `/blog/author/${slug}`
-			return entry(
-				path,
-				'blog',
-				listingDate(
-					path,
-					newestPost(post => post.authorSlug === slug)
-				),
-				'weekly',
-				0.5
-			)
+		...sources.authorSlugs.flatMap(slug => {
+			const date = newestPost(post => post.authorSlug === slug)
+			return date
+				? [entry(`/blog/author/${slug}`, 'blog', date, 'weekly', 0.5)]
+				: []
 		})
 	]
 }
