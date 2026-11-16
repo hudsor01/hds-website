@@ -24,10 +24,11 @@ import {
 const SITE_URL = 'https://hudsondigitalsolutions.com'
 const NOW = new Date()
 
-// No module mocks: the sitemap wraps every DB-backed source
-// (showcase/help-articles) in try/catch and falls back to an empty list, so
-// without a database it still emits the static + registry-derived URLs we
-// assert here. Blog URLs come from the compiled content/blog module.
+// No module mocks: loadSitemapSources() wraps each DB-backed source
+// (showcase, help articles, testimonials) in try/catch and falls back to an
+// empty list, so without a database it still emits the static +
+// registry-derived URLs we assert here. Blog URLs come from the compiled
+// content/blog module.
 
 async function entries(): Promise<SitemapEntry[]> {
 	return buildSitemapEntries(await loadSitemapSources())

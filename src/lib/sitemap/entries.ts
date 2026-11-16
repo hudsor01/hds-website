@@ -1,7 +1,10 @@
 /**
- * The sitemap entry list: one list shared by the sitemap index, the four
- * section children and the tests, so they can never disagree about which
- * URLs exist, which section each belongs to or when each last changed.
+ * The sitemap entry list: one builder shared by the sitemap index, the four
+ * section children and the tests, so within one render they agree about
+ * which URLs exist, which section each belongs to and when each last
+ * changed. Each route loads and revalidates its sources on its own, so after
+ * a DB change (or a regeneration during a DB outage) the index and a child
+ * can disagree until both have revalidated.
  *
  * Sections:
  * - blog: /blog, every post, every tag page, every author page
