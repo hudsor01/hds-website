@@ -5,7 +5,7 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import matter from 'gray-matter'
-import { Marked, marked, type Token } from 'marked'
+import { Marked, type Token } from 'marked'
 import { BLOG_AUTHORS, BLOG_TAGS } from '@/lib/constants/blog'
 import { countCommaBeforeAnd, findAiTells } from './voice'
 
@@ -97,14 +97,34 @@ export function computeReadingTime(body: string): number {
 	return Math.max(1, Math.ceil(wordCount(body) / 200))
 }
 
+/**
+ * Markdown to HTML. A link to a post that `linkable` rejects (one that is not
+ * live yet) renders as its inline content, so the page never ships an <a> that
+ * 404s; the next build on or after that post's date turns the link on. Every
+ * other link falls through to marked's default renderer, byte for byte. A
+ * dedicated Marked instance keeps the global `marked` untouched.
+ */
 export function bodyToHtml(
 	body: string,
-	format: 'markdown' | 'html' = 'markdown'
+	format: 'markdown' | 'html' = 'markdown',
+	linkable: (slug: string) => boolean = () => true
 ): string {
 	if (format === 'html') {
 		return body
 	}
-	return marked.parse(body, { async: false }) as string
+	const md = new Marked({
+		renderer: {
+			// Method syntax, not an arrow function: it needs `this.parser`.
+			link(token) {
+				const slug = postSlugFromHref(token.href)
+				if (slug && !linkable(slug)) {
+					return this.parser.parseInline(token.tokens)
+				}
+				return false
+			}
+		}
+	})
+	return md.parse(body, { async: false }) as string
 }
 
 export type Severity = 'error' | 'warn'

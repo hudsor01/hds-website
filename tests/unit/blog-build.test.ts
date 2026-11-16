@@ -7,7 +7,8 @@ import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { compilePosts, renderModule } from '../../scripts/blog/build'
+import { compilePosts, loadPosts, renderModule } from '../../scripts/blog/build'
+import { isLive } from '../../scripts/blog/lib'
 
 interface FixtureOptions {
 	slug: string
@@ -192,6 +193,124 @@ describe('compilePosts', () => {
 	test('throws when there are no published posts', () => {
 		writePost({ slug: 'only-draft', published: false })
 		expect(() => compilePosts(dir)).toThrow(/no published posts/)
+	})
+})
+
+describe('held-post links (D4)', () => {
+	const DAY_BEFORE = new Date('2026-03-01T23:59:59.999Z')
+	const ON_THE_DAY = new Date('2026-03-02T00:00:00.000Z')
+
+	function contentOf(slug: string, now: Date): string | undefined {
+		return compilePosts(dir, now).find(p => p.slug === slug)?.content
+	}
+
+	beforeEach(() => {
+		writePost({ slug: 'held-post', publishedAt: '2026-03-02' })
+	})
+
+	test('a link to a held post renders as its text, formatting kept', () => {
+		writePost({
+			slug: 'live-post',
+			publishedAt: '2026-03-01',
+			body: 'See [**the held post**](/blog/held-post) now.'
+		})
+		expect(contentOf('live-post', DAY_BEFORE)).toBe(
+			'<p>See <strong>the held post</strong> now.</p>\n'
+		)
+	})
+
+	test('the link switches on when the held post goes live', () => {
+		writePost({
+			slug: 'live-post',
+			publishedAt: '2026-03-01',
+			body: 'See [**the held post**](/blog/held-post) now.'
+		})
+		const posts = compilePosts(dir, ON_THE_DAY)
+		expect(posts.map(p => p.slug)).toEqual(['held-post', 'live-post'])
+		expect(posts.find(p => p.slug === 'live-post')?.content).toBe(
+			'<p>See <a href="/blog/held-post"><strong>the held post</strong></a> now.</p>\n'
+		)
+	})
+
+	test('an absolute link to a held post also renders as text', () => {
+		writePost({
+			slug: 'live-post',
+			publishedAt: '2026-03-01',
+			body: 'See [it](https://hudsondigitalsolutions.com/blog/held-post/#faq).'
+		})
+		expect(contentOf('live-post', DAY_BEFORE)).toBe('<p>See it.</p>\n')
+	})
+
+	test('a link to a draft renders as text', () => {
+		writePost({ slug: 'draft-post', published: false })
+		writePost({
+			slug: 'live-post',
+			publishedAt: '2026-03-01',
+			body: 'See [the draft](/blog/draft-post).'
+		})
+		expect(contentOf('live-post', DAY_BEFORE)).toBe('<p>See the draft.</p>\n')
+	})
+
+	test('every other link renders exactly as before', () => {
+		writePost({ slug: 'other-live', publishedAt: '2026-02-01' })
+		writePost({
+			slug: 'live-post',
+			publishedAt: '2026-03-01',
+			body: '[x](/blog/other-live) [tools](/tools/paystub-calculator) [g](https://google.com "Google")'
+		})
+		expect(contentOf('live-post', DAY_BEFORE)).toBe(
+			'<p><a href="/blog/other-live">x</a> <a href="/tools/paystub-calculator">tools</a> <a href="https://google.com" title="Google">g</a></p>\n'
+		)
+	})
+})
+
+describe('loadPosts', () => {
+	test('returns every parsed post, drafts and scheduled included', () => {
+		writePost({ slug: 'live-post' })
+		writePost({ slug: 'draft-post', published: false })
+		writePost({ slug: 'scheduled-post', publishedAt: '2099-01-01' })
+		expect(
+			loadPosts(dir)
+				.map(p => p.slug)
+				.sort()
+		).toEqual(['draft-post', 'live-post', 'scheduled-post'])
+	})
+
+	test('returns posts even when none is live', () => {
+		writePost({ slug: 'only-draft', published: false })
+		expect(loadPosts(dir).map(p => p.slug)).toEqual(['only-draft'])
+	})
+
+	test('throws with file and rule on a validation error', () => {
+		writePost({ slug: 'bad-tag', tags: ['not-a-tag'] })
+		expect(() => loadPosts(dir)).toThrow(
+			/blog:build failed for 1 issue\(s\):\n {2}bad-tag\.md: \[R4\] unknown tag: not-a-tag/
+		)
+	})
+
+	test('throws on unparseable frontmatter', () => {
+		// Different text from the compilePosts case: gray-matter caches by
+		// input string, so a repeat of the same broken text would not throw.
+		writeFileSync(
+			join(dir, 'broken.md'),
+			'---\ntitle: [still unclosed\nslug: broken\n---\nbody\n'
+		)
+		expect(() => loadPosts(dir)).toThrow(/broken\.md: cannot parse \(/)
+	})
+})
+
+describe('real content', () => {
+	test('no compiled post links to a post that is not live yet', () => {
+		const now = new Date()
+		const held = loadPosts()
+			.filter(p => p.data.published && !isLive(p.data, now))
+			.map(p => p.slug)
+		const compiled = compilePosts(undefined, now)
+		for (const slug of held) {
+			const href = new RegExp(`href="/blog/${slug}["/#?]`)
+			const offenders = compiled.filter(p => href.test(p.content))
+			expect(offenders.map(p => p.slug)).toEqual([])
+		}
 	})
 })
 

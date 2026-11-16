@@ -9,7 +9,9 @@
  * Runs automatically before `build`, `dev`, `typecheck` and `test:unit` (see
  * package.json), so the gitignored output is always fresh. Any parse failure
  * or validation ERROR (same rules as blog:validate) throws, failing the build
- * loudly instead of shipping an empty or partial blog.
+ * loudly instead of shipping an empty or partial blog. Links to scheduled
+ * posts render as plain text until their date; the daily scheduled-publish
+ * rebuild turns them into links on the day the target goes live.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -42,7 +44,10 @@ function compareByPublishedDesc(
 	)
 }
 
-function compilePost({ slug, data, body }: ParsedPost): CompiledBlogPost {
+function compilePost(
+	{ slug, data, body }: ParsedPost,
+	linkable: (slug: string) => boolean
+): CompiledBlogPost {
 	const title = stripMarkdown(data.title)
 	if (!title) {
 		throw new Error(`${slug}: title is empty after stripping markdown`)
@@ -51,7 +56,7 @@ function compilePost({ slug, data, body }: ParsedPost): CompiledBlogPost {
 		slug,
 		title,
 		excerpt: stripMarkdown(data.excerpt),
-		content: bodyToHtml(body, data.bodyFormat ?? 'markdown'),
+		content: bodyToHtml(body, data.bodyFormat ?? 'markdown', linkable),
 		featureImage: data.featureImage || null,
 		publishedAt: new Date(data.publishedAt).toISOString(),
 		readingTime:
@@ -64,17 +69,17 @@ function compilePost({ slug, data, body }: ParsedPost): CompiledBlogPost {
 	}
 }
 
+function failureMessage(failures: string[]): string {
+	return `blog:build failed for ${failures.length} issue(s):\n  ${failures.join('\n  ')}`
+}
+
 /**
- * Parse, validate, and compile every post in `dir`. Drafts
- * (`published: false`) and scheduled posts (publishedAt after `now`) are
- * validated but excluded from the output.
+ * Parse and validate every post in `dir`, drafts and scheduled posts
+ * included. Any parse failure or validation ERROR throws, listing each one.
  */
-export function compilePosts(
-	dir: string = CONTENT_DIR,
-	now: Date = new Date()
-): CompiledBlogPost[] {
+export function loadPosts(dir: string = CONTENT_DIR): ParsedPost[] {
 	const failures: string[] = []
-	const posts: CompiledBlogPost[] = []
+	const posts: ParsedPost[] = []
 
 	for (const file of listPostFiles(dir)) {
 		let parsed: ParsedPost
@@ -94,21 +99,39 @@ export function compilePosts(
 			}
 			continue
 		}
+		posts.push(parsed)
+	}
 
-		if (!isLive(parsed.data, now)) {
-			continue
-		}
+	if (failures.length > 0) {
+		throw new Error(failureMessage(failures))
+	}
+	return posts
+}
+
+/**
+ * Parse, validate, and compile every post in `dir`. Drafts
+ * (`published: false`) and scheduled posts (publishedAt after `now`) are
+ * validated but excluded from the output, and links to them render as text.
+ */
+export function compilePosts(
+	dir: string = CONTENT_DIR,
+	now: Date = new Date()
+): CompiledBlogPost[] {
+	const parsed = loadPosts(dir).filter(p => isLive(p.data, now))
+	const live = new Set(parsed.map(p => p.slug))
+	const failures: string[] = []
+	const posts: CompiledBlogPost[] = []
+
+	for (const p of parsed) {
 		try {
-			posts.push(compilePost(parsed))
+			posts.push(compilePost(p, slug => live.has(slug)))
 		} catch (error) {
 			failures.push(error instanceof Error ? error.message : String(error))
 		}
 	}
 
 	if (failures.length > 0) {
-		throw new Error(
-			`blog:build failed for ${failures.length} issue(s):\n  ${failures.join('\n  ')}`
-		)
+		throw new Error(failureMessage(failures))
 	}
 	if (posts.length === 0) {
 		throw new Error(`blog:build found no published posts in ${dir}`)
