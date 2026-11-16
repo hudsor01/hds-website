@@ -113,9 +113,7 @@ function main(): void {
 		post.slug,
 		status(sources.length),
 		String(sources.length),
-		live
-			? 'live'
-			: `held until ${new Date(post.data.publishedAt).toISOString().slice(0, 10)}`,
+		live ? 'live' : `held until ${post.data.publishedAt}`,
 		sources.length > 0 ? sources.join(', ') : '-',
 		serviceCards.get(post.slug)?.join(', ') ?? '-',
 		String(serviceLinks.get(post.slug) ?? 0),

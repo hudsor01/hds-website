@@ -11,13 +11,16 @@ import { loadPosts } from '../../scripts/blog/build'
 import {
 	type BlogFrontmatter,
 	extractPostLinks,
+	isLive,
 	type LinkViolation,
 	linkViolations,
 	ORPHAN_SEVERITY,
 	type ParsedPost,
 	postSlugFromHref,
+	publishedDay,
 	qualifies,
-	qualifyingInbound
+	qualifyingInbound,
+	validatePost
 } from '../../scripts/blog/lib'
 
 const NOW = new Date('2026-11-16T00:00:00Z')
@@ -208,12 +211,9 @@ describe('qualifies', () => {
 		expect(qualifies(later, held, NOW)).toBe(false)
 	})
 
-	test('compares calendar days, not times', () => {
-		const morning = post('morning', '', {
-			publishedAt: '2026-12-03T09:00:00Z'
-		})
-		const night = post('night', '', { publishedAt: '2026-12-03T01:00:00Z' })
-		expect(qualifies(morning, night, NOW)).toBe(true)
+	test('a held source with a date-time publishedAt never qualifies', () => {
+		const timed = post('timed', '', { publishedAt: '2026-12-03T01:00:00Z' })
+		expect(qualifies(timed, held, NOW)).toBe(false)
 	})
 
 	test('a held source with an unparsable date does not qualify', () => {
@@ -239,6 +239,108 @@ describe('qualifies', () => {
 	test('a live source qualifies even when the target date is unparsable', () => {
 		const bad = post('bad', '', { publishedAt: 'someday' })
 		expect(qualifies(live, bad, NOW)).toBe(true)
+	})
+})
+
+describe('publishedAt dates (UTC calendar days)', () => {
+	test.each(['2026-12-03', '2024-02-29'])('%s is a valid day', value => {
+		expect(publishedDay(value)).toBe(value)
+	})
+
+	test.each([
+		'2026-12-03T23:30:00',
+		'2026-12-03T00:00:00Z',
+		'2026-12-03 ',
+		'Dec 3, 2026',
+		'2026-1-3',
+		'2026-02-30',
+		'2025-02-29',
+		'someday',
+		''
+	])('%p is rejected', value => {
+		expect(publishedDay(value)).toBeNull()
+	})
+
+	test('a non-string value is rejected', () => {
+		expect(publishedDay(20261203)).toBeNull()
+		expect(publishedDay(new Date('2026-12-03'))).toBeNull()
+		expect(publishedDay(undefined)).toBeNull()
+	})
+
+	test('validation names the field and rejects anything but YYYY-MM-DD', () => {
+		for (const publishedAt of ['Dec 3, 2026', '2026-12-03T23:30:00']) {
+			const errors = validatePost(post('p', '', { publishedAt })).filter(
+				v => v.severity === 'error'
+			)
+			expect(errors).toHaveLength(1)
+			expect(errors[0]?.message).toContain('publishedAt')
+			expect(errors[0]?.message).toContain(publishedAt)
+		}
+	})
+
+	test('validation accepts a YYYY-MM-DD date', () => {
+		const errors = validatePost(post('p', '', { publishedAt: '2026-12-03' }))
+		expect(
+			errors.filter(v => v.rule === 'R0' && v.severity === 'error')
+		).toEqual([])
+	})
+
+	test('a post goes live at UTC midnight of its day', () => {
+		const data = post('p', '', { publishedAt: '2026-12-03' }).data
+		expect(isLive(data, new Date('2026-12-02T23:59:59.999Z'))).toBe(false)
+		expect(isLive(data, new Date('2026-12-03T00:00:00.000Z'))).toBe(true)
+	})
+
+	test('a date-time publishedAt is never live', () => {
+		const data = post('p', '', { publishedAt: '2026-01-01T00:00:00Z' }).data
+		expect(isLive(data, NOW)).toBe(false)
+	})
+
+	// Every rule works on UTC days, so a machine in any timezone must get the
+	// same answers as CI and Vercel (UTC).
+	test('results do not depend on the machine timezone', () => {
+		const target = post('target', '', { publishedAt: '2026-12-03' })
+		const sameDay = post('same-day', '', { publishedAt: '2026-12-03' })
+		const later = post('later', '', { publishedAt: '2026-12-04' })
+		const instants = [
+			'2026-12-02T12:00:00Z',
+			'2026-12-02T23:59:59Z',
+			'2026-12-03T00:00:00Z',
+			'2026-12-03T10:30:00Z'
+		].map(t => new Date(t))
+		const snapshot = (): unknown[] =>
+			instants.map(now => [
+				isLive(target.data, now),
+				qualifies(sameDay, target, now),
+				qualifies(later, target, now),
+				validatePost(target).filter(v => v.message.includes('publishedAt'))
+					.length
+			])
+		const original = process.env.TZ
+		try {
+			process.env.TZ = 'UTC'
+			const utc = snapshot()
+			expect(utc).toEqual([
+				[false, true, false, 0],
+				[false, true, false, 0],
+				[true, true, false, 0],
+				[true, true, false, 0]
+			])
+			for (const tz of [
+				'America/Chicago',
+				'Pacific/Kiritimati',
+				'Asia/Tokyo'
+			]) {
+				process.env.TZ = tz
+				expect(snapshot()).toEqual(utc)
+			}
+		} finally {
+			if (original === undefined) {
+				delete process.env.TZ
+			} else {
+				process.env.TZ = original
+			}
+		}
 	})
 })
 

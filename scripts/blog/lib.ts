@@ -56,6 +56,8 @@ const POST_HREF_RE =
 /** /blog/tag and /blog/author are listing pages, not posts. */
 const NON_POST_SEGMENTS: ReadonlySet<string> = new Set(['tag', 'author'])
 const HTML_HREF_RE = /href\s*=\s*(?:"([^"]*)"|'([^']*)')/gi
+/** publishedAt is a quoted calendar day; times and offsets are rejected. */
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 
 export function listPostFiles(dir: string = CONTENT_DIR): string[] {
 	return readdirSync(dir)
@@ -76,12 +78,34 @@ export function parsePost(file: string, dir: string = CONTENT_DIR): ParsedPost {
 }
 
 /**
- * Live = published and dated today or earlier. A future publishedAt schedules
- * the post: it stays out of the build until the first build on or after that
- * day (UTC midnight), which the publish-scheduled-posts workflow triggers.
+ * A publishedAt value as its YYYY-MM-DD calendar day, or null when it is not a
+ * real date in that exact form. Days are compared as strings and never parsed
+ * in local time, so no result depends on the machine's timezone.
+ */
+export function publishedDay(value: unknown): string | null {
+	if (typeof value !== 'string' || !DATE_RE.test(value)) {
+		return null
+	}
+	const time = Date.parse(`${value}T00:00:00Z`)
+	// Round trip rejects days that roll over, such as 2026-02-30.
+	return !Number.isNaN(time) && new Date(time).toISOString().startsWith(value)
+		? value
+		: null
+}
+
+/**
+ * Live = published and dated on or before today's UTC calendar day. A future
+ * publishedAt schedules the post: it stays out of the build until the first
+ * build on or after that day (UTC midnight), which the publish-scheduled-posts
+ * workflow triggers.
  */
 export function isLive(data: BlogFrontmatter, now: Date): boolean {
-	return data.published && Date.parse(data.publishedAt) <= now.getTime()
+	const day = publishedDay(data.publishedAt)
+	return (
+		data.published === true &&
+		day !== null &&
+		day <= now.toISOString().slice(0, 10)
+	)
 }
 
 export function wordCount(body: string): number {
@@ -186,9 +210,12 @@ export function validatePost(p: ParsedPost): Violation[] {
 	}
 	if (
 		typeof d?.publishedAt === 'string' &&
-		Number.isNaN(Date.parse(d.publishedAt))
+		publishedDay(d.publishedAt) === null
 	) {
-		err('R0', `publishedAt is not a valid date: ${d.publishedAt}`)
+		err(
+			'R0',
+			`publishedAt must be a YYYY-MM-DD date (UTC day), got "${d.publishedAt}"`
+		)
 	}
 	if (typeof d?.published !== 'boolean') {
 		err('R0', 'published must be a boolean')
@@ -334,19 +361,11 @@ export function extractPostLinks(p: ParsedPost): PostLinks {
 	return { targets, htmlTargets }
 }
 
-/** YYYY-MM-DD (UTC) of a parseable date string, otherwise null. */
-function day(value: unknown): string | null {
-	if (typeof value !== 'string') {
-		return null
-	}
-	const time = Date.parse(value)
-	return Number.isNaN(time) ? null : new Date(time).toISOString().slice(0, 10)
-}
-
 /**
  * A source link counts for a target when the source is published AND either
- * already live or dated on or before the target. Either way the link is live
- * by the target's go-live day. The set of qualifying links only grows as days
+ * already live or dated on or before the target. Both dates are UTC calendar
+ * days and isLive uses the same days, so either way the link is live by the
+ * target's go-live day. The set of qualifying links only grows as days
  * pass, so a scheduled post can never newly fail on its publish day.
  */
 export function qualifies(
@@ -360,8 +379,8 @@ export function qualifies(
 	if (isLive(src.data, now)) {
 		return true
 	}
-	const srcDay = day(src.data.publishedAt)
-	const tgtDay = day(tgt.data.publishedAt)
+	const srcDay = publishedDay(src.data.publishedAt)
+	const tgtDay = publishedDay(tgt.data.publishedAt)
 	return srcDay !== null && tgtDay !== null && srcDay <= tgtDay
 }
 

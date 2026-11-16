@@ -172,7 +172,14 @@ describe('compilePosts', () => {
 
 	test('throws on an invalid publishedAt', () => {
 		writePost({ slug: 'bad-date', publishedAt: 'someday' })
-		expect(() => compilePosts(dir)).toThrow(/publishedAt is not a valid date/)
+		expect(() => compilePosts(dir)).toThrow(/publishedAt must be a YYYY-MM-DD/)
+	})
+
+	test('throws on a date-time publishedAt, naming the file and field', () => {
+		writePost({ slug: 'timed', publishedAt: '2026-01-01T23:30:00' })
+		expect(() => compilePosts(dir)).toThrow(
+			/timed\.md: \[R0\] publishedAt must be a YYYY-MM-DD date/
+		)
 	})
 
 	test('throws when a slug does not match its filename', () => {
