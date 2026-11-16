@@ -28,7 +28,7 @@ I hit 95 percent forecast accuracy in revenue operations by keeping data pipelin
 
 ### The Attribution Black Hole
 
-Google Analytics 4 and your marketing stack rely on consistent domain names to stitch together user journeys. If you migrate without implementing precise 301 redirects, every historic link points to a server error. Bounce rates spike immediately. Conversion tracking resets. You lose the historical baseline that justifies your ad spend. Move hosts without mapping old URLs to new ones and you can end up rebuilding your GA4 configuration and pausing Meta ads while the algorithm relearns from fresh conversion signals.
+Google Analytics 4 and your marketing stack rely on consistent domain names to stitch together user journeys. If you migrate without implementing precise 301 redirects, every historic link points to a server error. Bounce rates spike immediately. Conversion tracking resets. You lose the historical baseline that justifies your ad spend. Move hosts without mapping old URLs to new ones and you can end up rebuilding your GA4 configuration and pausing Meta ads while the algorithm relearns from fresh conversion signals. Owners leaving an all-in-one platform face the same risk, which is why [my plan for leaving Thryv with every URL redirected](/blog/how-to-leave-thryv-without-losing-rankings) starts with the URL map.
 
 UTM parameters compound the problem. Your team probably runs URL tags across partner referrals, email campaigns and local directories. Those tags survive a domain change only if you preserve the exact slug structure or redirect them intelligently. I configure redirect rules that pass referral data through to the new domain without breaking attribution windows. Your pipeline stays intact and your forecast remains reliable. Now say you run a software company in Plano and the migration drops an alias record. Every referral link pointed at that alias goes dead and partner-sourced leads quietly stop until someone notices.
 
@@ -55,7 +55,7 @@ Before you request an authorization code, run through these steps. Missing one i
 - Back up CRM exports, automation workflows in HubSpot or Salesforce and all payment gateway configurations
 - Test contact forms, checkout flows and calendar booking links on a staging environment to confirm connectivity
 
-Cross-reference the list against your tech stack so nothing slips through the cracks. The checklist takes about twenty minutes and can save days of emergency troubleshooting later.
+Cross-reference the list against your tech stack so nothing slips through the cracks. If the domain move is part of a full platform switch, [my checklist for moving a whole site without losing SEO](/blog/website-migration-checklist) covers the rankings and tracking side. The checklist takes about twenty minutes and can save days of emergency troubleshooting later.
 
 ### The Actual Handoff Process
 
