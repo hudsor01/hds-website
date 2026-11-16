@@ -72,13 +72,10 @@ jobs:
 
   test:
     name: Test
-    # macOS runner: bun's native test-runner ESM loader on Linux fails to
-    # resolve drizzle-orm 0.45.2's `export *` re-export chains
-    # (SyntaxError: Export named 'sql'/'asc'/... not found). The same bun
-    # version resolves them fine on macOS. Unit tests are OS-agnostic logic;
-    # the Build job still validates Linux. Revert to ubuntu-latest once the
-    # bun Linux loader bug is fixed upstream.
-    runs-on: macos-latest
+    # Linux again: the bun Linux ESM loader bug with drizzle-orm `export *`
+    # chains that forced macOS (10x the minutes) no longer reproduces on
+    # bun 1.3.14 (checked on linux/amd64 and linux/arm64, 2026-11-16).
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
