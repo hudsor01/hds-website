@@ -21,8 +21,8 @@ export interface HelpArticle {
 	content: string
 	excerpt: string | null
 	published: boolean
-	created_at: string
-	updated_at: string
+	created_at: string | null
+	updated_at: string | null
 }
 
 export interface HelpCategory {
@@ -85,8 +85,9 @@ const mapHelpArticle = (row: HelpArticleRow): HelpArticle => ({
 	content: row.content,
 	excerpt: row.excerpt,
 	published: row.published ?? false,
-	created_at: row.createdAt?.toISOString() ?? new Date().toISOString(),
-	updated_at: row.updatedAt?.toISOString() ?? new Date().toISOString()
+	// A missing date stays null so no page or sitemap invents today's date.
+	created_at: row.createdAt?.toISOString() ?? null,
+	updated_at: row.updatedAt?.toISOString() ?? null
 })
 
 /**

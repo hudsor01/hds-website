@@ -60,7 +60,8 @@ function mapTestimonial(row: DbTestimonial): Testimonial {
 		video_url: row.videoUrl ?? undefined,
 		approved: row.published ?? false,
 		featured: row.featured ?? false,
-		created_at: row.createdAt?.toISOString() ?? new Date().toISOString()
+		created_at: row.createdAt?.toISOString() ?? new Date().toISOString(),
+		updated_at: row.updatedAt?.toISOString()
 	}
 }
 
