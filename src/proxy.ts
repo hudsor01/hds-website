@@ -33,8 +33,10 @@
  * Runs on the Node.js runtime (the only runtime Next 16 allows for proxy).
  * On Vercel every matched request is a function invocation, so the matcher
  * skips anything that never needs document headers: build assets, public
- * files, metadata image/text routes (plus /llms.txt), Vercel beacons, the Sentry tunnel
- * (`/monitoring`, see next.config.ts tunnelRoute), router prefetches, the
+ * files, metadata image/text routes (plus /llms.txt), the sitemap index
+ * (/sitemap.xml) and its section children (/sitemap-<section>.xml), Vercel
+ * beacons, the Sentry tunnel (`/monitoring`, see next.config.ts
+ * tunnelRoute), router prefetches, the
  * same-origin telemetry beacons (web-vitals, csp-reports, error-report),
  * uptime pings (/api/health) and RSS feed polls (/api/rss/* plus the
  * vercel.json feed rewrites). Routing middleware runs before the CDN cache,
@@ -49,7 +51,7 @@ export const config = {
 	matcher: [
 		{
 			source:
-				'/((?!_next/static|_next/image|_vercel|monitoring|api/(?:web-vitals|csp-reports|error-report|health)$|api/rss/|(?:blog/)?(?:rss|feed)$|(?:rss|feed)\\.xml$|favicon\\.ico|robots\\.txt|llms\\.txt|sitemap\\.xml|manifest\\.json|offline\\.html|icon|apple-icon|opengraph-image|twitter-image|fonts/|.*/(?:opengraph|twitter)-image|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?)$).*)',
+				'/((?!_next/static|_next/image|_vercel|monitoring|api/(?:web-vitals|csp-reports|error-report|health)$|api/rss/|(?:blog/)?(?:rss|feed)$|(?:rss|feed)\\.xml$|favicon\\.ico|robots\\.txt|llms\\.txt|sitemap(?:-[a-z]+)?\\.xml$|manifest\\.json|offline\\.html|icon|apple-icon|opengraph-image|twitter-image|fonts/|.*/(?:opengraph|twitter)-image|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?)$).*)',
 			missing: [
 				{ type: 'header', key: 'next-router-prefetch' },
 				{ type: 'header', key: 'purpose', value: 'prefetch' }

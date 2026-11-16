@@ -281,7 +281,11 @@ describe('proxy matcher', () => {
 			'/api/health/deep',
 			'/blog/rss-feeds-explained',
 			'/feedback',
-			'/services'
+			'/services',
+			'/sitemap-blog',
+			'/sitemaps',
+			'/sitemap/blog.xml',
+			'/blog/sitemap-tips'
 		]) {
 			expect(await matches(path)).toBe(true)
 		}
@@ -297,6 +301,10 @@ describe('proxy matcher', () => {
 			'/robots.txt',
 			'/llms.txt',
 			'/sitemap.xml',
+			'/sitemap-blog.xml',
+			'/sitemap-services.xml',
+			'/sitemap-locations.xml',
+			'/sitemap-core.xml',
 			'/manifest.json',
 			'/offline.html',
 			'/fonts/hanken-grotesk-600.woff',

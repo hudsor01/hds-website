@@ -131,6 +131,12 @@ describe('robots.txt', () => {
 		expect(ai?.allow).toBe('/')
 		expect(ai?.disallow).toEqual(wildcard?.disallow)
 	})
+
+	test('points crawlers at the sitemap index', () => {
+		expect(robots().sitemap).toBe(
+			'https://hudsondigitalsolutions.com/sitemap.xml'
+		)
+	})
 })
 
 describe('llms.txt', () => {
