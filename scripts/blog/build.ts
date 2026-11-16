@@ -9,7 +9,15 @@
  * Runs automatically before `build`, `dev`, `typecheck` and `test:unit` (see
  * package.json), so the gitignored output is always fresh. Any parse failure
  * or validation ERROR (same rules as blog:validate) throws, failing the build
- * loudly instead of shipping an empty or partial blog.
+ * loudly instead of shipping an empty or partial blog. Links to scheduled
+ * posts render as plain text until their date; the daily scheduled-publish
+ * rebuild turns them into links on the day the target goes live.
+ *
+ * Scheduled posts are compiled too (and left out of the output), so a compile
+ * failure shows up today, not on their publish day. runBuild then runs the
+ * cross-post link rules (lib.ts linkViolations) on the same posts: dead,
+ * unpublished, raw-HTML-to-held and orphan are errors; exactly 1 qualifying
+ * inbound link is a warning.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -20,6 +28,8 @@ import {
 	CONTENT_DIR,
 	computeReadingTime,
 	isLive,
+	type LinkViolation,
+	linkViolations,
 	listPostFiles,
 	type ParsedPost,
 	parsePost,
@@ -42,16 +52,19 @@ function compareByPublishedDesc(
 	)
 }
 
-function compilePost({ slug, data, body }: ParsedPost): CompiledBlogPost {
+function compilePost(
+	{ slug, data, body }: ParsedPost,
+	linkable: (slug: string) => boolean
+): CompiledBlogPost {
 	const title = stripMarkdown(data.title)
 	if (!title) {
-		throw new Error(`${slug}: title is empty after stripping markdown`)
+		throw new Error('title is empty after stripping markdown')
 	}
 	return {
 		slug,
 		title,
 		excerpt: stripMarkdown(data.excerpt),
-		content: bodyToHtml(body, data.bodyFormat ?? 'markdown'),
+		content: bodyToHtml(body, data.bodyFormat ?? 'markdown', linkable, slug),
 		featureImage: data.featureImage || null,
 		publishedAt: new Date(data.publishedAt).toISOString(),
 		readingTime:
@@ -64,17 +77,14 @@ function compilePost({ slug, data, body }: ParsedPost): CompiledBlogPost {
 	}
 }
 
-/**
- * Parse, validate, and compile every post in `dir`. Drafts
- * (`published: false`) and scheduled posts (publishedAt after `now`) are
- * validated but excluded from the output.
- */
-export function compilePosts(
-	dir: string = CONTENT_DIR,
-	now: Date = new Date()
-): CompiledBlogPost[] {
+function failureMessage(failures: string[]): string {
+	return `blog:build failed for ${failures.length} issue(s):\n  ${failures.join('\n  ')}`
+}
+
+/** Every parsed post that passed validation, plus one line per failure. */
+function parseAll(dir: string): { posts: ParsedPost[]; failures: string[] } {
 	const failures: string[] = []
-	const posts: CompiledBlogPost[] = []
+	const posts: ParsedPost[] = []
 
 	for (const file of listPostFiles(dir)) {
 		let parsed: ParsedPost
@@ -94,26 +104,95 @@ export function compilePosts(
 			}
 			continue
 		}
-
-		if (!isLive(parsed.data, now)) {
-			continue
-		}
-		try {
-			posts.push(compilePost(parsed))
-		} catch (error) {
-			failures.push(error instanceof Error ? error.message : String(error))
-		}
+		posts.push(parsed)
 	}
+	return { posts, failures }
+}
 
+/**
+ * Parse and validate every post in `dir`, drafts and scheduled posts
+ * included. Any parse failure or validation ERROR throws, listing each one.
+ */
+export function loadPosts(dir: string = CONTENT_DIR): ParsedPost[] {
+	const { posts, failures } = parseAll(dir)
 	if (failures.length > 0) {
-		throw new Error(
-			`blog:build failed for ${failures.length} issue(s):\n  ${failures.join('\n  ')}`
-		)
+		throw new Error(failureMessage(failures))
 	}
-	if (posts.length === 0) {
+	return posts
+}
+
+export interface CompileFailure {
+	file: string
+	message: string
+}
+
+/**
+ * Compile every published post, scheduled ones included, so a compile-time
+ * failure (such as a title that strips to nothing) shows up in CI and in every
+ * build instead of first in the scheduled rebuild on the post's publish day.
+ * Drafts are never compiled. Returns only the live posts, newest first; links
+ * to posts that are not live render as text.
+ */
+export function compileAll(
+	posts: ParsedPost[],
+	now: Date
+): { compiled: CompiledBlogPost[]; failures: CompileFailure[] } {
+	const live = new Set(posts.filter(p => isLive(p.data, now)).map(p => p.slug))
+	const compiled: CompiledBlogPost[] = []
+	const failures: CompileFailure[] = []
+
+	for (const p of posts.filter(post => post.data.published === true)) {
+		try {
+			const post = compilePost(p, slug => live.has(slug))
+			if (live.has(p.slug)) {
+				compiled.push(post)
+			}
+		} catch (error) {
+			failures.push({
+				file: p.file,
+				message: error instanceof Error ? error.message : String(error)
+			})
+		}
+	}
+	return { compiled: compiled.sort(compareByPublishedDesc), failures }
+}
+
+/**
+ * Parse, validate and compile `dir`, throwing one error that lists every
+ * parse, validation and compile failure. Returns the parsed posts too so
+ * callers can run the link rules without loading the directory twice.
+ */
+function compileDir(
+	dir: string,
+	now: Date
+): { parsed: ParsedPost[]; compiled: CompiledBlogPost[] } {
+	const { posts, failures } = parseAll(dir)
+	const { compiled, failures: compileFailures } = compileAll(posts, now)
+	const all = [
+		...failures,
+		...compileFailures.map(f => `${f.file}: ${f.message}`)
+	]
+	if (all.length > 0) {
+		throw new Error(failureMessage(all))
+	}
+	if (compiled.length === 0) {
 		throw new Error(`blog:build found no published posts in ${dir}`)
 	}
-	return posts.sort(compareByPublishedDesc)
+	return { parsed: posts, compiled }
+}
+
+/**
+ * Parse, validate, and compile every post in `dir`. Drafts
+ * (`published: false`) and scheduled posts (publishedAt after `now`) are
+ * validated but excluded from the output, and links to them render as text.
+ * Scheduled posts are still compiled (see compileAll). Parse, validation and
+ * compile failures are reported together in one error.
+ */
+export function compilePosts(
+	dir: string = CONTENT_DIR,
+	now: Date = new Date()
+): CompiledBlogPost[] {
+	return compileDir(dir, now).compiled
 }
 
 export function renderModule(posts: CompiledBlogPost[]): string {
@@ -140,17 +219,52 @@ function writeIfChanged(file: string, source: string): boolean {
  * run points it at tests/fixtures/blog so /blog renders the same posts no
  * matter what has been published or scheduled since the baselines were made.
  */
-function contentDir(): string {
-	const override = process.env.BLOG_CONTENT_DIR
+export function contentDir(
+	override: string | undefined = process.env.BLOG_CONTENT_DIR
+): string {
 	return override ? resolve(override) : CONTENT_DIR
+}
+
+export interface BuildResult {
+	posts: CompiledBlogPost[]
+	warnings: LinkViolation[]
+	changed: boolean
+}
+
+/**
+ * The whole blog:build for `dir`: parse, validate and compile every post, run
+ * the cross-post link rules (lib.ts linkViolations), then write the module to
+ * `out`. Every check runs before the write, so any error throws and leaves
+ * `out` untouched instead of half-updated.
+ */
+export function runBuild(
+	dir: string,
+	now: Date,
+	out: string = POSTS_FILE
+): BuildResult {
+	const { parsed, compiled } = compileDir(dir, now)
+	const violations = linkViolations(parsed, now)
+	const errors = violations.filter(v => v.severity === 'error')
+	if (errors.length > 0) {
+		throw new Error(
+			failureMessage(errors.map(v => `${v.file}: [${v.rule}] ${v.message}`))
+		)
+	}
+	return {
+		posts: compiled,
+		warnings: violations.filter(v => v.severity === 'warn'),
+		changed: writeIfChanged(out, renderModule(compiled))
+	}
 }
 
 function main(): void {
 	const dir = contentDir()
-	const posts = compilePosts(dir)
-	const changed = writeIfChanged(POSTS_FILE, renderModule(posts))
+	const { posts, warnings, changed } = runBuild(dir, new Date())
+	for (const v of warnings) {
+		console.warn(`warn  ${v.file}: [${v.rule}] ${v.message}`)
+	}
 	console.warn(
-		`blog:build - ${posts.length} published posts${dir === CONTENT_DIR ? '' : ` from ${dir}`} -> src/lib/_generated/blog-posts.ts${changed ? '' : ' (unchanged)'}`
+		`blog:build - ${posts.length} published posts${dir === CONTENT_DIR ? '' : ` from ${dir}`} -> src/lib/_generated/blog-posts.ts${changed ? '' : ' (unchanged)'}${warnings.length > 0 ? `, ${warnings.length} link warning(s)` : ''}`
 	)
 }
 

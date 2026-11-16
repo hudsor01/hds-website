@@ -79,7 +79,7 @@ I spent nearly a decade in revenue operations working in Salesforce, HubSpot, Po
 
 ## The Simpler Stack I Recommend Instead
 
-For most small businesses, here's the shape of a setup that covers everything above.
+For most small businesses, here's the shape of a setup that covers everything above. My post on [the stack I ship for fast client sites](/blog/how-we-build-fast-websites-the-stack) walks through it in more detail.
 
 ### Managed hosting for the website
 
@@ -91,7 +91,7 @@ Most brochure-plus-lead-capture sites don't need a database of their own at all.
 
 ### Automation for the business logic
 
-Lead routing, follow-up emails, booking confirmations and CRM updates belong in tools built for that job, not in custom services you deploy into a cluster. A form submission can fire a webhook into your CRM, tag the lead source and trigger a follow-up in minutes. I walk through the options in [workflow automation tools for small business](/blog/workflow-automation-tools-small-business) and the wiring itself in [how to connect your website to your CRM](/blog/how-to-connect-your-website-to-your-crm).
+Lead routing, follow-up emails, booking confirmations and CRM updates belong in tools built for that job, not in custom services you deploy into a cluster. A form submission can fire a webhook into your CRM, tag the lead source and trigger a follow-up in minutes. If that follow-up goes out by email, your domain needs [SPF, DKIM and DMARC set up](/blog/spf-dkim-dmarc-for-small-business-email) or Gmail may send it to spam. I walk through the options in [workflow automation tools for small business](/blog/workflow-automation-tools-small-business) and the wiring itself in [how to connect your website to your CRM](/blog/how-to-connect-your-website-to-your-crm).
 
 ### Monitoring you'll actually look at
 

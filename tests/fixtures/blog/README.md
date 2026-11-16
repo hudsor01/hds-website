@@ -6,5 +6,9 @@ instead of `content/blog` and `/blog` renders the same page on every run, no mat
 which posts have been published or scheduled since the baselines were captured.
 
 Every post is dated in the past and marked `legacy: true` (structural validation
-only). Changing anything here changes the `/blog` baselines: regenerate them with
-the "Update Visual Baselines" workflow.
+only). Frontmatter changes (title, excerpt, dates, featured, readingTime) change the
+`/blog` baselines: regenerate them with the "Update Visual Baselines" workflow. Body
+edits do not, because the index cards never render the body.
+
+The bodies link to each other in a ring (each post links the next two by date)
+because `blog:build` runs the inbound-link rules on this directory too.

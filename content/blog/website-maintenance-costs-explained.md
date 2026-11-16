@@ -68,7 +68,7 @@ Here is what I strip out of every maintenance contract that does not belong in i
 - Redesigns disguised as maintenance when the underlying architecture is sound and conversion-ready
 - Unmonitored server resources that sit idle during off-peak hours and still bill you flat monthly rates
 
-You keep the budget tight by auditing what actually moves your metrics. I run a quarterly efficiency review and reallocate funds toward the channels that generate consistent pipeline velocity. For a rough build and maintenance number to hold quotes against, run your project through [my free cost estimator](/tools/cost-estimator).
+When the architecture itself is the problem, maintenance only patches it. That is when [whether a custom build pays for itself](/blog/is-a-custom-website-worth-the-investment) becomes the real question. You keep the budget tight by auditing what actually moves your metrics. I run a quarterly efficiency review and reallocate funds toward the channels that generate consistent pipeline velocity. For a rough build and maintenance number to hold quotes against, run your project through [my free cost estimator](/tools/cost-estimator).
 
 ## How To Build A Maintenance Plan That Scales
 Scaling a website requires the same discipline I used to scale a partner network by 2,200 percent. You do not throw money at problems after they break. You build systems that prevent breaks in the first place and track every variable that influences revenue. The process starts with inventory, moves through automation and ends with continuous attribution reviews.

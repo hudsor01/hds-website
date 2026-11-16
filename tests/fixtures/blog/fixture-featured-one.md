@@ -16,3 +16,5 @@ legacy: true
 ## Fixture body
 
 Static body text for visual regression fixture post 1. It is never shown on the live site.
+
+Read [Fixture Regular Post Two](/blog/fixture-regular-two) and [Fixture Regular Post One](/blog/fixture-regular-one) next.

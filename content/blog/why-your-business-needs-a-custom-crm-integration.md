@@ -63,7 +63,7 @@ Most CRMs ship with native integrations. Tools like Zapier and Make connect thou
 - Volume is modest.
 - A short delay or an occasional manual fix doesn't hurt anything.
 
-A form that creates a HubSpot contact, or a closed deal that posts a message to your team, is a perfectly good job for a native connector. I walk through the common options in [workflow automation tools for small business](/blog/workflow-automation-tools-small-business).
+A form that creates a HubSpot contact, or a closed deal that posts a message to your team, is a perfectly good job for a native connector. I walk through the common options in [workflow automation tools for small business](/blog/workflow-automation-tools-small-business). If you're still picking the CRM itself, I compare [how HubSpot and Salesforce fit a 5 to 50 person team](/blog/hubspot-vs-salesforce-for-small-business).
 
 ## When Custom Pays Off
 
@@ -129,7 +129,7 @@ Don't build on faith. Measure these before you start, then again a month after l
 - **Speed to lead**, from form submission to first contact.
 - **Report agreement**, whether CRM revenue matches accounting revenue.
 
-Put a dollar figure on the hours and the late invoices and the business case usually writes itself. My [ROI calculator](/tools/roi-calculator) helps you run the numbers on your own business.
+Put a dollar figure on the hours and the late invoices and the business case usually writes itself. If you don't have the hours number yet, [a one-week time log of repeated tasks](/blog/how-ai-automation-can-save-your-business-20-hours-per-week) gets it for you. My [ROI calculator](/tools/roi-calculator) helps you run the numbers on your own business.
 
 ## Start With One Flow
 

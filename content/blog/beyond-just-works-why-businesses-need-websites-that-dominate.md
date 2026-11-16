@@ -34,7 +34,7 @@ Every one of those matters. None of them tells you whether the site is paying fo
 
 A site can pass that whole list and still lose most of the people who land on it. The headline says "Welcome to our website." The phone number is an image you can't tap. The form asks for nine fields. The submission lands in a shared inbox nobody checks until Tuesday. Technically, it all works. Practically, it's a brochure with a URL.
 
-The other problem is that "just works" is invisible. You can't see the visitor who left after four seconds because they couldn't tell if you serve Plano. You only see the leads that made it through, so the site always looks better than it is.
+The other problem is that "just works" is invisible. You can't see the visitor who left after four seconds because they couldn't tell if you serve Plano. You only see the leads that made it through, so the site always looks better than it is. [Five signs your website is costing you customers](/blog/5-signs-your-website-is-costing-you-customers) pairs each hidden leak with a check you can run yourself.
 
 ## The Question I Ask Instead
 
@@ -70,7 +70,7 @@ Slow small-business sites usually aren't slow because of hosting. They're slow b
 
 ### It records what happened
 
-This is where most "working" sites fall down hardest. If your site isn't tracking calls, form submissions and bookings as key events in Google Analytics 4, you are guessing. Add UTM tags to every link you control (social posts, email newsletters, your Google Business Profile website link) so you can separate the traffic that converts from the traffic that just browses.
+This is where most "working" sites fall down hardest. If your site isn't tracking calls, form submissions and bookings as key events in Google Analytics 4, you are guessing. Add UTM tags to every link you control (social posts, email newsletters, your Google Business Profile website link) so you can separate the traffic that converts from the traffic that just browses. I go through the key events and reports worth your time in [my GA4 guide for small businesses](/blog/google-analytics-4-for-small-business).
 
 Phone calls matter most for service businesses and they're the easiest to lose track of. At minimum, track taps on your phone number. For a business that lives on the phone, a call tracking number on the website tells you which source rang.
 
@@ -108,7 +108,7 @@ Write down what fails. That list is your plan. If you're getting visitors but th
 
 ## Fix It or Rebuild It
 
-Some sites need a weekend of fixes. Compressing images, rewriting the headline, trimming the form and setting up proper tracking can change a lot without touching the design.
+Some sites need a weekend of fixes. Compressing images, rewriting the headline, trimming the form and setting up proper tracking can change a lot without touching the design. [How to increase website conversion rates without more ads](/blog/how-to-increase-website-conversion-rates-2025-guide) puts those fixes in the order I work through them.
 
 Other sites are built on a foundation that fights you. If every edit requires a developer, if the platform won't let you add tracking or schema or if the site was assembled from a template that loads a pile of code you'll never use, patching it costs more over time than replacing it. The [signs you need a website redesign](/blog/signs-you-need-a-website-redesign) post covers how to tell which side of that line you're on.
 

@@ -88,7 +88,7 @@ So I write service pages like this. The question is the heading. The direct answ
 
 Three habits I hold every page to:
 
-- **Use the words customers use.** "AC not blowing cold air" beats "HVAC system performance diagnostics."
+- **Use the words customers use.** "AC not blowing cold air" beats "HVAC system performance diagnostics." My [local keyword research workflow](/blog/local-keyword-research-for-service-businesses) is how I find those words.
 - **Give ranges when you can.** A real range with the factors that move it is more useful than "call for a quote." You don't have to commit to a number you can't stand behind.
 - **Name the place.** "We replace roofs in Southlake and Keller" tells a model where you work. "We serve the area" tells it nothing.
 

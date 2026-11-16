@@ -28,7 +28,7 @@ You need to price your website budget around outcomes, not pages. A brochure cos
 
 ### What Actually Moves the Needle
 
-Let's break down where your money goes when I build for Dallas-Fort Worth businesses. I track every line item because vague quotes are just hiding fees until the invoice arrives.
+Let's break down where your money goes when I build for Dallas-Fort Worth businesses. I track every line item because vague quotes are just hiding fees until the invoice arrives. If you already have quotes in hand, I explain [how to read each line of a website quote](/blog/what-goes-into-a-website-quote).
 
 Design and development form the foundation. This covers custom layouts, mobile responsiveness and core web vitals optimization. You are not paying for templates here. You are paying for a structure that loads under two seconds on mobile data and ranks without fighting generic themes. Google counts page experience as a ranking signal. Slow pages also lose visitors no matter how good your copy is. Speed is not a luxury in DFW where mobile data still drops on highways and inside dense commercial buildings.
 

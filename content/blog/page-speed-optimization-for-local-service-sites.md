@@ -40,7 +40,7 @@ Track these fundamentals in your analytics stack:
 - Mobile bounce rate on your service pages, watched as a monthly trend rather than a single snapshot
 - Form completion time from page load to submission confirmation
 
-I pull this data into Power BI or HubSpot dashboards so every team member sees the same numbers. You cannot improve what you do not measure consistently. When a new page launches, I run it through Lighthouse and PageSpeed Insights first, then verify the results with GTmetrix on a throttled 3G connection. Real users in DFW do not browse on fiber optic desktops during business hours. They browse on LTE while standing in traffic or waiting for a tow truck. Your testing environment must match that reality.
+I pull this data into Power BI or HubSpot dashboards so every team member sees the same numbers. You cannot improve what you do not measure consistently. When a new page launches, I run it through Lighthouse and PageSpeed Insights first, then verify the results with GTmetrix on a throttled 3G connection. Real users in DFW do not browse on fiber optic desktops during business hours. They browse on LTE while standing in traffic or waiting for a tow truck. Your testing environment must match that reality. My post on [how mobile speed affects your local customers](/blog/mobile-site-speed-and-your-local-customers) goes deeper on that.
 
 ### How I Audit A Local Service Site For Speed
 

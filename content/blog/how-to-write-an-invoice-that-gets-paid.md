@@ -22,7 +22,7 @@ Late payments are not a customer problem; they are a system failure. I spent nea
 
 ## The cash flow tax you pay for bad invoices
 
-Most small businesses in Dallas and Fort Worth run on thin margins. A missed payment or a thirty day delay does not just hurt your monthly bank balance. It compounds into payroll stress, vendor delays and distorted forecasting. Picture a Frisco HVAC contractor whose Q3 projection falls apart because three commercial clients dispute line items that were never clearly defined. Or a Plano landscaping crew bleeding working capital while it chases handwritten invoices that went out without a purchase order number or payment deadline. The math is brutal. An invoice that sits for forty-five days costs you real money once you factor in administrative time, borrowing costs and opportunity cost. You are literally paying a tax for sloppy documentation.
+Most small businesses in Dallas and Fort Worth run on thin margins, often thinner than the owner thinks when [markup gets mistaken for margin](/blog/profit-margin-vs-markup). A missed payment or a thirty day delay does not just hurt your monthly bank balance. It compounds into payroll stress, vendor delays and distorted forecasting. Picture a Frisco HVAC contractor whose Q3 projection falls apart because three commercial clients dispute line items that were never clearly defined. Or a Plano landscaping crew bleeding working capital while it chases handwritten invoices that went out without a purchase order number or payment deadline. The math is brutal. An invoice that sits for forty-five days costs you real money once you factor in administrative time, borrowing costs and opportunity cost. You are literally paying a tax for sloppy documentation.
 
 The fix is not to raise your prices or beg clients for updates. The fix is to engineer the document so that payment becomes the path of least resistance. That requires stripping away ambiguity, aligning every field to your accounting stack and removing friction at the exact moment a client opens the file. I track dispute rates, days sales outstanding and email open times because those numbers tell you where the leak lives. When your invoice layout matches your CRM pipeline stages, disputes drop and collections accelerate. You stop guessing when cash will hit the account and start routing it.
 
@@ -54,7 +54,7 @@ Every invoice I design includes these exact elements. Missing any single one ope
 - Accepted payment methods with a clickable link to your processor
 - Your contact email for billing questions, separated from general support
 
-Populate these fields during the booking phase. That means the invoice auto generates with zero last minute editing. The client already approved the scope and pricing when they signed the digital contract. You remove the surprise factor that triggers disputes.
+Populate these fields during the booking phase. That means the invoice auto generates with zero last minute editing. The client already approved the scope and pricing when they signed the digital contract. You remove the surprise factor that triggers disputes. For hourly work the line items are only as good as the hours behind them, so [tracking crew hours at the point of entry](/blog/how-to-track-employee-hours) comes first.
 
 ### Wiring it to your CRM and accounting stack
 
@@ -64,7 +64,7 @@ Once the invoice leaves your system, a scheduled email sequence takes over. It s
 
 ## Stop chasing. Start collecting.
 
-Your invoice should do the heavy lifting so you can focus on scaling operations and winning more contracts across the metroplex. You can turn a chronic cash flow drag into a predictable revenue pipeline simply by tightening your billing documents and connecting them to the right automation tools. You do not need a corporate finance department to make it happen. You need a clear template, a disciplined workflow and the habit of tracking the metrics that matter.
+Your invoice should do the heavy lifting so you can focus on scaling operations and winning more contracts across the metroplex. You can turn a chronic cash flow drag into a predictable revenue pipeline simply by tightening your billing documents and connecting them to the right automation tools. You do not need a corporate finance department to make it happen. You need a clear template, a disciplined workflow and the habit of tracking the metrics that matter. If it is late in the year, [my year-end checklist for small business owners](/blog/year-end-checklist-for-small-business-owners) starts with the same job: chasing the money you are owed.
 
 If you want to build this system without guessing which fields drive payment or how to wire it to your existing stack, start with the practical step that removes template friction. [Try my free tool](/tools/invoice-generator) to generate clean, structured invoices in minutes. You will see how numbered line items, clear due dates and complete contact details change the way your clients respond to billing.
 

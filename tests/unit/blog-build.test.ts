@@ -4,10 +4,31 @@
  * the real content/blog tree is never touched.
  */
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import {
+	existsSync,
+	mkdtempSync,
+	readFileSync,
+	rmSync,
+	writeFileSync
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { compilePosts, renderModule } from '../../scripts/blog/build'
+import {
+	compileAll,
+	compilePosts,
+	contentDir,
+	loadPosts,
+	renderModule,
+	runBuild
+} from '../../scripts/blog/build'
+import {
+	CONTENT_DIR,
+	htmlAnchorHrefs,
+	isLive,
+	postSlugFromHref
+} from '../../scripts/blog/lib'
+import { validateAll } from '../../scripts/blog/validate'
+import type { CompiledBlogPost } from '../../src/types/blog'
 
 interface FixtureOptions {
 	slug: string
@@ -171,7 +192,14 @@ describe('compilePosts', () => {
 
 	test('throws on an invalid publishedAt', () => {
 		writePost({ slug: 'bad-date', publishedAt: 'someday' })
-		expect(() => compilePosts(dir)).toThrow(/publishedAt is not a valid date/)
+		expect(() => compilePosts(dir)).toThrow(/publishedAt must be a YYYY-MM-DD/)
+	})
+
+	test('throws on a date-time publishedAt, naming the file and field', () => {
+		writePost({ slug: 'timed', publishedAt: '2026-01-01T23:30:00' })
+		expect(() => compilePosts(dir)).toThrow(
+			/timed\.md: \[R0\] publishedAt must be a YYYY-MM-DD date/
+		)
 	})
 
 	test('throws when a slug does not match its filename', () => {
@@ -192,6 +220,379 @@ describe('compilePosts', () => {
 	test('throws when there are no published posts', () => {
 		writePost({ slug: 'only-draft', published: false })
 		expect(() => compilePosts(dir)).toThrow(/no published posts/)
+	})
+})
+
+describe('scheduled posts are compiled before their date (WR-06)', () => {
+	const BEFORE = new Date('2026-11-16T00:00:00.000Z')
+	// A title that passes validation (a non-empty string) but strips to nothing.
+	const EMPTY_TITLE = '![](x)'
+
+	beforeEach(() => {
+		writePost({ slug: 'live-post', publishedAt: '2026-01-01' })
+	})
+
+	test('a held post whose title strips to empty fails every build', () => {
+		writePost({
+			slug: 'held-bad',
+			title: EMPTY_TITLE,
+			publishedAt: '2026-12-20'
+		})
+		expect(() => compilePosts(dir, BEFORE)).toThrow(
+			/held-bad\.md: title is empty after stripping markdown/
+		)
+	})
+
+	test('blog:validate reports it as a COMPILE error on the file', () => {
+		writePost({
+			slug: 'held-bad',
+			title: EMPTY_TITLE,
+			publishedAt: '2026-12-20'
+		})
+		const report = validateAll(dir, BEFORE).find(r => r.file === 'held-bad.md')
+		expect(report?.violations).toContainEqual({
+			rule: 'COMPILE',
+			message: 'title is empty after stripping markdown',
+			severity: 'error'
+		})
+	})
+
+	test('a held post is compiled but left out of the output', () => {
+		writePost({ slug: 'held-post', publishedAt: '2026-12-20' })
+		const posts = loadPosts(dir)
+		const { compiled, failures } = compileAll(posts, BEFORE)
+		expect(failures).toEqual([])
+		expect(compiled.map(p => p.slug)).toEqual(['live-post'])
+	})
+
+	test('drafts are never compiled', () => {
+		writePost({ slug: 'draft-bad', title: EMPTY_TITLE, published: false })
+		expect(compilePosts(dir, BEFORE).map(p => p.slug)).toEqual(['live-post'])
+		const report = validateAll(dir, BEFORE).find(r => r.file === 'draft-bad.md')
+		expect(report?.violations.filter(v => v.rule === 'COMPILE')).toEqual([])
+	})
+
+	test('validation and compile failures are reported together', () => {
+		writePost({ slug: 'bad-tag', tags: ['not-a-tag'] })
+		writePost({
+			slug: 'held-bad',
+			title: EMPTY_TITLE,
+			publishedAt: '2026-12-20'
+		})
+		expect(() => compilePosts(dir, BEFORE)).toThrow(
+			/failed for 2 issue\(s\):\n {2}bad-tag\.md: \[R4\] unknown tag: not-a-tag\n {2}held-bad\.md: title is empty/
+		)
+	})
+})
+
+describe('held-post links (D4)', () => {
+	const DAY_BEFORE = new Date('2026-03-01T23:59:59.999Z')
+	const ON_THE_DAY = new Date('2026-03-02T00:00:00.000Z')
+
+	function contentOf(slug: string, now: Date): string | undefined {
+		return compilePosts(dir, now).find(p => p.slug === slug)?.content
+	}
+
+	beforeEach(() => {
+		writePost({ slug: 'held-post', publishedAt: '2026-03-02' })
+	})
+
+	test('a link to a held post renders as its text, formatting kept', () => {
+		writePost({
+			slug: 'live-post',
+			publishedAt: '2026-03-01',
+			body: 'See [**the held post**](/blog/held-post) now.'
+		})
+		expect(contentOf('live-post', DAY_BEFORE)).toBe(
+			'<p>See <strong>the held post</strong> now.</p>\n'
+		)
+	})
+
+	test('the link switches on when the held post goes live', () => {
+		writePost({
+			slug: 'live-post',
+			publishedAt: '2026-03-01',
+			body: 'See [**the held post**](/blog/held-post) now.'
+		})
+		const posts = compilePosts(dir, ON_THE_DAY)
+		expect(posts.map(p => p.slug)).toEqual(['held-post', 'live-post'])
+		expect(posts.find(p => p.slug === 'live-post')?.content).toBe(
+			'<p>See <a href="/blog/held-post"><strong>the held post</strong></a> now.</p>\n'
+		)
+	})
+
+	test('an absolute link to a held post also renders as text', () => {
+		writePost({
+			slug: 'live-post',
+			publishedAt: '2026-03-01',
+			body: 'See [it](https://hudsondigitalsolutions.com/blog/held-post/#faq).'
+		})
+		expect(contentOf('live-post', DAY_BEFORE)).toBe('<p>See it.</p>\n')
+	})
+
+	test('a link to a draft renders as text', () => {
+		writePost({ slug: 'draft-post', published: false })
+		writePost({
+			slug: 'live-post',
+			publishedAt: '2026-03-01',
+			body: 'See [the draft](/blog/draft-post).'
+		})
+		expect(contentOf('live-post', DAY_BEFORE)).toBe('<p>See the draft.</p>\n')
+	})
+
+	test('every other link renders exactly as before', () => {
+		writePost({ slug: 'other-live', publishedAt: '2026-02-01' })
+		writePost({
+			slug: 'live-post',
+			publishedAt: '2026-03-01',
+			body: '[x](/blog/other-live) [tools](/tools/paystub-calculator) [g](https://google.com "Google")'
+		})
+		expect(contentOf('live-post', DAY_BEFORE)).toBe(
+			'<p><a href="/blog/other-live">x</a> <a href="/tools/paystub-calculator">tools</a> <a href="https://google.com" title="Google">g</a></p>\n'
+		)
+	})
+})
+
+describe('loadPosts', () => {
+	test('returns every parsed post, drafts and scheduled included', () => {
+		writePost({ slug: 'live-post' })
+		writePost({ slug: 'draft-post', published: false })
+		writePost({ slug: 'scheduled-post', publishedAt: '2099-01-01' })
+		expect(
+			loadPosts(dir)
+				.map(p => p.slug)
+				.sort()
+		).toEqual(['draft-post', 'live-post', 'scheduled-post'])
+	})
+
+	test('returns posts even when none is live', () => {
+		writePost({ slug: 'only-draft', published: false })
+		expect(loadPosts(dir).map(p => p.slug)).toEqual(['only-draft'])
+	})
+
+	test('throws with file and rule on a validation error', () => {
+		writePost({ slug: 'bad-tag', tags: ['not-a-tag'] })
+		expect(() => loadPosts(dir)).toThrow(
+			/blog:build failed for 1 issue\(s\):\n {2}bad-tag\.md: \[R4\] unknown tag: not-a-tag/
+		)
+	})
+
+	test('throws on unparseable frontmatter', () => {
+		// Different text from the compilePosts case: gray-matter caches by
+		// input string, so a repeat of the same broken text would not throw.
+		writeFileSync(
+			join(dir, 'broken.md'),
+			'---\ntitle: [still unclosed\nslug: broken\n---\nbody\n'
+		)
+		expect(() => loadPosts(dir)).toThrow(/broken\.md: cannot parse \(/)
+	})
+})
+
+/**
+ * Every <a href> in compiled posts that resolves (the way a browser does on
+ * that post's page) to a post that is not live, as "source -> href". Hrefs
+ * are read by an HTML parser, so any quote style and absolute form counts.
+ */
+function anchorsToNonLive(
+	posts: CompiledBlogPost[],
+	live: ReadonlySet<string>
+): { offenders: string[]; postLinks: number } {
+	const offenders: string[] = []
+	let postLinks = 0
+	for (const p of posts) {
+		for (const href of htmlAnchorHrefs(p.content)) {
+			const slug = postSlugFromHref(href, p.slug)
+			if (slug === null) {
+				continue
+			}
+			postLinks++
+			if (!live.has(slug)) {
+				offenders.push(`${p.slug} -> ${href}`)
+			}
+		}
+	}
+	return { offenders, postLinks }
+}
+
+describe('no compiled <a> points at a post that is not live', () => {
+	const DAY_BEFORE = new Date('2026-03-01T23:59:59.999Z')
+	const ON_THE_DAY = new Date('2026-03-02T00:00:00.000Z')
+	// Every way a markdown body can link the held post; all must render as text.
+	const FORMS = [
+		'[a](/blog/held-post)',
+		'[b](https://hudsondigitalsolutions.com/blog/held-post/#faq)',
+		'[c](HTTPS://WWW.HudsonDigitalSolutions.com/blog/held-post)',
+		'[d](//hudsondigitalsolutions.com/blog/held-post?x=1)',
+		'[e](held-post)',
+		'[f](./held-post)',
+		'[g](../blog/held-post)',
+		'[h](https://hudsondigitalsolutions.com:443/blog/./held-post)',
+		'[i][ref]',
+		'[j](/blog//held-post)',
+		'[k](/blog/held-post//)',
+		'[l](https://hudsondigitalsolutions.com//blog/held-post)',
+		'<https://hudsondigitalsolutions.com/blog/held-post>',
+		'https://www.hudsondigitalsolutions.com/blog/held-post'
+	]
+
+	test('a synthetic held post is never linked before its date', () => {
+		writePost({ slug: 'held-post', publishedAt: '2026-03-02' })
+		writePost({
+			slug: 'live-post',
+			publishedAt: '2026-03-01',
+			body: `${FORMS.join('\n\n')}\n\n[ref]: /blog/held-post`
+		})
+		const live = (now: Date): Set<string> =>
+			new Set(
+				loadPosts(dir)
+					.filter(p => isLive(p.data, now))
+					.map(p => p.slug)
+			)
+
+		const before = anchorsToNonLive(
+			compilePosts(dir, DAY_BEFORE),
+			live(DAY_BEFORE)
+		)
+		expect(before).toEqual({ offenders: [], postLinks: 0 })
+
+		// Not vacuous: on the day, every form is a real link to the post.
+		const onTheDay = anchorsToNonLive(
+			compilePosts(dir, ON_THE_DAY),
+			live(ON_THE_DAY)
+		)
+		expect(onTheDay).toEqual({ offenders: [], postLinks: FORMS.length })
+	})
+
+	test('real content: no compiled <a> resolves to a non-live post', () => {
+		const now = new Date()
+		const posts = loadPosts()
+		const live = new Set(
+			posts.filter(p => isLive(p.data, now)).map(p => p.slug)
+		)
+		const { offenders, postLinks } = anchorsToNonLive(
+			compileAll(posts, now).compiled,
+			live
+		)
+		expect(offenders).toEqual([])
+		expect(postLinks).toBeGreaterThan(0)
+	})
+})
+
+describe('runBuild (the blog:build link gate)', () => {
+	const NOW = new Date('2026-03-01T12:00:00.000Z')
+	let out: string
+
+	beforeEach(() => {
+		out = join(dir, 'out', 'blog-posts.ts')
+	})
+
+	/** Three posts that each link the other two, so every rule stays quiet. */
+	function writeRing(): void {
+		const ring = ['ring-a', 'ring-b', 'ring-c']
+		for (const slug of ring) {
+			writePost({
+				slug,
+				body: ring
+					.filter(other => other !== slug)
+					.map(other => `[${other}](/blog/${other})`)
+					.join(' ')
+			})
+		}
+	}
+
+	test('writes the module when every rule passes', () => {
+		writeRing()
+		const result = runBuild(dir, NOW, out)
+		expect(result.changed).toBe(true)
+		expect(result.warnings).toEqual([])
+		expect(result.posts.map(p => p.slug)).toEqual([
+			'ring-a',
+			'ring-b',
+			'ring-c'
+		])
+		expect(readFileSync(out, 'utf8')).toBe(renderModule(result.posts))
+		expect(runBuild(dir, NOW, out).changed).toBe(false)
+	})
+
+	test('an orphan throws, names the slug and writes nothing', () => {
+		writeRing()
+		writePost({ slug: 'lonely' })
+		expect(() => runBuild(dir, NOW, out)).toThrow(
+			/lonely\.md: \[LINK-orphan\] lonely has no qualifying inbound links/
+		)
+		expect(existsSync(out)).toBe(false)
+	})
+
+	test('a raw HTML link to a held post throws and leaves the old module', () => {
+		writeRing()
+		writePost({ slug: 'held-post', publishedAt: '2026-03-02' })
+		writePost({
+			slug: 'ring-a',
+			body: '[b](/blog/ring-b) [c](/blog/ring-c) [h](/blog/held-post)'
+		})
+		writePost({
+			slug: 'ring-b',
+			body: '[a](/blog/ring-a) [c](/blog/ring-c) [h](/blog/held-post)'
+		})
+		runBuild(dir, NOW, out)
+		const before = readFileSync(out, 'utf8')
+		writePost({
+			slug: 'ring-c',
+			body: '[a](/blog/ring-a) [b](/blog/ring-b) <a href=/blog/held-post>h</a>'
+		})
+		expect(() => runBuild(dir, NOW, out)).toThrow(
+			/ring-c\.md: \[LINK-html\] raw HTML link to \/blog\/held-post/
+		)
+		expect(readFileSync(out, 'utf8')).toBe(before)
+	})
+
+	test('a dead link throws and writes nothing', () => {
+		writeRing()
+		writePost({
+			slug: 'ring-a',
+			body: '[b](/blog/ring-b) [c](./ring-c) [x](./missing-post)'
+		})
+		expect(() => runBuild(dir, NOW, out)).toThrow(
+			/ring-a\.md: \[LINK-dead\] links to \/blog\/missing-post/
+		)
+		expect(existsSync(out)).toBe(false)
+	})
+
+	test('a compile failure throws before the link rules and writes nothing', () => {
+		writeRing()
+		writePost({ slug: 'ring-a', title: '![](x)', body: '[b](/blog/ring-b)' })
+		expect(() => runBuild(dir, NOW, out)).toThrow(/ring-a\.md: title is empty/)
+		expect(existsSync(out)).toBe(false)
+	})
+
+	test('one qualifying inbound link is a warning, not a failure', () => {
+		writeRing()
+		writePost({ slug: 'target' })
+		writePost({
+			slug: 'ring-a',
+			body: '[b](/blog/ring-b) [c](/blog/ring-c) [t](/blog/target)'
+		})
+		const result = runBuild(dir, NOW, out)
+		expect(result.warnings.map(v => `${v.file} ${v.rule}`)).toEqual([
+			'target.md LINK-below'
+		])
+		expect(existsSync(out)).toBe(true)
+	})
+
+	test('BLOG_CONTENT_DIR selects the content directory', () => {
+		expect(contentDir(undefined)).toBe(CONTENT_DIR)
+		expect(contentDir('')).toBe(CONTENT_DIR)
+		expect(contentDir('tests/fixtures/blog')).toBe(
+			join(process.cwd(), 'tests/fixtures/blog')
+		)
+	})
+
+	test('the BLOG_CONTENT_DIR fixtures pass the gate', () => {
+		const fixtures = contentDir('tests/fixtures/blog')
+		const result = runBuild(fixtures, new Date('2026-02-01T00:00:00.000Z'), out)
+		expect(result.posts).toHaveLength(5)
+		expect(result.warnings).toEqual([])
+		expect(readFileSync(out, 'utf8')).toBe(renderModule(result.posts))
 	})
 })
 

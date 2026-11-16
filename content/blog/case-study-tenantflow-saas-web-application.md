@@ -107,6 +107,6 @@ You probably don't need a full SaaS platform. You might need a client portal, an
 1. **Cut scope on purpose.** Build what gets used every week.
 2. **Put the rules where they can't be skipped.** If something must never happen, enforce it in the database or the payment system, not in a reminder.
 3. **Test what you promise.** If the site says it, the product should do it.
-4. **Keep the stack small.** Every service you add is one more thing to pay for and maintain.
+4. **Keep the stack small.** Every service you add is one more thing to pay for and maintain. Hosting is no exception, which is why [I rarely recommend Kubernetes to a small business](/blog/kubernetes-for-small-business-is-it-worth-it).
 
-If you have a process that lives in spreadsheets and email right now, [tell me about it](/contact). I'll tell you whether it needs custom software, an off-the-shelf tool or just a better website. You can see TenantFlow and the rest of my work on the [showcase](/showcase).
+If you have a process that lives in spreadsheets and email right now, [tell me about it](/contact). I'll tell you whether it needs custom software, an off-the-shelf tool or just a better website. If it turns out you only need a better website, start with [when a website builder is enough and when a custom build pays off](/blog/custom-website-vs-website-builder). You can see TenantFlow and the rest of my work on the [showcase](/showcase).

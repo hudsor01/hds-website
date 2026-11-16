@@ -28,7 +28,7 @@ Google shifted to mobile first indexing years ago, but most DFW business owners 
 
 I track bounce rates and route them through attribution models so I know exactly which page costs you money. Speed is the first filter in that funnel. Slow pages break tracking pixels, delay form submissions and kill checkout flows before the customer even sees your pricing. I measure load time with Lighthouse, Power BI and Workato pipelines that feed raw performance data straight into HubSpot. The system tells me which pages bleed revenue and where to inject fixes first.
 
-You do not need a perfect Lighthouse score to move the needle. You just need your critical rendering path under two seconds and your first tap to register within two hundred milliseconds. That is the threshold where local customers actually finish what they started.
+You do not need a perfect Lighthouse score to move the needle. You just need your critical rendering path under two seconds and your first tap to register within two hundred milliseconds. That is the threshold where local customers actually finish what they started. If your hero image is the slow part, my guide to [tracking down a slow largest contentful paint](/blog/largest-contentful-paint-how-to-find-and-fix-it) shows where to look.
 
 ### What Your Customers Actually Experience
 
@@ -49,7 +49,7 @@ These numbers feed directly into my forecasting models. When performance improve
 
 You cannot rely on a developer to manually compress images and hope for the best. You need pipelines that catch bloat before it hits production. I run everything through Workato to automate asset delivery and cache invalidation. When a content team uploads a new service page, the workflow checks file size, converts images to WebP or AVIF, strips metadata and pushes a CDN edge cache update. The whole process takes forty seconds instead of forty minutes. Your sales team gets the updated page live before they finish their morning coffee.
 
-Booking flows and payment integrations are where most local sites fail under load. Every third party script adds latency. A calendar widget, a Stripe button and a review plugin can easily add hundreds of milliseconds of render delay. I remove unnecessary layers first, then load what matters only after the main content paints. I use lazy loading for below-the-fold elements and defer noncritical JavaScript until after user interaction. The result is a page that feels instant on mobile while still capturing every booking and payment event you need for reporting.
+Booking flows and payment integrations are where most local sites fail under load. Every third party script adds latency. A calendar widget, a Stripe button and a review plugin can easily add hundreds of milliseconds of render delay. I remove unnecessary layers first, then load what matters only after the main content paints. I use lazy loading for below-the-fold elements and defer noncritical JavaScript until after user interaction. The result is a page that feels instant on mobile while still capturing every booking and payment event you need for reporting. I dig into the other reasons a site drags in [what slows down most small business websites](/blog/why-your-small-business-has-a-slow-website).
 
 I build around these standards so your site stays fast as you add new services or hire sales reps. I document every change in a version control system and run regression tests before deployment. You get predictable performance instead of surprise slowdowns after a plugin update.
 

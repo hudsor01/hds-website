@@ -55,7 +55,7 @@ I set one project price for the core build once the scope is clear. That structu
 
 ## What Happens After Launch
 
-Most quotes stop at deployment. That leaves a hole in your operations. A website quote should include handoff protocols, analytics configuration and a maintenance window. I expect to set up UTM parameters, configure GA4 events and build a dashboard that shows which pages actually generate calls. I also schedule three post launch training sessions so your staff knows how to edit copy, manage forms and pull basic reports.
+Most quotes stop at deployment. That leaves a hole in your operations. A website quote should include handoff protocols, analytics configuration and a maintenance window. I expect to set up UTM parameters, configure GA4 events and build a dashboard that shows which pages actually generate calls. I also schedule three post launch training sessions so your staff knows how to edit copy, manage forms and pull basic reports. Domain, hosting, email and connected software keep billing after launch too. I list them in [the ongoing costs nobody puts in the quote](/blog/small-business-website-cost-2025).
 
 Maintenance is not an afterthought. It is continuous optimization. I monitor Core Web Vitals, patch CMS security updates and rotate backup schedules. Some vendors charge a monthly retainer for this work. Others bake it into the initial quote as a six month warranty period. Both models work if you know what is included. I prefer upfront inclusion so there are no hidden subscription traps.
 

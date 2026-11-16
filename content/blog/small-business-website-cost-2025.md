@@ -86,7 +86,7 @@ If you're already stuck on one of these platforms, I handle the move with your r
 
 ## How to Tell If the Price Is Worth It
 
-Stop comparing website quotes to each other. Compare them to what a customer is worth.
+Stop comparing website quotes to each other. Compare them to what a customer is worth. That comparison is the heart of [the acquisition cost math behind a custom build](/blog/is-a-custom-website-worth-the-investment).
 
 Here's the math I'd run. Say an average job is worth $1,500 to you and your site produces four extra booked jobs a month because the forms work, the tracking works and follow-up happens automatically. That's $6,000 a month in new revenue. A $7,000 build pays for itself in under two months. Now flip it. If the cheapest option loses even one job a month to a broken form or a slow page, it's costing you more than the price difference.
 

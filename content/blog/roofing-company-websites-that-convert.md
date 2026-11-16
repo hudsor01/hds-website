@@ -38,7 +38,7 @@ Picture a roofer in Richardson running Google Ads for "roof replacement". If the
 
 I also build dedicated landing pages for key suburbs like Allen, McKinney and Carrollton. These pages target hyper-local queries and include testimonials from homeowners in those exact zip codes. That local relevance helps Google match each page to searches in that community and can lift your ad Quality Score when the page matches the query. Track cost per lead separately for general repairs and full replacements. If your leads cost more than the jobs can carry, the problem is not just your ads. Your landing pages are likely generic and fail to address specific pain points.
 
-I break down service lines into dedicated pages with clear calls to action. A homeowner searching for gutter replacement in Frisco sees a page about gutters, not your entire homepage. This relevance drives conversion rates up and cost per acquisition down. You should see distinct performance data for each service category in your analytics so you know where to invest budget.
+I break down service lines into dedicated pages with clear calls to action. A homeowner searching for gutter replacement in Frisco sees a page about gutters, not your entire homepage. Plumbers build the same way, with [one page per service and city, like slab leak detection in Irving](/blog/plumber-website-design-that-books-jobs). This relevance drives conversion rates up and cost per acquisition down. You should see distinct performance data for each service category in your analytics so you know where to invest budget.
 
 ## Automate the Back Office to Free Up Your Sales Team.
 

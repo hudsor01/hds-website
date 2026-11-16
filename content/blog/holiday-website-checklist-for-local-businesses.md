@@ -99,7 +99,7 @@ If you want to put a dollar figure on what slow pages cost you, plug your number
 
 ## 5. Test Every Form and Every Phone Number
 
-This is the step everyone skips. I never skip it. Forms break quietly. A plugin updates, an email password changes, a spam filter gets stricter. Suddenly your contact form "works" for the visitor but sends nothing to you.
+This is the step everyone skips. I never skip it. Forms break quietly. A plugin updates, an email password changes, a spam filter gets stricter. Suddenly your contact form "works" for the visitor but sends nothing to you. A dead form tops my list of [warning signs that your website is losing customers](/blog/5-signs-your-website-is-costing-you-customers).
 
 Block out 20 minutes and do it yourself, on your own phone, on cell data rather than your office Wi-Fi.
 
@@ -135,7 +135,7 @@ Build the follow-up now, while you have time to think.
 
 You don't need an enterprise stack. A simple sequence in your email tool or CRM can send the thank-you, the review request and a January reminder on schedule. I've built these in HubSpot and Workato. The principle holds at any size: decide the steps once and let the system run them. For a starting point, [this post on automated follow-up](/blog/automate-customer-follow-up-email-sms) lays out a sequence that fits most service businesses.
 
-Then put a reminder on your calendar for January 2 to take down the holiday banner, reset any hours you changed by hand and pull the expired offer off the homepage.
+Then put a reminder on your calendar for January 2 to take down the holiday banner, reset any hours you changed by hand and pull the expired offer off the homepage. If January gives you a slow week, my one-hour check for [grading whether your site actually brings in leads](/blog/beyond-just-works-why-businesses-need-websites-that-dominate) is a good use of it.
 
 ## Your Holiday Website Checklist, Condensed
 

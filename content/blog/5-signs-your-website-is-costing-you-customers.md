@@ -86,7 +86,7 @@ The usual culprits:
 
 Hand your phone to someone who doesn't know your business. Show them the homepage for five seconds, then take it back. Ask what you sell, where you work and what they would click. If they hesitate on any of the three, your headline and your primary button need work.
 
-Go one step further and look at your service pages. Each one should name the service, the area you cover and a single clear next step. If you're unsure how to structure that button and the copy around it, [call to action best practices](/blog/call-to-action-best-practices) lays out what works on service sites.
+Go one step further and look at your service pages. Each one should name the service, the area you cover and a single clear next step. Any page that takes ad traffic should also [match the ad that sent the visitor](/blog/landing-page-optimization-small-business). If you're unsure how to structure that button and the copy around it, [call to action best practices](/blog/call-to-action-best-practices) lays out what works on service sites.
 
 ## Sign 5: Your Site Looks Abandoned
 
@@ -109,7 +109,7 @@ That is the revenue operations lesson I keep coming back to. When I was working 
 Your website deserves the same visibility, even at small-business scale. At minimum, that means:
 
 1. Every form submission lands in one place you check daily, not just an inbox.
-2. Phone clicks, form submissions and bookings are tracked as key events in GA4.
+2. Phone clicks, form submissions and bookings are tracked as key events in GA4. I explain how to set those up in [Google Analytics 4 for a service business](/blog/google-analytics-4-for-small-business).
 3. Someone tests the forms and the mobile experience at least once a month.
 4. Your business details match everywhere they appear online.
 
@@ -117,7 +117,7 @@ None of that requires an enterprise budget. It requires deciding that the websit
 
 ## Fix It or Rebuild It?
 
-Not every one of these signs means you need a new site. A dead form or a mismatched phone number is a same-day fix. A clearer headline and a sticky call button might take an afternoon.
+Not every one of these signs means you need a new site. A dead form or a mismatched phone number is a same-day fix. A clearer headline and a sticky call button might take an afternoon. I walk through those quick fixes, in the order I tackle them, in [my plan for raising your conversion rate](/blog/how-to-increase-website-conversion-rates-2025-guide).
 
 But say you're failing Core Web Vitals on every page. The site can't be edited without calling a developer. The form plugin hasn't been updated in years. At that point patching it starts to cost more than replacing it. [Signs you need a website redesign](/blog/signs-you-need-a-website-redesign) goes deeper on where that line sits.
 

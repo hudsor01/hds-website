@@ -147,7 +147,7 @@ Keep the reports running after you hit reject. Every new tool you add later need
 
 ## Where This Fits in Your Stack
 
-Email authentication isn't glamorous. But it sits under every revenue process that touches an inbox: quotes, invoices, booking confirmations, review requests, password resets. A great follow-up sequence is worthless if Gmail hides it.
+Email authentication isn't glamorous. But it sits under every revenue process that touches an inbox: quotes, invoices, booking confirmations, review requests, password resets. A great follow-up sequence is worthless if Gmail hides it. For the website itself, start with [the security basics that stop most small business site hacks](/blog/small-business-website-security-basics).
 
 It also matters any time you change providers or move your domain. Records get dropped during migrations all the time, which is why it's on the checklist in [how to transfer your domain safely](/blog/how-to-transfer-your-domain-safely).
 

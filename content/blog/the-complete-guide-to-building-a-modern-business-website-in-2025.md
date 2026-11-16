@@ -122,7 +122,7 @@ Anything that fails gets fixed before you announce the launch.
 
 ## Step 10: Measure and Maintain
 
-Launch is the starting line. In the first month, compare your baseline number from Step 1 to what the new site produces. Look at which pages get visits but no action and fix those first.
+Launch is the starting line. In the first month, compare your baseline number from Step 1 to what the new site produces. Look at which pages get visits but no action and fix those first. Check them against [the design mistakes that cost small businesses customers](/blog/web-design-mistakes-that-cost-customers).
 
 Then put maintenance on the calendar: software updates, backups, uptime monitoring and a quarterly look at speed and tracking. Browsers change, plugins age and forms quietly break. [Website maintenance costs explained](/blog/website-maintenance-costs-explained) covers what that upkeep involves so it doesn't surprise you.
 

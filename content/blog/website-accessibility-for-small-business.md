@@ -114,7 +114,7 @@ My take from the systems side: an overlay is a dashboard that reports green whil
 
 ## What Fixing It Actually Looks Like
 
-For most small business sites, the work isn't dramatic. It's a pass through the templates to fix heading order, add real alt text, tighten contrast in the color palette, label every form field and make focus states visible. On a well-built site, that's a modest project. On a cluttered template site with a page builder stacked on top of plugins, it can be cheaper to rebuild than to patch.
+For most small business sites, the work isn't dramatic. It's a pass through the templates to fix heading order, add real alt text, tighten contrast in the color palette, label every form field and make focus states visible. On a well-built site, that's a modest project. On a cluttered template site with a page builder stacked on top of plugins, it can be cheaper to rebuild than to patch. If you end up comparing designers for that rebuild, ask each one how they handle accessibility; my guide on [how to choose a web designer in DFW](/blog/how-to-choose-a-web-designer-in-dfw) lists the other questions worth asking.
 
 Then keep it fixed. Accessibility breaks the same way tracking breaks: someone uploads a new photo without alt text, adds a new form, drops in a third-party widget. Put a quick check into your normal routine, the same way you'd review a [website performance audit checklist](/blog/website-performance-audit-checklist-small-business) every quarter.
 
