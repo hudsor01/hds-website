@@ -7,8 +7,14 @@ import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { compilePosts, loadPosts, renderModule } from '../../scripts/blog/build'
+import {
+	compileAll,
+	compilePosts,
+	loadPosts,
+	renderModule
+} from '../../scripts/blog/build'
 import { isLive } from '../../scripts/blog/lib'
+import { validateAll } from '../../scripts/blog/validate'
 
 interface FixtureOptions {
 	slug: string
@@ -200,6 +206,68 @@ describe('compilePosts', () => {
 	test('throws when there are no published posts', () => {
 		writePost({ slug: 'only-draft', published: false })
 		expect(() => compilePosts(dir)).toThrow(/no published posts/)
+	})
+})
+
+describe('scheduled posts are compiled before their date (WR-06)', () => {
+	const BEFORE = new Date('2026-11-16T00:00:00.000Z')
+	// A title that passes validation (a non-empty string) but strips to nothing.
+	const EMPTY_TITLE = '![](x)'
+
+	beforeEach(() => {
+		writePost({ slug: 'live-post', publishedAt: '2026-01-01' })
+	})
+
+	test('a held post whose title strips to empty fails every build', () => {
+		writePost({
+			slug: 'held-bad',
+			title: EMPTY_TITLE,
+			publishedAt: '2026-12-20'
+		})
+		expect(() => compilePosts(dir, BEFORE)).toThrow(
+			/held-bad\.md: title is empty after stripping markdown/
+		)
+	})
+
+	test('blog:validate reports it as a COMPILE error on the file', () => {
+		writePost({
+			slug: 'held-bad',
+			title: EMPTY_TITLE,
+			publishedAt: '2026-12-20'
+		})
+		const report = validateAll(dir, BEFORE).find(r => r.file === 'held-bad.md')
+		expect(report?.violations).toContainEqual({
+			rule: 'COMPILE',
+			message: 'title is empty after stripping markdown',
+			severity: 'error'
+		})
+	})
+
+	test('a held post is compiled but left out of the output', () => {
+		writePost({ slug: 'held-post', publishedAt: '2026-12-20' })
+		const posts = loadPosts(dir)
+		const { compiled, failures } = compileAll(posts, BEFORE)
+		expect(failures).toEqual([])
+		expect(compiled.map(p => p.slug)).toEqual(['live-post'])
+	})
+
+	test('drafts are never compiled', () => {
+		writePost({ slug: 'draft-bad', title: EMPTY_TITLE, published: false })
+		expect(compilePosts(dir, BEFORE).map(p => p.slug)).toEqual(['live-post'])
+		const report = validateAll(dir, BEFORE).find(r => r.file === 'draft-bad.md')
+		expect(report?.violations.filter(v => v.rule === 'COMPILE')).toEqual([])
+	})
+
+	test('validation and compile failures are reported together', () => {
+		writePost({ slug: 'bad-tag', tags: ['not-a-tag'] })
+		writePost({
+			slug: 'held-bad',
+			title: EMPTY_TITLE,
+			publishedAt: '2026-12-20'
+		})
+		expect(() => compilePosts(dir, BEFORE)).toThrow(
+			/failed for 2 issue\(s\):\n {2}bad-tag\.md: \[R4\] unknown tag: not-a-tag\n {2}held-bad\.md: title is empty/
+		)
 	})
 })
 

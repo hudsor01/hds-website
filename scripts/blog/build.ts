@@ -55,7 +55,7 @@ function compilePost(
 ): CompiledBlogPost {
 	const title = stripMarkdown(data.title)
 	if (!title) {
-		throw new Error(`${slug}: title is empty after stripping markdown`)
+		throw new Error('title is empty after stripping markdown')
 	}
 	return {
 		slug,
@@ -78,11 +78,8 @@ function failureMessage(failures: string[]): string {
 	return `blog:build failed for ${failures.length} issue(s):\n  ${failures.join('\n  ')}`
 }
 
-/**
- * Parse and validate every post in `dir`, drafts and scheduled posts
- * included. Any parse failure or validation ERROR throws, listing each one.
- */
-export function loadPosts(dir: string = CONTENT_DIR): ParsedPost[] {
+/** Every parsed post that passed validation, plus one line per failure. */
+function parseAll(dir: string): { posts: ParsedPost[]; failures: string[] } {
 	const failures: string[] = []
 	const posts: ParsedPost[] = []
 
@@ -106,42 +103,81 @@ export function loadPosts(dir: string = CONTENT_DIR): ParsedPost[] {
 		}
 		posts.push(parsed)
 	}
+	return { posts, failures }
+}
 
+/**
+ * Parse and validate every post in `dir`, drafts and scheduled posts
+ * included. Any parse failure or validation ERROR throws, listing each one.
+ */
+export function loadPosts(dir: string = CONTENT_DIR): ParsedPost[] {
+	const { posts, failures } = parseAll(dir)
 	if (failures.length > 0) {
 		throw new Error(failureMessage(failures))
 	}
 	return posts
 }
 
+export interface CompileFailure {
+	file: string
+	message: string
+}
+
+/**
+ * Compile every published post, scheduled ones included, so a compile-time
+ * failure (such as a title that strips to nothing) shows up in CI and in every
+ * build instead of first in the scheduled rebuild on the post's publish day.
+ * Drafts are never compiled. Returns only the live posts, newest first; links
+ * to posts that are not live render as text.
+ */
+export function compileAll(
+	posts: ParsedPost[],
+	now: Date
+): { compiled: CompiledBlogPost[]; failures: CompileFailure[] } {
+	const live = new Set(posts.filter(p => isLive(p.data, now)).map(p => p.slug))
+	const compiled: CompiledBlogPost[] = []
+	const failures: CompileFailure[] = []
+
+	for (const p of posts.filter(post => post.data.published === true)) {
+		try {
+			const post = compilePost(p, slug => live.has(slug))
+			if (live.has(p.slug)) {
+				compiled.push(post)
+			}
+		} catch (error) {
+			failures.push({
+				file: p.file,
+				message: error instanceof Error ? error.message : String(error)
+			})
+		}
+	}
+	return { compiled: compiled.sort(compareByPublishedDesc), failures }
+}
+
 /**
  * Parse, validate, and compile every post in `dir`. Drafts
  * (`published: false`) and scheduled posts (publishedAt after `now`) are
  * validated but excluded from the output, and links to them render as text.
+ * Scheduled posts are still compiled (see compileAll). Parse, validation and
+ * compile failures are reported together in one error.
  */
 export function compilePosts(
 	dir: string = CONTENT_DIR,
 	now: Date = new Date()
 ): CompiledBlogPost[] {
-	const parsed = loadPosts(dir).filter(p => isLive(p.data, now))
-	const live = new Set(parsed.map(p => p.slug))
-	const failures: string[] = []
-	const posts: CompiledBlogPost[] = []
-
-	for (const p of parsed) {
-		try {
-			posts.push(compilePost(p, slug => live.has(slug)))
-		} catch (error) {
-			failures.push(error instanceof Error ? error.message : String(error))
-		}
+	const { posts, failures } = parseAll(dir)
+	const { compiled, failures: compileFailures } = compileAll(posts, now)
+	const all = [
+		...failures,
+		...compileFailures.map(f => `${f.file}: ${f.message}`)
+	]
+	if (all.length > 0) {
+		throw new Error(failureMessage(all))
 	}
-
-	if (failures.length > 0) {
-		throw new Error(failureMessage(failures))
-	}
-	if (posts.length === 0) {
+	if (compiled.length === 0) {
 		throw new Error(`blog:build found no published posts in ${dir}`)
 	}
-	return posts.sort(compareByPublishedDesc)
+	return compiled
 }
 
 export function renderModule(posts: CompiledBlogPost[]): string {
