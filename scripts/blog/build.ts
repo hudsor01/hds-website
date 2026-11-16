@@ -13,9 +13,11 @@
  * posts render as plain text until their date; the daily scheduled-publish
  * rebuild turns them into links on the day the target goes live.
  *
- * After compiling, main() runs the cross-post link rules (lib.ts
- * linkViolations) on the same directory: a dead or unpublished post link
- * fails the build, and posts below the inbound-link threshold are reported.
+ * Scheduled posts are compiled too (and left out of the output), so a compile
+ * failure shows up today, not on their publish day. runBuild then runs the
+ * cross-post link rules (lib.ts linkViolations) on the same posts: dead,
+ * unpublished, raw-HTML-to-held and orphan are errors; exactly 1 qualifying
+ * inbound link is a warning.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'

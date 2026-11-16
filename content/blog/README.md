@@ -78,7 +78,7 @@ build; 1 is a warning. Check with `bun run blog:links`.
 ```bash
 bun run blog:validate              # lint every post against R1-R9/R14 (CI gate)
 bun run blog:build                 # compile live posts for the site (runs in dev/build)
-bun run blog:links                 # inbound link report per published post (never fails)
+bun run blog:links                 # inbound link report per published post (link counts never fail it)
 bun run scripts/blog/pending.ts https://hudsondigitalsolutions.com  # due posts not live yet
 bun run blog:generate -- --pillar 3 --topic "..."  # LM Studio draft -> new .md
 ```

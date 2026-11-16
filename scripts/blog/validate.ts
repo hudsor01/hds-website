@@ -3,9 +3,9 @@
  * Two tiers (see lib.ts validatePost): ERRORS block the PR (publish/integrity,
  * brand rule, thin-content floor); WARNINGS are reported but never block, so
  * strong long-form content is never rejected for missing an arbitrary box.
- * Cross-post link rules (lib.ts linkViolations: dead, unpublished and raw HTML
- * links to held posts are errors; orphan and below-threshold posts are
- * reported) are merged into each file's report, and so is a compile of every
+ * Cross-post link rules (lib.ts linkViolations: dead, unpublished,
+ * raw-HTML-to-held and orphan are errors; exactly 1 qualifying inbound link is
+ * a warning) are merged into each file's report, and so is a compile of every
  * published post, scheduled ones included (rule COMPILE).
  *   bun run scripts/blog/validate.ts            # exit 1 only on errors
  *   bun run scripts/blog/validate.ts --strict   # exit 1 on warnings too

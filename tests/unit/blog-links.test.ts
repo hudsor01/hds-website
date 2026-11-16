@@ -764,10 +764,6 @@ describe('linkViolations', () => {
 			expect(v[0]?.message).toContain('lonely')
 		})
 
-		test('ORPHAN_SEVERITY is a valid severity', () => {
-			expect(['error', 'warn']).toContain(ORPHAN_SEVERITY)
-		})
-
 		test('an orphan fails the build', () => {
 			expect(ORPHAN_SEVERITY).toBe('error')
 		})

@@ -2,8 +2,10 @@
  * Inbound link report (LINK-01): for every published post, the qualifying
  * links from other posts (see lib.ts qualifies), whether a service page shows
  * it as a related-post card and any hand-written links to it from the service
- * and location pages. Report only: it never fails. Enforcement lives in
- * blog:build and blog:validate.
+ * and location pages. Report only: link counts never fail it. It still exits 1
+ * when a post fails validation or compile, or when a service or location
+ * source path is missing, because the report would be wrong. Enforcement
+ * lives in blog:build and blog:validate.
  *   bun run blog:links                 # table on stdout, summary on stderr
  *   bun run blog:links > file.md       # captures only the report
  * No DB / network needed.
@@ -125,17 +127,19 @@ function main(): void {
 		String(locationLinks.get(post.slug) ?? 0)
 	])
 
-	const bucket = (n: number, live?: boolean): number =>
+	const bucket = (match: (n: number) => boolean, live?: boolean): number =>
 		published.filter(
-			p =>
-				(n === 3 ? p.sources.length >= 3 : p.sources.length === n) &&
-				(live === undefined || p.live === live)
+			p => match(p.sources.length) && (live === undefined || p.live === live)
 		).length
+	const is =
+		(count: number) =>
+		(n: number): boolean =>
+			n === count
 
 	const lines = [
 		...table(HEADER, rows),
 		'',
-		`Histogram (qualifying inbound, published posts): 0: ${bucket(0)}, 1: ${bucket(1)}, 2: ${bucket(2)}, 3+: ${bucket(3)} (live: 0: ${bucket(0, true)}, 1: ${bucket(1, true)}; held: 0: ${bucket(0, false)}, 1: ${bucket(1, false)})`,
+		`Histogram (qualifying inbound, published posts): 0: ${bucket(is(0))}, 1: ${bucket(is(1))}, 2: ${bucket(is(2))}, 3+: ${bucket(n => n >= 3)} (live: 0: ${bucket(is(0), true)}, 1: ${bucket(is(1), true)}; held: 0: ${bucket(is(0), false)}, 1: ${bucket(is(1), false)})`,
 		'RelatedPosts, tag pages, the blog index and the sitemap are automatic surfaces on every live post and do not count toward the threshold.'
 	]
 	process.stdout.write(`${lines.join('\n')}\n`)
