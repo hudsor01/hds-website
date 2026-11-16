@@ -283,6 +283,8 @@ describe('proxy matcher', () => {
 			'/feedback',
 			'/services',
 			'/sitemap-blog',
+			'/sitemap-foo.xml',
+			'/sitemap-index.xml',
 			'/sitemaps',
 			'/sitemap/blog.xml',
 			'/blog/sitemap-tips'
