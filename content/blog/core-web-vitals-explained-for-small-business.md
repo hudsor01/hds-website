@@ -41,7 +41,7 @@ Cumulative Layout Shift measures visual stability. It tracks how much page eleme
 
 ## How I Measure What Matters
 
-A green score in a testing tool does not guarantee revenue. I look past the audit and focus on what actually impacts your P&L. You need to connect performance data to your business outcomes. I build that bridge by piping site analytics into the same kind of forecasting work I used to drive $3.7 million in revenue. The process is repeatable if you follow the steps.
+A green score in a testing tool does not guarantee revenue. I look past the audit and focus on what actually impacts your P&L. You need to connect performance data to your business outcomes. My post on [measuring website performance against revenue](/blog/how-to-measure-website-performance) covers the tracking side of that. I build that bridge by piping site analytics into the same kind of forecasting work I used to drive $3.7 million in revenue. The process is repeatable if you follow the steps.
 
 - Run a fresh audit on your homepage and top three conversion pages using PageSpeed Insights
 - Export the LCP, INP and CLS numbers to a spreadsheet or BI tool
@@ -53,7 +53,7 @@ I use this exact workflow for every client. It removes guesswork from the optimi
 
 ## DFW Scenarios Where Speed Drives Revenue
 
-Local businesses in this market compete on response time and reliability. Your website needs to reflect that same standard. Consider a Plano HVAC company running Google Ads during peak summer months. Every click costs money. Google's own data says more than half of mobile visits are abandoned when a page takes longer than three seconds to load, so a slow landing page burns a big share of those clicks before anyone sees the phone number or contact form. The fix is optimizing asset delivery and trimming unused CSS until the page loads in under two seconds. Every click you stop losing to a blank screen lowers your cost per lead.
+Local businesses in this market compete on response time and reliability. Your website needs to reflect that same standard. Consider a Plano HVAC company running Google Ads during peak summer months. Every click costs money. Google's own data says more than half of mobile visits are abandoned when a page takes longer than three seconds to load, so a slow landing page burns a big share of those clicks before anyone sees the phone number or contact form. The fix is optimizing asset delivery and trimming unused CSS until the page loads in under two seconds. Every click you stop losing to a blank screen lowers your cost per lead. I broke down [the real cost of a slow website for a local business](/blog/real-cost-of-a-slow-website-for-local-business), wasted ad spend included.
 
 Now picture a Frisco family law firm relying on organic search and local listings. Say their attorney bio page loads slowly because of heavy video files and unoptimized blog embeds. Visitors bounce before reading the credentials or clicking through to schedule a consultation. The fix is converting the media to modern formats, lazy loading what sits below the fold and moving heavy scripts to the footer. Once the page loads in under two and a half seconds and responds to taps in under two hundred milliseconds, more of those visitors stay long enough to book. The firm gets that without spending a dime more on advertising.
 
