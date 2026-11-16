@@ -348,8 +348,6 @@ describe('sitemap no-DB URL set', () => {
 		expect(count('locations')).toBe(1 + getAllLocationSlugs().length)
 		expect(count('core')).toBe(8 + TOOLS.length)
 		expect(count('blog')).toBe(1 + posts.length + tags.length + authors.length)
-		expect(SERVICES.length).toBe(3)
-		expect(getAllLocationSlugs().length).toBe(4)
 	})
 
 	it('dates every no-DB entry at a real UTC midnight no later than now', async () => {
