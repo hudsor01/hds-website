@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { buildMetadata } from '@/lib/seo-config'
+import { pageDate } from '@/lib/sitemap/page-dates'
 import { formatCalendarDate } from '@/lib/utils'
 
 export const metadata: Metadata = buildMetadata({
@@ -9,11 +10,12 @@ export const metadata: Metadata = buildMetadata({
 	path: '/terms'
 })
 
-// Hardcoded authored date instead of `formatCalendarDate(new Date())` — the
-// runtime form could render a UTC date one day ahead of the user's
-// local date and made "Last updated" appear in the future (audit #273).
-// Update this constant when the policy is actually reviewed.
-const lastUpdated = formatCalendarDate(new Date('2026-05-28T00:00:00Z'))
+// Authored date instead of `formatCalendarDate(new Date())` — the runtime
+// form could render a UTC date one day ahead of the user's local date and
+// made "Last updated" appear in the future (audit #273). The date lives in
+// PAGE_DATES, shared with the sitemap lastmod, so both always agree. Bump it
+// there when the policy is actually reviewed.
+const lastUpdated = formatCalendarDate(pageDate('/terms'))
 
 export default function TermsPage() {
 	return (
