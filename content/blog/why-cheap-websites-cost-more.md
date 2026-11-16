@@ -54,7 +54,7 @@ Search algorithms also reward fresh, structured content. Google prioritizes site
 
 ## How to Budget for Actual Returns
 
-Stop comparing quotes on template layouts and start comparing technical specifications. Ask about page speed targets, CRM integration depth and mobile optimization standards. A legitimate build has to pay for development, testing, analytics setup and initial content population. A quote that leaves any of those out usually hides compromises in tracking or performance optimization.
+Stop comparing quotes on template layouts and start comparing technical specifications. Ask about page speed targets, CRM integration depth and mobile optimization standards. That comparison is easier with [an eight-step project blueprint you send to every developer](/blog/your-website-needs-a-blueprint-how-to-plan-a-project-that-pays-off). A legitimate build has to pay for development, testing, analytics setup and initial content population. A quote that leaves any of those out usually hides compromises in tracking or performance optimization.
 
 Use my free cost estimator to map out your requirements and see realistic pricing tiers for your specific scope. [Try my free tool](/tools/cost-estimator) before you sign any contract with a developer. It strips away the guesswork and shows you exactly where your budget should go to protect your conversion pipeline.
 

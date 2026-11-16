@@ -84,7 +84,7 @@ For every form, button and booking widget, answer:
 - **What does the customer get back?** An instant confirmation text, an email, a calendar invite.
 - **What gets tracked?** Form submissions, phone taps and bookings as key events in Google Analytics 4.
 
-Also list anything else the site has to talk to: online payments, call tracking, a review request tool, your newsletter platform. An integration discovered halfway through a build costs more than one planned from the start.
+Also list anything else the site has to talk to: online payments, call tracking, a review request tool, your newsletter platform. An integration discovered halfway through a build costs more than one planned from the start. The cheapest quotes tend to skip this layer entirely, which is why [an underbuilt site ends up costing more than it saved](/blog/why-cheap-websites-cost-more).
 
 ## Step 6: Define What Done Means
 
@@ -110,7 +110,7 @@ Then assign who writes or approves the copy, who gathers photos and reviews and 
 
 Go through everything on your list and sort it into two columns. Must-have for launch: the pages, forms, tracking and integrations tied directly to the primary action. Later: the blog, the resources section, the second booking flow, the customer portal.
 
-Launching a tight site that works beats launching a sprawling one months late. Phase two goes better anyway, because by then you have real data on what visitors actually do.
+Launching a tight site that works beats launching a sprawling one months late. Phase two goes better anyway, because by then you have real data on what visitors actually do. Decide up front who handles that post-launch work and how it gets billed. My breakdown of [what a website retainer should cover after launch](/blog/website-retainer-vs-one-time-build) helps you choose.
 
 This is also where budget enters. With a scoped list, you can price it honestly. My guides on [setting a website budget](/blog/how-to-budget-for-a-website-project) and [what goes into a website quote](/blog/what-goes-into-a-website-quote) explain the line items. The [website cost estimator](/tools/cost-estimator) gives you a starting range for your scope.
 
@@ -127,7 +127,7 @@ Pull it together into one document with these headings:
 7. **Owners and dates:** who decides, who supplies content and when.
 8. **Phases:** launch scope versus later.
 
-Send the same document to every developer you're considering. Now the quotes compare the same scope instead of three different guesses. The gaps in a quote become obvious.
+Send the same document to every developer you're considering. Now the quotes compare the same scope instead of three different guesses. The gaps in a quote become obvious. If you are still building that shortlist, [the questions I would ask any DFW web designer before hiring](/blog/how-to-choose-a-web-designer-in-dfw) cover ownership, maintenance and red flags.
 
 ## Get a Second Set of Eyes
 

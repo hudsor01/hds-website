@@ -47,7 +47,7 @@ I wrote a full walkthrough on [who owns your website and domain](/blog/who-owns-
 
 Launch day is the start of the expensive part. Software needs updates. Forms break when a third-party service changes something on its end. Hours change, staff changes, services change. Somebody has to own all of it.
 
-Ask every web designer you interview what the first ninety days after launch look like. Good answers are specific: who you call, how fast they respond, what a monthly plan includes and what gets billed hourly. Bad answers sound like "we'll be around if you need anything."
+Ask every web designer you interview what the first ninety days after launch look like. Good answers are specific: who you call, how fast they respond, what a monthly plan includes and what gets billed hourly. Bad answers sound like "we'll be around if you need anything." Whether you need a monthly plan at all is a separate call, covered in [when a retainer beats a one-time build](/blog/website-retainer-vs-one-time-build).
 
 Then ask what you can change yourself. If updating your holiday hours takes a support ticket and a two-day wait, you'll stop updating your site. A stale site in a market as crowded as DFW is a slow leak. Your competitor in Plano posts this week's special while yours still shows last spring's promo.
 
