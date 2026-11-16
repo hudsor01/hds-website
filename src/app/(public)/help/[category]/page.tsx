@@ -28,7 +28,8 @@ import { Button } from '@/components/ui/button'
 import {
 	getAllCategorySlugs,
 	getArticlesByCategory,
-	getCategoryBySlug
+	getCategoryBySlug,
+	helpArticleDate
 } from '@/lib/help-articles'
 import { buildMetadata } from '@/lib/seo-config'
 
@@ -70,15 +71,16 @@ export async function generateMetadata({
 		}
 	}
 
-	// An empty category is a thin page: keep it out of the index (and the
-	// sitemap) until it has an article. Following links stays on.
+	// An empty category is a thin page: keep it out of the index until it has
+	// an article the sitemap can date (the sitemap's listing rule). Following
+	// links stays on.
 	const articles = await getArticlesByCategory(category)
 
 	return buildMetadata({
 		title: `${categoryInfo.name} | Help Center | Hudson Digital Solutions`,
 		description: categoryInfo.metaDescription,
 		path: `/help/${category}`,
-		noindex: articles.length === 0
+		noindex: !articles.some(article => helpArticleDate(article))
 	})
 }
 

@@ -21,7 +21,8 @@ import { JsonLd } from '@/components/utilities/JsonLd'
 import {
 	getAdjacentArticles,
 	getArticleBySlug,
-	getCategoryBySlug
+	getCategoryBySlug,
+	helpArticleDate
 } from '@/lib/help-articles'
 import { buildMetadata } from '@/lib/seo-config'
 import {
@@ -59,7 +60,9 @@ export async function generateMetadata({
 		title: `${article.title} | Help Center | Hudson Digital Solutions`,
 		description:
 			article.excerpt || `Read about ${article.title} in the help center.`,
-		path: `/help/${category}/${slug}`
+		path: `/help/${category}/${slug}`,
+		// The sitemap cannot date (so does not list) an undated article.
+		noindex: !helpArticleDate(article)
 	})
 }
 

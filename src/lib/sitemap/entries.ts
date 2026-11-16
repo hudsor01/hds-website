@@ -18,8 +18,9 @@
  *   its blogTag, because the page renders those related posts
  * - /showcase: the later of its PAGE_DATES entry and the newest item it lists
  * - showcase item: updatedAt, else publishedAt, else createdAt (DB columns)
- * - help article: updated_at, else created_at; help hub and categories: the
- *   newest article they list
+ * - help article: updated_at, else created_at (helpArticleDate, which the
+ *   help pages also use to noindex what is not listed); help hub and
+ *   categories: the newest article they list
  * - /testimonials: the newest approved row's updated_at. The mapped
  *   created_at can be a fallback filled in at request time, so it is never
  *   used here

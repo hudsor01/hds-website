@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { TOOLS } from '@/app/(public)/tools/tools-data'
 import { getAllPosts, getAuthors, getTags } from '@/lib/blog'
 import { SERVICES } from '@/lib/constants/services'
+import { helpArticleDate } from '@/lib/help-articles'
 import { getAllLocationSlugs } from '@/lib/locations'
 import {
 	buildSitemapEntries,
@@ -728,6 +729,49 @@ describe('sitemap lastmod', () => {
 			expect.stringContaining('no date'),
 			{ slug: 'undated' }
 		)
+	})
+
+	it('lists exactly the help articles the help pages leave indexable', () => {
+		const rows = [
+			{
+				slug: 'both',
+				updated_at: '2026-04-04T00:00:00.000Z',
+				created_at: '2026-01-01T00:00:00.000Z'
+			},
+			{
+				slug: 'updated',
+				updated_at: '2026-03-03T00:00:00.000Z',
+				created_at: null
+			},
+			{
+				slug: 'created',
+				updated_at: null,
+				created_at: '2026-02-02T00:00:00.000Z'
+			},
+			{ slug: 'undated', updated_at: null, created_at: null }
+		]
+		const entries = buildSitemapEntries(
+			fixtureSources({
+				helpCategorySlugs: ['billing'],
+				helpArticles: rows.map(row => ({
+					slug: row.slug,
+					category: 'billing',
+					updatedAt: row.updated_at,
+					createdAt: row.created_at
+				}))
+			})
+		)
+		for (const row of rows) {
+			const path = `/help/billing/${row.slug}`
+			const date = helpArticleDate(row)
+			expect([row.slug, hasPath(entries, path)]).toEqual([
+				row.slug,
+				date !== null
+			])
+			if (date) {
+				expect(lastmodOf(entries, path)).toBe(date)
+			}
+		}
 	})
 
 	it('lists a help article outside the known categories without its category', () => {
