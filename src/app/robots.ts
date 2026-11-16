@@ -1,6 +1,5 @@
 import type { MetadataRoute } from 'next'
-
-const SITE_URL = 'https://hudsondigitalsolutions.com'
+import { SITE_URL } from '@/lib/seo-config'
 
 /**
  * Paths no crawler needs. `/_next/` is deliberately NOT here: Google

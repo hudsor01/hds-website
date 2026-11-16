@@ -13,14 +13,24 @@ import {
 } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { getCategoriesWithCounts } from '@/lib/help-articles'
+import {
+	getAllPublishedArticles,
+	getCategoriesWithCounts,
+	getCategoryBySlug,
+	helpArticleDate
+} from '@/lib/help-articles'
 import { buildMetadata } from '@/lib/seo-config'
 
 export async function generateMetadata(): Promise<Metadata> {
-	// With no published articles the hub is a list of empty categories:
-	// keep it out of the index (and the sitemap) until one exists.
-	const categories = await getCategoriesWithCounts()
-	const hasArticles = categories.some(category => category.articleCount > 0)
+	// With no listed article the hub is a list of empty categories: keep it
+	// out of the index until a known category has an article the sitemap can
+	// date (the sitemap's listing rule).
+	const articles = await getAllPublishedArticles()
+	const hasArticles = articles.some(
+		article =>
+			getCategoryBySlug(article.category) !== undefined &&
+			helpArticleDate(article) !== null
+	)
 
 	return buildMetadata({
 		title: 'Help Center | Hudson Digital Solutions',

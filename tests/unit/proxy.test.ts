@@ -14,6 +14,7 @@ import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { unstable_doesMiddlewareMatch } from 'next/experimental/testing/server'
 import { NextRequest } from 'next/server'
 import type * as SecurityHeadersTypes from '@/lib/security-headers'
+import { SITEMAP_SECTIONS } from '@/lib/sitemap/sections'
 import { cleanupMocks } from '../test-utils'
 
 function makeRequest(
@@ -281,7 +282,13 @@ describe('proxy matcher', () => {
 			'/api/health/deep',
 			'/blog/rss-feeds-explained',
 			'/feedback',
-			'/services'
+			'/services',
+			'/sitemap-blog',
+			'/sitemap-foo.xml',
+			'/sitemap-index.xml',
+			'/sitemaps',
+			'/sitemap/blog.xml',
+			'/blog/sitemap-tips'
 		]) {
 			expect(await matches(path)).toBe(true)
 		}
@@ -297,6 +304,10 @@ describe('proxy matcher', () => {
 			'/robots.txt',
 			'/llms.txt',
 			'/sitemap.xml',
+			'/sitemap-blog.xml',
+			'/sitemap-services.xml',
+			'/sitemap-locations.xml',
+			'/sitemap-core.xml',
 			'/manifest.json',
 			'/offline.html',
 			'/fonts/hanken-grotesk-600.woff',
@@ -312,6 +323,14 @@ describe('proxy matcher', () => {
 			'/blog/some-post/twitter-image-16v7k9'
 		]) {
 			expect(await matches(path)).toBe(false)
+		}
+	})
+
+	it('skips every sitemap section child', async () => {
+		// The matcher lists the children by hand (Next needs a static
+		// literal), so a new section must be added there too.
+		for (const section of SITEMAP_SECTIONS) {
+			expect(await matches(`/sitemap-${section}.xml`)).toBe(false)
 		}
 	})
 

@@ -402,7 +402,8 @@ export default function TestimonialCollectorClient() {
 											)}
 										</div>
 										<span className="text-xs text-muted-foreground">
-											{formatDate(testimonial.created_at)}
+											{testimonial.created_at &&
+												formatDate(testimonial.created_at)}
 										</span>
 									</div>
 

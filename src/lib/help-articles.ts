@@ -21,8 +21,8 @@ export interface HelpArticle {
 	content: string
 	excerpt: string | null
 	published: boolean
-	created_at: string
-	updated_at: string
+	created_at: string | null
+	updated_at: string | null
 }
 
 export interface HelpCategory {
@@ -85,9 +85,22 @@ const mapHelpArticle = (row: HelpArticleRow): HelpArticle => ({
 	content: row.content,
 	excerpt: row.excerpt,
 	published: row.published ?? false,
-	created_at: row.createdAt?.toISOString() ?? new Date().toISOString(),
-	updated_at: row.updatedAt?.toISOString() ?? new Date().toISOString()
+	// A missing date stays null so no page or sitemap invents today's date.
+	created_at: row.createdAt?.toISOString() ?? null,
+	updated_at: row.updatedAt?.toISOString() ?? null
 })
+
+/**
+ * The date an article is listed under: updated_at, else created_at. The
+ * sitemap drops an article without one (src/lib/sitemap/entries.ts uses the
+ * same fallback chain), so the help pages noindex it too: a help URL is
+ * indexable only when the sitemap lists it.
+ */
+export function helpArticleDate(
+	article: Pick<HelpArticle, 'created_at' | 'updated_at'>
+): string | null {
+	return article.updated_at ?? article.created_at
+}
 
 /**
  * Get all published articles. Exported so the sitemap can enumerate

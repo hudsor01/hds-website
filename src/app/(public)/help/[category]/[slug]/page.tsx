@@ -21,7 +21,8 @@ import { JsonLd } from '@/components/utilities/JsonLd'
 import {
 	getAdjacentArticles,
 	getArticleBySlug,
-	getCategoryBySlug
+	getCategoryBySlug,
+	helpArticleDate
 } from '@/lib/help-articles'
 import { buildMetadata } from '@/lib/seo-config'
 import {
@@ -59,7 +60,9 @@ export async function generateMetadata({
 		title: `${article.title} | Help Center | Hudson Digital Solutions`,
 		description:
 			article.excerpt || `Read about ${article.title} in the help center.`,
-		path: `/help/${category}/${slug}`
+		path: `/help/${category}/${slug}`,
+		// The sitemap cannot date (so does not list) an undated article.
+		noindex: !helpArticleDate(article)
 	})
 }
 
@@ -77,12 +80,14 @@ export default async function HelpArticlePage({ params }: PageProps) {
 
 	const { prev, next } = await getAdjacentArticles(slug, category)
 
-	// Format date
-	const updatedDate = new Date(article.updated_at).toLocaleDateString('en-US', {
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric'
-	})
+	// Format date. A row without one shows no "Last updated" line.
+	const updatedDate = article.updated_at
+		? new Date(article.updated_at).toLocaleDateString('en-US', {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric'
+			})
+		: null
 
 	const articleUrl = `${SITE_URL}/help/${category}/${slug}`
 
@@ -94,8 +99,8 @@ export default async function HelpArticlePage({ params }: PageProps) {
 						'@type': 'TechArticle',
 						headline: article.title,
 						description: article.excerpt ?? undefined,
-						datePublished: article.created_at,
-						dateModified: article.updated_at,
+						datePublished: article.created_at ?? undefined,
+						dateModified: article.updated_at ?? undefined,
 						url: articleUrl,
 						mainEntityOfPage: articleUrl,
 						author: { '@id': BUSINESS_ID },
@@ -162,10 +167,12 @@ export default async function HelpArticlePage({ params }: PageProps) {
 							<h1 className="text-page-title text-foreground leading-tight text-balance mb-3">
 								{article.title}
 							</h1>
-							<div className="flex items-center gap-tight text-sm text-muted-foreground">
-								<Clock className="size-4" />
-								<span>Last updated: {updatedDate}</span>
-							</div>
+							{updatedDate && (
+								<div className="flex items-center gap-tight text-sm text-muted-foreground">
+									<Clock className="size-4" />
+									<span>Last updated: {updatedDate}</span>
+								</div>
+							)}
 						</header>
 
 						{/* Article Body */}
