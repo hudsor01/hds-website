@@ -36,7 +36,7 @@ bodyFormat: "markdown"         # "markdown" (default) or "html" (migrated posts)
 First paragraph is the share hook (R13).
 
 ## A Section (R7: H2/H3 structure)
-...body... with at least 2 internal links (R5): one tool/service, one related post,
+...body... with at least 2 internal links (R5): one tool/service, one related post
 and one clear CTA (R6) to /contact or a /tools/* page.
 ```
 
@@ -48,11 +48,36 @@ R8 1000-2000 words + readingTime - R9 no em/en-dash, no emoji - R11/R12 OG image
 (guaranteed by the dynamic `opengraph-image` card) - R14 publishes + renders.
 Full list: `.planning/milestones/v9-REQUIREMENTS.md`.
 
+### Cross-post links (`scripts/blog/lib.ts` linkViolations, run by `blog:validate` and `blog:build`)
+
+Errors (fail the build and the CI gate):
+
+- a link to a post slug that does not exist
+- a link from a published post to a `published: false` post
+- a raw HTML `<a href="/blog/...">` to a post that is not live yet (use a markdown
+  link instead)
+
+Inbound threshold, counted per published post:
+
+- orphan: no qualifying inbound links from other posts. A warning for now; it
+  becomes an error once the internal-linking phase lands its last commit
+- below: exactly 1 qualifying inbound link (a warning)
+
+A link counts toward a post's inbound total if the linking post is published and is
+either live already or dated on or before the post it links to. Links to scheduled
+posts render as plain text until the target's date, then the scheduled-publish
+rebuild turns them into links.
+
+The rule for new posts: every new published post ships with at least 2 qualifying
+inbound links from related posts dated on or before it, in the same PR. Check with
+`bun run blog:links`.
+
 ## Commands
 
 ```bash
 bun run blog:validate              # lint every post against R1-R9/R14 (CI gate)
 bun run blog:build                 # compile live posts for the site (runs in dev/build)
+bun run blog:links                 # inbound link report per published post (never fails)
 bun run scripts/blog/pending.ts https://hudsondigitalsolutions.com  # due posts not live yet
 bun run blog:generate -- --pillar 3 --topic "..."  # LM Studio draft -> new .md
 ```

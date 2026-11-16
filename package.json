@@ -36,6 +36,7 @@
 		"blog:build": "bun run scripts/blog/build.ts",
 		"blog:validate": "bun run scripts/blog/validate.ts",
 		"blog:coverage": "bun run scripts/blog/tool-coverage.ts",
+		"blog:links": "bun run scripts/blog/links.ts",
 		"blog:generate": "bun run scripts/blog/generate.ts",
 		"prepare": "lefthook install && bun run brand:generate"
 	},
