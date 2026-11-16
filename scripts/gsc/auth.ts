@@ -165,6 +165,10 @@ export async function fetchAccessToken(
 		init,
 		(res, body) => {
 			if (res.ok) {
+				// A 2xx body that is not JSON retries, as the Search Console calls do.
+				if (body === undefined) {
+					return { done: false }
+				}
 				const token = TokenSuccessSchema.safeParse(body)
 				if (!token.success) {
 					throw new GscSetupError(
@@ -184,6 +188,9 @@ export async function fetchAccessToken(
 	}
 	if (result.status === null) {
 		throw new GscSetupError('Token request failed: network error.')
+	}
+	if (result.status >= 200 && result.status < 300) {
+		throw new GscSetupError('Token response did not include an access token.')
 	}
 	throw new GscSetupError(mapTokenError(result.status, result.body))
 }

@@ -456,6 +456,39 @@ describe('fetchAccessToken', () => {
 		expect(clock.sleeps).toEqual([])
 	})
 
+	test('200 non-JSON retries, then succeeds', async () => {
+		const clock = fakeClock()
+		const { fetchFn, calls } = tokenSequence([
+			new Response('<html>busy</html>', { status: 200 }),
+			jsonResponse({ access_token: 'tok-after-retry' })
+		])
+		const token = await fetchAccessToken(cred, {
+			fetchFn,
+			clock,
+			deadlineMs: NO_DEADLINE
+		})
+		expect(token).toBe('tok-after-retry')
+		expect(calls).toHaveLength(2)
+		expect(clock.sleeps).toEqual([1000])
+	})
+
+	test('200 non-JSON three times fails with the no-token line', async () => {
+		const clock = fakeClock()
+		const { fetchFn, calls } = tokenSequence([
+			new Response('x', { status: 200 }),
+			new Response('x', { status: 200 }),
+			new Response('x', { status: 200 })
+		])
+		const error = await captureAsync(() =>
+			fetchAccessToken(cred, { fetchFn, clock, deadlineMs: NO_DEADLINE })
+		)
+		expect(error.message).toBe(
+			'Token response did not include an access token.'
+		)
+		expect(calls).toHaveLength(3)
+		expect(clock.sleeps).toEqual([1000, 2000])
+	})
+
 	test('500 non-JSON three times fails after exactly 3 attempts', async () => {
 		const clock = fakeClock()
 		const { fetchFn, calls } = tokenSequence([

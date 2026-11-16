@@ -165,7 +165,7 @@ In the lines below, `<request>` is `Search Analytics request` or
 | `Search Analytics request failed: network error.` | The runner could not reach Google in 3 attempts. Re-run the workflow. |
 | `<request> failed with HTTP <n>.` | Google rejected the request itself (a 4xx), which is a code bug. Open an issue with the run link. |
 | `<request> returned an unexpected response.` | Google answered in a shape the script does not expect. Re-run the workflow. If it repeats, open an issue with the run link. |
-| `Every URL Inspection request failed (<n> of <n>). The issue was left unchanged. Re-run the workflow later.` | URL Inspection was down or throttling for the whole run. Re-run the workflow later. |
+| `Every URL Inspection request failed (<n> of <n>). The issue was left unchanged. Re-run the workflow later. If it fails again, open an issue with the run link.` | URL Inspection was down or throttling for the whole run, or Google changed its response shape. Re-run the workflow later. If it fails again, open an issue with the run link. |
 | `Run stopped at its 6 minute time budget because Google is slow or throttling requests. The issue was left unchanged. Re-run the workflow later.` | Re-run the workflow later. If it repeats every week, open an issue with the run link. |
 | `Could not read the blog posts in content/blog. Run bun run blog:build locally to see which file fails.` | Run `bun run blog:build` locally, fix the post it names and merge the fix. |
 | `unexpected error (details withheld so no credential can leak).` | A bug or a runner failure. The details are withheld on purpose. Re-run the workflow. If it repeats, open an issue with the run link. |

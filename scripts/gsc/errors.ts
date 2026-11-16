@@ -26,3 +26,12 @@ export class GscApiError extends Error {
 		this.httpStatus = httpStatus
 	}
 }
+
+/** A Search Analytics body in a shape the script does not expect. */
+export function analyticsUnexpectedError(): GscApiError {
+	return new GscApiError(
+		'Search Analytics request returned an unexpected response.',
+		'unexpected',
+		200
+	)
+}

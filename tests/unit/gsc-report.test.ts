@@ -600,7 +600,7 @@ describe('run setup failures', () => {
 			routes: { inspect: () => googleError(503) }
 		})
 		expect(expectFailure(result)).toBe(
-			'gsc-report: Every URL Inspection request failed (3 of 3). The issue was left unchanged. Re-run the workflow later.\n'
+			'gsc-report: Every URL Inspection request failed (3 of 3). The issue was left unchanged. Re-run the workflow later. If it fails again, open an issue with the run link.\n'
 		)
 		expect(inspectCalls(result)).toHaveLength(9)
 	})

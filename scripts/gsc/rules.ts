@@ -17,7 +17,7 @@ import {
 	STRIKING_MIN,
 	WINDOW_DAYS
 } from './config'
-import { GscApiError } from './errors'
+import { analyticsUnexpectedError } from './errors'
 import type {
 	AnalyticsRow,
 	DateWindow,
@@ -168,11 +168,7 @@ export function windowFromProbe(rows: AnalyticsRow[]): DateWindow | null {
 	for (const r of rows) {
 		const parsed = SearchDateSchema.safeParse(r.keys[0])
 		if (!parsed.success) {
-			throw new GscApiError(
-				'Search Analytics request returned an unexpected response.',
-				'unexpected',
-				200
-			)
+			throw analyticsUnexpectedError()
 		}
 		const date = parsed.data
 		if (endDate === undefined || date > endDate) {

@@ -18,7 +18,7 @@ import {
 	SC_PROPERTY,
 	SECRET_ENV
 } from './config'
-import { GscApiError } from './errors'
+import { analyticsUnexpectedError, GscApiError } from './errors'
 import { BUDGET_MESSAGE, sendWithRetry } from './retry'
 import { AnalyticsResponseSchema, InspectResponseSchema } from './schemas'
 import type {
@@ -253,11 +253,7 @@ export async function queryAnalytics(
 	)
 	const parsed = AnalyticsResponseSchema.safeParse(body)
 	if (!parsed.success) {
-		throw new GscApiError(
-			'Search Analytics request returned an unexpected response.',
-			'unexpected',
-			200
-		)
+		throw analyticsUnexpectedError()
 	}
 	return parsed.data.rows ?? []
 }

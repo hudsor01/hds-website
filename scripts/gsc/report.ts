@@ -57,7 +57,7 @@ export const UNEXPECTED =
 
 /** Every inspection failing is an outage, not a report (D8, WR-02). */
 export function allInspectionsFailedMessage(n: number): string {
-	return `Every URL Inspection request failed (${n} of ${n}). The issue was left unchanged. Re-run the workflow later.`
+	return `Every URL Inspection request failed (${n} of ${n}). The issue was left unchanged. Re-run the workflow later. If it fails again, open an issue with the run link.`
 }
 
 /** Reads the post list; any parse or fs failure becomes one fixed line. */
