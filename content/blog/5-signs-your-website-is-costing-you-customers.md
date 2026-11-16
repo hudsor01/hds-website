@@ -86,7 +86,7 @@ The usual culprits:
 
 Hand your phone to someone who doesn't know your business. Show them the homepage for five seconds, then take it back. Ask what you sell, where you work and what they would click. If they hesitate on any of the three, your headline and your primary button need work.
 
-Go one step further and look at your service pages. Each one should name the service, the area you cover and a single clear next step. If you send ad traffic to those pages, my post on [matching each landing page to the ad that sent the visitor](/blog/landing-page-optimization-small-business) goes further. If you're unsure how to structure that button and the copy around it, [call to action best practices](/blog/call-to-action-best-practices) lays out what works on service sites.
+Go one step further and look at your service pages. Each one should name the service, the area you cover and a single clear next step. Any page that takes ad traffic should also [match the ad that sent the visitor](/blog/landing-page-optimization-small-business). If you're unsure how to structure that button and the copy around it, [call to action best practices](/blog/call-to-action-best-practices) lays out what works on service sites.
 
 ## Sign 5: Your Site Looks Abandoned
 

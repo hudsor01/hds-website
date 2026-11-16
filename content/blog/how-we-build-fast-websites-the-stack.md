@@ -38,7 +38,7 @@ Too many agencies promise CRM connectivity and deliver a broken Zapier workflow 
 
 ## Measuring What Actually Pays the Bills
 
-Routing leads is half the job. The other half is measuring the entire funnel. A fast website is useless if your form fields ask for a phone number on step one and an address on step two. I design progressive disclosure forms that start with your highest intent question, like project budget or timeline. Contact details come only after the prospect commits to a value proposition. I A/B test button colors, above fold copy and form placement with custom JavaScript event listeners. Copy gets the same treatment, with [word count targets for each page section](/blog/word-and-character-counts-that-matter) as the baseline. I log every micro conversion, pull it into Power BI and set up automated alerts when completion rates drop below the baseline.
+Routing leads is half the job. The other half is measuring the entire funnel. A fast website is useless if your form fields ask for a phone number on step one and an address on step two. I design progressive disclosure forms that start with your highest intent question, like project budget or timeline. Contact details come only after the prospect commits to a value proposition. I A/B test button colors, above fold copy and form placement with custom JavaScript event listeners. Copy tests start from my [word count targets for each page section](/blog/word-and-character-counts-that-matter). I log every micro conversion, pull it into Power BI and set up automated alerts when completion rates drop below the baseline.
 
 Here are the targets I hold every build to:
 - Largest Contentful Paint well under Google's 2.5 second good threshold on mobile networks

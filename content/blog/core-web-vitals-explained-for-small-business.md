@@ -41,7 +41,7 @@ Cumulative Layout Shift measures visual stability. It tracks how much page eleme
 
 ## How I Measure What Matters
 
-A green score in a testing tool does not guarantee revenue. I look past the audit and focus on what actually impacts your P&L. You need to connect performance data to your business outcomes. My post on [measuring website performance against revenue](/blog/how-to-measure-website-performance) covers the tracking side of that. I build that bridge by piping site analytics into the same kind of forecasting work I used to drive $3.7 million in revenue. The process is repeatable if you follow the steps.
+A green score in a testing tool does not guarantee revenue. I look past the audit and focus on what actually impacts your P&L. You need to connect performance data to your business outcomes. I build that bridge by piping site analytics into the same kind of forecasting work I used to drive $3.7 million in revenue. The process is repeatable if you follow the steps.
 
 - Run a fresh audit on your homepage and top three conversion pages using PageSpeed Insights
 - Export the LCP, INP and CLS numbers to a spreadsheet or BI tool
@@ -49,7 +49,7 @@ A green score in a testing tool does not guarantee revenue. I look past the audi
 - Calculate the revenue lost per day when metrics fall outside target ranges
 - Prioritize fixes that move the needle on lead capture and booking rates
 
-I use this exact workflow for every client. It removes guesswork from the optimization process. You stop chasing arbitrary scores and start investing in changes that directly improve your forecast accuracy. In revenue operations I hit ninety five percent forecast accuracy. The same discipline applies to page performance: tie every number to actual sales data. I also run these numbers through my [performance calculator](/tools/performance-calculator) so you can model the revenue gain before I touch a single line of code.
+I use this exact workflow for every client. [Measuring website performance against revenue](/blog/how-to-measure-website-performance) covers the tracking setup behind it in more depth. It removes guesswork from the optimization process. You stop chasing arbitrary scores and start investing in changes that directly improve your forecast accuracy. In revenue operations I hit ninety five percent forecast accuracy. The same discipline applies to page performance: tie every number to actual sales data. I also run these numbers through my [performance calculator](/tools/performance-calculator) so you can model the revenue gain before I touch a single line of code.
 
 ## DFW Scenarios Where Speed Drives Revenue
 
