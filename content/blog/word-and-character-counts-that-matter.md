@@ -25,7 +25,7 @@ People treat website copy like a creative exercise. They write what sounds profe
 
 Your website needs to move visitors from awareness to booking at scale. Short pages get to the point faster. That keeps mobile users from clicking away before the form appears. Longer pages can work when you are explaining complex services, but only if every paragraph drives a specific action. I measure copy length the same way I measured channel performance in my RevOps days. You set a target, you track the actuals and you rebuild what underperforms.
 
-I also look at how copy length interacts with your automation layer. When you route leads through HubSpot and trigger Workato workflows, the system needs clean data to score correctly. Clean, measured copy keeps your data pipeline tight. Tight pipelines mean accurate forecasting. Accurate forecasting means you stop guessing next quarter and start planning it.
+I also look at how copy length interacts with your automation layer. When you route leads through HubSpot and trigger Workato workflows, the system needs clean data to score correctly. For lists you move by hand, [converting a spreadsheet column into a clean comma separated list](/blog/spreadsheet-column-to-comma-list) keeps stray spaces and blank rows out of it. Clean, measured copy keeps your data pipeline tight. Tight pipelines mean accurate forecasting. Accurate forecasting means you stop guessing next quarter and start planning it.
 
 ### The Math Behind Your Copy
 
