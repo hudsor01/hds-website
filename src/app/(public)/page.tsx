@@ -156,10 +156,10 @@ export default function HomePage() {
 								<div className="w-px h-8 bg-border/40" />
 								<div>
 									<div className="text-xl font-black text-foreground tabular-nums">
-										5+ yrs
+										Nearly 10
 									</div>
 									<div className="text-xs text-muted-foreground mt-0.5">
-										Experience
+										Years experience
 									</div>
 								</div>
 							</div>
