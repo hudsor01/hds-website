@@ -69,7 +69,7 @@ In the DFW market, local intent drives a big share of service business traffic. 
 
 I also strip secondary navigation on mobile. Breadcrumbs, tag clouds and archive lists disappear from the primary flow. They clutter the viewport and dilute conversion focus. I keep only service categories, booking links and contact actions visible. The rest lives in a collapsible footer that expands only when users scroll past the fold.
 
-I test every mobile menu against Core Web Vitals and interaction depth. If navigation links delay first input by more than one hundred milliseconds, I rewrite the CSS and defer non critical scripts. Speed is not a vanity metric for menus. It directly impacts Google rankings and bounce rates on cellular networks across Collin and Denton counties.
+I test every mobile menu against Core Web Vitals and interaction depth. If navigation links delay first input by more than one hundred milliseconds, I rewrite the CSS and defer non critical scripts. Speed is not a vanity metric for menus. It directly impacts Google rankings and bounce rates on cellular networks across Collin and Denton counties. Check that the menu also opens and closes with only a keyboard, one of the steps in [the accessibility check I run on small business sites](/blog/website-accessibility-for-small-business).
 
 ### Track click paths, not just page views
 
