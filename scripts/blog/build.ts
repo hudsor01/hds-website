@@ -61,7 +61,7 @@ function compilePost(
 		slug,
 		title,
 		excerpt: stripMarkdown(data.excerpt),
-		content: bodyToHtml(body, data.bodyFormat ?? 'markdown', linkable),
+		content: bodyToHtml(body, data.bodyFormat ?? 'markdown', linkable, slug),
 		featureImage: data.featureImage || null,
 		publishedAt: new Date(data.publishedAt).toISOString(),
 		readingTime:

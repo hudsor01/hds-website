@@ -46,13 +46,33 @@ const EMOJI_RE =
 	/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F000}-\u{1F0FF}\u{2B00}-\u{2BFF}]/u
 const INTERNAL_LINK_RE = /\]\(\/(?!\/)|href=["']\/(?!\/)/g
 const CTA_RE = /\]\(\/(?:contact|tools)|href=["']\/(?:contact|tools)/
+/** Hrefs resolve against this origin, the way a browser does on our pages. */
+const SITE_ORIGIN = 'https://hudsondigitalsolutions.com'
+const SITE_HOSTS: ReadonlySet<string> = new Set([
+	'hudsondigitalsolutions.com',
+	'www.hudsondigitalsolutions.com'
+])
 /**
- * A post URL, relative or on our own host, with an optional trailing slash,
- * query or fragment. The slug capture is loose on purpose: a malformed slug is
- * still extracted so the dead-link rule reports it instead of skipping it.
+ * A resolved post path with an optional trailing slash. The segment capture is
+ * loose on purpose: a malformed slug is still extracted so the dead-link rule
+ * reports it instead of skipping it.
  */
-const POST_HREF_RE =
-	/^(?:https?:\/\/(?:www\.)?hudsondigitalsolutions\.com)?\/blog\/([^/?#]+)\/?(?:[?#].*)?$/
+const POST_PATH_RE = /^\/blog\/([^/]+)\/?$/
+/** Character references allowed in an href attribute value. */
+const ENTITY_RE = /&(?:#(\d+)|#x([\da-f]+)|([a-z]+));/gi
+const NAMED_ENTITIES: Readonly<Record<string, string>> = {
+	amp: '&',
+	apos: "'",
+	colon: ':',
+	gt: '>',
+	lt: '<',
+	num: '#',
+	percnt: '%',
+	period: '.',
+	quest: '?',
+	quot: '"',
+	sol: '/'
+}
 /** /blog/tag and /blog/author are listing pages, not posts. */
 const NON_POST_SEGMENTS: ReadonlySet<string> = new Set(['tag', 'author'])
 const HTML_HREF_RE = /href\s*=\s*(?:"([^"]*)"|'([^']*)')/gi
@@ -126,12 +146,14 @@ export function computeReadingTime(body: string): number {
  * live yet) renders as its inline content, so the page never ships an <a> that
  * 404s; the next build on or after that post's date turns the link on. Every
  * other link falls through to marked's default renderer, byte for byte. A
- * dedicated Marked instance keeps the global `marked` untouched.
+ * dedicated Marked instance keeps the global `marked` untouched. Pass the
+ * post's own slug so relative hrefs resolve the way they do on its page.
  */
 export function bodyToHtml(
 	body: string,
 	format: 'markdown' | 'html' = 'markdown',
-	linkable: (slug: string) => boolean = () => true
+	linkable: (slug: string) => boolean = () => true,
+	sourceSlug?: string
 ): string {
 	if (format === 'html') {
 		return body
@@ -140,7 +162,7 @@ export function bodyToHtml(
 		renderer: {
 			// Method syntax, not an arrow function: it needs `this.parser`.
 			link(token) {
-				const slug = postSlugFromHref(token.href)
+				const slug = markdownPostSlug(token.href, sourceSlug)
 				if (slug && !linkable(slug)) {
 					return this.parser.parseInline(token.tokens)
 				}
@@ -307,13 +329,76 @@ export function validatePost(p: ParsedPost): Violation[] {
 
 // --- Cross-post link graph (internal linking rules) ---
 
-/** The post slug an href points at, or null when it is not a post link. */
-export function postSlugFromHref(href: string): string | null {
-	const slug = POST_HREF_RE.exec(href)?.[1]
-	if (!slug || NON_POST_SEGMENTS.has(slug)) {
+/** An href attribute value with its character references decoded. */
+function decodeEntities(value: string): string {
+	return value.replace(
+		ENTITY_RE,
+		(ref, dec?: string, hex?: string, name?: string) => {
+			if (name) {
+				return NAMED_ENTITIES[name] ?? ref
+			}
+			const code = Number.parseInt(dec ?? hex ?? '', dec ? 10 : 16)
+			return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : ref
+		}
+	)
+}
+
+/**
+ * The post slug an href attribute value points at, or null when it is not a
+ * post link. The href is resolved with the WHATWG URL parser the way a browser
+ * resolves it on the source post's page (/blog/<sourceSlug>; the site sets
+ * trailingSlash: false), so scheme and host case, protocol-relative URLs,
+ * default ports, dot segments, percent-encoding, character references and
+ * relative paths ("held", "./held", "../blog/held") all land on the same slug.
+ * Without a source, relative hrefs resolve against the site root.
+ */
+export function postSlugFromHref(
+	href: string,
+	sourceSlug?: string
+): string | null {
+	const base =
+		sourceSlug === undefined
+			? `${SITE_ORIGIN}/`
+			: `${SITE_ORIGIN}/blog/${sourceSlug}`
+	let url: URL
+	try {
+		url = new URL(decodeEntities(href), base)
+	} catch {
 		return null
 	}
-	return slug
+	if (
+		(url.protocol !== 'https:' && url.protocol !== 'http:') ||
+		!SITE_HOSTS.has(url.hostname) ||
+		url.port !== ''
+	) {
+		return null
+	}
+	const segment = POST_PATH_RE.exec(url.pathname)?.[1]
+	if (!segment) {
+		return null
+	}
+	let slug = segment
+	try {
+		slug = decodeURIComponent(segment)
+	} catch {
+		// Malformed percent-encoding: keep the raw segment so LINK-dead names it.
+	}
+	return NON_POST_SEGMENTS.has(slug) ? null : slug
+}
+
+/**
+ * The post slug a markdown link points at. marked writes the href into the
+ * page through encodeURI (its cleanUrl), so resolve that form, not the raw
+ * token, to match what the browser follows.
+ */
+function markdownPostSlug(href: string, sourceSlug?: string): string | null {
+	let rendered: string
+	try {
+		rendered = encodeURI(href).replace(/%25/g, '%')
+	} catch {
+		return null
+	}
+	return postSlugFromHref(rendered, sourceSlug)
 }
 
 export interface PostLinks {
@@ -332,7 +417,9 @@ export function extractPostLinks(p: ParsedPost): PostLinks {
 	const targets = new Set<string>()
 	const htmlTargets = new Set<string>()
 	const add = (href: string, html: boolean): void => {
-		const slug = postSlugFromHref(href)
+		const slug = html
+			? postSlugFromHref(href, p.slug)
+			: markdownPostSlug(href, p.slug)
 		if (!slug || slug === p.slug) {
 			return
 		}

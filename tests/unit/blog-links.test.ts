@@ -10,6 +10,7 @@ import { join } from 'node:path'
 import { loadPosts } from '../../scripts/blog/build'
 import {
 	type BlogFrontmatter,
+	bodyToHtml,
 	extractPostLinks,
 	isLive,
 	type LinkViolation,
@@ -88,6 +89,110 @@ describe('postSlugFromHref', () => {
 		'#faq'
 	])('%s is not a post link', href => {
 		expect(postSlugFromHref(href)).toBeNull()
+	})
+})
+
+/**
+ * Every href form a browser on /blog/src resolves to /blog/held (the site sets
+ * trailingSlash: false). Each must hit the same slug in the renderer and in
+ * every LINK rule.
+ */
+const HELD_FORMS = [
+	'/blog/held',
+	'HTTPS://HudsonDigitalSolutions.com/blog/held',
+	'https://HUDSONDIGITALSOLUTIONS.COM/blog/held',
+	'http://www.hudsondigitalsolutions.com/blog/held',
+	'//hudsondigitalsolutions.com/blog/held',
+	'held',
+	'./held',
+	'../blog/held',
+	'held/',
+	'https://hudsondigitalsolutions.com:443/blog/held',
+	'http://hudsondigitalsolutions.com:80/blog/held',
+	'/blog/./held',
+	'/blog/x/../held',
+	'/blog/%68eld',
+	'&#x2F;blog&#x2F;held',
+	'/blog&sol;held'
+]
+
+describe('postSlugFromHref resolves like a browser on the source page', () => {
+	test.each(HELD_FORMS)('%s from /blog/src is held', href => {
+		expect(postSlugFromHref(href, 'src')).toBe('held')
+	})
+
+	test.each([
+		['#faq', 'src'],
+		['?ref=x', 'src'],
+		['', 'src']
+	])('%p resolves to the source page itself', (href, slug) => {
+		expect(postSlugFromHref(href, 'src')).toBe(slug)
+	})
+
+	test.each([
+		'tag/seo',
+		'../blog',
+		'../tools/x',
+		'/blog/a/b',
+		'https://hudsondigitalsolutions.com:8443/blog/held',
+		'ftp://hudsondigitalsolutions.com/blog/held',
+		'mailto:hello@hudsondigitalsolutions.com',
+		'javascript:alert(1)',
+		'https://[bad'
+	])('%s from /blog/src is not a post link', href => {
+		expect(postSlugFromHref(href, 'src')).toBeNull()
+	})
+
+	test('without a source, relative hrefs resolve against the site root', () => {
+		expect(postSlugFromHref('held')).toBeNull()
+		expect(postSlugFromHref('blog/held')).toBe('held')
+	})
+})
+
+describe('non-canonical hrefs in the renderer and the LINK rules', () => {
+	const notHeld = (slug: string): boolean => slug !== 'held'
+
+	test.each(HELD_FORMS)('[x](%s) to a held post renders as text', href => {
+		const html = bodyToHtml(`See [it](${href}).`, 'markdown', notHeld, 'src')
+		expect(html).toBe('<p>See it.</p>\n')
+	})
+
+	test.each(HELD_FORMS)('[x](%s) to a live post renders as a link', href => {
+		const html = bodyToHtml(`See [it](${href}).`, 'markdown', () => true, 'src')
+		expect(html).toContain('<a href=')
+	})
+
+	test.each(HELD_FORMS)('[x](%s) counts as a link to held', href => {
+		const { targets } = extractPostLinks(post('src', `[it](${href})`))
+		expect([...targets]).toEqual(['held'])
+	})
+
+	test.each(HELD_FORMS)(
+		'<a href="%s"> counts as a raw HTML link to held',
+		href => {
+			const { htmlTargets } = extractPostLinks(
+				post('src', `<a href="${href}">it</a>`, { bodyFormat: 'html' })
+			)
+			expect([...htmlTargets]).toEqual(['held'])
+		}
+	)
+
+	test.each([
+		'./missing-post',
+		'missing-post',
+		'HTTPS://HUDSONDIGITALSOLUTIONS.COM/blog/missing-post',
+		'//www.hudsondigitalsolutions.com/blog/missing-post/',
+		'/blog/./missing-post'
+	])('[x](%s) to an unknown slug is LINK-dead', href => {
+		const posts = [
+			linking('ring-a', ['ring-b', 'ring-c']),
+			linking('ring-b', ['ring-a', 'ring-c']),
+			linking('ring-c', ['ring-a', 'ring-b']),
+			post('src', `[x](${href}) [y](/blog/ring-a)`)
+		]
+		const dead = rules(linkViolations(posts, NOW), 'LINK-dead')
+		expect(dead.map(v => v.file)).toEqual(['src.md'])
+		expect(dead[0]?.message).toContain('/blog/missing-post')
 	})
 })
 
