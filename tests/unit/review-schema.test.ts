@@ -43,4 +43,11 @@ describe('generateReviewSchema', () => {
 			datePublished: '2026-11-01'
 		})
 	})
+
+	test('omits datePublished when a review has no created date', () => {
+		const undated: Testimonial = { ...review(5, 'Dee'), created_at: null }
+		// JSON-LD is emitted with JSON.stringify, which drops undefined keys.
+		const [, node] = generateReviewSchema([undated])
+		expect(JSON.stringify(node)).not.toContain('datePublished')
+	})
 })

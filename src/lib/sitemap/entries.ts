@@ -51,15 +51,16 @@ import { getShowcaseItems } from '@/lib/showcase'
 import { getApprovedTestimonials } from '@/lib/testimonials'
 import { pageDate } from './page-dates'
 
-/** Section children in sitemap-index order. */
-export const SITEMAP_SECTIONS = [
-	'blog',
-	'services',
-	'locations',
-	'core'
-] as const
+import { SITEMAP_SECTIONS, type SitemapSection } from './sections'
 
-export type SitemapSection = (typeof SITEMAP_SECTIONS)[number]
+export { SITEMAP_SECTIONS, type SitemapSection }
+
+/** /blog needs a live post for its lastmod; there is no fixed fallback. */
+function noLivePostDate(): never {
+	throw new Error(
+		'No live blog post to date /blog in the sitemap: publish a post (a /blog PAGE_DATES entry is deliberately not allowed)'
+	)
+}
 
 type ChangeFrequency = 'weekly' | 'monthly' | 'yearly'
 
@@ -275,11 +276,11 @@ export function buildSitemapEntries(sources: SitemapSources): SitemapEntry[] {
 			0.8
 		),
 		entry('/faq', 'core', pageDate('/faq'), 'monthly', 0.7),
-		// /blog has no PAGE_DATES entry, so pageDate throws if no post is live.
+		// /blog is dated by its newest live post and has no PAGE_DATES entry.
 		entry(
 			'/blog',
 			'blog',
-			newestPost(() => true) ?? pageDate('/blog'),
+			newestPost(() => true) ?? noLivePostDate(),
 			'weekly',
 			0.8
 		),

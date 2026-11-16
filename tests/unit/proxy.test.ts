@@ -14,6 +14,7 @@ import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { unstable_doesMiddlewareMatch } from 'next/experimental/testing/server'
 import { NextRequest } from 'next/server'
 import type * as SecurityHeadersTypes from '@/lib/security-headers'
+import { SITEMAP_SECTIONS } from '@/lib/sitemap/sections'
 import { cleanupMocks } from '../test-utils'
 
 function makeRequest(
@@ -322,6 +323,14 @@ describe('proxy matcher', () => {
 			'/blog/some-post/twitter-image-16v7k9'
 		]) {
 			expect(await matches(path)).toBe(false)
+		}
+	})
+
+	it('skips every sitemap section child', async () => {
+		// The matcher lists the children by hand (Next needs a static
+		// literal), so a new section must be added there too.
+		for (const section of SITEMAP_SECTIONS) {
+			expect(await matches(`/sitemap-${section}.xml`)).toBe(false)
 		}
 	})
 

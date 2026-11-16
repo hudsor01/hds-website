@@ -2,7 +2,13 @@ import { describe, expect, it, type mock } from 'bun:test'
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { TOOLS } from '@/app/(public)/tools/tools-data'
-import { getAllPosts, getAuthors, getTags } from '@/lib/blog'
+import {
+	getAllPosts,
+	getAuthors,
+	getPostsByAuthor,
+	getPostsByTag,
+	getTags
+} from '@/lib/blog'
 import { SERVICES } from '@/lib/constants/services'
 import { helpArticleDate } from '@/lib/help-articles'
 import { getAllLocationSlugs } from '@/lib/locations'
@@ -1130,5 +1136,55 @@ describe('sitemap routes', () => {
 		}
 		// sitemap.xml must be the route folder, never a static file.
 		expect(statSync(join(APP_DIR, 'sitemap.xml')).isDirectory()).toBe(true)
+	})
+})
+
+describe('sitemap and page indexing agree', () => {
+	// The tag and author pages set noindex exactly when getPostsByTag /
+	// getPostsByAuthor return no posts (see their generateMetadata). The
+	// pages are not imported here: other suites mock next/navigation
+	// partially and bun's module mocks are process-wide. This checks the
+	// same data path, so a listing the sitemap omits is always noindex and
+	// a listing it includes is always indexable.
+	it('lists a tag or author page exactly when that page is indexable', async () => {
+		const urls = new Set(
+			buildSitemapEntries(await loadSitemapSources()).map(e => e.url)
+		)
+		const listings = [
+			...(await Promise.all(
+				(
+					await getTags()
+				).map(async t => ({
+					url: `${SITE_URL}/blog/tag/${t.slug}`,
+					indexable: (await getPostsByTag(t.slug)).length > 0
+				}))
+			)),
+			...(await Promise.all(
+				(
+					await getAuthors()
+				).map(async a => ({
+					url: `${SITE_URL}/blog/author/${a.slug}`,
+					indexable: (await getPostsByAuthor(a.slug)).length > 0
+				}))
+			))
+		]
+		expect(listings.length).toBeGreaterThan(0)
+		for (const listing of listings) {
+			expect({ url: listing.url, listed: urls.has(listing.url) }).toEqual({
+				url: listing.url,
+				listed: listing.indexable
+			})
+		}
+	})
+
+	it('both listing pages derive noindex from their post count', () => {
+		for (const file of [
+			'src/app/(public)/blog/tag/[slug]/page.tsx',
+			'src/app/(public)/blog/author/[slug]/page.tsx'
+		]) {
+			expect(readFileSync(file, 'utf8')).toContain(
+				'noindex: posts.length === 0'
+			)
+		}
 	})
 })
