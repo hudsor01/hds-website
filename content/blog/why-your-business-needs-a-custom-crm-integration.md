@@ -56,14 +56,14 @@ Each one is a symptom of data that has to be moved by a person. People get busy.
 
 I'll be straight about this, because not every business needs custom work.
 
-Most CRMs ship with native integrations. If you're still picking the CRM itself, I compare [how HubSpot and Salesforce fit a 5 to 50 person team](/blog/hubspot-vs-salesforce-for-small-business). Tools like Zapier and Make connect thousands of apps without code. If your needs look like this, start there:
+Most CRMs ship with native integrations. Tools like Zapier and Make connect thousands of apps without code. If your needs look like this, start there:
 
 - Data moves one way, from one tool to another.
 - You use standard fields: name, email, phone, amount.
 - Volume is modest.
 - A short delay or an occasional manual fix doesn't hurt anything.
 
-A form that creates a HubSpot contact, or a closed deal that posts a message to your team, is a perfectly good job for a native connector. I walk through the common options in [workflow automation tools for small business](/blog/workflow-automation-tools-small-business).
+A form that creates a HubSpot contact, or a closed deal that posts a message to your team, is a perfectly good job for a native connector. I walk through the common options in [workflow automation tools for small business](/blog/workflow-automation-tools-small-business). If you're still picking the CRM itself, I compare [how HubSpot and Salesforce fit a 5 to 50 person team](/blog/hubspot-vs-salesforce-for-small-business).
 
 ## When Custom Pays Off
 

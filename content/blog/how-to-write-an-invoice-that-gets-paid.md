@@ -54,7 +54,7 @@ Every invoice I design includes these exact elements. Missing any single one ope
 - Accepted payment methods with a clickable link to your processor
 - Your contact email for billing questions, separated from general support
 
-Populate these fields during the booking phase. That means the invoice auto generates with zero last minute editing. For hourly work the line items are only as good as the hours behind them, so [tracking crew hours at the point of entry](/blog/how-to-track-employee-hours) comes first. The client already approved the scope and pricing when they signed the digital contract. You remove the surprise factor that triggers disputes.
+Populate these fields during the booking phase. That means the invoice auto generates with zero last minute editing. The client already approved the scope and pricing when they signed the digital contract. You remove the surprise factor that triggers disputes. For hourly work the line items are only as good as the hours behind them, so [tracking crew hours at the point of entry](/blog/how-to-track-employee-hours) comes first.
 
 ### Wiring it to your CRM and accounting stack
 

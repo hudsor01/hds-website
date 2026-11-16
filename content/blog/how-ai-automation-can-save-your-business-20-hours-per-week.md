@@ -69,7 +69,7 @@ AI helps at the edges. When information arrives in a format a rule can't parse, 
 
 ### 4. Invoices and Payment Reminders
 
-Sending invoices when a job closes and nudging late payers on a schedule is classic rules-based work. Most invoicing tools do it natively and too many businesses never turn it on. My post on [automating invoicing and payment reminders](/blog/automate-invoicing-and-payment-reminders) covers the pay links, the reminder schedule and syncing payments to your books. It also takes the awkward "just checking in" email off your plate entirely.
+Sending invoices when a job closes and nudging late payers on a schedule is classic rules-based work. Most invoicing tools do it natively and too many businesses never turn it on. It also takes the awkward "just checking in" email off your plate entirely. My post on [automating invoicing and payment reminders](/blog/automate-invoicing-and-payment-reminders) covers the pay links, the reminder schedule and syncing payments to your books.
 
 ### 5. The Same Questions, Every Day
 

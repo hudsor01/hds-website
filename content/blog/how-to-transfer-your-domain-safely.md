@@ -55,7 +55,7 @@ Before you request an authorization code, run through these steps. Missing one i
 - Back up CRM exports, automation workflows in HubSpot or Salesforce and all payment gateway configurations
 - Test contact forms, checkout flows and calendar booking links on a staging environment to confirm connectivity
 
-Cross-reference the list against your tech stack so nothing slips through the cracks. If the domain move is part of a full platform switch, [my checklist for moving a whole site without losing SEO](/blog/website-migration-checklist) covers the rankings and tracking side. The checklist takes about twenty minutes and can save days of emergency troubleshooting later.
+Cross-reference the list against your tech stack so nothing slips through the cracks. The checklist takes about twenty minutes and can save days of emergency troubleshooting later. If the domain move is part of a full platform switch, [my checklist for moving a whole site without losing SEO](/blog/website-migration-checklist) covers the rankings and tracking side.
 
 ### The Actual Handoff Process
 
