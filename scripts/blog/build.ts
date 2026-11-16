@@ -12,6 +12,10 @@
  * loudly instead of shipping an empty or partial blog. Links to scheduled
  * posts render as plain text until their date; the daily scheduled-publish
  * rebuild turns them into links on the day the target goes live.
+ *
+ * After compiling, main() runs the cross-post link rules (lib.ts
+ * linkViolations) on the same directory: a dead or unpublished post link
+ * fails the build, and posts below the inbound-link threshold are reported.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -22,6 +26,7 @@ import {
 	CONTENT_DIR,
 	computeReadingTime,
 	isLive,
+	linkViolations,
 	listPostFiles,
 	type ParsedPost,
 	parsePost,
@@ -170,10 +175,26 @@ function contentDir(): string {
 
 function main(): void {
 	const dir = contentDir()
-	const posts = compilePosts(dir)
+	const now = new Date()
+	const posts = compilePosts(dir, now)
+
+	// Checked before writing, so a failed link check never leaves a
+	// half-updated generated module behind.
+	const violations = linkViolations(loadPosts(dir), now)
+	const errors = violations.filter(v => v.severity === 'error')
+	if (errors.length > 0) {
+		throw new Error(
+			failureMessage(errors.map(v => `${v.file}: [${v.rule}] ${v.message}`))
+		)
+	}
+	const warnings = violations.filter(v => v.severity === 'warn')
+	for (const v of warnings) {
+		console.warn(`warn  ${v.file}: [${v.rule}] ${v.message}`)
+	}
+
 	const changed = writeIfChanged(POSTS_FILE, renderModule(posts))
 	console.warn(
-		`blog:build - ${posts.length} published posts${dir === CONTENT_DIR ? '' : ` from ${dir}`} -> src/lib/_generated/blog-posts.ts${changed ? '' : ' (unchanged)'}`
+		`blog:build - ${posts.length} published posts${dir === CONTENT_DIR ? '' : ` from ${dir}`} -> src/lib/_generated/blog-posts.ts${changed ? '' : ' (unchanged)'}${warnings.length > 0 ? `, ${warnings.length} link warning(s)` : ''}`
 	)
 }
 

@@ -5,6 +5,8 @@
  * in-memory ParsedPost objects, so no files are read or written.
  */
 import { describe, expect, test } from 'bun:test'
+import { join } from 'node:path'
+import { loadPosts } from '../../scripts/blog/build'
 import {
 	type BlogFrontmatter,
 	extractPostLinks,
@@ -454,5 +456,22 @@ describe('linkViolations', () => {
 			linking('bad-date', ['no-date'], { publishedAt: 'someday' })
 		])
 		expect(() => linkViolations(posts, NOW)).not.toThrow()
+	})
+})
+
+describe('fixture dir', () => {
+	const FIXTURE_DIR = join(process.cwd(), 'tests/fixtures/blog')
+	const FIXTURE_NOW = new Date('2026-02-01T00:00:00.000Z')
+
+	test('the visual fixtures have no link violations', () => {
+		expect(linkViolations(loadPosts(FIXTURE_DIR), FIXTURE_NOW)).toEqual([])
+	})
+
+	test('every fixture has exactly 2 qualifying inbound links', () => {
+		const inbound = qualifyingInbound(loadPosts(FIXTURE_DIR), FIXTURE_NOW)
+		expect(inbound.size).toBe(5)
+		for (const sources of inbound.values()) {
+			expect(sources).toHaveLength(2)
+		}
 	})
 })
