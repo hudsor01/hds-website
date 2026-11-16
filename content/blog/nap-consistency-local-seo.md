@@ -44,7 +44,7 @@ Most owners try to fix this by manually updating directories. It takes hours, it
 You can model this cost yourself. If you pay a virtual assistant $20 an hour to update directories and it takes four hours per month, you are spending $960 annually on a task that breaks every time your business evolves. That money belongs in paid ads, content creation or sales development. The ROI calculation on manual cleanup is negative from day one. You can run your own numbers with my [ROI calculator](/tools/roi-calculator). Plug in your monthly traffic, conversion rate and average order value to see what a lift in conversions is worth, then compare that to what drifting citations are costing you.
 
 ## Automating and Monitoring NAP Across Every Channel
-I treat local SEO the same way I treated revenue operations. You measure what matters, you automate the repetitive work and you build alerts for drift before it impacts rankings. NAP consistency is not a one time checklist. It is an ongoing data discipline that requires the same rigor you apply to your CRM hygiene or your forecasting models.
+I treat local SEO the same way I treated revenue operations. You measure what matters, you automate the repetitive work and you build alerts for drift before it impacts rankings. NAP consistency is not a one time checklist. It is an ongoing data discipline that requires the same rigor you apply to your CRM hygiene or your forecasting models. Citations are one piece of a bigger system, which I lay out in [a practical local SEO plan for small businesses](/blog/local-seo-for-small-business-guide).
 
 ### Building a NAP Workflow That Prints Booked Appointments
 Here is the workflow I put in place when I take on local SEO:

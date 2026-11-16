@@ -58,7 +58,7 @@ You can't pour water into a bucket with holes. I audit every site for technical 
 
 Schema markup is another area where most shops leave money on the table. I generate custom local business schema that explicitly tells Google your service areas, operating hours and price ranges. This helps you qualify for rich snippets in the map pack and reduces irrelevant calls from outside your service radius. I use my schema generator to build markup that matches your exact business structure, then validate it before deployment.
 
-I also audit your internal linking structure. Your service pages need to support each other with contextual backlinks that pass equity toward your money keywords. A general contractor in Arlington should link their roofing page to their gutter installation page when the context makes sense. This creates a topical cluster that Google reads as expertise. I run regular crawl reports to find broken redirects and orphaned pages that drain your indexing budget.
+I also audit your internal linking structure. Your service pages need to support each other with contextual backlinks that pass equity toward your money keywords. A general contractor in Arlington should link their roofing page to their gutter installation page when the context makes sense. This creates a topical cluster that Google reads as expertise. I run regular crawl reports to find broken redirects and orphaned pages that drain your indexing budget. If you serve more than one city, the same cluster logic applies to your location pages. My post on [ranking in several cities without thin pages](/blog/how-to-rank-in-multiple-cities) walks through that structure.
 
 ## The exact workflow I use to push for the top three
 

@@ -34,7 +34,7 @@ I do not hand clients a spreadsheet of three thousand terms and wish them luck. 
 
 - Audit your current search console data to find queries that already generate impressions but sit on page two or three. You can capture those positions with minor copy adjustments instead of starting from scratch.
 - Map every target phrase to a specific funnel stage and tie it to a HubSpot pipeline deal. I track discovery keywords separately from ready to book terms so you know exactly where traffic drops off.
-- Build location specific pages that answer the exact question in the query plus one commercial intent signal. A page for AC repair Frisco TX needs service area boundaries, same day availability and a booking widget above the fold.
+- Build location specific pages that answer the exact question in the query plus one commercial intent signal. A page for AC repair Frisco TX needs service area boundaries, same day availability and a booking widget above the fold. That answer-first structure is also what [AI search tools look for when they quote a business](/blog/how-to-show-up-in-ai-search).
 - Run automated alerts in Power BI that flag keywords where cost per click exceeds your target customer acquisition cost. I set the threshold well under the profit on a single job and kill or rewrite any term that crosses it.
 - Install schema markup for local business, service area and FAQ to qualify for rich results. A richer listing gives a mobile searcher more reasons to tap you instead of the result below.
 
