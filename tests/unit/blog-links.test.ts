@@ -12,6 +12,7 @@ import {
 	type BlogFrontmatter,
 	bodyToHtml,
 	extractPostLinks,
+	htmlAnchorHrefs,
 	isLive,
 	type LinkViolation,
 	linkViolations,
@@ -279,6 +280,111 @@ describe('extractPostLinks', () => {
 		const links = extractPostLinks(post('src', body, { bodyFormat: 'html' }))
 		expect(links.targets.size).toBe(0)
 		expect(links.htmlTargets.size).toBe(0)
+	})
+})
+
+describe('raw HTML is parsed, not pattern-matched', () => {
+	/** Raw HTML link targets for a body, in both body formats. */
+	function htmlTargetsBoth(body: string): string[][] {
+		return (['markdown', 'html'] as const).map(bodyFormat => [
+			...extractPostLinks(post('src', body, { bodyFormat })).targets
+		])
+	}
+
+	test.each([
+		['double-quoted', '<a href="/blog/held">x</a>'],
+		['single-quoted', "<a href='/blog/held'>x</a>"],
+		['unquoted', '<a href=/blog/held>x</a>'],
+		['unquoted, uppercase tag', '<A HREF=/blog/held/>x</A>'],
+		['unquoted, other attributes', '<a class=x href=/blog/held rel=y>x</a>'],
+		['a real anchor inside pre', '<pre><a href="/blog/held">x</a></pre>']
+	])('a %s href counts as a raw HTML link', (_, body) => {
+		for (const bodyFormat of ['markdown', 'html'] as const) {
+			const links = extractPostLinks(post('src', body, { bodyFormat }))
+			expect([...links.targets]).toEqual(['held'])
+			expect([...links.htmlTargets]).toEqual(['held'])
+		}
+	})
+
+	test.each([
+		['an HTML comment', '<!-- <a href="/blog/gone">x</a> -->'],
+		[
+			'a comment inside a paragraph',
+			'Text <!-- <a href="/blog/gone">x</a> --> more text.'
+		],
+		[
+			'a multi-line comment',
+			'<!--\nold link:\n<a href="/blog/gone">x</a>\n-->'
+		],
+		[
+			'escaped markup in pre and code',
+			'<pre><code>&lt;a href="/blog/gone"&gt;x&lt;/a&gt;</code></pre>'
+		],
+		[
+			'escaped markup in inline code',
+			'Use <code>&lt;a href=/blog/gone&gt;</code>.'
+		],
+		['a data-href attribute', '<div data-href="/blog/gone">x</div>'],
+		['data-href on an anchor', '<a data-href="/blog/gone">x</a>'],
+		['xlink:href', '<svg><a xlink:href="/blog/gone">x</a></svg>'],
+		['script text', '<script>const s = \'<a href="/blog/gone">\'</script>'],
+		['style text', '<style>/* <a href="/blog/gone"> */</style>']
+	])('%s never counts', (_, body) => {
+		expect(htmlTargetsBoth(body)).toEqual([[], []])
+	})
+
+	test('a markdown link inside an HTML comment never counts', () => {
+		const body = 'Text.\n\n<!-- [x](/blog/gone) -->\n\nMore.'
+		expect(extractPostLinks(post('src', body)).targets.size).toBe(0)
+	})
+
+	test('htmlAnchorHrefs reads every anchor in document order', () => {
+		expect(
+			htmlAnchorHrefs(
+				'<a href="/a">a</a><!-- <a href="/b"> --><a href=\'/c\'>c</a><a href=/d>d</a>'
+			)
+		).toEqual(['/a', '/c', '/d'])
+	})
+
+	test('an unquoted raw HTML link to a held post is LINK-html', () => {
+		for (const bodyFormat of ['markdown', 'html'] as const) {
+			const posts = [
+				linking('ring-a', ['ring-b', 'ring-c']),
+				linking('ring-b', ['ring-a', 'ring-c']),
+				linking('ring-c', ['ring-a', 'ring-b']),
+				post('held', '', { publishedAt: '2026-12-03' }),
+				post('src', '<p><a href=/blog/held>x</a></p>', { bodyFormat })
+			]
+			const v = rules(linkViolations(posts, NOW), 'LINK-html')
+			expect(v.map(x => x.file)).toEqual(['src.md'])
+		}
+	})
+
+	test('commented-out anchors are not dead links', () => {
+		const posts = [
+			linking('ring-a', ['ring-b', 'ring-c']),
+			linking('ring-b', ['ring-a', 'ring-c']),
+			linking('ring-c', ['ring-a', 'ring-b']),
+			post('src', '<!-- <a href="/blog/gone">x</a> --> [y](/blog/ring-a)')
+		]
+		expect(rules(linkViolations(posts, NOW), 'LINK-dead')).toEqual([])
+	})
+
+	test('a post whose only inbound links are commented out is an orphan', () => {
+		const commented = '<!-- <a href="/blog/tg">x</a> -->'
+		const posts = [
+			linking('ring-a', ['ring-b', 'ring-c']),
+			linking('ring-b', ['ring-a', 'ring-c']),
+			linking('ring-c', ['ring-a', 'ring-b']),
+			post('tg'),
+			post('one', `${commented} [r](/blog/ring-a)`),
+			post('two', `${commented} [r](/blog/ring-b)`),
+			post('three', `<p>${commented}<a href="/blog/ring-c">r</a></p>`, {
+				bodyFormat: 'html'
+			})
+		]
+		const orphans = rules(linkViolations(posts, NOW), 'LINK-orphan')
+		expect(orphans.map(v => v.file)).toContain('tg.md')
 	})
 })
 

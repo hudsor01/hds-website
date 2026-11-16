@@ -75,7 +75,6 @@ const NAMED_ENTITIES: Readonly<Record<string, string>> = {
 }
 /** /blog/tag and /blog/author are listing pages, not posts. */
 const NON_POST_SEGMENTS: ReadonlySet<string> = new Set(['tag', 'author'])
-const HTML_HREF_RE = /href\s*=\s*(?:"([^"]*)"|'([^']*)')/gi
 /** publishedAt is a quoted calendar day; times and offsets are rejected. */
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 
@@ -409,9 +408,32 @@ export interface PostLinks {
 }
 
 /**
+ * The href of every <a> element in a piece of raw HTML, in document order.
+ * Bun's HTMLRewriter is a real HTML tokenizer, so HTML comments, script and
+ * style text, escaped markup inside code or pre (&lt;a href=...&gt;) and other
+ * attributes such as data-href never count, while double-quoted,
+ * single-quoted and unquoted href values all do.
+ */
+export function htmlAnchorHrefs(html: string): string[] {
+	const hrefs: string[] = []
+	new HTMLRewriter()
+		.on('a[href]', {
+			element(el) {
+				const href = el.getAttribute('href')
+				if (href !== null) {
+					hrefs.push(href)
+				}
+			}
+		})
+		.transform(html)
+	return hrefs
+}
+
+/**
  * The other posts a body links to. Markdown goes through the marked lexer, so
- * reference links and autolinks count while code spans and code blocks never
- * do; raw HTML anchors (and html-format bodies) are scanned for hrefs.
+ * reference links and autolinks count while code spans, code blocks and HTML
+ * comments never do; raw HTML (html tokens and html-format bodies) is parsed
+ * and only real <a href> elements count.
  */
 export function extractPostLinks(p: ParsedPost): PostLinks {
 	const targets = new Set<string>()
@@ -429,8 +451,8 @@ export function extractPostLinks(p: ParsedPost): PostLinks {
 		}
 	}
 	const scanHtml = (html: string): void => {
-		for (const m of html.matchAll(HTML_HREF_RE)) {
-			add(m[1] ?? m[2] ?? '', true)
+		for (const href of htmlAnchorHrefs(html)) {
+			add(href, true)
 		}
 	}
 	if ((p.data.bodyFormat ?? 'markdown') === 'html') {
