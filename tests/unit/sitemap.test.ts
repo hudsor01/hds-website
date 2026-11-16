@@ -1,8 +1,7 @@
 import { describe, expect, it, type mock } from 'bun:test'
-import { readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { TOOLS } from '@/app/(public)/tools/tools-data'
-import sitemap from '@/app/sitemap'
 import { getAllPosts, getAuthors, getTags } from '@/lib/blog'
 import { SERVICES } from '@/lib/constants/services'
 import { getAllLocationSlugs } from '@/lib/locations'
@@ -29,23 +28,27 @@ const NOW = new Date()
 // without a database it still emits the static + registry-derived URLs we
 // assert here. Blog URLs come from the compiled content/blog module.
 
+async function entries(): Promise<SitemapEntry[]> {
+	return buildSitemapEntries(await loadSitemapSources())
+}
+
 describe('sitemap', () => {
 	it('includes every public tool from the TOOLS registry', async () => {
-		const urls = new Set((await sitemap()).map(e => e.url))
+		const urls = new Set((await entries()).map(e => e.url))
 		for (const tool of TOOLS) {
 			expect(urls.has(`${SITE_URL}${tool.href}`)).toBe(true)
 		}
 	})
 
 	it('excludes the admin-only testimonial-collector tool', async () => {
-		const urls = (await sitemap()).map(e => e.url)
+		const urls = (await entries()).map(e => e.url)
 		expect(urls.some(u => u.includes('/tools/testimonial-collector'))).toBe(
 			false
 		)
 	})
 
 	it('includes legal and landing routes that were previously missing', async () => {
-		const urls = new Set((await sitemap()).map(e => e.url))
+		const urls = new Set((await entries()).map(e => e.url))
 		expect(urls.has(`${SITE_URL}/terms`)).toBe(true)
 		expect(urls.has(`${SITE_URL}/website-migration`)).toBe(true)
 	})
@@ -53,12 +56,12 @@ describe('sitemap', () => {
 	it('leaves out help pages that have no published articles', async () => {
 		// No database here, so there are no help articles: the hub and every
 		// category are empty pages and must not be listed.
-		const urls = (await sitemap()).map(e => e.url)
+		const urls = (await entries()).map(e => e.url)
 		expect(urls.some(u => u.startsWith(`${SITE_URL}/help`))).toBe(false)
 	})
 
 	it('emits exactly one URL per published blog post', async () => {
-		const blogUrls = (await sitemap())
+		const blogUrls = (await entries())
 			.map(e => e.url)
 			.filter(u => /\/blog\/(?!tag\/|author\/)[^/]+$/.test(u))
 		const posts = await getAllPosts()
@@ -68,7 +71,7 @@ describe('sitemap', () => {
 	})
 
 	it('never emits a duplicate URL', async () => {
-		const urls = (await sitemap()).map(e => e.url)
+		const urls = (await entries()).map(e => e.url)
 		expect(urls.length).toBe(new Set(urls).size)
 	})
 })
@@ -905,5 +908,114 @@ describe('sitemap XML', () => {
 		for (const loc of locs) {
 			expect(loc.startsWith(SITE_URL)).toBe(true)
 		}
+	})
+})
+
+type SitemapRoute = { GET: () => Promise<Response> }
+
+// Literal imports so each route module is type-checked.
+const CHILD_ROUTES: Record<SitemapSection, () => Promise<SitemapRoute>> = {
+	blog: () => import('@/app/sitemap-blog.xml/route'),
+	services: () => import('@/app/sitemap-services.xml/route'),
+	locations: () => import('@/app/sitemap-locations.xml/route'),
+	core: () => import('@/app/sitemap-core.xml/route')
+}
+
+async function serve(
+	load: () => Promise<SitemapRoute>
+): Promise<{ response: Response; xml: string }> {
+	const response = await (await load()).GET()
+	return { response, xml: await response.text() }
+}
+
+function locsOf(xml: string): string[] {
+	return Array.from(parse(xml).getElementsByTagName('loc')).map(
+		node => node.textContent ?? ''
+	)
+}
+
+const APP_DIR = join(import.meta.dir, '../../src/app')
+
+describe('sitemap routes', () => {
+	for (const section of SITEMAP_SECTIONS) {
+		it(`serves /sitemap-${section}.xml as a valid urlset`, async () => {
+			const { response, xml } = await serve(CHILD_ROUTES[section])
+			expect(response.status).toBe(200)
+			expect(response.headers.get('content-type')).toBe(
+				'application/xml; charset=utf-8'
+			)
+			const doc = parse(xml)
+			expect(doc.getElementsByTagName('parsererror').length).toBe(0)
+			expect(doc.documentElement.tagName).toBe('urlset')
+			expect(doc.documentElement.namespaceURI).toBe(SITEMAP_NS)
+			expect(BARE_AMP.test(xml)).toBe(false)
+			const locs = locsOf(xml)
+			expect(locs.length).toBeGreaterThan(0)
+			for (const loc of locs) {
+				expect(loc.startsWith(SITE_URL)).toBe(true)
+			}
+		})
+	}
+
+	it('partitions the builder URL set across the four children', async () => {
+		const builderUrls = (await entries()).map(e => e.url)
+		const served: string[] = []
+		for (const section of SITEMAP_SECTIONS) {
+			const locs = locsOf((await serve(CHILD_ROUTES[section])).xml)
+			for (const loc of locs) {
+				expect([loc, expectedSection(pathOf(loc))]).toEqual([loc, section])
+			}
+			served.push(...locs)
+		}
+		// Equal counts plus equal sets: no URL is in two children.
+		expect(served.length).toBe(builderUrls.length)
+		expect(new Set(served)).toEqual(new Set(builderUrls))
+	})
+
+	it('serves /sitemap.xml as an index of the four children in order', async () => {
+		const { response, xml } = await serve(
+			() => import('@/app/sitemap.xml/route')
+		)
+		expect(response.status).toBe(200)
+		expect(response.headers.get('content-type')).toBe(
+			'application/xml; charset=utf-8'
+		)
+		const doc = parse(xml)
+		expect(doc.getElementsByTagName('parsererror').length).toBe(0)
+		expect(doc.documentElement.tagName).toBe('sitemapindex')
+		expect(doc.documentElement.namespaceURI).toBe(SITEMAP_NS)
+		expect(BARE_AMP.test(xml)).toBe(false)
+		expect(locsOf(xml)).toEqual([
+			`${SITE_URL}/sitemap-blog.xml`,
+			`${SITE_URL}/sitemap-services.xml`,
+			`${SITE_URL}/sitemap-locations.xml`,
+			`${SITE_URL}/sitemap-core.xml`
+		])
+	})
+
+	it('dates each index entry by the newest lastmod in its child', async () => {
+		const all = await entries()
+		const { xml } = await serve(() => import('@/app/sitemap.xml/route'))
+		const lastmods = Array.from(parse(xml).getElementsByTagName('sitemap')).map(
+			node => textOf(node, 'lastmod')
+		)
+		const expected = SITEMAP_SECTIONS.map(section =>
+			new Date(
+				Math.max(
+					...all
+						.filter(e => e.section === section)
+						.map(e => e.lastModified.getTime())
+				)
+			).toISOString()
+		)
+		expect(lastmods).toEqual(expected)
+	})
+
+	it('has no metadata sitemap file competing for /sitemap.xml', () => {
+		for (const file of ['sitemap.ts', 'sitemap.tsx', 'sitemap.js']) {
+			expect([file, existsSync(join(APP_DIR, file))]).toEqual([file, false])
+		}
+		// sitemap.xml must be the route folder, never a static file.
+		expect(statSync(join(APP_DIR, 'sitemap.xml')).isDirectory()).toBe(true)
 	})
 })
