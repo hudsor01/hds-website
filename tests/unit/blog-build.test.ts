@@ -4,17 +4,31 @@
  * the real content/blog tree is never touched.
  */
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import {
+	existsSync,
+	mkdtempSync,
+	readFileSync,
+	rmSync,
+	writeFileSync
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import {
 	compileAll,
 	compilePosts,
+	contentDir,
 	loadPosts,
-	renderModule
+	renderModule,
+	runBuild
 } from '../../scripts/blog/build'
-import { isLive } from '../../scripts/blog/lib'
+import {
+	CONTENT_DIR,
+	htmlAnchorHrefs,
+	isLive,
+	postSlugFromHref
+} from '../../scripts/blog/lib'
 import { validateAll } from '../../scripts/blog/validate'
+import type { CompiledBlogPost } from '../../src/types/blog'
 
 interface FixtureOptions {
 	slug: string
@@ -374,18 +388,208 @@ describe('loadPosts', () => {
 	})
 })
 
-describe('real content', () => {
-	test('no compiled post links to a post that is not live yet', () => {
-		const now = new Date()
-		const held = loadPosts()
-			.filter(p => p.data.published && !isLive(p.data, now))
-			.map(p => p.slug)
-		const compiled = compilePosts(undefined, now)
-		for (const slug of held) {
-			const href = new RegExp(`href="/blog/${slug}["/#?]`)
-			const offenders = compiled.filter(p => href.test(p.content))
-			expect(offenders.map(p => p.slug)).toEqual([])
+/**
+ * Every <a href> in compiled posts that resolves (the way a browser does on
+ * that post's page) to a post that is not live, as "source -> href". Hrefs
+ * are read by an HTML parser, so any quote style and absolute form counts.
+ */
+function anchorsToNonLive(
+	posts: CompiledBlogPost[],
+	live: ReadonlySet<string>
+): { offenders: string[]; postLinks: number } {
+	const offenders: string[] = []
+	let postLinks = 0
+	for (const p of posts) {
+		for (const href of htmlAnchorHrefs(p.content)) {
+			const slug = postSlugFromHref(href, p.slug)
+			if (slug === null) {
+				continue
+			}
+			postLinks++
+			if (!live.has(slug)) {
+				offenders.push(`${p.slug} -> ${href}`)
+			}
 		}
+	}
+	return { offenders, postLinks }
+}
+
+describe('no compiled <a> points at a post that is not live', () => {
+	const DAY_BEFORE = new Date('2026-03-01T23:59:59.999Z')
+	const ON_THE_DAY = new Date('2026-03-02T00:00:00.000Z')
+	// Every way a markdown body can link the held post; all must render as text.
+	const FORMS = [
+		'[a](/blog/held-post)',
+		'[b](https://hudsondigitalsolutions.com/blog/held-post/#faq)',
+		'[c](HTTPS://WWW.HudsonDigitalSolutions.com/blog/held-post)',
+		'[d](//hudsondigitalsolutions.com/blog/held-post?x=1)',
+		'[e](held-post)',
+		'[f](./held-post)',
+		'[g](../blog/held-post)',
+		'[h](https://hudsondigitalsolutions.com:443/blog/./held-post)',
+		'[i][ref]',
+		'<https://hudsondigitalsolutions.com/blog/held-post>',
+		'https://www.hudsondigitalsolutions.com/blog/held-post'
+	]
+
+	test('a synthetic held post is never linked before its date', () => {
+		writePost({ slug: 'held-post', publishedAt: '2026-03-02' })
+		writePost({
+			slug: 'live-post',
+			publishedAt: '2026-03-01',
+			body: `${FORMS.join('\n\n')}\n\n[ref]: /blog/held-post`
+		})
+		const live = (now: Date): Set<string> =>
+			new Set(
+				loadPosts(dir)
+					.filter(p => isLive(p.data, now))
+					.map(p => p.slug)
+			)
+
+		const before = anchorsToNonLive(
+			compilePosts(dir, DAY_BEFORE),
+			live(DAY_BEFORE)
+		)
+		expect(before).toEqual({ offenders: [], postLinks: 0 })
+
+		// Not vacuous: on the day, every form is a real link to the post.
+		const onTheDay = anchorsToNonLive(
+			compilePosts(dir, ON_THE_DAY),
+			live(ON_THE_DAY)
+		)
+		expect(onTheDay).toEqual({ offenders: [], postLinks: FORMS.length })
+	})
+
+	test('real content: no compiled <a> resolves to a non-live post', () => {
+		const now = new Date()
+		const posts = loadPosts()
+		const live = new Set(
+			posts.filter(p => isLive(p.data, now)).map(p => p.slug)
+		)
+		const { offenders, postLinks } = anchorsToNonLive(
+			compileAll(posts, now).compiled,
+			live
+		)
+		expect(offenders).toEqual([])
+		expect(postLinks).toBeGreaterThan(0)
+	})
+})
+
+describe('runBuild (the blog:build link gate)', () => {
+	const NOW = new Date('2026-03-01T12:00:00.000Z')
+	let out: string
+
+	beforeEach(() => {
+		out = join(dir, 'out', 'blog-posts.ts')
+	})
+
+	/** Three posts that each link the other two, so every rule stays quiet. */
+	function writeRing(): void {
+		const ring = ['ring-a', 'ring-b', 'ring-c']
+		for (const slug of ring) {
+			writePost({
+				slug,
+				body: ring
+					.filter(other => other !== slug)
+					.map(other => `[${other}](/blog/${other})`)
+					.join(' ')
+			})
+		}
+	}
+
+	test('writes the module when every rule passes', () => {
+		writeRing()
+		const result = runBuild(dir, NOW, out)
+		expect(result.changed).toBe(true)
+		expect(result.warnings).toEqual([])
+		expect(result.posts.map(p => p.slug)).toEqual([
+			'ring-a',
+			'ring-b',
+			'ring-c'
+		])
+		expect(readFileSync(out, 'utf8')).toBe(renderModule(result.posts))
+		expect(runBuild(dir, NOW, out).changed).toBe(false)
+	})
+
+	test('an orphan throws, names the slug and writes nothing', () => {
+		writeRing()
+		writePost({ slug: 'lonely' })
+		expect(() => runBuild(dir, NOW, out)).toThrow(
+			/lonely\.md: \[LINK-orphan\] lonely has no qualifying inbound links/
+		)
+		expect(existsSync(out)).toBe(false)
+	})
+
+	test('a raw HTML link to a held post throws and leaves the old module', () => {
+		writeRing()
+		writePost({ slug: 'held-post', publishedAt: '2026-03-02' })
+		writePost({
+			slug: 'ring-a',
+			body: '[b](/blog/ring-b) [c](/blog/ring-c) [h](/blog/held-post)'
+		})
+		writePost({
+			slug: 'ring-b',
+			body: '[a](/blog/ring-a) [c](/blog/ring-c) [h](/blog/held-post)'
+		})
+		runBuild(dir, NOW, out)
+		const before = readFileSync(out, 'utf8')
+		writePost({
+			slug: 'ring-c',
+			body: '[a](/blog/ring-a) [b](/blog/ring-b) <a href=/blog/held-post>h</a>'
+		})
+		expect(() => runBuild(dir, NOW, out)).toThrow(
+			/ring-c\.md: \[LINK-html\] raw HTML link to \/blog\/held-post/
+		)
+		expect(readFileSync(out, 'utf8')).toBe(before)
+	})
+
+	test('a dead link throws and writes nothing', () => {
+		writeRing()
+		writePost({
+			slug: 'ring-a',
+			body: '[b](/blog/ring-b) [c](./ring-c) [x](./missing-post)'
+		})
+		expect(() => runBuild(dir, NOW, out)).toThrow(
+			/ring-a\.md: \[LINK-dead\] links to \/blog\/missing-post/
+		)
+		expect(existsSync(out)).toBe(false)
+	})
+
+	test('a compile failure throws before the link rules and writes nothing', () => {
+		writeRing()
+		writePost({ slug: 'ring-a', title: '![](x)', body: '[b](/blog/ring-b)' })
+		expect(() => runBuild(dir, NOW, out)).toThrow(/ring-a\.md: title is empty/)
+		expect(existsSync(out)).toBe(false)
+	})
+
+	test('one qualifying inbound link is a warning, not a failure', () => {
+		writeRing()
+		writePost({ slug: 'target' })
+		writePost({
+			slug: 'ring-a',
+			body: '[b](/blog/ring-b) [c](/blog/ring-c) [t](/blog/target)'
+		})
+		const result = runBuild(dir, NOW, out)
+		expect(result.warnings.map(v => `${v.file} ${v.rule}`)).toEqual([
+			'target.md LINK-below'
+		])
+		expect(existsSync(out)).toBe(true)
+	})
+
+	test('BLOG_CONTENT_DIR selects the content directory', () => {
+		expect(contentDir(undefined)).toBe(CONTENT_DIR)
+		expect(contentDir('')).toBe(CONTENT_DIR)
+		expect(contentDir('tests/fixtures/blog')).toBe(
+			join(process.cwd(), 'tests/fixtures/blog')
+		)
+	})
+
+	test('the BLOG_CONTENT_DIR fixtures pass the gate', () => {
+		const fixtures = contentDir('tests/fixtures/blog')
+		const result = runBuild(fixtures, new Date('2026-02-01T00:00:00.000Z'), out)
+		expect(result.posts).toHaveLength(5)
+		expect(result.warnings).toEqual([])
+		expect(readFileSync(out, 'utf8')).toBe(renderModule(result.posts))
 	})
 })
 

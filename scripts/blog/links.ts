@@ -11,7 +11,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { SERVICES } from '@/lib/constants/services'
-import { compilePosts, loadPosts } from './build'
+import { compileAll, loadPosts } from './build'
 import { isLive, postSlugFromHref, qualifyingInbound } from './lib'
 
 /** Mirrors RELATED_POST_LIMIT in src/app/(public)/services/[slug]/page.tsx. */
@@ -78,7 +78,12 @@ function main(): void {
 	const now = new Date()
 	const posts = loadPosts()
 	const inbound = qualifyingInbound(posts, now)
-	const compiled = compilePosts(undefined, now)
+	const { compiled, failures } = compileAll(posts, now)
+	if (failures.length > 0) {
+		throw new Error(
+			`blog:links cannot compile:\n  ${failures.map(f => `${f.file}: ${f.message}`).join('\n  ')}`
+		)
+	}
 
 	// Post slug -> the service pages that show it as a related-post card.
 	const serviceCards = new Map<string, string[]>()

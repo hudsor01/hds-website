@@ -26,6 +26,7 @@ import {
 	CONTENT_DIR,
 	computeReadingTime,
 	isLive,
+	type LinkViolation,
 	linkViolations,
 	listPostFiles,
 	type ParsedPost,
@@ -155,16 +156,14 @@ export function compileAll(
 }
 
 /**
- * Parse, validate, and compile every post in `dir`. Drafts
- * (`published: false`) and scheduled posts (publishedAt after `now`) are
- * validated but excluded from the output, and links to them render as text.
- * Scheduled posts are still compiled (see compileAll). Parse, validation and
- * compile failures are reported together in one error.
+ * Parse, validate and compile `dir`, throwing one error that lists every
+ * parse, validation and compile failure. Returns the parsed posts too so
+ * callers can run the link rules without loading the directory twice.
  */
-export function compilePosts(
-	dir: string = CONTENT_DIR,
-	now: Date = new Date()
-): CompiledBlogPost[] {
+function compileDir(
+	dir: string,
+	now: Date
+): { parsed: ParsedPost[]; compiled: CompiledBlogPost[] } {
 	const { posts, failures } = parseAll(dir)
 	const { compiled, failures: compileFailures } = compileAll(posts, now)
 	const all = [
@@ -177,7 +176,21 @@ export function compilePosts(
 	if (compiled.length === 0) {
 		throw new Error(`blog:build found no published posts in ${dir}`)
 	}
-	return compiled
+	return { parsed: posts, compiled }
+}
+
+/**
+ * Parse, validate, and compile every post in `dir`. Drafts
+ * (`published: false`) and scheduled posts (publishedAt after `now`) are
+ * validated but excluded from the output, and links to them render as text.
+ * Scheduled posts are still compiled (see compileAll). Parse, validation and
+ * compile failures are reported together in one error.
+ */
+export function compilePosts(
+	dir: string = CONTENT_DIR,
+	now: Date = new Date()
+): CompiledBlogPost[] {
+	return compileDir(dir, now).compiled
 }
 
 export function renderModule(posts: CompiledBlogPost[]): string {
@@ -204,31 +217,50 @@ function writeIfChanged(file: string, source: string): boolean {
  * run points it at tests/fixtures/blog so /blog renders the same posts no
  * matter what has been published or scheduled since the baselines were made.
  */
-function contentDir(): string {
-	const override = process.env.BLOG_CONTENT_DIR
+export function contentDir(
+	override: string | undefined = process.env.BLOG_CONTENT_DIR
+): string {
 	return override ? resolve(override) : CONTENT_DIR
 }
 
-function main(): void {
-	const dir = contentDir()
-	const now = new Date()
-	const posts = compilePosts(dir, now)
+export interface BuildResult {
+	posts: CompiledBlogPost[]
+	warnings: LinkViolation[]
+	changed: boolean
+}
 
-	// Checked before writing, so a failed link check never leaves a
-	// half-updated generated module behind.
-	const violations = linkViolations(loadPosts(dir), now)
+/**
+ * The whole blog:build for `dir`: parse, validate and compile every post, run
+ * the cross-post link rules (lib.ts linkViolations), then write the module to
+ * `out`. Every check runs before the write, so any error throws and leaves
+ * `out` untouched instead of half-updated.
+ */
+export function runBuild(
+	dir: string,
+	now: Date,
+	out: string = POSTS_FILE
+): BuildResult {
+	const { parsed, compiled } = compileDir(dir, now)
+	const violations = linkViolations(parsed, now)
 	const errors = violations.filter(v => v.severity === 'error')
 	if (errors.length > 0) {
 		throw new Error(
 			failureMessage(errors.map(v => `${v.file}: [${v.rule}] ${v.message}`))
 		)
 	}
-	const warnings = violations.filter(v => v.severity === 'warn')
+	return {
+		posts: compiled,
+		warnings: violations.filter(v => v.severity === 'warn'),
+		changed: writeIfChanged(out, renderModule(compiled))
+	}
+}
+
+function main(): void {
+	const dir = contentDir()
+	const { posts, warnings, changed } = runBuild(dir, new Date())
 	for (const v of warnings) {
 		console.warn(`warn  ${v.file}: [${v.rule}] ${v.message}`)
 	}
-
-	const changed = writeIfChanged(POSTS_FILE, renderModule(posts))
 	console.warn(
 		`blog:build - ${posts.length} published posts${dir === CONTENT_DIR ? '' : ` from ${dir}`} -> src/lib/_generated/blog-posts.ts${changed ? '' : ' (unchanged)'}${warnings.length > 0 ? `, ${warnings.length} link warning(s)` : ''}`
 	)
