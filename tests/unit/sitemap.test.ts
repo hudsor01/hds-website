@@ -15,6 +15,11 @@ import {
 	type SitemapSources
 } from '@/lib/sitemap/entries'
 import { PAGE_DATES, pageDate } from '@/lib/sitemap/page-dates'
+import {
+	renderSitemapIndex,
+	renderUrlset,
+	xmlResponse
+} from '@/lib/sitemap/xml'
 
 const SITE_URL = 'https://hudsondigitalsolutions.com'
 const NOW = new Date()
@@ -782,6 +787,123 @@ describe('sitemap source scan', () => {
 				.replace(/\/\/.*$/gm, '')
 			expect([file, /new Date\(\s*\)/.test(code)]).toEqual([file, false])
 			expect([file, code.includes('BUILD_TIME')]).toEqual([file, false])
+		}
+	})
+})
+
+const SITEMAP_NS = 'http://www.sitemaps.org/schemas/sitemap/0.9'
+// happy-dom's DOMParser accepts a raw `&`, so escaping is checked on the text.
+const BARE_AMP = /&(?!(?:amp|lt|gt|quot|apos);)/
+
+function parse(xml: string): Document {
+	return new DOMParser().parseFromString(xml, 'application/xml')
+}
+
+function textOf(parent: Element, tag: string): string | null {
+	return parent.getElementsByTagName(tag)[0]?.textContent ?? null
+}
+
+function fixtureEntry(url: string): SitemapEntry {
+	return {
+		url,
+		section: 'core',
+		lastModified: new Date('2026-11-14T00:00:00.000Z'),
+		changeFrequency: 'monthly',
+		priority: 0.7
+	}
+}
+
+describe('sitemap XML', () => {
+	it('renders a well-formed urlset in the sitemaps 0.9 namespace', () => {
+		const entry = fixtureEntry(`${SITE_URL}/about`)
+		const xml = renderUrlset([entry])
+		expect(xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>')).toBe(true)
+		const doc = parse(xml)
+		expect(doc.getElementsByTagName('parsererror').length).toBe(0)
+		expect(doc.documentElement.tagName).toBe('urlset')
+		expect(doc.documentElement.namespaceURI).toBe(SITEMAP_NS)
+		const urls = doc.getElementsByTagName('url')
+		expect(urls.length).toBe(1)
+		const url = urls[0]
+		if (!url) {
+			throw new Error('expected one <url>')
+		}
+		expect(textOf(url, 'loc')).toBe(`${SITE_URL}/about`)
+		expect(textOf(url, 'lastmod')).toBe(entry.lastModified.toISOString())
+		expect(textOf(url, 'changefreq')).toBe('monthly')
+		expect(textOf(url, 'priority')).toBe('0.7')
+	})
+
+	it('escapes &, < and > in a loc', () => {
+		const xml = renderUrlset([fixtureEntry(`${SITE_URL}/x?a=1&b=<2>`)])
+		expect(xml).toContain('x?a=1&amp;b=&lt;2&gt;')
+		const doc = parse(xml)
+		expect(doc.getElementsByTagName('parsererror').length).toBe(0)
+		expect(textOf(doc.documentElement, 'loc')).toBe(`${SITE_URL}/x?a=1&b=<2>`)
+	})
+
+	it('leaves no bare ampersand in a urlset or an index', () => {
+		const urlset = renderUrlset([fixtureEntry(`${SITE_URL}/y?a=1&b=2`)])
+		expect(urlset).toContain('y?a=1&amp;b=2')
+		expect(BARE_AMP.test(urlset)).toBe(false)
+
+		const index = renderSitemapIndex([
+			{
+				loc: `${SITE_URL}/sitemap-blog.xml?a=1&b=2`,
+				lastModified: new Date('2026-11-12T00:00:00.000Z')
+			}
+		])
+		expect(index).toContain('sitemap-blog.xml?a=1&amp;b=2')
+		expect(BARE_AMP.test(index)).toBe(false)
+	})
+
+	it('renders a well-formed sitemapindex with the children in order', () => {
+		const children = [
+			{ loc: `${SITE_URL}/sitemap-blog.xml`, date: '2026-11-12' },
+			{ loc: `${SITE_URL}/sitemap-services.xml`, date: '2026-11-15' },
+			{ loc: `${SITE_URL}/sitemap-locations.xml`, date: '2026-11-14' },
+			{ loc: `${SITE_URL}/sitemap-core.xml`, date: '2026-11-16' }
+		].map(({ loc, date }) => ({
+			loc,
+			lastModified: new Date(`${date}T00:00:00.000Z`)
+		}))
+		const xml = renderSitemapIndex(children)
+		expect(xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>')).toBe(true)
+		const doc = parse(xml)
+		expect(doc.getElementsByTagName('parsererror').length).toBe(0)
+		expect(doc.documentElement.tagName).toBe('sitemapindex')
+		expect(doc.documentElement.namespaceURI).toBe(SITEMAP_NS)
+		const sitemaps = Array.from(doc.getElementsByTagName('sitemap'))
+		expect(
+			sitemaps.map(node => [textOf(node, 'loc'), textOf(node, 'lastmod')])
+		).toEqual(
+			children.map(child => [child.loc, child.lastModified.toISOString()])
+		)
+	})
+
+	it('serves XML with an explicit UTF-8 content type and the body unchanged', async () => {
+		const body = renderUrlset([fixtureEntry(`${SITE_URL}/faq`)])
+		const response = xmlResponse(body)
+		expect(response.status).toBe(200)
+		expect(response.headers.get('content-type')).toBe(
+			'application/xml; charset=utf-8'
+		)
+		expect(await response.text()).toBe(body)
+	})
+
+	it('renders the full no-DB entry list as a valid urlset', async () => {
+		const entries = buildSitemapEntries(await loadSitemapSources())
+		const xml = renderUrlset(entries)
+		const doc = parse(xml)
+		expect(doc.getElementsByTagName('parsererror').length).toBe(0)
+		expect(doc.documentElement.namespaceURI).toBe(SITEMAP_NS)
+		expect(BARE_AMP.test(xml)).toBe(false)
+		const locs = Array.from(doc.getElementsByTagName('loc')).map(
+			node => node.textContent ?? ''
+		)
+		expect(locs.length).toBe(entries.length)
+		for (const loc of locs) {
+			expect(loc.startsWith(SITE_URL)).toBe(true)
 		}
 	})
 })
