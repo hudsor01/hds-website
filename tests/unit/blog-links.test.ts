@@ -1,0 +1,458 @@
+/**
+ * Tests for the cross-post link graph in scripts/blog/lib.ts: which hrefs are
+ * post links, how a body becomes a set of linked slugs, which sources count
+ * toward a target's inbound total and the LINK-* build rules. Posts are
+ * in-memory ParsedPost objects, so no files are read or written.
+ */
+import { describe, expect, test } from 'bun:test'
+import {
+	type BlogFrontmatter,
+	extractPostLinks,
+	type LinkViolation,
+	linkViolations,
+	ORPHAN_SEVERITY,
+	type ParsedPost,
+	postSlugFromHref,
+	qualifies,
+	qualifyingInbound
+} from '../../scripts/blog/lib'
+
+const NOW = new Date('2026-11-16T00:00:00Z')
+const ORIGIN = 'https://hudsondigitalsolutions.com'
+
+function post(
+	slug: string,
+	body = '',
+	data: Partial<BlogFrontmatter> = {}
+): ParsedPost {
+	return {
+		file: `${slug}.md`,
+		slug,
+		body,
+		data: {
+			title: `Title for ${slug}`,
+			slug,
+			excerpt: `Excerpt for ${slug}`,
+			tags: ['seo'],
+			author: 'richard-hudson',
+			publishedAt: '2026-01-01',
+			published: true,
+			...data
+		}
+	}
+}
+
+/** Builds posts whose bodies link to the given slugs. */
+function linking(
+	slug: string,
+	targets: string[],
+	data: Partial<BlogFrontmatter> = {}
+): ParsedPost {
+	return post(slug, targets.map(t => `[to ${t}](/blog/${t})`).join(' '), data)
+}
+
+function rules(violations: LinkViolation[], rule: string): LinkViolation[] {
+	return violations.filter(v => v.rule === rule)
+}
+
+describe('postSlugFromHref', () => {
+	test.each([
+		['/blog/a-post', 'a-post'],
+		['/blog/a-post/', 'a-post'],
+		['/blog/a-post#faq', 'a-post'],
+		['/blog/a-post?ref=x', 'a-post'],
+		[`${ORIGIN}/blog/a-post`, 'a-post'],
+		[`${ORIGIN}/blog/a-post/#faq`, 'a-post'],
+		['https://www.hudsondigitalsolutions.com/blog/a-post', 'a-post'],
+		['/blog/Bad_Slug', 'Bad_Slug']
+	])('%s is a link to %s', (href, slug) => {
+		expect(postSlugFromHref(href)).toBe(slug)
+	})
+
+	test.each([
+		'/blog',
+		'/blog/',
+		'/blog/tag',
+		'/blog/tag/seo',
+		'/blog/author/richard-hudson',
+		'https://evil.example/blog/a-post',
+		'https://hudsondigitalsolutions.com.evil.example/blog/a-post',
+		'/tools/x',
+		'/contact',
+		'#faq'
+	])('%s is not a post link', href => {
+		expect(postSlugFromHref(href)).toBeNull()
+	})
+})
+
+describe('extractPostLinks', () => {
+	test('counts an inline link', () => {
+		const { targets, htmlTargets } = extractPostLinks(
+			post('src', 'Read [the guide](/blog/a) first.')
+		)
+		expect([...targets]).toEqual(['a'])
+		expect(htmlTargets.size).toBe(0)
+	})
+
+	test('counts a reference-style link', () => {
+		const body = 'Read [the guide][ref] first.\n\n[ref]: /blog/b'
+		expect([...extractPostLinks(post('src', body)).targets]).toEqual(['b'])
+	})
+
+	test('counts an autolink', () => {
+		const body = `See <${ORIGIN}/blog/c> for more.`
+		expect([...extractPostLinks(post('src', body)).targets]).toEqual(['c'])
+	})
+
+	test('counts links inside lists, headings and emphasis', () => {
+		const body =
+			'## See [h](/blog/h)\n\n- item [l](/blog/l)\n\n**[s](/blog/s)**'
+		expect([...extractPostLinks(post('src', body)).targets].sort()).toEqual([
+			'h',
+			'l',
+			's'
+		])
+	})
+
+	test('counts a target once no matter how often it is linked', () => {
+		const body = '[one](/blog/a) [two](/blog/a/) [three](/blog/a#faq)'
+		expect([...extractPostLinks(post('src', body)).targets]).toEqual(['a'])
+	})
+
+	test('ignores a link to the post itself', () => {
+		const body = '[me](/blog/src) and [other](/blog/a)'
+		expect([...extractPostLinks(post('src', body)).targets]).toEqual(['a'])
+	})
+
+	test('ignores tag, author and index links', () => {
+		const body =
+			'[t](/blog/tag/seo) [a](/blog/author/richard-hudson) [i](/blog)'
+		expect(extractPostLinks(post('src', body)).targets.size).toBe(0)
+	})
+
+	test('does not count a link inside an inline code span', () => {
+		const body = 'Write `[x](/blog/d)` in markdown.'
+		expect(extractPostLinks(post('src', body)).targets.size).toBe(0)
+	})
+
+	test('does not count a link inside a fenced code block', () => {
+		const body = 'Example:\n\n```md\n[x](/blog/d)\n```\n'
+		expect(extractPostLinks(post('src', body)).targets.size).toBe(0)
+	})
+
+	test('finds raw HTML anchors and marks them as raw HTML', () => {
+		const body = 'Read <a href="/blog/e">e</a> and [f](/blog/f).'
+		const { targets, htmlTargets } = extractPostLinks(post('src', body))
+		expect([...targets].sort()).toEqual(['e', 'f'])
+		expect([...htmlTargets]).toEqual(['e'])
+	})
+
+	test('finds single-quoted raw HTML anchors in a block of HTML', () => {
+		const body = "<div>\n<a href='/blog/g'>g</a>\n</div>"
+		const { targets, htmlTargets } = extractPostLinks(post('src', body))
+		expect([...targets]).toEqual(['g'])
+		expect([...htmlTargets]).toEqual(['g'])
+	})
+
+	test('treats every link in an html-format body as raw HTML', () => {
+		const body = '<p><a href="/blog/a">a</a> <A HREF="/blog/b/">b</A></p>'
+		const { targets, htmlTargets } = extractPostLinks(
+			post('src', body, { bodyFormat: 'html' })
+		)
+		expect([...targets].sort()).toEqual(['a', 'b'])
+		expect([...htmlTargets].sort()).toEqual(['a', 'b'])
+	})
+
+	test('ignores a self-link in an html-format body', () => {
+		const body = '<a href="/blog/src">me</a>'
+		const links = extractPostLinks(post('src', body, { bodyFormat: 'html' }))
+		expect(links.targets.size).toBe(0)
+		expect(links.htmlTargets.size).toBe(0)
+	})
+})
+
+describe('qualifies', () => {
+	const live = post('live', '', { publishedAt: '2026-01-01' })
+	const held = post('held', '', { publishedAt: '2026-12-03' })
+
+	test('an unpublished source never qualifies', () => {
+		const draft = post('draft', '', { published: false })
+		expect(qualifies(draft, live, NOW)).toBe(false)
+		expect(qualifies(draft, held, NOW)).toBe(false)
+	})
+
+	test('a live source qualifies for a live target', () => {
+		const other = post('other', '', { publishedAt: '2026-06-01' })
+		expect(qualifies(other, live, NOW)).toBe(true)
+	})
+
+	test('a live source qualifies for a held target', () => {
+		expect(qualifies(live, held, NOW)).toBe(true)
+	})
+
+	test('a held source dated before a held target qualifies', () => {
+		const earlier = post('earlier', '', { publishedAt: '2026-12-01' })
+		expect(qualifies(earlier, held, NOW)).toBe(true)
+	})
+
+	test('a held source dated the same day as a held target qualifies', () => {
+		const sameDay = post('same-day', '', { publishedAt: '2026-12-03' })
+		expect(qualifies(sameDay, held, NOW)).toBe(true)
+	})
+
+	test('a held source dated after a held target does not qualify', () => {
+		const later = post('later', '', { publishedAt: '2026-12-10' })
+		expect(qualifies(later, held, NOW)).toBe(false)
+	})
+
+	test('compares calendar days, not times', () => {
+		const morning = post('morning', '', {
+			publishedAt: '2026-12-03T09:00:00Z'
+		})
+		const night = post('night', '', { publishedAt: '2026-12-03T01:00:00Z' })
+		expect(qualifies(morning, night, NOW)).toBe(true)
+	})
+
+	test('a held source with an unparsable date does not qualify', () => {
+		const bad = post('bad', '', { publishedAt: 'someday' })
+		expect(qualifies(bad, held, NOW)).toBe(false)
+	})
+
+	test('a held source never qualifies for a target with an unparsable date', () => {
+		const later = post('later', '', { publishedAt: '2026-12-10' })
+		const bad = post('bad', '', { publishedAt: 'someday' })
+		expect(qualifies(later, bad, NOW)).toBe(false)
+	})
+
+	test('a non-string publishedAt never throws', () => {
+		const odd = post('odd', '', {
+			publishedAt: 20261210 as unknown as string
+		})
+		const later = post('later', '', { publishedAt: '2026-12-10' })
+		expect(() => qualifies(odd, held, NOW)).not.toThrow()
+		expect(qualifies(later, odd, NOW)).toBe(false)
+	})
+
+	test('a live source qualifies even when the target date is unparsable', () => {
+		const bad = post('bad', '', { publishedAt: 'someday' })
+		expect(qualifies(live, bad, NOW)).toBe(true)
+	})
+})
+
+describe('qualifyingInbound', () => {
+	test('has one key per published post, drafts excluded', () => {
+		const inbound = qualifyingInbound(
+			[post('a'), post('b'), post('draft', '', { published: false })],
+			NOW
+		)
+		expect([...inbound.keys()].sort()).toEqual(['a', 'b'])
+	})
+
+	test('a post with no inbound links has an empty list', () => {
+		expect(qualifyingInbound([post('a')], NOW).get('a')).toEqual([])
+	})
+
+	test('lists each source once and sorted', () => {
+		const posts = [
+			post('target'),
+			post('zeta', '[x](/blog/target) [y](/blog/target#faq)'),
+			linking('alpha', ['target'])
+		]
+		expect(qualifyingInbound(posts, NOW).get('target')).toEqual([
+			'alpha',
+			'zeta'
+		])
+	})
+
+	test('excludes unpublished sources', () => {
+		const posts = [
+			post('target'),
+			linking('draft', ['target'], { published: false })
+		]
+		expect(qualifyingInbound(posts, NOW).get('target')).toEqual([])
+	})
+
+	test('excludes held sources dated after a held target', () => {
+		const posts = [
+			post('target', '', { publishedAt: '2026-12-03' }),
+			linking('earlier', ['target'], { publishedAt: '2026-12-01' }),
+			linking('later', ['target'], { publishedAt: '2026-12-10' })
+		]
+		expect(qualifyingInbound(posts, NOW).get('target')).toEqual(['earlier'])
+	})
+
+	test('ignores links to unknown and unpublished slugs', () => {
+		const posts = [
+			post('draft', '', { published: false }),
+			linking('src', ['draft', 'missing'])
+		]
+		const inbound = qualifyingInbound(posts, NOW)
+		expect(inbound.has('draft')).toBe(false)
+		expect(inbound.has('missing')).toBe(false)
+	})
+})
+
+describe('linkViolations', () => {
+	/** Two well-linked companions so threshold rules stay quiet elsewhere. */
+	function ringed(extra: ParsedPost[]): ParsedPost[] {
+		return [
+			linking('ring-a', ['ring-b', 'ring-c']),
+			linking('ring-b', ['ring-a', 'ring-c']),
+			linking('ring-c', ['ring-a', 'ring-b']),
+			...extra
+		]
+	}
+
+	describe('dead links', () => {
+		test('a link to a missing slug is an error on the source file', () => {
+			const v = rules(
+				linkViolations(ringed([linking('src', ['missing-post'])]), NOW),
+				'LINK-dead'
+			)
+			expect(v).toHaveLength(1)
+			expect(v[0]?.severity).toBe('error')
+			expect(v[0]?.file).toBe('src.md')
+			expect(v[0]?.message).toContain('missing-post')
+		})
+
+		test('fires when the source is a draft', () => {
+			const draft = linking('draft', ['missing-post'], { published: false })
+			const v = rules(linkViolations(ringed([draft]), NOW), 'LINK-dead')
+			expect(v).toHaveLength(1)
+			expect(v[0]?.file).toBe('draft.md')
+		})
+
+		test('catches a malformed slug', () => {
+			const src = post('src', '[x](/blog/Bad_Slug)')
+			const v = rules(linkViolations(ringed([src]), NOW), 'LINK-dead')
+			expect(v[0]?.message).toContain('Bad_Slug')
+		})
+
+		test('a link to an existing post is not dead', () => {
+			const v = linkViolations(ringed([linking('src', ['ring-a'])]), NOW)
+			expect(rules(v, 'LINK-dead')).toHaveLength(0)
+		})
+	})
+
+	describe('unpublished targets', () => {
+		test('a published source linking a draft is an error on the source', () => {
+			const posts = ringed([
+				post('draft', '', { published: false }),
+				linking('src', ['draft'])
+			])
+			const v = rules(linkViolations(posts, NOW), 'LINK-unpublished')
+			expect(v).toHaveLength(1)
+			expect(v[0]?.severity).toBe('error')
+			expect(v[0]?.file).toBe('src.md')
+			expect(v[0]?.message).toContain('draft')
+		})
+
+		test('a draft linking a draft is allowed', () => {
+			const posts = ringed([
+				post('draft-a', '', { published: false }),
+				linking('draft-b', ['draft-a'], { published: false })
+			])
+			expect(
+				rules(linkViolations(posts, NOW), 'LINK-unpublished')
+			).toHaveLength(0)
+		})
+	})
+
+	describe('raw HTML links', () => {
+		test('a raw HTML anchor to a held post is an error on the source', () => {
+			const posts = ringed([
+				post('held-post', '', { publishedAt: '2026-12-03' }),
+				post('src', 'See <a href="/blog/held-post">it</a>.')
+			])
+			const v = rules(linkViolations(posts, NOW), 'LINK-html')
+			expect(v).toHaveLength(1)
+			expect(v[0]?.severity).toBe('error')
+			expect(v[0]?.file).toBe('src.md')
+			expect(v[0]?.message).toContain('held-post')
+		})
+
+		test('a raw HTML anchor to a live post is allowed', () => {
+			const posts = ringed([post('src', 'See <a href="/blog/ring-a">it</a>.')])
+			expect(rules(linkViolations(posts, NOW), 'LINK-html')).toHaveLength(0)
+		})
+
+		test('a markdown link to a held post is allowed', () => {
+			const posts = ringed([
+				post('held-post', '', { publishedAt: '2026-12-03' }),
+				linking('src', ['held-post'])
+			])
+			expect(rules(linkViolations(posts, NOW), 'LINK-html')).toHaveLength(0)
+		})
+	})
+
+	describe('inbound threshold', () => {
+		test('0 qualifying inbound is an orphan on the target file', () => {
+			const v = rules(
+				linkViolations(ringed([post('lonely')]), NOW),
+				'LINK-orphan'
+			)
+			expect(v).toHaveLength(1)
+			expect(v[0]?.severity).toBe(ORPHAN_SEVERITY)
+			expect(v[0]?.file).toBe('lonely.md')
+			expect(v[0]?.message).toContain('lonely')
+		})
+
+		test('ORPHAN_SEVERITY is a valid severity', () => {
+			expect(['error', 'warn']).toContain(ORPHAN_SEVERITY)
+		})
+
+		test('exactly 1 qualifying inbound warns and names the source', () => {
+			const posts = ringed([
+				post('target'),
+				linking('fan', ['target', 'ring-a'])
+			])
+			const v = rules(linkViolations(posts, NOW), 'LINK-below')
+			const forTarget = v.filter(x => x.file === 'target.md')
+			expect(forTarget).toHaveLength(1)
+			expect(forTarget[0]?.severity).toBe('warn')
+			expect(forTarget[0]?.message).toContain('target')
+			expect(forTarget[0]?.message).toContain('fan')
+		})
+
+		test('2 or more qualifying inbound is clean', () => {
+			const v = linkViolations(ringed([]), NOW)
+			expect(v).toEqual([])
+		})
+
+		test('drafts are never orphan-checked', () => {
+			const posts = ringed([post('draft', '', { published: false })])
+			expect(linkViolations(posts, NOW)).toEqual([])
+		})
+
+		test('a held post linked only by a later held post is an orphan', () => {
+			const posts = ringed([
+				post('held-post', '', { publishedAt: '2026-12-03' }),
+				linking('later', ['held-post', 'ring-a'], {
+					publishedAt: '2026-12-10'
+				})
+			])
+			const v = rules(linkViolations(posts, NOW), 'LINK-orphan')
+			expect(v.map(x => x.file)).toContain('held-post.md')
+		})
+
+		test('links from a draft do not lift a post off orphan', () => {
+			const posts = ringed([
+				post('target'),
+				linking('draft-a', ['target'], { published: false }),
+				linking('draft-b', ['target'], { published: false })
+			])
+			const v = rules(linkViolations(posts, NOW), 'LINK-orphan')
+			expect(v.map(x => x.file)).toEqual(['target.md'])
+		})
+	})
+
+	test('never throws on a missing or invalid publishedAt', () => {
+		const posts = ringed([
+			linking('no-date', ['ring-a'], {
+				publishedAt: undefined as unknown as string
+			}),
+			linking('bad-date', ['no-date'], { publishedAt: 'someday' })
+		])
+		expect(() => linkViolations(posts, NOW)).not.toThrow()
+	})
+})

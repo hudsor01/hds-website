@@ -5,7 +5,7 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import matter from 'gray-matter'
-import { marked } from 'marked'
+import { Marked, marked, type Token } from 'marked'
 import { BLOG_AUTHORS, BLOG_TAGS } from '@/lib/constants/blog'
 import { countCommaBeforeAnd, findAiTells } from './voice'
 
@@ -46,6 +46,16 @@ const EMOJI_RE =
 	/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F000}-\u{1F0FF}\u{2B00}-\u{2BFF}]/u
 const INTERNAL_LINK_RE = /\]\(\/(?!\/)|href=["']\/(?!\/)/g
 const CTA_RE = /\]\(\/(?:contact|tools)|href=["']\/(?:contact|tools)/
+/**
+ * A post URL, relative or on our own host, with an optional trailing slash,
+ * query or fragment. The slug capture is loose on purpose: a malformed slug is
+ * still extracted so the dead-link rule reports it instead of skipping it.
+ */
+const POST_HREF_RE =
+	/^(?:https?:\/\/(?:www\.)?hudsondigitalsolutions\.com)?\/blog\/([^/?#]+)\/?(?:[?#].*)?$/
+/** /blog/tag and /blog/author are listing pages, not posts. */
+const NON_POST_SEGMENTS: ReadonlySet<string> = new Set(['tag', 'author'])
+const HTML_HREF_RE = /href\s*=\s*(?:"([^"]*)"|'([^']*)')/gi
 
 export function listPostFiles(dir: string = CONTENT_DIR): string[] {
 	return readdirSync(dir)
@@ -244,6 +254,221 @@ export function validatePost(p: ParsedPost): Violation[] {
 	const commaAnd = countCommaBeforeAnd(`${d.excerpt} ${p.body}`)
 	if (commaAnd > 0) {
 		warn('VOICE', `${commaAnd}x comma before "and" (voice rule: never use it)`)
+	}
+	return v
+}
+
+// --- Cross-post link graph (internal linking rules) ---
+
+/** The post slug an href points at, or null when it is not a post link. */
+export function postSlugFromHref(href: string): string | null {
+	const slug = POST_HREF_RE.exec(href)?.[1]
+	if (!slug || NON_POST_SEGMENTS.has(slug)) {
+		return null
+	}
+	return slug
+}
+
+export interface PostLinks {
+	/** Every other post this body links to, once each. */
+	targets: Set<string>
+	/** The subset linked from raw HTML, which the renderer cannot hide. */
+	htmlTargets: Set<string>
+}
+
+/**
+ * The other posts a body links to. Markdown goes through the marked lexer, so
+ * reference links and autolinks count while code spans and code blocks never
+ * do; raw HTML anchors (and html-format bodies) are scanned for hrefs.
+ */
+export function extractPostLinks(p: ParsedPost): PostLinks {
+	const targets = new Set<string>()
+	const htmlTargets = new Set<string>()
+	const add = (href: string, html: boolean): void => {
+		const slug = postSlugFromHref(href)
+		if (!slug || slug === p.slug) {
+			return
+		}
+		targets.add(slug)
+		if (html) {
+			htmlTargets.add(slug)
+		}
+	}
+	const scanHtml = (html: string): void => {
+		for (const m of html.matchAll(HTML_HREF_RE)) {
+			add(m[1] ?? m[2] ?? '', true)
+		}
+	}
+	if ((p.data.bodyFormat ?? 'markdown') === 'html') {
+		scanHtml(p.body)
+		return { targets, htmlTargets }
+	}
+	const md = new Marked()
+	md.walkTokens(md.lexer(p.body), (token: Token) => {
+		if (token.type === 'link') {
+			add(token.href, false)
+		} else if (token.type === 'html') {
+			scanHtml(token.raw)
+		}
+	})
+	return { targets, htmlTargets }
+}
+
+/** YYYY-MM-DD (UTC) of a parseable date string, otherwise null. */
+function day(value: unknown): string | null {
+	if (typeof value !== 'string') {
+		return null
+	}
+	const time = Date.parse(value)
+	return Number.isNaN(time) ? null : new Date(time).toISOString().slice(0, 10)
+}
+
+/**
+ * A source link counts for a target when the source is published AND either
+ * already live or dated on or before the target. Either way the link is live
+ * by the target's go-live day. The set of qualifying links only grows as days
+ * pass, so a scheduled post can never newly fail on its publish day.
+ */
+export function qualifies(
+	src: ParsedPost,
+	tgt: ParsedPost,
+	now: Date
+): boolean {
+	if (src.data.published !== true) {
+		return false
+	}
+	if (isLive(src.data, now)) {
+		return true
+	}
+	const srcDay = day(src.data.publishedAt)
+	const tgtDay = day(tgt.data.publishedAt)
+	return srcDay !== null && tgtDay !== null && srcDay <= tgtDay
+}
+
+function inboundFrom(
+	posts: ParsedPost[],
+	links: ReadonlyMap<ParsedPost, PostLinks>,
+	now: Date
+): Map<string, string[]> {
+	const bySlug = new Map(posts.map(p => [p.slug, p]))
+	const inbound = new Map<string, string[]>()
+	for (const p of posts) {
+		if (p.data.published === true) {
+			inbound.set(p.slug, [])
+		}
+	}
+	for (const src of posts) {
+		for (const slug of links.get(src)?.targets ?? []) {
+			const tgt = bySlug.get(slug)
+			const sources = inbound.get(slug)
+			if (tgt && sources && qualifies(src, tgt, now)) {
+				sources.push(src.slug)
+			}
+		}
+	}
+	for (const sources of inbound.values()) {
+		sources.sort()
+	}
+	return inbound
+}
+
+/**
+ * Every published post's slug mapped to the sorted, distinct slugs of the
+ * posts whose links qualify for it (see qualifies). Empty when none do.
+ */
+export function qualifyingInbound(
+	posts: ParsedPost[],
+	now: Date
+): Map<string, string[]> {
+	return inboundFrom(
+		posts,
+		new Map(posts.map(p => [p, extractPostLinks(p)])),
+		now
+	)
+}
+
+/** Plan 36-10 flips this to 'error' once the content links have landed. */
+export const ORPHAN_SEVERITY: Severity = 'warn'
+
+export interface LinkViolation extends Violation {
+	file: string
+}
+
+/**
+ * Cross-post link rules. They need every post at once, so they cannot live in
+ * validatePost. Source-side rules land on the linking file:
+ *   - LINK-dead: the target slug does not exist (any source, drafts included)
+ *   - LINK-unpublished: a published source links a published: false post
+ *   - LINK-html: a raw HTML anchor points at a post that is not live yet,
+ *     which the renderer cannot turn into text the way it does markdown links
+ * Target-side rules land on the linked file and count only qualifying links
+ * from other published posts (live now OR dated on or before the target):
+ *   - LINK-orphan: 0 qualifying inbound links (ORPHAN_SEVERITY)
+ *   - LINK-below: exactly 1, a warning, because the floor is 2 so that one
+ *     later edit cannot orphan a post again
+ */
+export function linkViolations(
+	posts: ParsedPost[],
+	now: Date
+): LinkViolation[] {
+	const v: LinkViolation[] = []
+	const err = (file: string, rule: string, message: string): void => {
+		v.push({ file, rule, message, severity: 'error' })
+	}
+	const warn = (file: string, rule: string, message: string): void => {
+		v.push({ file, rule, message, severity: 'warn' })
+	}
+
+	const bySlug = new Map(posts.map(p => [p.slug, p]))
+	const links = new Map(posts.map(p => [p, extractPostLinks(p)]))
+
+	for (const src of posts) {
+		const { targets, htmlTargets } = links.get(src) ?? {
+			targets: new Set<string>(),
+			htmlTargets: new Set<string>()
+		}
+		for (const slug of targets) {
+			const tgt = bySlug.get(slug)
+			if (!tgt) {
+				err(
+					src.file,
+					'LINK-dead',
+					`links to /blog/${slug}, which does not exist`
+				)
+				continue
+			}
+			if (tgt.data.published !== true && src.data.published === true) {
+				err(
+					src.file,
+					'LINK-unpublished',
+					`links to /blog/${slug}, which is published: false`
+				)
+			} else if (htmlTargets.has(slug) && !isLive(tgt.data, now)) {
+				err(
+					src.file,
+					'LINK-html',
+					`raw HTML link to /blog/${slug}, which is not live yet; use a markdown link so the build renders it as text until it publishes`
+				)
+			}
+		}
+	}
+
+	for (const [slug, sources] of inboundFrom(posts, links, now)) {
+		const file = bySlug.get(slug)?.file ?? `${slug}.md`
+		if (sources.length === 0) {
+			v.push({
+				file,
+				rule: 'LINK-orphan',
+				message: `${slug} has no qualifying inbound links from other posts (needs at least 2)`,
+				severity: ORPHAN_SEVERITY
+			})
+		} else if (sources.length === 1) {
+			warn(
+				file,
+				'LINK-below',
+				`${slug} has 1 qualifying inbound link (from ${sources[0]}); add one more from a related post`
+			)
+		}
 	}
 	return v
 }
