@@ -1,8 +1,9 @@
 /**
  * Tests for the cross-post link graph in scripts/blog/lib.ts: which hrefs are
  * post links, how a body becomes a set of linked slugs, which sources count
- * toward a target's inbound total and the LINK-* build rules. Posts are
- * in-memory ParsedPost objects, so no files are read or written.
+ * toward a target's inbound total and the LINK-* build rules. Most posts are
+ * in-memory ParsedPost objects; the fixture dir and real content blocks read
+ * posts from disk. Nothing is written.
  */
 import { describe, expect, test } from 'bun:test'
 import { join } from 'node:path'
@@ -403,6 +404,10 @@ describe('linkViolations', () => {
 			expect(['error', 'warn']).toContain(ORPHAN_SEVERITY)
 		})
 
+		test('an orphan fails the build', () => {
+			expect(ORPHAN_SEVERITY).toBe('error')
+		})
+
 		test('exactly 1 qualifying inbound warns and names the source', () => {
 			const posts = ringed([
 				post('target'),
@@ -473,5 +478,16 @@ describe('fixture dir', () => {
 		for (const sources of inbound.values()) {
 			expect(sources).toHaveLength(2)
 		}
+	})
+})
+
+describe('real content', () => {
+	// Errors only: a post at 1 qualifying inbound is a warning by design, so
+	// this never asserts that the full violation list is empty.
+	test('content/blog has no link errors', () => {
+		const errors = linkViolations(loadPosts(), new Date()).filter(
+			v => v.severity === 'error'
+		)
+		expect(errors).toEqual([])
 	})
 })

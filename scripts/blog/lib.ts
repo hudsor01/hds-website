@@ -407,8 +407,14 @@ export function qualifyingInbound(
 	)
 }
 
-/** Plan 36-10 flips this to 'error' once the content links have landed. */
-export const ORPHAN_SEVERITY: Severity = 'warn'
+/**
+ * An orphan fails the build and the message names the slug. Every published
+ * post has inbound links, so an orphan can only come from a new post shipped
+ * without them. Scheduled publishes stay safe: a link qualifies when its source
+ * is live now OR dated on or before the target, so the qualifying set only
+ * grows as dates pass.
+ */
+export const ORPHAN_SEVERITY: Severity = 'error'
 
 export interface LinkViolation extends Violation {
 	file: string

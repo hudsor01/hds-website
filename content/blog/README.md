@@ -59,8 +59,9 @@ Errors (fail the build and the CI gate):
 
 Inbound threshold, counted per published post:
 
-- orphan: no qualifying inbound links from other posts. A warning for now; it
-  becomes an error once the internal-linking phase lands its last commit
+- orphan: no qualifying inbound links from other posts. An error: it fails
+  `blog:build` (and so `dev`, `build`, `typecheck`, `test:unit` and the deploy)
+  with a message naming the slug
 - below: exactly 1 qualifying inbound link (a warning)
 
 A link counts toward a post's inbound total if the linking post is published and is
@@ -69,8 +70,8 @@ posts render as plain text until the target's date, then the scheduled-publish
 rebuild turns them into links.
 
 The rule for new posts: every new published post ships with at least 2 qualifying
-inbound links from related posts dated on or before it, in the same PR. Check with
-`bun run blog:links`.
+inbound links from related posts dated on or before it, in the same PR. 0 fails the
+build; 1 is a warning. Check with `bun run blog:links`.
 
 ## Commands
 
