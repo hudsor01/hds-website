@@ -428,6 +428,9 @@ describe('no compiled <a> points at a post that is not live', () => {
 		'[g](../blog/held-post)',
 		'[h](https://hudsondigitalsolutions.com:443/blog/./held-post)',
 		'[i][ref]',
+		'[j](/blog//held-post)',
+		'[k](/blog/held-post//)',
+		'[l](https://hudsondigitalsolutions.com//blog/held-post)',
 		'<https://hudsondigitalsolutions.com/blog/held-post>',
 		'https://www.hudsondigitalsolutions.com/blog/held-post'
 	]

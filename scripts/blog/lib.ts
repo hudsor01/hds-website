@@ -347,8 +347,9 @@ function decodeEntities(value: string): string {
  * post link. The href is resolved with the WHATWG URL parser the way a browser
  * resolves it on the source post's page (/blog/<sourceSlug>; the site sets
  * trailingSlash: false), so scheme and host case, protocol-relative URLs,
- * default ports, dot segments, percent-encoding, character references and
- * relative paths ("held", "./held", "../blog/held") all land on the same slug.
+ * default ports, dot segments, repeated slashes, percent-encoding, character
+ * references and relative paths ("held", "./held", "../blog/held") all land on
+ * the same slug.
  * Without a source, relative hrefs resolve against the site root.
  */
 export function postSlugFromHref(
@@ -372,7 +373,10 @@ export function postSlugFromHref(
 	) {
 		return null
 	}
-	const segment = POST_PATH_RE.exec(url.pathname)?.[1]
+	// The URL parser keeps empty segments, but Next 308s any path containing
+	// "//" to its single-slash form, so /blog//held lands on /blog/held.
+	const path = url.pathname.replace(/\/{2,}/g, '/')
+	const segment = POST_PATH_RE.exec(path)?.[1]
 	if (!segment) {
 		return null
 	}

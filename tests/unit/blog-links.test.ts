@@ -112,6 +112,11 @@ const HELD_FORMS = [
 	'http://hudsondigitalsolutions.com:80/blog/held',
 	'/blog/./held',
 	'/blog/x/../held',
+	'/blog//held',
+	'/blog/held//',
+	'held//',
+	'https://hudsondigitalsolutions.com//blog/held',
+	'//hudsondigitalsolutions.com//blog/held',
 	'/blog/%68eld',
 	'&#x2F;blog&#x2F;held',
 	'/blog&sol;held'
@@ -183,7 +188,9 @@ describe('non-canonical hrefs in the renderer and the LINK rules', () => {
 		'missing-post',
 		'HTTPS://HUDSONDIGITALSOLUTIONS.COM/blog/missing-post',
 		'//www.hudsondigitalsolutions.com/blog/missing-post/',
-		'/blog/./missing-post'
+		'/blog/./missing-post',
+		'/blog//missing-post',
+		'https://hudsondigitalsolutions.com//blog/missing-post'
 	])('[x](%s) to an unknown slug is LINK-dead', href => {
 		const posts = [
 			linking('ring-a', ['ring-b', 'ring-c']),
