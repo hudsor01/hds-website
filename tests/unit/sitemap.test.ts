@@ -790,6 +790,23 @@ describe('sitemap lastmod', () => {
 		}
 	})
 
+	it('URL-escapes a help article slug that is not URL-safe', () => {
+		const entries = buildSitemapEntries(
+			fixtureSources({
+				helpCategorySlugs: ['billing'],
+				helpArticles: [
+					{
+						slug: 'late fees é',
+						category: 'billing',
+						updatedAt: '2026-02-01T00:00:00.000Z',
+						createdAt: null
+					}
+				]
+			})
+		)
+		expect(hasPath(entries, '/help/billing/late%20fees%20%C3%A9')).toBe(true)
+	})
+
 	it('leaves out a help article outside the known categories (its page 404s)', () => {
 		const entries = buildSitemapEntries(
 			fixtureSources({

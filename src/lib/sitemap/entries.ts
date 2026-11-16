@@ -302,9 +302,12 @@ export function buildSitemapEntries(sources: SitemapSources): SitemapEntry[] {
 		...helpCategories.map(category =>
 			entry(`/help/${category.slug}`, 'core', category.date, 'monthly', 0.5)
 		),
+		// Help slugs come from raw SQL with no slug check, so the slug is
+		// URL-escaped (sitemaps.org requires escaped locs). The category is
+		// always a known slug here.
 		...helpArticles.map(article =>
 			entry(
-				`/help/${article.category}/${article.slug}`,
+				`/help/${article.category}/${encodeURIComponent(article.slug)}`,
 				'core',
 				article.date,
 				'monthly',
