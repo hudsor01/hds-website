@@ -31,7 +31,7 @@ export interface Testimonial {
 	service_type?: string
 	approved: boolean
 	featured: boolean
-	created_at: string
+	created_at: string | null
 	updated_at?: string
 }
 

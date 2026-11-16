@@ -22,9 +22,7 @@
  * - help article: updated_at, else created_at (helpArticleDate, which the
  *   help pages also use to noindex what is not listed); help hub and
  *   categories: the newest article they list
- * - /testimonials: the newest approved row's updated_at. The mapped
- *   created_at can be a fallback filled in at request time, so it is never
- *   used here
+ * - /testimonials: the newest approved row's updated_at, else created_at
  * - every other page: PAGE_DATES, the checked-in date of its last visible
  *   content change
  *
@@ -95,7 +93,10 @@ export interface SitemapSources {
 		updatedAt: string | null
 		createdAt: string | null
 	}[]
-	testimonials: readonly { updatedAt: string | null }[]
+	testimonials: readonly {
+		updatedAt: string | null
+		createdAt: string | null
+	}[]
 }
 
 /**
@@ -164,7 +165,8 @@ async function loadHelpArticles(): Promise<SitemapSources['helpArticles']> {
 async function loadTestimonials(): Promise<SitemapSources['testimonials']> {
 	try {
 		return (await getApprovedTestimonials()).map(testimonial => ({
-			updatedAt: testimonial.updated_at ?? null
+			updatedAt: testimonial.updated_at ?? null,
+			createdAt: testimonial.created_at
 		}))
 	} catch (error) {
 		logger.error('Sitemap: testimonials unavailable', error)
@@ -224,9 +226,10 @@ export function buildSitemapEntries(sources: SitemapSources): SitemapEntry[] {
 		sources.testimonials.length > 0
 			? datedOrDrop('testimonials page', 'testimonials', [
 					newest(
-						sources.testimonials.flatMap(testimonial =>
-							testimonial.updatedAt ? [new Date(testimonial.updatedAt)] : []
-						)
+						sources.testimonials.flatMap(testimonial => {
+							const date = testimonial.updatedAt ?? testimonial.createdAt
+							return date ? [new Date(date)] : []
+						})
 					)
 				])
 			: undefined

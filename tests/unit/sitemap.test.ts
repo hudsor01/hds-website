@@ -294,7 +294,9 @@ describe('sitemap sections', () => {
 						createdAt: null
 					}
 				],
-				testimonials: [{ updatedAt: '2026-04-01T00:00:00.000Z' }]
+				testimonials: [
+					{ updatedAt: '2026-04-01T00:00:00.000Z', createdAt: null }
+				]
 			})
 		)
 		for (const path of [
@@ -417,7 +419,9 @@ describe('sitemap no-DB URL set', () => {
 						createdAt: null
 					}
 				],
-				testimonials: [{ updatedAt: '2026-04-01T00:00:00.000Z' }]
+				testimonials: [
+					{ updatedAt: '2026-04-01T00:00:00.000Z', createdAt: null }
+				]
 			})
 		)
 		const expectations: [string, string, number][] = [
@@ -815,18 +819,33 @@ describe('sitemap lastmod', () => {
 		const entries = buildSitemapEntries(
 			fixtureSources({
 				testimonials: [
-					{ updatedAt: '2026-04-01T00:00:00.000Z' },
-					{ updatedAt: '2026-07-07T00:00:00.000Z' },
-					{ updatedAt: null }
+					{ updatedAt: '2026-04-01T00:00:00.000Z', createdAt: null },
+					{
+						updatedAt: '2026-07-07T00:00:00.000Z',
+						createdAt: '2026-01-01T00:00:00.000Z'
+					},
+					{ updatedAt: null, createdAt: null }
 				]
 			})
 		)
 		expect(lastmodOf(entries, '/testimonials')).toBe('2026-07-07T00:00:00.000Z')
 	})
 
-	it('drops and logs /testimonials when no approved row has updatedAt', async () => {
+	it('falls back to createdAt for a testimonial with no updatedAt', () => {
 		const entries = buildSitemapEntries(
-			fixtureSources({ testimonials: [{ updatedAt: null }] })
+			fixtureSources({
+				testimonials: [
+					{ updatedAt: '2026-04-01T00:00:00.000Z', createdAt: null },
+					{ updatedAt: null, createdAt: '2026-08-08T00:00:00.000Z' }
+				]
+			})
+		)
+		expect(lastmodOf(entries, '/testimonials')).toBe('2026-08-08T00:00:00.000Z')
+	})
+
+	it('drops and logs /testimonials when no approved row has a date', async () => {
+		const entries = buildSitemapEntries(
+			fixtureSources({ testimonials: [{ updatedAt: null, createdAt: null }] })
 		)
 		expect(hasPath(entries, '/testimonials')).toBe(false)
 		expect(await currentLoggerWarn()).toHaveBeenCalledWith(
@@ -836,7 +855,26 @@ describe('sitemap lastmod', () => {
 	})
 })
 
+// Any read of the current clock: new Date(), Date.now(), performance.now()
+// and performance.timeOrigin.
+const CLOCK_READ =
+	/new Date\(\s*\)|\bDate\.now\(|\bperformance\.(?:now\(|timeOrigin\b)/
+
 describe('sitemap source scan', () => {
+	it('detects every clock read form it guards against', () => {
+		for (const code of [
+			'new Date()',
+			'new Date( )',
+			'Date.now()',
+			'new Date(Date.now())',
+			'new Date(performance.timeOrigin)',
+			'performance.now()'
+		]) {
+			expect([code, CLOCK_READ.test(code)]).toEqual([code, true])
+		}
+		expect(CLOCK_READ.test("new Date('2026-01-01T00:00:00Z')")).toBe(false)
+	})
+
 	it('never stamps build or request time in src/lib/sitemap', () => {
 		const dir = join(import.meta.dir, '../../src/lib/sitemap')
 		const files = readdirSync(dir).filter(file => file.endsWith('.ts'))
@@ -845,7 +883,7 @@ describe('sitemap source scan', () => {
 			const code = readFileSync(join(dir, file), 'utf8')
 				.replace(/\/\*[\s\S]*?\*\//g, '')
 				.replace(/\/\/.*$/gm, '')
-			expect([file, /new Date\(\s*\)/.test(code)]).toEqual([file, false])
+			expect([file, CLOCK_READ.test(code)]).toEqual([file, false])
 			expect([file, code.includes('BUILD_TIME')]).toEqual([file, false])
 		}
 	})

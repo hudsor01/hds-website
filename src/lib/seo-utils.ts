@@ -258,7 +258,7 @@ export function generateReviewSchema(
 				worstRating: 1
 			},
 			reviewBody: t.content,
-			datePublished: t.created_at.slice(0, 10)
+			datePublished: t.created_at?.slice(0, 10)
 		}))
 	]
 }
