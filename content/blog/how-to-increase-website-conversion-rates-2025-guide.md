@@ -41,7 +41,7 @@ The only benchmark that matters is your own rate last month versus this month, s
 
 ## Fix the First Five Seconds
 
-Somebody lands on your page. Before they scroll, they need answers to three questions. What do you do? Do you do it where I am? How do I get it? If your hero section can't answer all three without a scroll, that's your first fix.
+Somebody lands on your page. Before they scroll, they need answers to three questions. What do you do? Do you do it where I am? How do I get it? If your hero section can't answer all three without a scroll, that's your first fix. I break down the rest of the page below that hero in [the anatomy of a high-converting homepage](/blog/anatomy-of-a-high-converting-homepage).
 
 Compare these two headlines:
 
@@ -114,7 +114,7 @@ I hit 95% forecast accuracy in revenue operations. The discipline behind it was 
 
 Once tracking works and the obvious problems are fixed, you can start testing. Keep it simple. Change one thing, like the headline or the form length. Let it run long enough to collect a meaningful number of conversions. Then compare against the previous period for the same traffic source.
 
-Most small-business sites don't have enough traffic for formal A/B tests with real statistical confidence. That's fine. A before-and-after comparison works if you change one variable at a time and account for the season. An HVAC company in Fort Worth sees different behavior in July than in March no matter what's on the page.
+Most small-business sites don't have enough traffic for formal A/B tests with real statistical confidence. That's fine. A before-and-after comparison works if you change one variable at a time and account for the season. An HVAC company in Fort Worth sees different behavior in July than in March no matter what's on the page. If your busy season is December, my [checklist for prepping your site before the holiday rush](/blog/holiday-website-checklist-for-local-businesses) covers what to fix before that traffic shows up.
 
 Free tools show you what people actually do. Microsoft Clarity records sessions and builds heatmaps at no cost. Watch twenty recordings of real visitors and the problem usually jumps out: people scrolling straight past the button, tapping something that isn't a link, or abandoning the form at one specific field.
 
@@ -134,4 +134,4 @@ If you only do three things, do these:
 2. Rewrite your homepage headline so it says what you do and where you do it.
 3. Set up an instant alert so every new lead reaches a real person within minutes.
 
-That alone puts you ahead of a lot of local competitors. If you'd rather have someone look at the whole funnel, from the first click to how fast your team calls back, [reach out through the contact page](/contact) and I'll show you where the leaks are.
+That alone puts you ahead of a lot of local competitors. For the bigger picture, my post on [a website that generates leads instead of just working](/blog/beyond-just-works-why-businesses-need-websites-that-dominate) ends with a one-hour self-check. If you'd rather have someone look at the whole funnel, from the first click to how fast your team calls back, [reach out through the contact page](/contact) and I'll show you where the leaks are.
