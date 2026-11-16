@@ -195,7 +195,13 @@ export function buildSitemapEntries(sources: SitemapSources): SitemapEntry[] {
 		return date ? [{ slug: item.slug, date }] : []
 	})
 
+	// An article in an unknown category 404s (its page needs the category),
+	// so it is never listed.
+	const knownHelpCategories = new Set(sources.helpCategorySlugs)
 	const helpArticles = sources.helpArticles.flatMap(article => {
+		if (!knownHelpCategories.has(article.category)) {
+			return []
+		}
 		const date = datedOrDrop('help article', article.slug, [
 			article.updatedAt,
 			article.createdAt

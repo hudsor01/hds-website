@@ -774,7 +774,7 @@ describe('sitemap lastmod', () => {
 		}
 	})
 
-	it('lists a help article outside the known categories without its category', () => {
+	it('leaves out a help article outside the known categories (its page 404s)', () => {
 		const entries = buildSitemapEntries(
 			fixtureSources({
 				helpCategorySlugs: ['billing'],
@@ -788,7 +788,7 @@ describe('sitemap lastmod', () => {
 				]
 			})
 		)
-		expect(hasPath(entries, '/help/retired/orphan')).toBe(true)
+		expect(hasPath(entries, '/help/retired/orphan')).toBe(false)
 		expect(hasPath(entries, '/help/retired')).toBe(false)
 		expect(hasPath(entries, '/help')).toBe(false)
 	})
