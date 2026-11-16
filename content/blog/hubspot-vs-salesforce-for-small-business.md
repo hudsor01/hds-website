@@ -101,7 +101,7 @@ Both push annual commitments, especially on the higher tiers. A monthly price th
 
 Most comparison posts skip this part.
 
-If you're a small service business with one or two people answering the phone, you may not need a general-purpose CRM at all. You need jobs booked, reminders sent, invoices paid and follow-up that doesn't depend on someone remembering. Field service and booking tools built for your trade often do that better out of the box than HubSpot or Salesforce ever will, because they already know what a job, a technician and a service call are.
+If you're a small service business with one or two people answering the phone, you may not need a general-purpose CRM at all. You need jobs booked, reminders sent, invoices paid and follow-up that doesn't depend on someone remembering. Field service and booking tools built for your trade often do that better out of the box than HubSpot or Salesforce ever will, because they already know what a job, a technician and a service call are. If getting paid is the slow part, start with [automatic invoices, pay links and payment reminders](/blog/automate-invoicing-and-payment-reminders) before you shop for a CRM.
 
 Sometimes the right move is a simpler CRM plus a few targeted automations. A web form that creates a contact, a text that goes out within a minute and a task that lands on the right person's list will recover more revenue than a full CRM rollout that nobody finishes. I covered that pattern in [CRM automation that stops leads from dying in your inbox](/blog/crm-automation-stop-losing-leads) and compared the glue tools in [workflow automation tools for small business](/blog/workflow-automation-tools-small-business).
 

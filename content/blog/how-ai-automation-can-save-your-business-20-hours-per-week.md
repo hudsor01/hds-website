@@ -41,7 +41,7 @@ It's the same discipline behind the forecasting work that got me to 95% accuracy
 
 These get lumped together. They shouldn't be. They solve different problems and they fail in different ways.
 
-**Plain automation** follows rules. When X happens, do Y. A form gets submitted, so create a contact in HubSpot, text the customer a confirmation and post a note in your team chat. It does the same thing every time. When it breaks, it breaks loudly and predictably. Tools like Zapier, Make, n8n and Workato live here, along with the built-in automations in most CRMs, booking apps and invoicing software.
+**Plain automation** follows rules. When X happens, do Y. A form gets submitted, so create a contact in HubSpot, text the customer a confirmation and post a note in your team chat. It does the same thing every time. When it breaks, it breaks loudly and predictably. Tools like Zapier, Make, n8n and Workato live here, along with the built-in automations in most CRMs, booking apps and invoicing software. If you're still choosing a CRM, start with [my HubSpot vs Salesforce comparison for small teams](/blog/hubspot-vs-salesforce-for-small-business).
 
 **AI automation** handles the messy stuff rules can't. Reading a rambling email and figuring out whether it's a quote request, a complaint or spam. Pulling the job address and scope out of a photo of a handwritten work order. Summarizing a 20 minute phone call into three lines for the CRM. Drafting a reply in your tone that a human approves before it goes out.
 
@@ -63,13 +63,13 @@ The back-and-forth of "does Tuesday work?" is pure waste. Online booking that re
 
 ### 3. Re-Typing Data Between Apps
 
-If the same customer name, address and job details get typed into your CRM, your scheduling tool and your accounting software, you're paying someone to be a cable between systems. This is where integration platforms shine. Connect the apps once and the data flows on its own.
+If the same customer name, address and job details get typed into your CRM, your scheduling tool and your accounting software, you're paying someone to be a cable between systems. This is where integration platforms shine. Connect the apps once and the data flows on its own. If you're not sure off-the-shelf connectors will hold up, I cover [when a custom CRM integration is worth building](/blog/why-your-business-needs-a-custom-crm-integration).
 
 AI helps at the edges. When information arrives in a format a rule can't parse, like a PDF purchase order or a vendor invoice in someone's inbox, an AI step can extract the fields and hand them to the rest of the workflow. Have a person spot-check those extractions until you trust them.
 
 ### 4. Invoices and Payment Reminders
 
-Sending invoices when a job closes and nudging late payers on a schedule is classic rules-based work. Most invoicing tools do it natively and too many businesses never turn it on. It also takes the awkward "just checking in" email off your plate entirely.
+Sending invoices when a job closes and nudging late payers on a schedule is classic rules-based work. Most invoicing tools do it natively and too many businesses never turn it on. My post on [automating invoicing and payment reminders](/blog/automate-invoicing-and-payment-reminders) covers the pay links, the reminder schedule and syncing payments to your books. It also takes the awkward "just checking in" email off your plate entirely.
 
 ### 5. The Same Questions, Every Day
 

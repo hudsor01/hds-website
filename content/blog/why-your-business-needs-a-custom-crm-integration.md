@@ -56,7 +56,7 @@ Each one is a symptom of data that has to be moved by a person. People get busy.
 
 I'll be straight about this, because not every business needs custom work.
 
-Most CRMs ship with native integrations. Tools like Zapier and Make connect thousands of apps without code. If your needs look like this, start there:
+Most CRMs ship with native integrations. If you're still picking the CRM itself, I compare [how HubSpot and Salesforce fit a 5 to 50 person team](/blog/hubspot-vs-salesforce-for-small-business). Tools like Zapier and Make connect thousands of apps without code. If your needs look like this, start there:
 
 - Data moves one way, from one tool to another.
 - You use standard fields: name, email, phone, amount.
@@ -129,7 +129,7 @@ Don't build on faith. Measure these before you start, then again a month after l
 - **Speed to lead**, from form submission to first contact.
 - **Report agreement**, whether CRM revenue matches accounting revenue.
 
-Put a dollar figure on the hours and the late invoices and the business case usually writes itself. My [ROI calculator](/tools/roi-calculator) helps you run the numbers on your own business.
+Put a dollar figure on the hours and the late invoices and the business case usually writes itself. If you don't have the hours number yet, [a one-week time log of repeated tasks](/blog/how-ai-automation-can-save-your-business-20-hours-per-week) gets it for you. My [ROI calculator](/tools/roi-calculator) helps you run the numbers on your own business.
 
 ## Start With One Flow
 
