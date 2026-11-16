@@ -32,9 +32,15 @@ export function renderSitemapIndex(
 	return `${XML_DECLARATION}\n<sitemapindex xmlns="${SITEMAP_NS}">\n${sitemaps.join('\n')}\n</sitemapindex>\n`
 }
 
-/** No Cache-Control here: Next's route caching owns it. */
+/**
+ * No Cache-Control here: Next's route caching owns it. nosniff is set here
+ * because the proxy matcher skips the sitemap routes.
+ */
 export function xmlResponse(body: string): Response {
 	return new Response(body, {
-		headers: { 'Content-Type': 'application/xml; charset=utf-8' }
+		headers: {
+			'Content-Type': 'application/xml; charset=utf-8',
+			'X-Content-Type-Options': 'nosniff'
+		}
 	})
 }

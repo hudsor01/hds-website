@@ -986,6 +986,8 @@ describe('sitemap XML', () => {
 		expect(response.headers.get('content-type')).toBe(
 			'application/xml; charset=utf-8'
 		)
+		expect(response.headers.get('x-content-type-options')).toBe('nosniff')
+		expect(response.headers.get('cache-control')).toBeNull()
 		expect(await response.text()).toBe(body)
 	})
 
