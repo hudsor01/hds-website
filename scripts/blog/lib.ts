@@ -493,6 +493,29 @@ export function qualifies(
 	return srcDay !== null && tgtDay !== null && srcDay <= tgtDay
 }
 
+/**
+ * Whether the source can be on the site while the target is not live yet: the
+ * source is published and either live now or dated before the target. Drafts
+ * never render, and a held source dated on or after the target is only ever
+ * compiled once the target is live (both go live at UTC midnight).
+ */
+function rendersWhileHeld(
+	src: ParsedPost,
+	tgt: ParsedPost,
+	now: Date
+): boolean {
+	if (src.data.published !== true || isLive(tgt.data, now)) {
+		return false
+	}
+	if (isLive(src.data, now)) {
+		return true
+	}
+	const srcDay = publishedDay(src.data.publishedAt)
+	const tgtDay = publishedDay(tgt.data.publishedAt)
+	// A target with no valid date never goes live, so fail closed.
+	return srcDay !== null && (tgtDay === null || srcDay < tgtDay)
+}
+
 function inboundFrom(
 	posts: ParsedPost[],
 	links: ReadonlyMap<ParsedPost, PostLinks>,
@@ -554,7 +577,8 @@ export interface LinkViolation extends Violation {
  *   - LINK-dead: the target slug does not exist (any source, drafts included)
  *   - LINK-unpublished: a published source links a published: false post
  *   - LINK-html: a raw HTML anchor points at a post that is not live yet,
- *     which the renderer cannot turn into text the way it does markdown links
+ *     which the renderer cannot turn into text the way it does markdown links;
+ *     only when the source can render first (see rendersWhileHeld)
  * Target-side rules land on the linked file and count only qualifying links
  * from other published posts (live now OR dated on or before the target):
  *   - LINK-orphan: 0 qualifying inbound links (ORPHAN_SEVERITY)
@@ -597,7 +621,7 @@ export function linkViolations(
 					'LINK-unpublished',
 					`links to /blog/${slug}, which is published: false`
 				)
-			} else if (htmlTargets.has(slug) && !isLive(tgt.data, now)) {
+			} else if (htmlTargets.has(slug) && rendersWhileHeld(src, tgt, now)) {
 				err(
 					src.file,
 					'LINK-html',

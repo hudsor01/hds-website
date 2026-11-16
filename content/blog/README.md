@@ -54,8 +54,8 @@ Errors (fail the build and the CI gate):
 
 - a link to a post slug that does not exist
 - a link from a published post to a `published: false` post
-- a raw HTML `<a href="/blog/...">` to a post that is not live yet (use a markdown
-  link instead)
+- a raw HTML `<a href="/blog/...">` to a post that is not live yet, from a published
+  post that is live or dated before it (use a markdown link instead)
 
 Inbound threshold, counted per published post:
 

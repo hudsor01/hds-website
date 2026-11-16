@@ -692,6 +692,57 @@ describe('linkViolations', () => {
 			expect(rules(linkViolations(posts, NOW), 'LINK-html')).toHaveLength(0)
 		})
 
+		test('a held source dated before a held target is an error', () => {
+			const posts = ringed([
+				post('held-post', '', { publishedAt: '2026-12-03' }),
+				post('src', 'See <a href="/blog/held-post">it</a>.', {
+					publishedAt: '2026-12-01'
+				})
+			])
+			const v = rules(linkViolations(posts, NOW), 'LINK-html')
+			expect(v.map(x => x.file)).toEqual(['src.md'])
+		})
+
+		test('a held source dated after a held target is allowed', () => {
+			const posts = ringed([
+				post('held-post', '', { publishedAt: '2026-12-03' }),
+				post('src', 'See <a href="/blog/held-post">it</a>.', {
+					publishedAt: '2026-12-10'
+				})
+			])
+			expect(rules(linkViolations(posts, NOW), 'LINK-html')).toHaveLength(0)
+		})
+
+		test('a held source dated the same day as the target is allowed', () => {
+			const posts = ringed([
+				post('held-post', '', { publishedAt: '2026-12-03' }),
+				post('src', 'See <a href="/blog/held-post">it</a>.', {
+					publishedAt: '2026-12-03'
+				})
+			])
+			expect(rules(linkViolations(posts, NOW), 'LINK-html')).toHaveLength(0)
+		})
+
+		test('a draft source linking a held post is allowed', () => {
+			const posts = ringed([
+				post('held-post', '', { publishedAt: '2026-12-03' }),
+				post('draft', 'See <a href="/blog/held-post">it</a>.', {
+					published: false
+				})
+			])
+			expect(rules(linkViolations(posts, NOW), 'LINK-html')).toHaveLength(0)
+		})
+
+		test('a draft linking a draft in raw HTML is allowed', () => {
+			const posts = ringed([
+				post('draft-a', '', { published: false }),
+				post('draft-b', '<a href="/blog/draft-a">a</a>', { published: false })
+			])
+			const v = linkViolations(posts, NOW)
+			expect(rules(v, 'LINK-html')).toHaveLength(0)
+			expect(rules(v, 'LINK-unpublished')).toHaveLength(0)
+		})
+
 		test('a markdown link to a held post is allowed', () => {
 			const posts = ringed([
 				post('held-post', '', { publishedAt: '2026-12-03' }),
