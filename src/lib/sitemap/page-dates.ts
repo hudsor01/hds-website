@@ -53,7 +53,7 @@ export const PAGE_DATES = {
 	'/tools/meta-tag-generator': '2026-05-30',
 	'/tools/schema-generator': '2026-05-30',
 	'/tools/ttl-calculator': '2026-11-15',
-	'/tools/mortgage-calculator': '2026-11-15',
+	'/tools/mortgage-calculator': '2026-11-22',
 	'/tools/tip-calculator': '2026-05-30',
 	'/tools/paystub-calculator': '2026-11-15',
 	'/tools/profit-margin-calculator': '2026-05-30',
