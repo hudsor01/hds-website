@@ -48,15 +48,19 @@ interface WebVitalMetric {
 	navigationType?: string
 }
 
-async function storeWebVital(metric: WebVitalMetric) {
+export async function storeWebVital(metric: WebVitalMetric) {
 	try {
 		// Only store in production
 		if (env.NODE_ENV !== 'production') {
 			return
 		}
 
+		// keepalive lets the request finish after the page is hidden or
+		// closed. LCP, CLS and INP are reported at that moment, so without it
+		// the browser cancels most of them (mobile almost always).
 		await fetch('/api/web-vitals', {
 			method: 'POST',
+			keepalive: true,
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				name: metric.name,

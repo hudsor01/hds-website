@@ -7,22 +7,23 @@ name: E2E (live backend)
 #
 # Decoupled from the per-push/PR CI lane on purpose: the normal `E2E` job in
 # ci.yml is functional-only and never spends a Neon branch, so regular
-# development costs nothing. This runs on a schedule (1 ephemeral branch/day)
+# development costs nothing. This runs on a schedule (1 ephemeral branch/week)
 # as a smoke check, plus on demand via workflow_dispatch.
 #
 # No RESEND_API_KEY is set, so the contact route returns success in "test
 # mode" and newsletter email is isResendConfigured()-guarded: zero emails.
 #
 # NOTE: scheduled workflows only fire from the default branch (main), so this
-# starts running nightly once merged.
+# starts running weekly once merged.
 
 on:
   schedule:
-    # 07:00 UTC daily (~02:00 US Central)
-    - cron: '0 7 * * *'
+    # 07:00 UTC Mondays (~02:00 US Central). Weekly, not daily: CI already
+    # runs E2E on every PR, and this live smoke check cost ~8 min a day.
+    - cron: '0 7 * * 1'
   workflow_dispatch:
 
-# Cancel an in-progress nightly if a new one is triggered
+# Cancel an in-progress scheduled run if a new one is triggered
 concurrency:
   group: e2e-live
   cancel-in-progress: true
