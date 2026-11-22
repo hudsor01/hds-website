@@ -13,7 +13,9 @@
 import { describe, expect, test } from 'bun:test'
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import * as ts from 'typescript'
+// TypeScript 7 ships no JS compiler API; the TS 6 API is installed under
+// the typescript6 alias (Microsoft's side-by-side guidance) for this parser.
+import * as ts from 'typescript6'
 import { countCommaBeforeAnd } from '../../scripts/blog/voice'
 import {
 	buildAssertion,

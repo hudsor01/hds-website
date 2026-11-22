@@ -100,7 +100,8 @@
 		"react": "19.3.1",
 		"react-dom": "19.3.1",
 		"tailwindcss": "4.3.5",
-		"typescript": "6.0.3"
+		"typescript": "7.0.2",
+		"typescript6": "npm:typescript@6.0.3"
 	},
 	"overrides": {
 		"path-to-regexp": "8.4.2",
