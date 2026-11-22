@@ -48,13 +48,14 @@ import {
 } from '@/lib/mortgage-calculator/calculate'
 import { formatCurrency } from '@/lib/utils'
 
-const PROGRAMS = ['conventional', 'fha', 'va'] as const
+const PROGRAMS = ['conventional', 'fha', 'va', 'usda'] as const
 const TERMS = [30, 25, 20, 15, 10] as const
 
 const PROGRAM_LABELS: Record<LoanProgram, string> = {
 	conventional: 'Conventional',
 	fha: 'FHA',
-	va: 'VA'
+	va: 'VA',
+	usda: 'USDA'
 }
 
 const MONTH_NAMES = [
@@ -231,7 +232,14 @@ export function MortgageCalculatorClient() {
 	const taxAnnual = taxAmount ?? (homePrice * taxRate) / 100
 	const taxInDollars = taxAmount !== null
 	const showPmi = program === 'conventional' && downRatio < 0.2
-	const hasUpfrontFee = program === 'fha' || (program === 'va' && !vaExempt)
+	const hasUpfrontFee =
+		program === 'fha' || program === 'usda' || (program === 'va' && !vaExempt)
+	const upfrontFeeName =
+		program === 'fha'
+			? 'FHA upfront MIP'
+			: program === 'usda'
+				? 'USDA guarantee fee'
+				: 'VA funding fee'
 
 	const buildInputs = (): MortgageInputs => {
 		const start = parseMonth(startMonth ?? nextMonth())
@@ -527,7 +535,13 @@ export function MortgageCalculatorClient() {
 						<Label htmlFor="program">Loan Type</Label>
 						<Select
 							value={program}
-							onValueChange={value => setProgram(value as LoanProgram)}
+							onValueChange={value => {
+								setProgram(value as LoanProgram)
+								// USDA guaranteed loans are 30-year fixed only
+								if (value === 'usda') {
+									setTermYears(30)
+								}
+							}}
 						>
 							<SelectTrigger id="program">
 								<SelectValue />
@@ -547,6 +561,7 @@ export function MortgageCalculatorClient() {
 						<Select
 							value={String(termYears)}
 							onValueChange={value => setTermYears(Number(value))}
+							disabled={program === 'usda'}
 						>
 							<SelectTrigger id="loanTerm">
 								<SelectValue />
@@ -559,8 +574,21 @@ export function MortgageCalculatorClient() {
 								))}
 							</SelectContent>
 						</Select>
+						{program === 'usda' && (
+							<p className="text-xs text-muted-foreground">
+								USDA guaranteed loans are 30-year fixed
+							</p>
+						)}
 					</div>
 				</div>
+
+				{program === 'usda' && (
+					<p className="text-xs text-muted-foreground">
+						USDA loans need no down payment, but the home must be in an eligible
+						rural area and household income must be within the area limit. Check
+						an address at eligibility.sc.egov.usda.gov.
+					</p>
+				)}
 
 				{program === 'va' && (
 					<div className="space-y-tight rounded-lg border border-border p-4">
@@ -611,8 +639,8 @@ export function MortgageCalculatorClient() {
 							}}
 						/>
 						<Label htmlFor="financeFee" className="font-normal leading-snug">
-							Add the {program === 'fha' ? 'FHA upfront MIP' : 'VA funding fee'}{' '}
-							to the loan instead of paying it at closing
+							Add the {upfrontFeeName} to the loan instead of paying it at
+							closing
 						</Label>
 					</div>
 				)}
@@ -732,6 +760,12 @@ export function MortgageCalculatorClient() {
 					<p className="text-xs text-muted-foreground">
 						FHA annual MIP is set by HUD from your loan amount, term and down
 						payment, so there is nothing to enter.
+					</p>
+				)}
+				{program === 'usda' && (
+					<p className="text-xs text-muted-foreground">
+						The USDA annual fee (0.35%) and the 1% guarantee fee are set by
+						USDA, so there is nothing to enter.
 					</p>
 				)}
 			</Section>
@@ -888,7 +922,7 @@ export function MortgageCalculatorClient() {
 	return (
 		<ToolPageLayout
 			title="Mortgage Calculator"
-			description="See the full monthly payment for a conventional, FHA or VA loan, with taxes, insurance, PMI or MIP, HOA dues, cash to close and how extra payments change your payoff date"
+			description="See the full monthly payment for a conventional, FHA, VA or USDA loan, with taxes, insurance, mortgage insurance or fees, HOA dues, cash to close and how extra payments change your payoff date"
 			columns="two"
 			formSlot={formSlot}
 			resultSlot={resultSlot}

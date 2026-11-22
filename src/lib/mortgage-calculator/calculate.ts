@@ -14,9 +14,16 @@
  * - Conventional PMI: CFPB, Homeowners Protection Act. PMI ends
  *   automatically when the balance reaches 78% of the original value, and
  *   no later than the month after the loan's midpoint.
+ * - USDA (Section 502 guaranteed): fees from RD Instruction 440.1 Exhibit K
+ *   (1.00% upfront on a new purchase loan, 0.35% annual). HB-1-3555 16.4:
+ *   the upfront fee is a percent of the total loan, so financing all of it
+ *   makes the loan base / (1 - rate). HB-1-3555 16.5 and 7 CFR 3555.107(h):
+ *   the annual fee is on the average scheduled balance from the original
+ *   amortization schedule, for the life of the loan. USDA fact sheet: no
+ *   down payment required, 30-year fixed rate.
  */
 
-export type LoanProgram = 'conventional' | 'fha' | 'va'
+export type LoanProgram = 'conventional' | 'fha' | 'va' | 'usda'
 
 export interface MortgageInputs {
 	homePrice: number
@@ -32,7 +39,7 @@ export interface MortgageInputs {
 	pmiRate: number
 	vaFirstUse: boolean
 	vaExempt: boolean
-	/** Roll the FHA upfront MIP or VA funding fee into the loan */
+	/** Roll the FHA upfront MIP, VA funding fee or USDA guarantee fee into the loan */
 	financeUpfrontFee: boolean
 	/** Lender and title costs, excluding points and the upfront fee */
 	closingCosts: number
@@ -91,6 +98,9 @@ export interface MortgageResults {
 export class MortgageInputError extends Error {}
 
 const FHA_UPFRONT_RATE = 0.0175
+const USDA_UPFRONT_RATE = 0.01
+const USDA_ANNUAL_RATE = 0.0035
+const USDA_TERM_YEARS = 30
 const FHA_HIGH_BALANCE = 726_200
 const FHA_SHORT_DURATION_MONTHS = 132 // 11 years
 
@@ -210,6 +220,11 @@ function validate(i: MortgageInputs): void {
 	if (![10, 15, 20, 25, 30].includes(i.termYears)) {
 		throw new MortgageInputError('Choose a 10, 15, 20, 25 or 30 year term.')
 	}
+	if (i.program === 'usda' && i.termYears !== USDA_TERM_YEARS) {
+		throw new MortgageInputError(
+			'USDA guaranteed loans are 30-year fixed. Choose a 30 year term.'
+		)
+	}
 	if (i.startMonth < 1 || i.startMonth > 12 || !Number.isInteger(i.startYear)) {
 		throw new MortgageInputError('Enter a valid first payment month.')
 	}
@@ -227,6 +242,14 @@ function upfrontFee(i: MortgageInputs, baseLoan: number): UpfrontFee {
 	if (i.program === 'va' && !i.vaExempt) {
 		const rate = vaFundingFeeRate(i.downPayment / i.homePrice, i.vaFirstUse)
 		return { amount: baseLoan * rate, label: 'VA funding fee' }
+	}
+	if (i.program === 'usda') {
+		// The fee is charged on the total loan, which includes the fee itself
+		// when it is financed: total = base / (1 - rate).
+		const amount = i.financeUpfrontFee
+			? (baseLoan * USDA_UPFRONT_RATE) / (1 - USDA_UPFRONT_RATE)
+			: baseLoan * USDA_UPFRONT_RATE
+		return { amount, label: 'USDA guarantee fee' }
 	}
 	return { amount: 0, label: '' }
 }
@@ -260,31 +283,62 @@ function insurancePlan(
 		}
 	}
 	if (i.program === 'fha') {
-		const rate = fhaAnnualMipRate(baseLoan, ltv, i.termYears)
-		const duration = fhaMipDurationMonths(ltv, i.termYears)
-		const byYear = new Map<number, number>()
-		const yearCharge = (loanYear: number): number => {
-			const cached = byYear.get(loanYear)
-			if (cached !== undefined) {
-				return cached
-			}
-			let sum = 0
-			for (let k = 0; k < 12; k++) {
-				sum += scheduledBalance(loanAmount, r, payment, loanYear * 12 + k)
-			}
-			const monthly = (rate * (sum / 12)) / 12
-			byYear.set(loanYear, monthly)
-			return monthly
-		}
-		return {
-			label: 'FHA annual MIP',
-			charge: (m, balanceBefore) =>
-				m <= duration && balanceBefore > 0
-					? yearCharge(Math.floor((m - 1) / 12))
-					: 0
-		}
+		return averageBalancePlan(
+			'FHA annual MIP',
+			fhaAnnualMipRate(baseLoan, ltv, i.termYears),
+			fhaMipDurationMonths(ltv, i.termYears),
+			loanAmount,
+			r,
+			payment
+		)
+	}
+	if (i.program === 'usda') {
+		return averageBalancePlan(
+			'USDA annual fee',
+			USDA_ANNUAL_RATE,
+			termMonths,
+			loanAmount,
+			r,
+			payment
+		)
 	}
 	return { label: '', charge: () => 0 }
+}
+
+/**
+ * FHA annual MIP and the USDA annual fee: each loan year is charged the
+ * annual rate on the average scheduled balance of that year (original
+ * schedule, ignoring extra payments), spread over 12 monthly payments.
+ */
+function averageBalancePlan(
+	label: string,
+	annualRate: number,
+	durationMonths: number,
+	loanAmount: number,
+	r: number,
+	payment: number
+): InsurancePlan {
+	const byYear = new Map<number, number>()
+	const yearCharge = (loanYear: number): number => {
+		const cached = byYear.get(loanYear)
+		if (cached !== undefined) {
+			return cached
+		}
+		let sum = 0
+		for (let k = 0; k < 12; k++) {
+			sum += scheduledBalance(loanAmount, r, payment, loanYear * 12 + k)
+		}
+		const monthly = (annualRate * (sum / 12)) / 12
+		byYear.set(loanYear, monthly)
+		return monthly
+	}
+	return {
+		label,
+		charge: (m, balanceBefore) =>
+			m <= durationMonths && balanceBefore > 0
+				? yearCharge(Math.floor((m - 1) / 12))
+				: 0
+	}
 }
 
 interface Amortization {
