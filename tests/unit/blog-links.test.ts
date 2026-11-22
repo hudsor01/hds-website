@@ -848,13 +848,23 @@ describe('fixture dir', () => {
 	})
 })
 
+/** Tests that walk every real post: slower than unit tests by design. */
+const REAL_CONTENT_TIMEOUT_MS = 30_000
+
 describe('real content', () => {
 	// Errors only: a post at 1 qualifying inbound is a warning by design, so
 	// this never asserts that the full violation list is empty.
-	test('content/blog has no link errors', () => {
-		const errors = linkViolations(loadPosts(), new Date()).filter(
-			v => v.severity === 'error'
-		)
-		expect(errors).toEqual([])
-	})
+	// Reads and lexes every post, so it scales with the blog and runs well
+	// past bun's 5s default under coverage on CI. REAL_CONTENT_TIMEOUT_MS
+	// leaves headroom as posts are added.
+	test(
+		'content/blog has no link errors',
+		() => {
+			const errors = linkViolations(loadPosts(), new Date()).filter(
+				v => v.severity === 'error'
+			)
+			expect(errors).toEqual([])
+		},
+		REAL_CONTENT_TIMEOUT_MS
+	)
 })

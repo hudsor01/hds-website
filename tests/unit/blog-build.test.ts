@@ -463,6 +463,8 @@ describe('no compiled <a> points at a post that is not live', () => {
 		expect(onTheDay).toEqual({ offenders: [], postLinks: FORMS.length })
 	})
 
+	// Compiles every real post, so it scales with the blog and runs past
+	// bun's 5s default under coverage on CI.
 	test('real content: no compiled <a> resolves to a non-live post', () => {
 		const now = new Date()
 		const posts = loadPosts()
@@ -475,7 +477,7 @@ describe('no compiled <a> points at a post that is not live', () => {
 		)
 		expect(offenders).toEqual([])
 		expect(postLinks).toBeGreaterThan(0)
-	})
+	}, 30_000)
 })
 
 describe('runBuild (the blog:build link gate)', () => {
