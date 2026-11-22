@@ -1,6 +1,6 @@
 /**
  * Mortgage Calculator
- * Calculate monthly mortgage payments with taxes, insurance, and PMI
+ * Full monthly payment for conventional, FHA and VA loans
  */
 
 import type { Metadata } from 'next'
@@ -8,13 +8,13 @@ import { buildMetadata } from '@/lib/seo-config'
 import { MortgageCalculatorClient } from './MortgageCalculatorClient'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Mortgage Calculator | Hudson Digital Solutions',
+	title: 'Mortgage Calculator: FHA, VA, Conventional | Hudson Digital',
 	description:
-		'Calculate your monthly mortgage payment including principal, interest, taxes, insurance, and PMI. Free mortgage calculator.',
+		'Free mortgage calculator for conventional, FHA and VA loans. See the full payment with taxes, insurance, PMI or MIP, cash to close and extra payments.',
 	path: '/tools/mortgage-calculator',
 	socialTitle: 'Mortgage Calculator',
 	socialDescription:
-		'Calculate monthly mortgage payments with taxes, insurance, and PMI.'
+		'Full monthly payment for conventional, FHA and VA loans, with cash to close and extra payments.'
 })
 
 export default function MortgageCalculatorPage() {

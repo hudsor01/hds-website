@@ -155,13 +155,13 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Mortgage Calculator',
 		description:
-			'See the full monthly mortgage payment, not the teaser number. Principal, interest, taxes, insurance and PMI broken out so you know what you are signing up for.',
+			'See the full monthly mortgage payment, not the teaser number. Conventional, FHA or VA, with taxes, insurance, PMI or MIP, cash to close and extra payments broken out.',
 		href: TOOL_ROUTES.MORTGAGE_CALCULATOR,
 		Icon: Home,
 		benefits: [
-			'Principal and interest breakdown',
-			'Includes taxes and insurance',
-			'PMI calculations'
+			'Conventional, FHA and VA loans',
+			'Cash to close and PMI drop-off',
+			'Extra payments and payoff date'
 		],
 		cta: 'Calculate Payment',
 		category: 'business'

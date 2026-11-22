@@ -7,7 +7,7 @@
 
 import { CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -29,6 +29,8 @@ interface CalculatorResultsProps {
 	inputs: Record<string, unknown> | object
 	showEmailCapture?: boolean
 	onEmailSubmit?: (email: string) => void
+	/** Extra detail shown right after the results, before the email capture */
+	children?: ReactNode
 }
 
 export function CalculatorResults({
@@ -36,7 +38,8 @@ export function CalculatorResults({
 	calculatorType,
 	inputs,
 	showEmailCapture = true,
-	onEmailSubmit
+	onEmailSubmit,
+	children
 }: CalculatorResultsProps) {
 	const [email, setEmail] = useState('')
 	const [emailSubmitted, setEmailSubmitted] = useState(false)
@@ -120,6 +123,8 @@ export function CalculatorResults({
 					))}
 				</div>
 			</div>
+
+			{children}
 
 			{/* Email Capture */}
 			{showEmailCapture && !emailSubmitted && (

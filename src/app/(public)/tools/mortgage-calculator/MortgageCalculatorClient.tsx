@@ -1,17 +1,27 @@
 /**
  * Mortgage Calculator Client Component
- * Contains the interactive mortgage calculation form with URL state management
+ * Full monthly payment by loan type (conventional, FHA, VA), cash to close,
+ * extra payments and a yearly amortization schedule. Inputs live in the URL
+ * so a calculation can be shared. Math lives in src/lib/mortgage-calculator.
  */
 
 'use client'
 
-import { parseAsFloat, parseAsInteger, useQueryState } from 'nuqs'
-import { useState } from 'react'
+import {
+	parseAsBoolean,
+	parseAsFloat,
+	parseAsInteger,
+	parseAsString,
+	parseAsStringLiteral,
+	useQueryState
+} from 'nuqs'
+import { type ReactNode, useState } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
 import type { ToolAction } from '@/components/layout/ToolPageLayout'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import {
 	Select,
@@ -20,216 +30,301 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select'
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow
+} from '@/components/ui/table'
 import { trackEvent } from '@/lib/analytics'
+import {
+	calculateMortgage,
+	type LoanProgram,
+	MortgageInputError,
+	type MortgageInputs,
+	type MortgageResults
+} from '@/lib/mortgage-calculator/calculate'
 import { formatCurrency } from '@/lib/utils'
 
-interface MortgageInputs {
-	homePrice: number
-	downPayment: number
-	downPaymentPercent: number
-	interestRate: number
-	loanTerm: number
-	propertyTax: number
-	homeInsurance: number
-	pmi: number
-	hoaFees: number
+const PROGRAMS = ['conventional', 'fha', 'va'] as const
+const TERMS = [30, 25, 20, 15, 10] as const
+
+const PROGRAM_LABELS: Record<LoanProgram, string> = {
+	conventional: 'Conventional',
+	fha: 'FHA',
+	va: 'VA'
 }
 
-interface MortgageResults {
-	monthlyPrincipalInterest: string
-	monthlyPropertyTax: string
-	monthlyInsurance: string
-	monthlyPMI: string
-	monthlyHOA: string
-	totalMonthlyPayment: string
-	loanAmount: string
-	totalInterest: string
-	totalPayments: string
+const MONTH_NAMES = [
+	'January',
+	'February',
+	'March',
+	'April',
+	'May',
+	'June',
+	'July',
+	'August',
+	'September',
+	'October',
+	'November',
+	'December'
+]
+
+const DEFAULTS = {
+	price: 350000,
+	downPercent: 20,
+	rate: 6.5,
+	term: 30,
+	taxRate: 1.8,
+	insurance: 2400,
+	pmiRate: 0.5,
+	closingCosts: 8500
+}
+
+/** "YYYY-MM" for the month after today, the usual first payment month. */
+function nextMonth(): string {
+	const d = new Date()
+	const y = d.getMonth() === 11 ? d.getFullYear() + 1 : d.getFullYear()
+	const m = ((d.getMonth() + 1) % 12) + 1
+	return `${y}-${String(m).padStart(2, '0')}`
+}
+
+function parseMonth(value: string): { year: number; month: number } {
+	const [y, m] = value.split('-').map(Number)
+	return { year: y ?? new Date().getFullYear(), month: m ?? 1 }
+}
+
+function percent(n: number): string {
+	return `${(n * 100).toFixed(1)}%`
+}
+
+function toNumber(value: string): number {
+	const n = Number.parseFloat(value)
+	return Number.isFinite(n) ? n : 0
+}
+
+interface SectionProps {
+	title: string
+	children: ReactNode
+}
+
+function Section({ title, children }: SectionProps) {
+	return (
+		<fieldset className="space-y-content border-t border-border pt-6 first:border-t-0 first:pt-0">
+			<legend className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+				{title}
+			</legend>
+			{children}
+		</fieldset>
+	)
+}
+
+interface ModeToggleProps {
+	label: string
+	options: readonly [string, string]
+	active: 0 | 1
+	onChange: (index: 0 | 1) => void
+}
+
+function ModeToggle({ label, options, active, onChange }: ModeToggleProps) {
+	return (
+		<div className="flex items-center gap-tight">
+			{options.map((option, index) => (
+				<button
+					key={option}
+					type="button"
+					aria-pressed={active === index}
+					aria-label={`${label} in ${option === '%' ? 'percent' : 'dollars'}`}
+					onClick={() => onChange(index as 0 | 1)}
+					className={`px-2 py-1 text-xs rounded ${
+						active === index
+							? 'bg-accent text-accent-foreground'
+							: 'bg-muted text-muted-foreground'
+					}`}
+				>
+					{option}
+				</button>
+			))}
+		</div>
+	)
 }
 
 export function MortgageCalculatorClient() {
 	const [homePrice, setHomePrice] = useQueryState(
 		'price',
-		parseAsFloat.withDefault(350000)
+		parseAsFloat.withDefault(DEFAULTS.price)
 	)
-	const [downPayment, setDownPayment] = useQueryState(
-		'dp',
-		parseAsFloat.withDefault(70000)
-	)
-	const [downPaymentPercent, setDownPaymentPercent] = useQueryState(
+	// Down payment is stored as a percent (dpp) or, once typed in dollars,
+	// as dollars (dp). dp wins when present, matching older shared links.
+	const [downDollars, setDownDollars] = useQueryState('dp', parseAsFloat)
+	const [downPercent, setDownPercent] = useQueryState(
 		'dpp',
-		parseAsFloat.withDefault(20)
+		parseAsFloat.withDefault(DEFAULTS.downPercent)
+	)
+	const [program, setProgram] = useQueryState(
+		'type',
+		parseAsStringLiteral(PROGRAMS).withDefault('conventional')
 	)
 	const [interestRate, setInterestRate] = useQueryState(
 		'rate',
-		parseAsFloat.withDefault(6.5)
+		parseAsFloat.withDefault(DEFAULTS.rate)
 	)
-	const [loanTerm, setLoanTerm] = useQueryState(
+	const [termYears, setTermYears] = useQueryState(
 		'term',
-		parseAsInteger.withDefault(30)
+		parseAsInteger.withDefault(DEFAULTS.term)
 	)
-	const [propertyTax, setPropertyTax] = useQueryState(
-		'tax',
-		parseAsFloat.withDefault(3500)
+	const [startMonth, setStartMonth] = useQueryState('start', parseAsString)
+	// Property tax as a yearly dollar amount (tax) or a rate (taxr).
+	const [taxAmount, setTaxAmount] = useQueryState('tax', parseAsFloat)
+	const [taxRate, setTaxRate] = useQueryState(
+		'taxr',
+		parseAsFloat.withDefault(DEFAULTS.taxRate)
 	)
-	const [homeInsurance, setHomeInsurance] = useQueryState(
+	const [insurance, setInsurance] = useQueryState(
 		'ins',
-		parseAsFloat.withDefault(1200)
+		parseAsFloat.withDefault(DEFAULTS.insurance)
 	)
-	const [pmi, setPmi] = useQueryState('pmi', parseAsFloat.withDefault(0))
-	const [hoaFees, setHoaFees] = useQueryState(
-		'hoa',
+	const [hoa, setHoa] = useQueryState('hoa', parseAsFloat.withDefault(0))
+	const [pmiRate, setPmiRate] = useQueryState(
+		'pmir',
+		parseAsFloat.withDefault(DEFAULTS.pmiRate)
+	)
+	const [vaFirstUse, setVaFirstUse] = useQueryState(
+		'vafirst',
+		parseAsBoolean.withDefault(true)
+	)
+	const [vaExempt, setVaExempt] = useQueryState(
+		'vaexempt',
+		parseAsBoolean.withDefault(false)
+	)
+	const [financeFee, setFinanceFee] = useQueryState(
+		'finfee',
+		parseAsBoolean.withDefault(true)
+	)
+	const [closingCosts, setClosingCosts] = useQueryState(
+		'cc',
+		parseAsFloat.withDefault(DEFAULTS.closingCosts)
+	)
+	const [points, setPoints] = useQueryState('pts', parseAsFloat.withDefault(0))
+	const [credits, setCredits] = useQueryState(
+		'credits',
+		parseAsFloat.withDefault(0)
+	)
+	const [extraMonthly, setExtraMonthly] = useQueryState(
+		'xm',
+		parseAsFloat.withDefault(0)
+	)
+	const [extraYearly, setExtraYearly] = useQueryState(
+		'xy',
 		parseAsFloat.withDefault(0)
 	)
 
 	const [results, setResults] = useState<MortgageResults | null>(null)
-	const [usePercent, setUsePercent] = useState(true)
+	const [error, setError] = useState('')
+	const [downInDollars, setDownInDollars] = useState(downDollars !== null)
+	const [showSchedule, setShowSchedule] = useState(false)
 
-	const inputs: MortgageInputs = {
-		homePrice,
-		downPayment,
-		downPaymentPercent,
-		interestRate,
-		loanTerm,
-		propertyTax,
-		homeInsurance,
-		pmi,
-		hoaFees
-	}
+	const downPayment = downDollars ?? Math.round((homePrice * downPercent) / 100)
+	const downRatio = homePrice > 0 ? downPayment / homePrice : 0
+	const taxAnnual = taxAmount ?? (homePrice * taxRate) / 100
+	const taxInDollars = taxAmount !== null
+	const showPmi = program === 'conventional' && downRatio < 0.2
+	const hasUpfrontFee = program === 'fha' || (program === 'va' && !vaExempt)
 
-	const handleInputChange = (field: keyof MortgageInputs, value: string) => {
-		const numValue = parseFloat(value) || 0
-
-		if (field === 'downPaymentPercent') {
-			const dpValue = (homePrice * numValue) / 100
-			setDownPaymentPercent(numValue)
-			setDownPayment(Math.round(dpValue))
-			// Auto-add PMI if down payment < 20%
-			if (numValue < 20) {
-				setPmi(100)
-			} else if (downPaymentPercent >= 20) {
-				setPmi(0)
-			}
-		} else if (field === 'downPayment') {
-			const percent = (numValue / homePrice) * 100
-			setDownPayment(numValue)
-			setDownPaymentPercent(Math.round(percent * 10) / 10)
-			// Auto-add PMI if percent < 20%
-			if (percent < 20) {
-				setPmi(100)
-			} else if (percent >= 20) {
-				setPmi(0)
-			}
-		} else if (field === 'homePrice') {
-			const newDownPayment = usePercent
-				? (numValue * downPaymentPercent) / 100
-				: downPayment
-			const newPercent = usePercent
-				? downPaymentPercent
-				: (downPayment / numValue) * 100
-			setHomePrice(numValue)
-			setDownPayment(Math.round(newDownPayment))
-			setDownPaymentPercent(Math.round(newPercent * 10) / 10)
-		} else {
-			switch (field) {
-				case 'interestRate':
-					setInterestRate(numValue)
-					break
-				case 'loanTerm':
-					setLoanTerm(numValue)
-					break
-				case 'propertyTax':
-					setPropertyTax(numValue)
-					break
-				case 'homeInsurance':
-					setHomeInsurance(numValue)
-					break
-				case 'pmi':
-					setPmi(numValue)
-					break
-				case 'hoaFees':
-					setHoaFees(numValue)
-					break
-				default:
-					break
-			}
+	const buildInputs = (): MortgageInputs => {
+		const start = parseMonth(startMonth ?? nextMonth())
+		return {
+			homePrice,
+			downPayment,
+			program,
+			interestRate,
+			termYears,
+			propertyTaxAnnual: taxAnnual,
+			insuranceAnnual: insurance,
+			hoaMonthly: hoa,
+			pmiRate: showPmi ? pmiRate : 0,
+			vaFirstUse,
+			vaExempt,
+			financeUpfrontFee: financeFee,
+			closingCosts,
+			discountPoints: points,
+			credits,
+			extraMonthly,
+			extraYearly,
+			startYear: start.year,
+			startMonth: start.month
 		}
 	}
 
-	const calculateMortgage = () => {
-		const loanAmount = inputs.homePrice - inputs.downPayment
-		const monthlyRate = inputs.interestRate / 100 / 12
-		const numberOfPayments = inputs.loanTerm * 12
-
-		// Monthly P&I payment formula: M = P[r(1+r)^n]/[(1+r)^n-1]
-		let monthlyPrincipalInterest = 0
-		if (monthlyRate > 0) {
-			monthlyPrincipalInterest =
-				(loanAmount * (monthlyRate * (1 + monthlyRate) ** numberOfPayments)) /
-				((1 + monthlyRate) ** numberOfPayments - 1)
-		} else {
-			monthlyPrincipalInterest = loanAmount / numberOfPayments
-		}
-
-		const monthlyPropertyTax = inputs.propertyTax / 12
-		const monthlyInsurance = inputs.homeInsurance / 12
-		const monthlyPMI = inputs.pmi
-		const monthlyHOA = inputs.hoaFees
-
-		const totalMonthlyPayment =
-			monthlyPrincipalInterest +
-			monthlyPropertyTax +
-			monthlyInsurance +
-			monthlyPMI +
-			monthlyHOA
-
-		const totalPayments = monthlyPrincipalInterest * numberOfPayments
-		const totalInterest = totalPayments - loanAmount
-
-		const calculatedResults: MortgageResults = {
-			monthlyPrincipalInterest: formatCurrency(monthlyPrincipalInterest),
-			monthlyPropertyTax: formatCurrency(monthlyPropertyTax),
-			monthlyInsurance: formatCurrency(monthlyInsurance),
-			monthlyPMI: formatCurrency(monthlyPMI),
-			monthlyHOA: formatCurrency(monthlyHOA),
-			totalMonthlyPayment: formatCurrency(totalMonthlyPayment),
-			loanAmount: formatCurrency(loanAmount),
-			totalInterest: formatCurrency(totalInterest),
-			totalPayments: formatCurrency(
-				totalPayments +
-					(monthlyPropertyTax + monthlyInsurance + monthlyPMI + monthlyHOA) *
-						numberOfPayments
-			)
-		}
-
-		setResults(calculatedResults)
-
-		trackEvent('calculator_used', {
-			calculator_type: 'mortgage-calculator',
-			home_price: inputs.homePrice,
-			down_payment_percent: inputs.downPaymentPercent,
-			interest_rate: inputs.interestRate,
-			loan_term: inputs.loanTerm
-		})
+	const handleDownPercent = (value: string) => {
+		setDownDollars(null)
+		setDownPercent(toNumber(value))
 	}
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleDownDollars = (value: string) => {
+		const dollars = toNumber(value)
+		setDownDollars(dollars)
+		if (homePrice > 0) {
+			setDownPercent(Math.round((dollars / homePrice) * 1000) / 10)
+		}
+	}
+
+	const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		calculateMortgage()
+		try {
+			const calculated = calculateMortgage(buildInputs())
+			setResults(calculated)
+			setError('')
+			trackEvent('calculator_used', {
+				calculator_type: 'mortgage-calculator',
+				home_price: homePrice,
+				down_payment_percent: Math.round(downRatio * 1000) / 10,
+				interest_rate: interestRate,
+				loan_term: termYears,
+				loan_program: program
+			})
+		} catch (err) {
+			if (err instanceof MortgageInputError) {
+				setResults(null)
+				setError(err.message)
+				return
+			}
+			throw err
+		}
 	}
 
 	const handleReset = () => {
 		setResults(null)
-		setHomePrice(350000)
-		setDownPayment(70000)
-		setDownPaymentPercent(20)
-		setInterestRate(6.5)
-		setLoanTerm(30)
-		setPropertyTax(3500)
-		setHomeInsurance(1200)
-		setPmi(0)
-		setHoaFees(0)
+		setError('')
+		setShowSchedule(false)
+		setDownInDollars(false)
+		setHomePrice(null)
+		setDownDollars(null)
+		setDownPercent(null)
+		setProgram(null)
+		setInterestRate(null)
+		setTermYears(null)
+		setStartMonth(null)
+		setTaxAmount(null)
+		setTaxRate(null)
+		setInsurance(null)
+		setHoa(null)
+		setPmiRate(null)
+		setVaFirstUse(null)
+		setVaExempt(null)
+		setFinanceFee(null)
+		setClosingCosts(null)
+		setPoints(null)
+		setCredits(null)
+		setExtraMonthly(null)
+		setExtraYearly(null)
 	}
+
+	const payoffLabel = results
+		? `${MONTH_NAMES[results.payoffMonth - 1]} ${results.payoffYear}`
+		: ''
 
 	const handleCopy = () => {
 		if (!results) {
@@ -237,72 +332,125 @@ export function MortgageCalculatorClient() {
 		}
 		const text = [
 			'Mortgage Calculator Summary',
-			`Total Monthly Payment: ${results.totalMonthlyPayment}`,
-			`Principal & Interest: ${results.monthlyPrincipalInterest}`,
-			`Property Tax: ${results.monthlyPropertyTax}`,
-			`Home Insurance: ${results.monthlyInsurance}`,
-			`Loan Amount: ${results.loanAmount}`,
-			`Total Interest Paid: ${results.totalInterest}`
+			`Loan type: ${PROGRAM_LABELS[program]}`,
+			`Total monthly payment: ${formatCurrency(results.totalMonthlyPayment)}`,
+			`Principal and interest: ${formatCurrency(results.monthlyPrincipalInterest)}`,
+			`Property tax: ${formatCurrency(results.monthlyPropertyTax)}`,
+			`Home insurance: ${formatCurrency(results.monthlyInsurance)}`,
+			...(results.monthlyMortgageInsurance > 0
+				? [
+						`${results.mortgageInsuranceLabel}: ${formatCurrency(results.monthlyMortgageInsurance)}`
+					]
+				: []),
+			...(results.monthlyHoa > 0
+				? [`HOA dues: ${formatCurrency(results.monthlyHoa)}`]
+				: []),
+			`Loan amount: ${formatCurrency(results.loanAmount)}`,
+			`Cash to close: ${formatCurrency(results.cashToClose)}`,
+			`Total interest: ${formatCurrency(results.totalInterest)}`,
+			`Paid off: ${payoffLabel}`
 		].join('\n')
 		navigator.clipboard.writeText(text).catch(() => undefined)
+	}
+
+	const insuranceEndLabel = (r: MortgageResults): string => {
+		if (r.mortgageInsuranceEndsAfterPayment === null) {
+			return 'Charged for the life of the loan'
+		}
+		const years = Math.floor(r.mortgageInsuranceEndsAfterPayment / 12)
+		const months = r.mortgageInsuranceEndsAfterPayment % 12
+		const parts = [
+			years > 0 ? `${years} year${years === 1 ? '' : 's'}` : '',
+			months > 0 ? `${months} month${months === 1 ? '' : 's'}` : ''
+		].filter(Boolean)
+		return `Drops off after ${parts.join(' ')}`
 	}
 
 	const resultItems = results
 		? [
 				{
 					label: 'Total Monthly Payment',
-					value: results.totalMonthlyPayment,
-					description: 'Principal, interest, taxes, insurance, and fees',
+					value: formatCurrency(results.totalMonthlyPayment),
+					description: 'Principal, interest, taxes, insurance and fees',
 					highlight: true
 				},
 				{
-					label: 'Principal & Interest',
-					value: results.monthlyPrincipalInterest,
-					description: 'Monthly loan payment'
+					label: 'Principal and Interest',
+					value: formatCurrency(results.monthlyPrincipalInterest),
+					description: `${formatCurrency(results.loanAmount)} at ${interestRate}% for ${termYears} years`
 				},
 				{
 					label: 'Property Tax',
-					value: results.monthlyPropertyTax,
-					description: 'Monthly property tax'
+					value: formatCurrency(results.monthlyPropertyTax),
+					description: `${formatCurrency(taxAnnual)} a year`
 				},
 				{
 					label: 'Home Insurance',
-					value: results.monthlyInsurance,
-					description: 'Monthly insurance premium'
+					value: formatCurrency(results.monthlyInsurance),
+					description: `${formatCurrency(insurance)} a year`
 				},
-				...(inputs.pmi > 0
+				...(results.monthlyMortgageInsurance > 0
 					? [
 							{
-								label: 'PMI',
-								value: results.monthlyPMI,
-								description: 'Private Mortgage Insurance (down payment < 20%)'
+								label: results.mortgageInsuranceLabel,
+								value: formatCurrency(results.monthlyMortgageInsurance),
+								description: insuranceEndLabel(results)
 							}
 						]
 					: []),
-				...(inputs.hoaFees > 0
+				...(results.monthlyHoa > 0
 					? [
 							{
-								label: 'HOA Fees',
-								value: results.monthlyHOA,
-								description: 'Homeowners Association dues'
+								label: 'HOA Dues',
+								value: formatCurrency(results.monthlyHoa),
+								description: 'Homeowners association'
 							}
 						]
 					: []),
 				{
 					label: 'Loan Amount',
-					value: results.loanAmount,
-					description: 'Total amount borrowed'
+					value: formatCurrency(results.loanAmount),
+					description:
+						results.loanAmount > results.baseLoan
+							? `Includes ${formatCurrency(results.loanAmount - results.baseLoan)} ${results.upfrontFeeLabel}`
+							: `${percent(results.ltv)} of the home price`
 				},
 				{
-					label: 'Total Interest Paid',
-					value: results.totalInterest,
-					description: `Over ${inputs.loanTerm} years`,
+					label: 'Cash Needed at Closing',
+					value: formatCurrency(results.cashToClose),
+					description: 'Down payment, closing costs and points, less credits',
 					highlight: true
 				},
 				{
-					label: 'Total of All Payments',
-					value: results.totalPayments,
-					description: 'Principal, interest, and all fees'
+					label: 'Total Interest',
+					value: formatCurrency(results.totalInterest),
+					description:
+						results.interestSaved > 0
+							? `Extra payments save ${formatCurrency(results.interestSaved)}`
+							: `Over ${termYears} years`
+				},
+				...(results.totalMortgageInsurance > 0
+					? [
+							{
+								label: `Total ${results.mortgageInsuranceLabel}`,
+								value: formatCurrency(results.totalMortgageInsurance),
+								description: 'Until it drops off or the loan is paid'
+							}
+						]
+					: []),
+				{
+					label: 'Paid Off',
+					value: payoffLabel,
+					description:
+						results.monthsSaved > 0
+							? `${results.monthsSaved} months early with extra payments`
+							: `${results.payoffMonths} payments`
+				},
+				{
+					label: 'Total Cost Over the Loan',
+					value: formatCurrency(results.totalCost),
+					description:
+						'Principal, interest, mortgage insurance, taxes, insurance and HOA at today’s rates'
 				}
 			]
 		: []
@@ -312,180 +460,352 @@ export function MortgageCalculatorClient() {
 	]
 
 	const formSlot = (
-		<form onSubmit={handleSubmit} className="space-y-comfortable">
-			{/* Home Price */}
-			<CalculatorInput
-				label="Home Price"
-				id="homePrice"
-				type="number"
-				min="0"
-				step="1000"
-				value={inputs.homePrice || ''}
-				onChange={e => handleInputChange('homePrice', e.target.value)}
-				prefix="$"
-				helpText="Purchase price of the home"
-				required
-			/>
-
-			{/* Down Payment */}
-			<div className="space-y-tight">
-				<div className="flex items-center justify-between">
-					<label className="text-sm font-medium text-foreground">
-						Down Payment
-					</label>
-					<div className="flex items-center gap-tight">
-						<button
-							type="button"
-							onClick={() => setUsePercent(true)}
-							className={`px-2 py-1 text-xs rounded ${
-								usePercent
-									? 'bg-accent text-accent-foreground'
-									: 'bg-muted text-muted-foreground'
-							}`}
-						>
-							%
-						</button>
-						<button
-							type="button"
-							onClick={() => setUsePercent(false)}
-							className={`px-2 py-1 text-xs rounded ${
-								!usePercent
-									? 'bg-accent text-accent-foreground'
-									: 'bg-muted text-muted-foreground'
-							}`}
-						>
-							$
-						</button>
-					</div>
-				</div>
-				{usePercent ? (
-					<CalculatorInput
-						label=""
-						id="downPaymentPercent"
-						type="number"
-						min="0"
-						max="100"
-						step="0.5"
-						value={inputs.downPaymentPercent || ''}
-						onChange={e =>
-							handleInputChange('downPaymentPercent', e.target.value)
-						}
-						suffix="%"
-						helpText={formatCurrency(inputs.downPayment)}
-						required
-					/>
-				) : (
-					<CalculatorInput
-						label=""
-						id="downPayment"
-						type="number"
-						min="0"
-						step="1000"
-						value={inputs.downPayment || ''}
-						onChange={e => handleInputChange('downPayment', e.target.value)}
-						prefix="$"
-						helpText={`${inputs.downPaymentPercent}% of home price`}
-						required
-					/>
-				)}
-				{inputs.downPaymentPercent < 20 && (
-					<p className="text-xs text-warning-text">
-						PMI is typically required for down payments less than 20%
-					</p>
-				)}
-			</div>
-
-			{/* Loan Details */}
-			<div className="grid gap-content md:grid-cols-2">
+		<form onSubmit={handleSubmit} className="space-y-comfortable" noValidate>
+			<Section title="Home and Loan">
 				<CalculatorInput
-					label="Interest Rate"
-					id="interestRate"
+					label="Home Price"
+					id="homePrice"
 					type="number"
 					min="0"
-					max="30"
-					step="0.125"
-					value={inputs.interestRate || ''}
-					onChange={e => handleInputChange('interestRate', e.target.value)}
-					suffix="%"
-					helpText="Annual interest rate"
+					step="1000"
+					value={homePrice || ''}
+					onChange={e => {
+						const price = toNumber(e.target.value)
+						setHomePrice(price)
+						// In dollar mode the dollars stay put; keep the percent in step
+						if (downInDollars && price > 0) {
+							setDownPercent(Math.round((downPayment / price) * 1000) / 10)
+						}
+					}}
+					prefix="$"
+					helpText="Purchase price of the home"
 					required
 				/>
 
 				<div className="space-y-tight">
-					<Label htmlFor="loanTerm">Loan Term</Label>
-					<Select
-						value={String(loanTerm)}
-						onValueChange={val => setLoanTerm(Number(val))}
-					>
-						<SelectTrigger id="loanTerm">
-							<SelectValue />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="30">30 years</SelectItem>
-							<SelectItem value="20">20 years</SelectItem>
-							<SelectItem value="15">15 years</SelectItem>
-							<SelectItem value="10">10 years</SelectItem>
-						</SelectContent>
-					</Select>
+					<div className="flex items-center justify-between">
+						<Label htmlFor={downInDollars ? 'downPayment' : 'downPercent'}>
+							Down Payment
+						</Label>
+						<ModeToggle
+							label="Down payment"
+							options={['%', '$']}
+							active={downInDollars ? 1 : 0}
+							onChange={index => setDownInDollars(index === 1)}
+						/>
+					</div>
+					{downInDollars ? (
+						<CalculatorInput
+							label=""
+							id="downPayment"
+							type="number"
+							min="0"
+							step="1000"
+							value={downPayment || ''}
+							onChange={e => handleDownDollars(e.target.value)}
+							prefix="$"
+							helpText={`${percent(downRatio)} of the home price`}
+						/>
+					) : (
+						<CalculatorInput
+							label=""
+							id="downPercent"
+							type="number"
+							min="0"
+							max="100"
+							step="0.5"
+							value={downPercent || ''}
+							onChange={e => handleDownPercent(e.target.value)}
+							suffix="%"
+							helpText={formatCurrency(downPayment)}
+						/>
+					)}
 				</div>
-			</div>
 
-			{/* Additional Costs */}
-			<div className="space-y-content border-t border-border pt-6">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-					Additional Costs (Optional)
-				</h2>
+				<div className="grid gap-content md:grid-cols-2">
+					<div className="space-y-tight">
+						<Label htmlFor="program">Loan Type</Label>
+						<Select
+							value={program}
+							onValueChange={value => setProgram(value as LoanProgram)}
+						>
+							<SelectTrigger id="program">
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent>
+								{PROGRAMS.map(p => (
+									<SelectItem key={p} value={p}>
+										{PROGRAM_LABELS[p]}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
+
+					<div className="space-y-tight">
+						<Label htmlFor="loanTerm">Loan Term</Label>
+						<Select
+							value={String(termYears)}
+							onValueChange={value => setTermYears(Number(value))}
+						>
+							<SelectTrigger id="loanTerm">
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent>
+								{TERMS.map(t => (
+									<SelectItem key={t} value={String(t)}>
+										{t} years
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
+				</div>
+
+				{program === 'va' && (
+					<div className="space-y-tight rounded-lg border border-border p-4">
+						<div className="space-y-tight">
+							<Label htmlFor="vaUse">VA Loan Use</Label>
+							<Select
+								value={vaFirstUse ? 'first' : 'subsequent'}
+								onValueChange={value => setVaFirstUse(value === 'first')}
+							>
+								<SelectTrigger id="vaUse">
+									<SelectValue />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="first">First VA loan</SelectItem>
+									<SelectItem value="subsequent">
+										I have used a VA loan before
+									</SelectItem>
+								</SelectContent>
+							</Select>
+						</div>
+						<div className="flex items-start gap-tight pt-2">
+							<Checkbox
+								id="vaExempt"
+								checked={vaExempt}
+								onCheckedChange={value => {
+									if (typeof value === 'boolean') {
+										setVaExempt(value)
+									}
+								}}
+							/>
+							<Label htmlFor="vaExempt" className="font-normal leading-snug">
+								Exempt from the funding fee (for example, you receive VA
+								disability compensation)
+							</Label>
+						</div>
+					</div>
+				)}
+
+				{hasUpfrontFee && (
+					<div className="flex items-start gap-tight">
+						<Checkbox
+							id="financeFee"
+							checked={financeFee}
+							onCheckedChange={value => {
+								if (typeof value === 'boolean') {
+									setFinanceFee(value)
+								}
+							}}
+						/>
+						<Label htmlFor="financeFee" className="font-normal leading-snug">
+							Add the {program === 'fha' ? 'FHA upfront MIP' : 'VA funding fee'}{' '}
+							to the loan instead of paying it at closing
+						</Label>
+					</div>
+				)}
 
 				<div className="grid gap-content md:grid-cols-2">
 					<CalculatorInput
-						label="Annual Property Tax"
-						id="propertyTax"
+						label="Interest Rate"
+						id="interestRate"
 						type="number"
 						min="0"
-						step="100"
-						value={inputs.propertyTax || ''}
-						onChange={e => handleInputChange('propertyTax', e.target.value)}
-						prefix="$"
-						helpText="Yearly property tax"
+						max="30"
+						step="0.125"
+						value={interestRate || ''}
+						onChange={e => setInterestRate(toNumber(e.target.value))}
+						suffix="%"
+						helpText="The rate your lender quoted"
+						required
 					/>
-
 					<CalculatorInput
-						label="Annual Home Insurance"
-						id="homeInsurance"
-						type="number"
-						min="0"
-						step="100"
-						value={inputs.homeInsurance || ''}
-						onChange={e => handleInputChange('homeInsurance', e.target.value)}
-						prefix="$"
-						helpText="Yearly insurance premium"
-					/>
-
-					<CalculatorInput
-						label="Monthly PMI"
-						id="pmi"
-						type="number"
-						min="0"
-						step="10"
-						value={inputs.pmi || ''}
-						onChange={e => handleInputChange('pmi', e.target.value)}
-						prefix="$"
-						helpText="Private mortgage insurance"
-					/>
-
-					<CalculatorInput
-						label="Monthly HOA Fees"
-						id="hoaFees"
-						type="number"
-						min="0"
-						step="10"
-						value={inputs.hoaFees || ''}
-						onChange={e => handleInputChange('hoaFees', e.target.value)}
-						prefix="$"
-						helpText="Homeowners association dues"
+						label="First Payment"
+						id="startMonth"
+						type="month"
+						value={startMonth ?? ''}
+						onChange={e => setStartMonth(e.target.value || null)}
+						helpText="Leave blank for next month"
 					/>
 				</div>
-			</div>
+			</Section>
+
+			<Section title="Monthly Costs">
+				<div className="space-y-tight">
+					<div className="flex items-center justify-between">
+						<Label htmlFor={taxInDollars ? 'taxAmount' : 'taxRate'}>
+							Property Tax
+						</Label>
+						<ModeToggle
+							label="Property tax"
+							options={['%', '$']}
+							active={taxInDollars ? 1 : 0}
+							onChange={index =>
+								index === 1
+									? setTaxAmount(Math.round(taxAnnual))
+									: setTaxAmount(null)
+							}
+						/>
+					</div>
+					{taxInDollars ? (
+						<CalculatorInput
+							label=""
+							id="taxAmount"
+							type="number"
+							min="0"
+							step="100"
+							value={taxAmount ?? ''}
+							onChange={e => setTaxAmount(toNumber(e.target.value))}
+							prefix="$"
+							helpText="Yearly tax bill, after any homestead exemption"
+						/>
+					) : (
+						<CalculatorInput
+							label=""
+							id="taxRate"
+							type="number"
+							min="0"
+							max="10"
+							step="0.01"
+							value={taxRate || ''}
+							onChange={e => setTaxRate(toNumber(e.target.value))}
+							suffix="%"
+							helpText={`${formatCurrency(taxAnnual)} a year. Use the combined rate from your county appraisal district.`}
+						/>
+					)}
+				</div>
+
+				<div className="grid gap-content md:grid-cols-2">
+					<CalculatorInput
+						label="Home Insurance"
+						id="insurance"
+						type="number"
+						min="0"
+						step="100"
+						value={insurance || ''}
+						onChange={e => setInsurance(toNumber(e.target.value))}
+						prefix="$"
+						suffix="/yr"
+						helpText="Yearly premium from your insurance quote"
+					/>
+					<CalculatorInput
+						label="HOA Dues"
+						id="hoa"
+						type="number"
+						min="0"
+						step="10"
+						value={hoa || ''}
+						onChange={e => setHoa(toNumber(e.target.value))}
+						prefix="$"
+						suffix="/mo"
+						helpText="Leave blank if there is no HOA"
+					/>
+				</div>
+
+				{showPmi && (
+					<CalculatorInput
+						label="PMI Rate"
+						id="pmiRate"
+						type="number"
+						min="0"
+						max="5"
+						step="0.05"
+						value={pmiRate || ''}
+						onChange={e => setPmiRate(toNumber(e.target.value))}
+						suffix="%/yr"
+						helpText="Ask your lender. It depends on your credit score and down payment. PMI drops off once you owe 78% of the original value."
+					/>
+				)}
+				{program === 'fha' && (
+					<p className="text-xs text-muted-foreground">
+						FHA annual MIP is set by HUD from your loan amount, term and down
+						payment, so there is nothing to enter.
+					</p>
+				)}
+			</Section>
+
+			<Section title="Closing Costs">
+				<CalculatorInput
+					label="Closing Costs"
+					id="closingCosts"
+					type="number"
+					min="0"
+					step="100"
+					value={closingCosts || ''}
+					onChange={e => setClosingCosts(toNumber(e.target.value))}
+					prefix="$"
+					helpText="Lender, title and prepaid costs from page 2 of your Loan Estimate"
+				/>
+				<div className="grid gap-content md:grid-cols-2">
+					<CalculatorInput
+						label="Discount Points"
+						id="points"
+						type="number"
+						min="0"
+						max="10"
+						step="0.125"
+						value={points || ''}
+						onChange={e => setPoints(toNumber(e.target.value))}
+						helpText="1 point costs 1% of the loan"
+					/>
+					<CalculatorInput
+						label="Seller or Lender Credits"
+						id="credits"
+						type="number"
+						min="0"
+						step="100"
+						value={credits || ''}
+						onChange={e => setCredits(toNumber(e.target.value))}
+						prefix="$"
+						helpText="Money toward your closing costs"
+					/>
+				</div>
+			</Section>
+
+			<Section title="Extra Payments">
+				<div className="grid gap-content md:grid-cols-2">
+					<CalculatorInput
+						label="Extra Each Month"
+						id="extraMonthly"
+						type="number"
+						min="0"
+						step="25"
+						value={extraMonthly || ''}
+						onChange={e => setExtraMonthly(toNumber(e.target.value))}
+						prefix="$"
+						helpText="Added to principal every month"
+					/>
+					<CalculatorInput
+						label="Extra Each Year"
+						id="extraYearly"
+						type="number"
+						min="0"
+						step="100"
+						value={extraYearly || ''}
+						onChange={e => setExtraYearly(toNumber(e.target.value))}
+						prefix="$"
+						helpText="One extra principal payment a year"
+					/>
+				</div>
+			</Section>
+
+			{error && (
+				<p role="alert" className="text-sm text-destructive">
+					{error}
+				</p>
+			)}
 
 			<Button type="submit" variant="accent" className="w-full">
 				Calculate Payment
@@ -498,7 +818,7 @@ export function MortgageCalculatorClient() {
 					onClick={handleReset}
 					className="w-full"
 				>
-					Recalculate
+					Start Over
 				</Button>
 			)}
 		</form>
@@ -508,19 +828,72 @@ export function MortgageCalculatorClient() {
 		<CalculatorResults
 			results={resultItems}
 			calculatorType="mortgage-calculator"
-			inputs={inputs}
-		/>
+			inputs={buildInputs()}
+		>
+			<div className="space-y-tight">
+				<Button
+					type="button"
+					variant="outline"
+					className="w-full"
+					aria-expanded={showSchedule}
+					aria-controls="amortization-schedule"
+					onClick={() => setShowSchedule(open => !open)}
+				>
+					{showSchedule ? 'Hide' : 'Show'} Yearly Amortization Schedule
+				</Button>
+				{showSchedule && (
+					<div id="amortization-schedule" className="overflow-x-auto">
+						<Table>
+							<TableHeader>
+								<TableRow>
+									<TableHead>Year</TableHead>
+									<TableHead className="text-right">Principal</TableHead>
+									<TableHead className="text-right">Interest</TableHead>
+									{results.totalMortgageInsurance > 0 && (
+										<TableHead className="text-right">
+											{results.mortgageInsuranceLabel}
+										</TableHead>
+									)}
+									<TableHead className="text-right">Balance</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{results.schedule.map(row => (
+									<TableRow key={row.year}>
+										<TableCell>{row.year}</TableCell>
+										<TableCell className="text-right tabular-nums">
+											{formatCurrency(row.principal)}
+										</TableCell>
+										<TableCell className="text-right tabular-nums">
+											{formatCurrency(row.interest)}
+										</TableCell>
+										{results.totalMortgageInsurance > 0 && (
+											<TableCell className="text-right tabular-nums">
+												{formatCurrency(row.mortgageInsurance)}
+											</TableCell>
+										)}
+										<TableCell className="text-right tabular-nums">
+											{formatCurrency(row.endingBalance)}
+										</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</div>
+				)}
+			</div>
+		</CalculatorResults>
 	) : undefined
 
 	return (
 		<ToolPageLayout
 			title="Mortgage Calculator"
-			description="Calculate your monthly mortgage payment including principal, interest, property taxes, insurance, and PMI"
+			description="See the full monthly payment for a conventional, FHA or VA loan, with taxes, insurance, PMI or MIP, HOA dues, cash to close and how extra payments change your payoff date"
 			columns="two"
 			formSlot={formSlot}
 			resultSlot={resultSlot}
 			hasResult={results !== null}
-			resultPlaceholder="Enter loan details to calculate your payment"
+			resultPlaceholder="Enter your loan details to calculate your payment"
 			actions={actions}
 		/>
 	)
