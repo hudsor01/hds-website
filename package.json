@@ -79,6 +79,7 @@
 		"@biomejs/biome": "2.6.8",
 		"@happy-dom/global-registrator": "21.0.4",
 		"@playwright/test": "1.65.1",
+		"@sentry/bun": "11.16.0",
 		"@tailwindcss/postcss": "4.3.5",
 		"@testing-library/dom": "10.4.2",
 		"@testing-library/jest-dom": "8.0.0",
