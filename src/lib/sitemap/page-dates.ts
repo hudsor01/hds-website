@@ -55,7 +55,7 @@ export const PAGE_DATES = {
 	'/tools/ttl-calculator': '2026-11-15',
 	'/tools/mortgage-calculator': '2026-11-22',
 	'/tools/tip-calculator': '2026-05-30',
-	'/tools/paystub-calculator': '2026-11-15',
+	'/tools/paystub-calculator': '2026-11-22',
 	'/tools/profit-margin-calculator': '2026-05-30',
 	'/tools/invoice-late-fee-calculator': '2026-05-30',
 	'/tools/time-card-calculator': '2026-05-30',

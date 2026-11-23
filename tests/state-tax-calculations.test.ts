@@ -1,197 +1,259 @@
 import { describe, expect, it } from 'bun:test'
-import { calculateStateTax } from '@/lib/paystub-calculator/state-tax-calculations'
+import {
+	calculateStatePeriod,
+	EMPTY_STATE_YTD,
+	type StatePeriodInput,
+	stateInsuranceLabel
+} from '@/lib/paystub-calculator/state-tax-calculations'
 import { getSupportedIncomeTaxStateCodes } from '@/lib/paystub-calculator/state-tax-data'
 import { getIncomeTaxStates } from '@/lib/paystub-calculator/states-utils'
 
-describe('State Tax Calculations', () => {
-	describe('PAYSTUB-01: dropdown <-> data parity', () => {
-		it('selectable income-tax states equal the states with bracket data', () => {
-			// Bidirectional parity: the dropdown list (getIncomeTaxStates) is derived
-			// from the bracket-data keys (getSupportedIncomeTaxStateCodes), so the two
-			// can never drift. Dedupe + sort both sides and compare.
-			const selectable = [
-				...new Set(getIncomeTaxStates().map(s => s.value))
-			].sort()
-			const withData = [...new Set(getSupportedIncomeTaxStateCodes())].sort()
+/**
+ * 2026 state payroll withholding. Where the agency publishes worked examples
+ * they are used directly: EDD DE 44 (2026) Method B Examples A to F,
+ * NYS-50-T-NYS (1/26) Method II Examples, IL-700-T (2026) automated payroll
+ * example. NY and CA per-period examples use rounded per-period tables, so
+ * the annualized method can differ by a few cents.
+ */
+const SS_WAGE_BASE = 184500
 
-			expect(selectable).toEqual(withData)
-		})
+function input(overrides: Partial<StatePeriodInput>): StatePeriodInput {
+	return {
+		state: 'CA',
+		filingStatus: 'single',
+		payFrequency: 'biweekly',
+		grossPay: 2000,
+		retirement: 0,
+		health: 0,
+		ficaTax: 0,
+		allowances: 0,
+		additionalAllowances: 0,
+		...overrides
+	}
+}
 
-		it('the supported income-tax set is exactly CA, IL, MA, NY, PA', () => {
-			expect(
-				getIncomeTaxStates()
-					.map(s => s.value)
-					.sort()
-			).toEqual(['CA', 'IL', 'MA', 'NY', 'PA'])
-		})
+function run(overrides: Partial<StatePeriodInput>, ytd = EMPTY_STATE_YTD) {
+	return calculateStatePeriod(input(overrides), ytd, SS_WAGE_BASE)
+}
+
+describe('supported states', () => {
+	it('dropdown income-tax states equal the states with formulas', () => {
+		const selectable = getIncomeTaxStates()
+			.map(s => s.value)
+			.sort()
+		expect(selectable).toEqual([...getSupportedIncomeTaxStateCodes()].sort())
+		expect(selectable).toEqual(['CA', 'IL', 'MA', 'NY', 'PA'])
 	})
 
-	describe('Illinois State Tax (4.95% flat)', () => {
-		it('should calculate IL state tax correctly', () => {
-			const grossPay = 5000
-			const ytdGross = 25000
+	it('no-income-tax and unknown states withhold nothing', () => {
+		for (const state of ['TX', 'FL', 'ZZ']) {
+			const r = run({ state, grossPay: 5000 })
+			expect(r.incomeTax).toBe(0)
+			expect(r.insurance).toBe(0)
+		}
+	})
+})
 
-			const tax = calculateStateTax(grossPay, ytdGross, 'IL', 'single')
-
-			// IL has 4.95% flat rate
-			expect(tax).toBeCloseTo(247.5, 2) // 5000 * 0.0495
-		})
-
-		it('should handle YTD accumulation for progressive states', () => {
-			const grossPay = 3000
-			const ytdGross = 15000
-
-			const tax = calculateStateTax(grossPay, ytdGross, 'IL', 'single')
-
-			// Still flat rate for IL
-			expect(tax).toBeCloseTo(148.5, 2) // 3000 * 0.0495
-		})
+describe('California, DE 44 Method B', () => {
+	it('Example A: below the low income exemption withholds nothing', () => {
+		const r = run({ payFrequency: 'weekly', grossPay: 210, allowances: 1 })
+		expect(r.incomeTax).toBe(0)
 	})
 
-	describe('Pennsylvania State Tax (3.07% flat)', () => {
-		it('should calculate PA state tax correctly', () => {
-			const grossPay = 4000
-			const ytdGross = 20000
-
-			const tax = calculateStateTax(grossPay, ytdGross, 'PA', 'single')
-
-			// PA has 3.07% flat rate
-			expect(tax).toBeCloseTo(122.8, 2) // 4000 * 0.0307
+	it('Example B: married, 2 regular and 1 estimated deduction allowance', () => {
+		const r = run({
+			filingStatus: 'marriedJoint',
+			grossPay: 1600,
+			allowances: 2,
+			additionalAllowances: 1
 		})
+		expect(r.incomeTax).toBeCloseTo(2.38, 2)
 	})
 
-	describe('Massachusetts State Tax (flat 5.0%)', () => {
-		it('should calculate MA state tax for low income', () => {
-			const grossPay = 2000
-			const ytdGross = 10000
-
-			const tax = calculateStateTax(grossPay, ytdGross, 'MA', 'single')
-
-			// MA is a flat 5.0% below the 1083150 surtax threshold
-			expect(tax).toBeCloseTo(100, 2) // 2000 * 0.05
+	it('Example D: head of household, 3 allowances (table method gives 1.69)', () => {
+		const r = run({
+			filingStatus: 'headOfHousehold',
+			payFrequency: 'weekly',
+			grossPay: 950,
+			allowances: 3
 		})
-
-		it('should calculate MA state tax for higher income', () => {
-			const grossPay = 5000
-			const ytdGross = 80000
-
-			const tax = calculateStateTax(grossPay, ytdGross, 'MA', 'single')
-
-			// Still flat 5.0%, well below the 1083150 surtax threshold
-			expect(tax).toBeCloseTo(250, 2) // 5000 * 0.05
-		})
+		expect(r.incomeTax).toBeCloseTo(1.67, 2)
 	})
 
-	describe('Corrected 2025 surtax boundaries', () => {
-		it('applies the MA 4% surtax over 1083150 (effective 9.0%)', () => {
-			// cumulative 1000000 -> 1100000: 83150 at 5% (up to 1083150) + 16850 at 9%
-			// = 4157.50 + 1516.50 = 5674.00
-			const tax = calculateStateTax(100000, 1000000, 'MA', 'single')
-			expect(tax).toBeCloseTo(5674, 2)
+	it('Example E: semimonthly $2,400, married, 4 allowances', () => {
+		const r = run({
+			filingStatus: 'marriedJoint',
+			payFrequency: 'semimonthly',
+			grossPay: 2400,
+			allowances: 4
 		})
-
-		it('applies the CA Mental Health Services surtax over 1000000 (13.3%)', () => {
-			// cumulative 1000000 -> 1050000: entire 50000 slice is over 1000000 at 13.3%
-			// = 50000 * 0.133 = 6650.00
-			const tax = calculateStateTax(50000, 1000000, 'CA', 'single')
-			expect(tax).toBeCloseTo(6650, 2)
-		})
-
-		it('hits the NY 10.9% top bracket over 25000000', () => {
-			// cumulative 25000000 -> 26000000: entire 1000000 slice is over 25000000
-			// at 10.9% = 1000000 * 0.109 = 109000.00
-			const tax = calculateStateTax(1000000, 25000000, 'NY', 'single')
-			expect(tax).toBeCloseTo(109000, 2)
-		})
+		expect(r.incomeTax).toBeCloseTo(4.13, 2)
 	})
 
-	describe('Defensive fallback for UI-unreachable input', () => {
-		it('returns 0 for Texas (TX is in NO_INCOME_TAX_CODES, not selectable here)', () => {
-			// Defensive fallback: TX has no bracket data, so calculateStateTax returns 0.
-			// The UI groups TX under "No State Income Tax", so this path is only reached
-			// by direct/stale input, not by a user selecting a taxed state.
-			const grossPay = 5000
-			const ytdGross = 25000
-
-			const tax = calculateStateTax(grossPay, ytdGross, 'TX', 'single')
-
-			expect(tax).toBe(0)
+	it('Example F: monthly $4,750, married, 4 allowances', () => {
+		const r = run({
+			filingStatus: 'marriedJoint',
+			payFrequency: 'monthly',
+			grossPay: 4750,
+			allowances: 4
 		})
-
-		it('returns 0 for Florida (FL is in NO_INCOME_TAX_CODES, not selectable here)', () => {
-			// Defensive fallback: same as TX. Not user-facing "graceful" behavior, since
-			// FL is never offered in the income-tax dropdown group.
-			const grossPay = 6000
-			const ytdGross = 30000
-
-			const tax = calculateStateTax(grossPay, ytdGross, 'FL', 'single')
-
-			expect(tax).toBe(0)
-		})
+		expect(r.incomeTax).toBeCloseTo(7.17, 2)
 	})
 
-	describe('Defensive fallback for unknown state codes', () => {
-		it('returns 0 for an unknown state code (UI cannot produce this)', () => {
-			// Defensive fallback for input the UI can no longer produce: the dropdown is
-			// derived from getSupportedIncomeTaxStateCodes, so 'XX' is unreachable through
-			// normal use. Returning 0 keeps a stale shared URL from crashing the calc.
-			const grossPay = 5000
-			const ytdGross = 25000
+	it('SDI is 1.3% of wages after Section 125 premiums, 401(k) included', () => {
+		const r = run({ grossPay: 2000, retirement: 200, health: 100 })
+		expect(r.insurance).toBeCloseTo(24.7, 2)
+		expect(stateInsuranceLabel('ca')).toBe('CA SDI')
+	})
+})
 
-			const tax = calculateStateTax(grossPay, ytdGross, 'XX', 'single')
-
-			expect(tax).toBe(0)
+describe('New York, NYS-50-T-NYS Method II and III', () => {
+	it('single Example 2: semimonthly $5,000, 1 allowance', () => {
+		const r = run({
+			state: 'NY',
+			payFrequency: 'semimonthly',
+			grossPay: 5000,
+			allowances: 1
 		})
+		expect(r.incomeTax).toBeCloseTo(258.51, 1)
 	})
 
-	describe('California State Tax (progressive, per-status schedule)', () => {
-		it('uses the Schedule X (single) golden, not Schedule Z (gross 70000)', () => {
-			// Schedule X single: 11079/26264/41452/57542/72724 ...
-			// 0.01*11079 + 0.02*(26264-11079) + 0.04*(41452-26264)
-			//   + 0.06*(57542-41452) + 0.08*(70000-57542)
-			// = 110.79 + 303.70 + 607.52 + 965.40 + 996.64 = 2984.05
-			const tax = calculateStateTax(70000, 0, 'CA', 'single')
-			expect(tax).toBeCloseTo(2984.05, 2)
+	it('single Example 3: monthly $50,000, 3 allowances', () => {
+		const r = run({
+			state: 'NY',
+			payFrequency: 'monthly',
+			grossPay: 50000,
+			allowances: 3
 		})
-
-		it('uses the Schedule Z (HoH) golden, distinct from single (gross 70000)', () => {
-			// Schedule Z HoH: 22173/52530/67716/83805 ... distinguishes per-status from
-			// single (single at 70000 = 2984.05, HoH = 1573.35 -- not the same schedule).
-			// 0.01*22173 + 0.02*(52530-22173) + 0.04*(67716-52530)
-			//   + 0.06*(70000-67716)
-			// = 221.73 + 607.14 + 607.44 + 137.04 = 1573.35
-			const tax = calculateStateTax(70000, 0, 'CA', 'headOfHousehold')
-			expect(tax).toBeCloseTo(1573.35, 2)
-		})
+		expect(r.incomeTax).toBeCloseTo(3576.63, 1)
 	})
 
-	describe('New York State Tax (progressive, per-status schedule)', () => {
-		it('uses the single schedule golden (gross 100000)', () => {
-			// Single: 8500/11700/13900/80650/215400 ...
-			// 0.04*8500 + 0.045*(11700-8500) + 0.0525*(13900-11700)
-			//   + 0.055*(80650-13900) + 0.06*(100000-80650)
-			// = 340.00 + 144.00 + 115.50 + 3671.25 + 1161.00 = 5431.75
-			const tax = calculateStateTax(100000, 0, 'ny', 'single')
-			expect(tax).toBeCloseTo(5431.75, 2)
+	it('married Example 2: semimonthly $5,000, 3 allowances', () => {
+		const r = run({
+			state: 'NY',
+			filingStatus: 'marriedJoint',
+			payFrequency: 'semimonthly',
+			grossPay: 5000,
+			allowances: 3
 		})
-
-		it('uses the MFJ schedule golden, distinct from single (gross 100000)', () => {
-			// MFJ: 17150/23600/27900/161550 ... distinguishes per-status from single
-			// (single at 100000 = 5431.75, MFJ = 5167.50 -- wider low brackets).
-			// 0.04*17150 + 0.045*(23600-17150) + 0.0525*(27900-23600)
-			//   + 0.055*(100000-27900)
-			// = 686.00 + 290.25 + 225.75 + 3965.50 = 5167.50
-			const tax = calculateStateTax(100000, 0, 'ny', 'marriedJoint')
-			expect(tax).toBeCloseTo(5167.5, 2)
-		})
+		expect(r.incomeTax).toBeCloseTo(248.11, 1)
 	})
 
-	describe('Defensive fallback in the no-income-tax group', () => {
-		it('returns 0 for TX (defensive, not user-facing graceful behavior)', () => {
-			// Defensive fallback: TX is in NO_INCOME_TAX_CODES and has no bracket data,
-			// so this exercises the UI-unreachable return-0 path, not a real $0 estimate.
-			const tax = calculateStateTax(4000, 10000, 'TX', 'single')
-			expect(tax).toBe(0)
+	it('married Example 3: monthly $50,000, 3 allowances', () => {
+		const r = run({
+			state: 'NY',
+			filingStatus: 'marriedJoint',
+			payFrequency: 'monthly',
+			grossPay: 50000,
+			allowances: 3
 		})
+		expect(r.incomeTax).toBeCloseTo(3622.09, 1)
+	})
+
+	it('Method III at $1,077,550 and above (single)', () => {
+		// (1,560,000 - 7,400) x 10.45% / 52
+		const r = run({ state: 'NY', payFrequency: 'weekly', grossPay: 30000 })
+		expect(r.incomeTax).toBeCloseTo(3120.13, 2)
+	})
+
+	it('PFL 0.432% plus disability 0.5% capped at $0.60 a week', () => {
+		const r = run({ state: 'NY', grossPay: 3000 })
+		// 12.96 PFL + 1.20 disability (2 weeks x 0.60)
+		expect(r.insurance).toBeCloseTo(14.16, 2)
+		expect(r.ytd.nyPflPaid).toBeCloseTo(12.96, 2)
+	})
+
+	it('stops PFL at the $411.91 yearly maximum', () => {
+		const r = run(
+			{ state: 'NY', grossPay: 3000 },
+			{ ...EMPTY_STATE_YTD, nyPflPaid: 405 }
+		)
+		expect(r.insurance).toBeCloseTo(6.91 + 1.2, 2)
+	})
+})
+
+describe('Illinois, IL-700-T automated payroll method', () => {
+	it('IL-700-T example: $800 weekly, 2 line 1 and 2 line 2 allowances', () => {
+		const r = run({
+			state: 'IL',
+			payFrequency: 'weekly',
+			grossPay: 800,
+			allowances: 2,
+			additionalAllowances: 2
+		})
+		expect(r.incomeTax).toBeCloseTo(32.13, 2)
+	})
+
+	it('401(k) and Section 125 reduce Illinois wages', () => {
+		const r = run({ state: 'IL', grossPay: 2000, retirement: 100, health: 100 })
+		expect(r.incomeTax).toBeCloseTo(1800 * 0.0495, 2)
+	})
+})
+
+describe('Pennsylvania, 3.07% flat', () => {
+	it('taxes 401(k) deferrals but not Section 125 premiums', () => {
+		const r = run({ state: 'PA', grossPay: 2000, retirement: 100, health: 40 })
+		expect(r.incomeTax).toBeCloseTo(60.17, 2)
+	})
+})
+
+describe('Massachusetts, Circular M', () => {
+	it('subtracts FICA and the exemption factor, then 5%', () => {
+		// 2,500 - 191.25 - 169 = 2,139.75 x 5%
+		const r = run({
+			state: 'MA',
+			grossPay: 2500,
+			ficaTax: 191.25,
+			allowances: 1
+		})
+		expect(r.incomeTax).toBeCloseTo(106.99, 2)
+		expect(r.ytd.maFicaDeducted).toBeCloseTo(191.25, 2)
+	})
+
+	it('stops the FICA deduction at $2,000 for the year', () => {
+		const r = run(
+			{ state: 'MA', grossPay: 2500, ficaTax: 191.25, allowances: 1 },
+			{ ...EMPTY_STATE_YTD, maFicaDeducted: 1900 }
+		)
+		// 2,500 - 100 - 169 = 2,231 x 5%
+		expect(r.incomeTax).toBeCloseTo(111.55, 2)
+	})
+
+	it('uses 38n + 131 for more than one biweekly exemption', () => {
+		const r = run({ state: 'MA', grossPay: 2500, allowances: 3 })
+		expect(r.incomeTax).toBeCloseTo((2500 - 245) * 0.05, 2)
+	})
+
+	it('subtracts the head of household amount', () => {
+		const r = run({
+			state: 'MA',
+			filingStatus: 'headOfHousehold',
+			grossPay: 2500,
+			ficaTax: 191.25,
+			allowances: 1
+		})
+		expect(r.incomeTax).toBeCloseTo(102.37, 2)
+	})
+
+	it('withholds nothing at or below $308 biweekly with an exemption', () => {
+		expect(run({ state: 'MA', grossPay: 300, allowances: 1 }).incomeTax).toBe(0)
+	})
+
+	it('adds the 4% surtax over $1,107,750 a year', () => {
+		// 1,560,000 x 5% + 452,250 x 4% = 96,090 / 52
+		const r = run(
+			{ state: 'MA', payFrequency: 'weekly', grossPay: 30000, ficaTax: 2295 },
+			{ ...EMPTY_STATE_YTD, maFicaDeducted: 2000 }
+		)
+		expect(r.incomeTax).toBeCloseTo(1847.88, 2)
+	})
+
+	it('PFML is 0.46% up to the Social Security wage base', () => {
+		expect(run({ state: 'MA', grossPay: 2500 }).insurance).toBeCloseTo(11.5, 2)
+		const capped = run(
+			{ state: 'MA', grossPay: 2500 },
+			{ ...EMPTY_STATE_YTD, maPfmlWages: 184000 }
+		)
+		expect(capped.insurance).toBeCloseTo(500 * 0.0046, 2)
 	})
 })

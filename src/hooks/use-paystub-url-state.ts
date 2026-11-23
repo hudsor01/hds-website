@@ -4,10 +4,8 @@ import {
 	parseAsFloat,
 	parseAsInteger,
 	parseAsString,
-	parseAsStringLiteral,
 	useQueryStates
 } from 'nuqs'
-import { FILING_STATUSES, type FilingStatus } from '@/types/paystub'
 
 /**
  * URL state configuration for the paystub generator.
@@ -26,7 +24,9 @@ const paystubParsers = {
 	hours: parseAsFloat,
 
 	// Tax info
-	status: parseAsStringLiteral(FILING_STATUSES),
+	// Plain string: older links carry five return statuses, which the
+	// generator maps onto the three Form W-4 statuses on restore
+	status: parseAsString,
 	year: parseAsInteger,
 	state: parseAsString
 }
@@ -37,7 +37,7 @@ interface PaystubUrlState {
 	employer: string | null
 	rate: number | null
 	hours: number | null
-	status: FilingStatus | null
+	status: string | null
 	year: number | null
 	state: string | null
 }

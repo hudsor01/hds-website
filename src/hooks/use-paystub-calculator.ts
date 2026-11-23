@@ -30,11 +30,13 @@ export function usePaystubCalculator(params: PaystubCalculationParams) {
 		payFrequency,
 		overtimeHours,
 		overtimeRate,
-		additionalDeductions
+		additionalDeductions,
+		withholding
 	} = params
 
 	// Create a stable string representation of additional deductions for dependency tracking
 	const additionalDeductionsString = JSON.stringify(additionalDeductions)
+	const withholdingString = JSON.stringify(withholding)
 
 	// Create a stable params object to prevent unnecessary recalculations
 	const stableParams = useMemo(
@@ -49,7 +51,10 @@ export function usePaystubCalculator(params: PaystubCalculationParams) {
 			overtimeRate,
 			additionalDeductions: JSON.parse(
 				additionalDeductionsString
-			) as typeof additionalDeductions
+			) as typeof additionalDeductions,
+			withholding: withholdingString
+				? (JSON.parse(withholdingString) as typeof withholding)
+				: undefined
 		}),
 		[
 			hourlyRate,
@@ -60,7 +65,8 @@ export function usePaystubCalculator(params: PaystubCalculationParams) {
 			payFrequency,
 			overtimeHours,
 			overtimeRate,
-			additionalDeductionsString
+			additionalDeductionsString,
+			withholdingString
 		]
 	)
 
@@ -92,9 +98,12 @@ export function usePaystubCalculator(params: PaystubCalculationParams) {
 			totalTax:
 				calculationResult.totals.federalTax +
 				calculationResult.totals.stateTax +
+				calculationResult.totals.stateInsurance +
 				calculationResult.totals.socialSecurity +
 				calculationResult.totals.medicare,
-			totalDeductions: calculationResult.totals.otherDeductions
+			totalDeductions:
+				calculationResult.totals.preTaxDeductions +
+				calculationResult.totals.otherDeductions
 		}
 	}, [calculationResult])
 

@@ -1,6 +1,6 @@
 /**
  * Paystub Calculator
- * Estimate 2025 payroll tax breakdowns with federal and state income tax
+ * 2026 paycheck withholding: federal (IRS Pub. 15-T), FICA and state payroll formulas
  */
 
 import type { Metadata } from 'next'
@@ -10,11 +10,11 @@ import PaystubCalculatorClient from './PaystubCalculatorClient'
 export const metadata: Metadata = buildMetadata({
 	title: 'Paystub Calculator | Hudson Digital Solutions',
 	description:
-		'Estimate 2025 payroll tax breakdowns with this free paystub calculator. Federal tax for all filers and state income tax for CA, NY, IL, PA, and MA.',
+		'Free 2026 paystub calculator. Federal withholding from your W-4, Social Security, Medicare, 401(k) and state tax for CA, NY, IL, PA and MA.',
 	path: '/tools/paystub-calculator',
 	socialTitle: 'Paystub Calculator',
 	socialDescription:
-		'Estimate 2025 payroll tax breakdowns with this free paystub calculator.'
+		'See take-home pay for each 2026 paycheck with your W-4 and deductions.'
 })
 
 export default function PaystubCalculatorPage() {

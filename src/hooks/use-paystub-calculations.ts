@@ -2,7 +2,11 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { usePaystubCalculator } from '@/hooks/use-paystub-calculator'
 import { logger } from '@/lib/logger'
-import type { PayFrequency, PaystubData } from '@/types/paystub'
+import type {
+	PayFrequency,
+	PaystubData,
+	WithholdingInputs
+} from '@/types/paystub'
 
 interface UsePaystubCalculationsProps {
 	paystubData: PaystubData
@@ -11,6 +15,7 @@ interface UsePaystubCalculationsProps {
 	overtimeHours: number
 	overtimeRate: number
 	additionalDeductions: Array<{ name: string; amount: number }>
+	withholding: WithholdingInputs
 	setPaystubData: React.Dispatch<React.SetStateAction<PaystubData>>
 	setResultsVisible: (visible: boolean) => void
 	setDocumentType: (type: 'form' | 'paystub' | 'annual') => void
@@ -24,6 +29,7 @@ export function usePaystubCalculations({
 	overtimeHours,
 	overtimeRate,
 	additionalDeductions,
+	withholding,
 	setPaystubData,
 	setResultsVisible,
 	setDocumentType,
@@ -41,7 +47,8 @@ export function usePaystubCalculations({
 		payFrequency,
 		overtimeHours,
 		overtimeRate: overtimeRate || paystubData.hourlyRate * 1.5,
-		additionalDeductions
+		additionalDeductions,
+		withholding
 	})
 
 	const generatePaystubs = () => {

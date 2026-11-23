@@ -3,7 +3,7 @@ import { act, renderHook } from '@testing-library/react'
 import { usePaystubCalculations } from '@/hooks/use-paystub-calculations'
 import { usePaystubForm } from '@/hooks/use-paystub-form'
 import { usePaystubValidation } from '@/hooks/use-paystub-validation'
-import type { PaystubData } from '@/types/paystub'
+import { DEFAULT_WITHHOLDING, type PaystubData } from '@/types/paystub'
 
 /**
  * Paystub Calculator Hooks Tests
@@ -26,15 +26,17 @@ describe('Paystub Calculator Hooks', () => {
 				hourlyRate: 40,
 				hoursPerPeriod: 80,
 				filingStatus: 'single',
-				taxYear: 2025,
+				taxYear: 2026,
 				payPeriods: [],
 				totals: {
 					hours: 0,
 					grossPay: 0,
+					preTaxDeductions: 0,
 					federalTax: 0,
 					socialSecurity: 0,
 					medicare: 0,
 					stateTax: 0,
+					stateInsurance: 0,
 					otherDeductions: 0,
 					netPay: 0
 				}
@@ -48,6 +50,7 @@ describe('Paystub Calculator Hooks', () => {
 					overtimeHours: 0,
 					overtimeRate: 60,
 					additionalDeductions: [],
+					withholding: DEFAULT_WITHHOLDING,
 					setPaystubData: mockSetPaystubData,
 					setResultsVisible: mockSetResultsVisible,
 					setDocumentType: mockSetDocumentType,
@@ -91,15 +94,17 @@ describe('Paystub Calculator Hooks', () => {
 				hourlyRate: 25,
 				hoursPerPeriod: 45, // Regular hours
 				filingStatus: 'single',
-				taxYear: 2025,
+				taxYear: 2026,
 				payPeriods: [],
 				totals: {
 					hours: 0,
 					grossPay: 0,
+					preTaxDeductions: 0,
 					federalTax: 0,
 					socialSecurity: 0,
 					medicare: 0,
 					stateTax: 0,
+					stateInsurance: 0,
 					otherDeductions: 0,
 					netPay: 0
 				}
@@ -113,6 +118,7 @@ describe('Paystub Calculator Hooks', () => {
 					overtimeHours: 0,
 					overtimeRate: 37.5,
 					additionalDeductions: [],
+					withholding: DEFAULT_WITHHOLDING,
 					setPaystubData: mockSetPaystubData,
 					setResultsVisible: mockSetResultsVisible,
 					setDocumentType: mockSetDocumentType,
@@ -138,15 +144,17 @@ describe('Paystub Calculator Hooks', () => {
 				hourlyRate: 0,
 				hoursPerPeriod: 0,
 				filingStatus: 'single',
-				taxYear: 2025,
+				taxYear: 2026,
 				payPeriods: [],
 				totals: {
 					hours: 0,
 					grossPay: 0,
+					preTaxDeductions: 0,
 					federalTax: 0,
 					socialSecurity: 0,
 					medicare: 0,
 					stateTax: 0,
+					stateInsurance: 0,
 					otherDeductions: 0,
 					netPay: 0
 				}
@@ -159,7 +167,8 @@ describe('Paystub Calculator Hooks', () => {
 					payFrequency: 'biweekly',
 					overtimeHours: 0,
 					overtimeRate: 60,
-					additionalDeductions: []
+					additionalDeductions: [],
+					withholding: DEFAULT_WITHHOLDING
 				})
 			)
 
@@ -186,15 +195,17 @@ describe('Paystub Calculator Hooks', () => {
 				hourlyRate: 25,
 				hoursPerPeriod: 40,
 				filingStatus: 'single',
-				taxYear: 2025,
+				taxYear: 2026,
 				payPeriods: [],
 				totals: {
 					hours: 0,
 					grossPay: 0,
+					preTaxDeductions: 0,
 					federalTax: 0,
 					socialSecurity: 0,
 					medicare: 0,
 					stateTax: 0,
+					stateInsurance: 0,
 					otherDeductions: 0,
 					netPay: 0
 				}
@@ -207,7 +218,8 @@ describe('Paystub Calculator Hooks', () => {
 					payFrequency: 'biweekly',
 					overtimeHours: 0,
 					overtimeRate: 60,
-					additionalDeductions: []
+					additionalDeductions: [],
+					withholding: DEFAULT_WITHHOLDING
 				})
 			)
 

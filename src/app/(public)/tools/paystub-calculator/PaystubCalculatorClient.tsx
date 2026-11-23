@@ -10,10 +10,13 @@ import { PaystubForm } from '@/components/paystub/PaystubForm'
 import { PaystubNavigation } from '@/components/paystub/PaystubNavigation'
 import { Card } from '@/components/ui/card'
 import { usePaystubGenerator } from '@/hooks/use-paystub-generator'
-import { formatCurrency } from '@/lib/utils'
+import { stateInsuranceLabel } from '@/lib/paystub-calculator/state-tax-calculations'
+import { formatCurrency, formatDate } from '@/lib/utils'
 
 export default function PaystubCalculatorClient() {
 	const generator = usePaystubGenerator()
+	const insuranceLabel = stateInsuranceLabel(generator.selectedState)
+	const { totals } = generator.paystubData
 
 	const formSlot = (
 		<PaystubForm
@@ -29,6 +32,8 @@ export default function PaystubCalculatorClient() {
 			setOvertimeRate={generator.setOvertimeRate}
 			additionalDeductions={generator.additionalDeductions}
 			setAdditionalDeductions={generator.setAdditionalDeductions}
+			withholding={generator.withholding}
+			setWithholding={generator.setWithholding}
 			formErrors={generator.formErrors}
 			onGenerate={generator.generatePaystubs}
 			onClear={generator.handleClearForm}
@@ -55,7 +60,8 @@ export default function PaystubCalculatorClient() {
 					.map(period => (
 						<Card key={period.period}>
 							<h3 className="text-lg font-semibold text-foreground mb-heading">
-								Period {period.period} - {period.payDate}
+								Period {period.period}, paid{' '}
+								{formatDate(period.payDate, 'long')}
 							</h3>
 							<div className="space-y-3">
 								<div className="flex justify-between">
@@ -71,6 +77,16 @@ export default function PaystubCalculatorClient() {
 									</span>
 								</div>
 								<div className="border-t border-border pt-3 space-y-2">
+									{period.preTaxDeductions > 0 && (
+										<div className="flex justify-between text-sm">
+											<span className="text-muted-foreground">
+												Pre-Tax Deductions
+											</span>
+											<span className="text-destructive-text">
+												-{formatCurrency(period.preTaxDeductions)}
+											</span>
+										</div>
+									)}
 									<div className="flex justify-between text-sm">
 										<span className="text-muted-foreground">Federal Tax</span>
 										<span className="text-destructive-text">
@@ -97,10 +113,20 @@ export default function PaystubCalculatorClient() {
 											-{formatCurrency(period.stateTax)}
 										</span>
 									</div>
+									{period.stateInsurance > 0 && (
+										<div className="flex justify-between text-sm">
+											<span className="text-muted-foreground">
+												{insuranceLabel}
+											</span>
+											<span className="text-destructive-text">
+												-{formatCurrency(period.stateInsurance)}
+											</span>
+										</div>
+									)}
 									{period.otherDeductions > 0 && (
 										<div className="flex justify-between text-sm">
 											<span className="text-muted-foreground">
-												Other Deductions
+												After-Tax Deductions
 											</span>
 											<span className="text-destructive-text">
 												-{formatCurrency(period.otherDeductions)}
@@ -127,13 +153,13 @@ export default function PaystubCalculatorClient() {
 						<div>
 							<div className="text-sm text-muted-foreground">Total Hours</div>
 							<div className="text-lg font-semibold text-foreground">
-								{generator.paystubData.totals.hours}
+								{totals.hours}
 							</div>
 						</div>
 						<div>
 							<div className="text-sm text-muted-foreground">Gross Pay</div>
 							<div className="text-lg font-semibold text-foreground">
-								{formatCurrency(generator.paystubData.totals.grossPay)}
+								{formatCurrency(totals.grossPay)}
 							</div>
 						</div>
 						<div>
@@ -141,20 +167,13 @@ export default function PaystubCalculatorClient() {
 								Total Deductions
 							</div>
 							<div className="text-lg font-semibold text-destructive-text">
-								-
-								{formatCurrency(
-									generator.paystubData.totals.federalTax +
-										generator.paystubData.totals.socialSecurity +
-										generator.paystubData.totals.medicare +
-										generator.paystubData.totals.stateTax +
-										generator.paystubData.totals.otherDeductions
-								)}
+								-{formatCurrency(totals.grossPay - totals.netPay)}
 							</div>
 						</div>
 						<div>
 							<div className="text-sm text-muted-foreground">Net Pay</div>
 							<div className="text-xl font-bold text-accent">
-								{formatCurrency(generator.paystubData.totals.netPay)}
+								{formatCurrency(totals.netPay)}
 							</div>
 						</div>
 					</div>
@@ -165,7 +184,7 @@ export default function PaystubCalculatorClient() {
 	return (
 		<ToolPageLayout
 			title="Paystub Calculator"
-			description="Estimate your 2025 federal and state income tax breakdown by pay period. State income tax is supported for CA, NY, IL, PA, and MA. This is an estimate and does not account for W-4 allowances, deductions, or credits."
+			description="See take-home pay for each 2026 paycheck. Federal withholding follows the IRS payroll method with your Form W-4, plus Social Security, Medicare, pre-tax 401(k) and health premiums. State withholding uses the payroll formulas for CA, NY, IL, PA and MA, including CA SDI and NY and MA paid leave."
 			columns="single"
 			formSlot={formSlot}
 			resultSlot={resultSlot}

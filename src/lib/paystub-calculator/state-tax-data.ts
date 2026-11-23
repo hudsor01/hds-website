@@ -1,192 +1,170 @@
-import type { TaxData } from '@/types/paystub'
+import type { PayFrequency } from '@/types/paystub'
+import { row, type ScheduleRow } from './schedule'
 
-// Official 2025 state income-tax data by year. Add or adjust per annual releases.
-// Surtaxes (CA 1% Mental Health Services over $1M, MA 4% over $1,083,150) are
-// encoded as additional top brackets so calculateStateTax needs no new math path.
-type StateTaxBrackets = Record<string, TaxData['federalBrackets']>
+/**
+ * 2026 state payroll withholding constants. Each state uses its own
+ * employer formula, not the tax return brackets.
+ *
+ * - CA: EDD DE 44 Rev. 52 (4-26), Method B Exact Calculation, Tables 1 to 5,
+ *   annual payroll period. SDI 1.3%, no wage limit (DE 44 page 2).
+ * - NY: NYS-50-T-NYS (1/26), Method II Exact Calculation (annual tables) and
+ *   Method III. PFL 0.432% up to $411.91 a year (paidfamilyleave.ny.gov/2026).
+ *   Disability 0.5% up to $0.60 a week (WCL section 209).
+ * - IL: IL-700-T (R-12/25) automated payroll method: 4.95% after $2,925 per
+ *   IL-W-4 line 1 allowance and $1,000 per line 2 allowance.
+ * - PA: 3.07% flat on compensation, no allowances (REV-415).
+ * - MA: Circular M (Rev. 12/25) percentage method: 5%, plus 4% surtax over
+ *   $1,107,750. PFML employee share 0.46% up to the Social Security wage base.
+ */
+export const INCOME_TAX_STATE_CODES = ['CA', 'IL', 'MA', 'NY', 'PA'] as const
 
-function flatBrackets(rate: number): TaxData['federalBrackets'] {
-	return {
-		single: [{ limit: Infinity, rate }],
-		marriedJoint: [{ limit: Infinity, rate }],
-		marriedSeparate: [{ limit: Infinity, rate }],
-		headOfHousehold: [{ limit: Infinity, rate }],
-		qualifyingSurvivingSpouse: [{ limit: Infinity, rate }]
-	}
+export const NO_INCOME_TAX_STATE_CODES = [
+	'AK',
+	'FL',
+	'NV',
+	'SD',
+	'TN',
+	'TX',
+	'WA',
+	'WY'
+] as const
+
+export const CA = {
+	lowIncomeExemption: { low: 18896, high: 37791 },
+	standardDeduction: { low: 5706, high: 11412 },
+	estimatedDeductionAllowance: 1000,
+	allowanceCredit: 168.3,
+	sdiRate: 0.013,
+	schedules: {
+		single: [
+			row(0, 0, 0.011),
+			row(11079, 121.87, 0.022),
+			row(26264, 455.94, 0.044),
+			row(41452, 1124.21, 0.066),
+			row(57542, 2186.15, 0.088),
+			row(72724, 3522.17, 0.1023),
+			row(371479, 34084.81, 0.1133),
+			row(445771, 42502.09, 0.1243),
+			row(742953, 79441.81, 0.1353),
+			row(1000000, 114220.27, 0.1463)
+		],
+		married: [
+			row(0, 0, 0.011),
+			row(22158, 243.74, 0.022),
+			row(52528, 911.88, 0.044),
+			row(82904, 2248.42, 0.066),
+			row(115084, 4372.3, 0.088),
+			row(145448, 7044.33, 0.1023),
+			row(742958, 68169.6, 0.1133),
+			row(891542, 85004.17, 0.1243),
+			row(1000000, 98485.5, 0.1353),
+			row(1485906, 164228.58, 0.1463)
+		],
+		headOfHousehold: [
+			row(0, 0, 0.011),
+			row(22173, 243.9, 0.022),
+			row(52530, 911.75, 0.044),
+			row(67716, 1579.93, 0.066),
+			row(83805, 2641.8, 0.088),
+			row(98990, 3978.08, 0.1023),
+			row(505208, 45534.18, 0.1133),
+			row(606251, 56982.35, 0.1243),
+			row(1000000, 105925.35, 0.1353),
+			row(1010417, 107334.77, 0.1463)
+		]
+	} satisfies Record<string, ScheduleRow[]>
+} as const
+
+export const NY = {
+	deduction: { single: 7400, married: 7950 },
+	allowance: 1000,
+	methodIIIThreshold: { single: 1077550, married: 2155350 },
+	methodIIIRates: [
+		{ atLeast: 25000000, rate: 0.117 },
+		{ atLeast: 5000000, rate: 0.111 },
+		{ atLeast: 0, rate: 0.1045 }
+	],
+	pflRate: 0.00432,
+	pflAnnualMax: 411.91,
+	disabilityRate: 0.005,
+	disabilityWeeklyMax: 0.6,
+	schedules: {
+		single: [
+			row(0, 0, 0.039),
+			row(8500, 332, 0.044),
+			row(11700, 472, 0.0515),
+			row(13900, 586, 0.054),
+			row(80650, 4190, 0.059),
+			row(96800, 5143, 0.0703),
+			row(107650, 5906, 0.0753),
+			row(157650, 9673, 0.064),
+			row(215400, 13369, 0.1144),
+			row(265400, 19091, 0.0735)
+		],
+		married: [
+			row(0, 0, 0.039),
+			row(8500, 332, 0.044),
+			row(11700, 472, 0.0515),
+			row(13900, 586, 0.054),
+			row(80650, 4190, 0.059),
+			row(96800, 5143, 0.0657),
+			row(107650, 5855, 0.0707),
+			row(157650, 9388, 0.0801),
+			row(211550, 13708, 0.064),
+			row(323200, 20854, 0.1349),
+			row(373200, 27600, 0.0735),
+			row(1077550, 79369, 0.0765)
+		]
+	} satisfies Record<string, ScheduleRow[]>
+} as const
+
+export const IL = {
+	rate: 0.0495,
+	basicAllowance: 2925,
+	additionalAllowance: 1000
+} as const
+
+export const PA = { rate: 0.0307 } as const
+
+export const MA = {
+	rate: 0.05,
+	surtaxRate: 0.04,
+	surtaxThreshold: 1107750,
+	ficaDeductionMax: 2000,
+	pfmlRate: 0.0046,
+	/** Exemption factor per period: one exemption, else perExemption * n + base */
+	exemption: {
+		weekly: { one: 85, perExemption: 19, base: 66 },
+		biweekly: { one: 169, perExemption: 38, base: 131 },
+		semimonthly: { one: 183, perExemption: 42, base: 141 },
+		monthly: { one: 367, perExemption: 83, base: 284 }
+	} satisfies Record<
+		PayFrequency,
+		{ one: number; perExemption: number; base: number }
+	>,
+	/** No withholding at or below these wages when claiming 1 or more exemptions */
+	noWithholdingAtOrBelow: {
+		weekly: 154,
+		biweekly: 308,
+		semimonthly: 333,
+		monthly: 667
+	} satisfies Record<PayFrequency, number>,
+	headOfHouseholdCredit: {
+		weekly: 2.31,
+		biweekly: 4.62,
+		semimonthly: 5,
+		monthly: 10
+	} satisfies Record<PayFrequency, number>
+} as const
+
+/** Weeks in each pay period, for the NY disability weekly cap */
+export const WEEKS_PER_PERIOD: Record<PayFrequency, number> = {
+	weekly: 1,
+	biweekly: 2,
+	semimonthly: 52 / 24,
+	monthly: 52 / 12
 }
 
-// MA 2025: flat 5.0% on income up to 1083150, then 9.0% (5% + 4% surtax) over it.
-// Not flatBrackets (that emits a single Infinity band only).
-function massachusettsBrackets(): TaxData['federalBrackets'] {
-	const bands = [
-		{ limit: 1083150, rate: 0.05 },
-		{ limit: Infinity, rate: 0.09 }
-	]
-	return {
-		single: bands,
-		marriedJoint: bands,
-		marriedSeparate: bands,
-		headOfHousehold: bands,
-		qualifyingSurvivingSpouse: bands
-	}
-}
-
-const stateTaxDataByYear: Record<number, StateTaxBrackets> = {
-	2025: {
-		// FTB 2025 Schedules X/Y/Z + 1% MHS surtax band over 1000000 (effective 13.3% top).
-		CA: {
-			// Schedule X (Single / MFS): 1000000 sits inside the 12.3% band (over 742953).
-			single: [
-				{ limit: 11079, rate: 0.01 },
-				{ limit: 26264, rate: 0.02 },
-				{ limit: 41452, rate: 0.04 },
-				{ limit: 57542, rate: 0.06 },
-				{ limit: 72724, rate: 0.08 },
-				{ limit: 371479, rate: 0.093 },
-				{ limit: 445771, rate: 0.103 },
-				{ limit: 742953, rate: 0.113 },
-				{ limit: 1000000, rate: 0.123 },
-				{ limit: Infinity, rate: 0.133 }
-			],
-			// Schedule Y (MFJ / QSS): 1000000 sits inside the 11.3% band (891542..1485906).
-			marriedJoint: [
-				{ limit: 22158, rate: 0.01 },
-				{ limit: 52528, rate: 0.02 },
-				{ limit: 82904, rate: 0.04 },
-				{ limit: 115084, rate: 0.06 },
-				{ limit: 145448, rate: 0.08 },
-				{ limit: 742958, rate: 0.093 },
-				{ limit: 891542, rate: 0.103 },
-				{ limit: 1000000, rate: 0.113 },
-				{ limit: 1485906, rate: 0.123 },
-				{ limit: Infinity, rate: 0.133 }
-			],
-			// Schedule X (Single / MFS): 1000000 sits inside the 12.3% band (over 742953).
-			marriedSeparate: [
-				{ limit: 11079, rate: 0.01 },
-				{ limit: 26264, rate: 0.02 },
-				{ limit: 41452, rate: 0.04 },
-				{ limit: 57542, rate: 0.06 },
-				{ limit: 72724, rate: 0.08 },
-				{ limit: 371479, rate: 0.093 },
-				{ limit: 445771, rate: 0.103 },
-				{ limit: 742953, rate: 0.113 },
-				{ limit: 1000000, rate: 0.123 },
-				{ limit: Infinity, rate: 0.133 }
-			],
-			// Schedule Z (HoH): 1000000 sits inside the 11.3% band (606251..1010417).
-			headOfHousehold: [
-				{ limit: 22173, rate: 0.01 },
-				{ limit: 52530, rate: 0.02 },
-				{ limit: 67716, rate: 0.04 },
-				{ limit: 83805, rate: 0.06 },
-				{ limit: 98990, rate: 0.08 },
-				{ limit: 505208, rate: 0.093 },
-				{ limit: 606251, rate: 0.103 },
-				{ limit: 1000000, rate: 0.113 },
-				{ limit: 1010417, rate: 0.123 },
-				{ limit: Infinity, rate: 0.133 }
-			],
-			// Schedule Y (MFJ / QSS): 1000000 sits inside the 11.3% band (891542..1485906).
-			qualifyingSurvivingSpouse: [
-				{ limit: 22158, rate: 0.01 },
-				{ limit: 52528, rate: 0.02 },
-				{ limit: 82904, rate: 0.04 },
-				{ limit: 115084, rate: 0.06 },
-				{ limit: 145448, rate: 0.08 },
-				{ limit: 742958, rate: 0.093 },
-				{ limit: 891542, rate: 0.103 },
-				{ limit: 1000000, rate: 0.113 },
-				{ limit: 1485906, rate: 0.123 },
-				{ limit: Infinity, rate: 0.133 }
-			]
-		},
-		// DTF IT-201-I 2025 (unchanged from 2024); includes 9.65 / 10.3 / 10.9 high brackets.
-		NY: {
-			single: [
-				{ limit: 8500, rate: 0.04 },
-				{ limit: 11700, rate: 0.045 },
-				{ limit: 13900, rate: 0.0525 },
-				{ limit: 80650, rate: 0.055 },
-				{ limit: 215400, rate: 0.06 },
-				{ limit: 1077550, rate: 0.0685 },
-				{ limit: 5000000, rate: 0.0965 },
-				{ limit: 25000000, rate: 0.103 },
-				{ limit: Infinity, rate: 0.109 }
-			],
-			marriedJoint: [
-				{ limit: 17150, rate: 0.04 },
-				{ limit: 23600, rate: 0.045 },
-				{ limit: 27900, rate: 0.0525 },
-				{ limit: 161550, rate: 0.055 },
-				{ limit: 323200, rate: 0.06 },
-				{ limit: 2155350, rate: 0.0685 },
-				{ limit: 5000000, rate: 0.0965 },
-				{ limit: 25000000, rate: 0.103 },
-				{ limit: Infinity, rate: 0.109 }
-			],
-			marriedSeparate: [
-				{ limit: 8500, rate: 0.04 },
-				{ limit: 11700, rate: 0.045 },
-				{ limit: 13900, rate: 0.0525 },
-				{ limit: 80650, rate: 0.055 },
-				{ limit: 215400, rate: 0.06 },
-				{ limit: 1077550, rate: 0.0685 },
-				{ limit: 5000000, rate: 0.0965 },
-				{ limit: 25000000, rate: 0.103 },
-				{ limit: Infinity, rate: 0.109 }
-			],
-			headOfHousehold: [
-				{ limit: 12800, rate: 0.04 },
-				{ limit: 17650, rate: 0.045 },
-				{ limit: 20900, rate: 0.0525 },
-				{ limit: 107650, rate: 0.055 },
-				{ limit: 269300, rate: 0.06 },
-				{ limit: 1616450, rate: 0.0685 },
-				{ limit: 5000000, rate: 0.0965 },
-				{ limit: 25000000, rate: 0.103 },
-				{ limit: Infinity, rate: 0.109 }
-			],
-			qualifyingSurvivingSpouse: [
-				{ limit: 17150, rate: 0.04 },
-				{ limit: 23600, rate: 0.045 },
-				{ limit: 27900, rate: 0.0525 },
-				{ limit: 161550, rate: 0.055 },
-				{ limit: 323200, rate: 0.06 },
-				{ limit: 2155350, rate: 0.0685 },
-				{ limit: 5000000, rate: 0.0965 },
-				{ limit: 25000000, rate: 0.103 },
-				{ limit: Infinity, rate: 0.109 }
-			]
-		},
-		IL: flatBrackets(0.0495),
-		PA: flatBrackets(0.0307),
-		MA: massachusettsBrackets()
-	}
-}
-
-export function getStateTaxBrackets(
-	state: string,
-	year?: number
-): TaxData['federalBrackets'] | undefined {
-	const normalizedState = state?.toUpperCase()
-	const targetYear = year ?? new Date().getFullYear()
-	const yearTable =
-		stateTaxDataByYear[targetYear] ??
-		stateTaxDataByYear[Math.max(...Object.keys(stateTaxDataByYear).map(Number))]
-	return yearTable?.[normalizedState]
-}
-
-// Single source of truth for the selectable income-tax states: the union of every
-// state code present across all year tables. After the 2025 re-key + TX/FL/WA removal
-// this returns CA, NY, IL, PA, MA. 11-03 wires the dropdown to this so the UI can
-// never offer a state without bracket data.
 export function getSupportedIncomeTaxStateCodes(): string[] {
-	const codes = new Set<string>()
-	for (const yearTable of Object.values(stateTaxDataByYear)) {
-		for (const code of Object.keys(yearTable)) {
-			codes.add(code)
-		}
-	}
-	return [...codes]
+	return [...INCOME_TAX_STATE_CODES]
 }

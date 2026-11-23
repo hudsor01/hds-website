@@ -4,9 +4,22 @@ import { logger } from '@/lib/logger'
 import { validatePaystubInputs } from '@/lib/paystub-calculator/validation'
 import { paystubFormSchema } from '@/lib/schemas/paystub'
 import type { FormErrors } from '@/types/common'
-import type { PaystubData } from '@/types/paystub'
+import type {
+	PayFrequency,
+	PaystubData,
+	WithholdingInputs
+} from '@/types/paystub'
 
-type PayFrequency = 'weekly' | 'biweekly' | 'semimonthly' | 'monthly'
+const WITHHOLDING_ERROR_KEYS = [
+	'dependentsCredit',
+	'otherIncome',
+	'deductions',
+	'extraWithholding',
+	'retirementPerPeriod',
+	'healthPerPeriod',
+	'stateAllowances',
+	'stateAdditionalAllowances'
+] as const
 
 interface UsePaystubValidationProps {
 	paystubData: PaystubData
@@ -15,6 +28,7 @@ interface UsePaystubValidationProps {
 	overtimeHours: number
 	overtimeRate: number
 	additionalDeductions: Array<{ name: string; amount: number }>
+	withholding: WithholdingInputs
 }
 
 export function usePaystubValidation({
@@ -23,7 +37,8 @@ export function usePaystubValidation({
 	payFrequency,
 	overtimeHours,
 	overtimeRate,
-	additionalDeductions
+	additionalDeductions,
+	withholding
 }: UsePaystubValidationProps) {
 	const [formErrors, setFormErrors] = useState<FormErrors>({})
 
@@ -66,7 +81,8 @@ export function usePaystubValidation({
 			payFrequency,
 			overtimeHours,
 			overtimeRate: overtimeRate || paystubData.hourlyRate * 1.5,
-			additionalDeductions
+			additionalDeductions,
+			withholding
 		})
 
 		const combinedErrors: FormErrors = {
@@ -90,6 +106,12 @@ export function usePaystubValidation({
 			// rather than only in a generic toast (defense-in-depth).
 			if (validationResult.errors.taxYear) {
 				combinedErrors.taxYear = validationResult.errors.taxYear
+			}
+			for (const key of WITHHOLDING_ERROR_KEYS) {
+				const message = validationResult.errors[key]
+				if (message) {
+					combinedErrors[key] = message
+				}
 			}
 		}
 

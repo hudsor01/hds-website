@@ -183,13 +183,13 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Paystub Calculator',
 		description:
-			'Run a clean payroll breakdown with federal and state withholding and the net pay that actually hits the bank. Useful when you are cutting checks yourself.',
+			'Run a 2026 payroll breakdown with W-4 based federal withholding, 401(k) and health deductions, state tax and the net pay that actually hits the bank. Useful when you are cutting checks yourself.',
 		href: TOOL_ROUTES.PAYSTUB_CALCULATOR,
 		Icon: DollarSign,
 		benefits: [
-			'Federal and state tax withholding',
-			'Detailed deduction breakdown',
-			'Net pay calculation'
+			'IRS payroll method with your 2026 W-4',
+			'Pre-tax 401(k) and health premiums',
+			'CA, NY, IL, PA and MA payroll formulas'
 		],
 		cta: 'Generate Paystub',
 		category: 'business'
