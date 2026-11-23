@@ -43,7 +43,7 @@ Revenue tells you how busy you were. Margin tells you whether busy was worth it.
 
 You'll usually find one of two things. Either a service you love doing barely breaks even, or a boring job you take for granted is carrying the whole business. Both are useful to know before you set 2027 prices.
 
-Run your numbers through the free [profit margin calculator](/tools/profit-margin-calculator). If you've been pricing with a markup and wondering why the math feels off, read [profit margin vs markup](/blog/profit-margin-vs-markup). A 50% markup is a 33% margin, not 50%. Price off the wrong one and you're short on every job.
+Run your numbers through the free [profit margin calculator](/tools/profit-margin-calculator). If you've been pricing with a markup and wondering why the math feels off, read [profit margin vs markup](/blog/profit-margin-vs-markup). A 50% markup is a 33% margin, not 50%. Price off the wrong one and you're short on every job. I keep [every free pricing and billing tool I built](/blog/free-pricing-tools-for-small-service-businesses) in one round-up.
 
 ### Questions to answer before you raise prices
 

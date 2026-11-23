@@ -65,6 +65,6 @@ You do not need a bloated agency retainer to execute this properly. I build lean
 
 ## Next Steps for Your DFW Business
 
-If you are planning a platform shift or a full rebuild, do not guess at the routing. I will walk you through the exact migration steps, map your redirects and lock in your tracking before I touch production traffic. See what a migration project includes on [my services](/services) page. When you book a call I will put together a custom migration timeline, cost breakdown and risk assessment. I protect your rankings and your pipeline while you focus on selling.
+If you are planning a platform shift or a full rebuild, do not guess at the routing. If you would rather hire the move out, here is [how to vet a website migration expert](/blog/how-to-choose-a-website-migration-expert) before you sign anything. I will walk you through the exact migration steps, map your redirects and lock in your tracking before I touch production traffic. See what a migration project includes on [my services](/services) page. When you book a call I will put together a custom migration timeline, cost breakdown and risk assessment. I work to protect your rankings and your pipeline while you focus on selling.
 
 Let’s get it done right. [Get started today](/contact) and I will start mapping your routes before the next quarter closes. I treat every migration like a revenue handoff, not a cosmetic refresh. Your baseline report will show whether the move held.

@@ -63,7 +63,7 @@ You also need to verify their DFW experience. Local SEO requires different tacti
 
 ### Using the Right Tools to Build Your Own Estimate
 
-I built a free proposal builder because most small business owners do not know which line items matter until they get burned. You can map your requirements, assign priority levels and generate a structured estimate that matches my internal scoping process. It takes three minutes to input your goals, tech stack preferences and launch timeline. The output gives you a checklist you can hand to any agency or use as your own project plan. [try my free tool](/tools/proposal-generator).
+I built a free proposal builder because most small business owners do not know which line items matter until they get burned. The [proposal generator](/tools/proposal-generator) lets you lay out scope items, milestones with durations, pricing line items with a running total, payment terms and your terms and conditions. Save a draft in your browser and download a PDF you can hand to any agency or use as your own project plan.
 
 The document forces you to think like an operator. You will see how CRM routing, form validation and tracking setup directly impact your final number. It also highlights common gaps that cheap quotes routinely miss. I use it internally to align sales, development and QA before a single line of code ships. You should run your current vendor proposal through the same filter to catch inconsistencies early.
 
