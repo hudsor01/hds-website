@@ -1,23 +1,19 @@
 /**
  * Website Cost Estimator Client Component
- * Contains the interactive cost estimation form with URL state management
+ * An illustrative planning model with URL state, shown beside published
+ * market ranges for context. Not market data and not a quote.
  */
 
 'use client'
 
-import {
-	parseAsArrayOf,
-	parseAsBoolean,
-	parseAsInteger,
-	parseAsString,
-	useQueryState
-} from 'nuqs'
-import { useState } from 'react'
+import { useQueryStates } from 'nuqs'
+import { toast } from 'sonner'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
 import type { ToolAction } from '@/components/layout/ToolPageLayout'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import {
@@ -28,242 +24,162 @@ import {
 	SelectValue
 } from '@/components/ui/select'
 import { trackEvent } from '@/lib/analytics'
-import { formatCurrency } from '@/lib/utils'
+import {
+	calculateEstimate,
+	DESIGN_LEVELS,
+	estimatorParsers,
+	FEATURES,
+	type Feature,
+	formatWholeDollars,
+	MAX_PAGES,
+	MIN_PAGES,
+	parsePageCount,
+	TIMELINES,
+	WEBSITE_TYPES
+} from '@/lib/cost-estimator'
+import { logger } from '@/lib/logger'
 
-interface CalculatorInputs {
-	websiteType: string
-	numberOfPages: number
-	features: string[]
-	designComplexity: string
-	timeline: string
-	maintenanceNeeded: boolean
-}
+const CLUTCH_URL =
+	'https://clutch.co/resources/how-to-create-a-budget-for-a-new-website'
 
-const websiteTypes = [
-	{ value: 'landing-page', label: 'Landing Page', basePrice: 2000 },
-	{ value: 'business-website', label: 'Business Website', basePrice: 5000 },
-	{ value: 'e-commerce', label: 'E-Commerce Store', basePrice: 10000 },
-	{ value: 'web-app', label: 'Web Application', basePrice: 15000 },
-	{ value: 'enterprise', label: 'Custom Platform', basePrice: 30000 }
-]
+const CLUTCH_FIGURES = [
+	'Building a website from scratch usually costs less than $10,000.',
+	'Hiring a freelancer: $500 to $5,000 for a basic 5 to 10 page site.',
+	'DIY website builders: typically $10 to $50 a month for hosting and builder fees.',
+	'Larger or more complex projects (enterprise sites, e-commerce, membership portals) can exceed $100,000.'
+] as const
 
-const availableFeatures = [
-	{ value: 'blog', label: 'Blog/News Section', price: 1500 },
-	{ value: 'contact-forms', label: 'Advanced Contact Forms', price: 800 },
-	{ value: 'payment', label: 'Payment Processing', price: 3000 },
-	{ value: 'user-auth', label: 'User Authentication', price: 2500 },
-	{ value: 'booking', label: 'Booking System', price: 3500 },
-	{ value: 'membership', label: 'Membership Area', price: 4000 },
-	{ value: 'analytics', label: 'Advanced Analytics', price: 1200 },
-	{ value: 'multilingual', label: 'Multi-language Support', price: 2000 },
-	{
-		value: 'api-integration',
-		label: 'Third-party API Integration',
-		price: 2500
-	},
-	{ value: 'custom-dashboard', label: 'Custom Dashboard', price: 5000 }
-]
+const PAGES_ERROR = `Enter a whole number from ${MIN_PAGES} to ${MAX_PAGES}.`
 
 export function CostEstimatorClient() {
-	const [websiteType, setWebsiteType] = useQueryState(
-		'type',
-		parseAsString.withDefault('')
-	)
-	const [numberOfPages, setNumberOfPages] = useQueryState(
-		'pages',
-		parseAsInteger.withDefault(5)
-	)
-	const [features, setFeatures] = useQueryState(
-		'features',
-		parseAsArrayOf(parseAsString).withDefault([])
-	)
-	const [designComplexity, setDesignComplexity] = useQueryState(
-		'design',
-		parseAsString.withDefault('standard')
-	)
-	const [timeline, setTimeline] = useQueryState(
-		'timeline',
-		parseAsString.withDefault('normal')
-	)
-	const [maintenanceNeeded, setMaintenanceNeeded] = useQueryState(
-		'maint',
-		parseAsBoolean.withDefault(false)
-	)
+	const [params, setParams] = useQueryStates(estimatorParsers)
+	const { type: websiteType, features, design, timeline, maint } = params
+	const pages = parsePageCount(params.pages)
 
-	const [showResults, setShowResults] = useState(false)
-	const [results, setResults] = useState<Record<string, string>>({})
+	// Derived during render, so the range always matches the current inputs.
+	const estimate =
+		websiteType && pages !== null
+			? calculateEstimate({
+					websiteType,
+					pages,
+					features,
+					design,
+					timeline,
+					maintenance: maint
+				})
+			: null
 
-	const inputs: CalculatorInputs = {
-		websiteType,
-		numberOfPages,
-		features,
-		designComplexity,
-		timeline,
-		maintenanceNeeded
-	}
-
-	const handleFeatureToggle = (feature: string) => {
-		setFeatures(prevFeatures =>
-			prevFeatures.includes(feature)
-				? prevFeatures.filter(f => f !== feature)
-				: [...prevFeatures, feature]
-		)
-	}
-
-	const calculateCost = () => {
-		// Base price from website type
-		const selectedType = websiteTypes.find(t => t.value === inputs.websiteType)
-		let totalCost = selectedType?.basePrice || 0
-
-		// Add cost per page (after first 5 pages)
-		const extraPages = Math.max(0, inputs.numberOfPages - 5)
-		totalCost += extraPages * 500
-
-		// Add feature costs
-		inputs.features.forEach(feature => {
-			const featureData = availableFeatures.find(f => f.value === feature)
-			if (featureData) {
-				totalCost += featureData.price
-			}
-		})
-
-		// Design complexity multiplier
-		const designMultipliers: Record<string, number> = {
-			basic: 0.8,
-			standard: 1.0,
-			custom: 1.3,
-			premium: 1.6
+	const handleTypeChange = (value: string) => {
+		const selected = WEBSITE_TYPES.find(t => t.value === value)
+		if (!selected) {
+			return
 		}
-		totalCost *= designMultipliers[inputs.designComplexity] || 1.0
-
-		// Timeline adjustment
-		if (inputs.timeline === 'urgent') {
-			totalCost *= 1.25 // 25% rush fee
-		}
-
-		// Maintenance package (annual)
-		const maintenanceCost = inputs.maintenanceNeeded ? totalCost * 0.15 : 0
-
-		// Calculate ranges (+-20%)
-		const lowEstimate = Math.round(totalCost * 0.8)
-		const highEstimate = Math.round(totalCost * 1.2)
-		const avgEstimate = Math.round(totalCost)
-
-		// Timeline estimate (weeks)
-		let timelineWeeks = 4
-		if (inputs.websiteType === 'e-commerce') {
-			timelineWeeks = 8
-		}
-		if (inputs.websiteType === 'web-app') {
-			timelineWeeks = 12
-		}
-		if (inputs.websiteType === 'enterprise') {
-			timelineWeeks = 16
-		}
-		timelineWeeks += inputs.features.length
-		if (inputs.timeline === 'urgent') {
-			timelineWeeks = Math.ceil(timelineWeeks * 0.7)
-		}
-
-		const calculatedResults = {
-			estimatedCost: `${formatCurrency(lowEstimate)} - ${formatCurrency(highEstimate)}`,
-			averageCost: formatCurrency(avgEstimate),
-			timeline: `${timelineWeeks} weeks`,
-			monthlyMaintenance: inputs.maintenanceNeeded
-				? `${formatCurrency(Math.round(maintenanceCost / 12))}/mo`
-				: 'Not included',
-			annualMaintenance: inputs.maintenanceNeeded
-				? `${formatCurrency(Math.round(maintenanceCost))}/year`
-				: 'Not included'
-		}
-
-		setResults(calculatedResults)
-		setShowResults(true)
-
-		// Track calculator usage
+		setParams({ type: selected.value })
 		trackEvent('calculator_used', {
 			calculator_type: 'cost-estimator',
-			website_type: inputs.websiteType,
-			estimated_cost: avgEstimate,
-			features_count: inputs.features.length
+			website_type: selected.value,
+			features_count: features.length
 		})
 	}
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault()
-		calculateCost()
+	const handleFeatureToggle = (feature: Feature) => {
+		setParams({
+			features: features.includes(feature)
+				? features.filter(f => f !== feature)
+				: [...features, feature]
+		})
 	}
 
-	const handleReset = () => {
-		setShowResults(false)
-		setWebsiteType('')
-		setNumberOfPages(5)
-		setFeatures([])
-		setDesignComplexity('standard')
-		setTimeline('normal')
-		setMaintenanceNeeded(false)
+	const handleStartOver = () => {
+		setParams(null)
 	}
 
-	const handleCopy = () => {
-		if (!showResults) {
+	const rangeText = estimate
+		? `${formatWholeDollars(estimate.low)} to ${formatWholeDollars(estimate.high)}`
+		: ''
+	const maintenanceText =
+		estimate && estimate.monthlyMaintenance !== null
+			? `${formatWholeDollars(estimate.monthlyMaintenance)}/mo`
+			: 'Not included'
+
+	const handleCopy = async () => {
+		if (!estimate) {
 			return
 		}
 		const text = [
-			'Website Cost: Typical Market Range (not a quote)',
-			`Typical Market Range: ${results.estimatedCost}`,
-			`Market Midpoint: ${results.averageCost}`,
-			`Typical Timeline: ${results.timeline}`,
-			`Typical Maintenance: ${results.monthlyMaintenance}`
+			'Website Cost Estimator: illustrative planning model (not market data, not a quote)',
+			`Planning model range: ${rangeText}`,
+			`Planning model midpoint: ${formatWholeDollars(estimate.midpoint)}`,
+			`Planning timeline: ${estimate.weeks} weeks`,
+			`Maintenance: ${maintenanceText}`
 		].join('\n')
-		navigator.clipboard.writeText(text).catch(() => undefined)
+		try {
+			await navigator.clipboard.writeText(text)
+			toast.success('Range copied')
+		} catch (err) {
+			logger.error('Copy range failed', err)
+			toast.error(
+				'Could not copy the range. Select the text and copy it instead.'
+			)
+		}
 	}
 
-	const resultItems = [
-		{
-			label: 'Typical Market Range',
-			value: results.estimatedCost || '$0',
-			description: 'What a project like this commonly costs. Not a quote.',
-			highlight: true
-		},
-		{
-			label: 'Market Midpoint',
-			value: results.averageCost || '$0',
-			description: 'Middle of the typical range'
-		},
-		{
-			label: 'Typical Timeline',
-			value: results.timeline || '0 weeks',
-			description: 'Common kickoff-to-launch time for this scope'
-		},
-		{
-			label: 'Typical Maintenance',
-			value: results.monthlyMaintenance || 'Not included',
-			description: 'Common cost of ongoing support and updates'
-		}
-	]
+	const resultItems = estimate
+		? [
+				{
+					label: 'Planning model range',
+					value: rangeText,
+					description:
+						"Illustrative output of this tool's own formula. Not market data and not a quote.",
+					highlight: true
+				},
+				{
+					label: 'Planning model midpoint',
+					value: formatWholeDollars(estimate.midpoint),
+					description: 'Middle of the planning range'
+				},
+				{
+					label: 'Planning timeline',
+					value: `${estimate.weeks} weeks`,
+					description: "This tool's assumption for this scope, not a schedule"
+				},
+				{
+					label: 'Maintenance',
+					value: maintenanceText,
+					description:
+						estimate.annualMaintenance === null
+							? 'Turn on ongoing maintenance to include it'
+							: `${formatWholeDollars(estimate.annualMaintenance)} a year. This tool assumes 15% of the build figure per year, before any rush adjustment.`
+				}
+			]
+		: []
 
-	const actions: ToolAction[] = [
-		{ type: 'copy', label: 'Copy Range', onClick: handleCopy }
-	]
+	const actions: ToolAction[] | undefined = estimate
+		? [{ type: 'copy', label: 'Copy Range', onClick: handleCopy }]
+		: undefined
 
 	const formSlot = (
-		<form onSubmit={handleSubmit} className="space-y-comfortable">
+		<form
+			onSubmit={e => e.preventDefault()}
+			className="space-y-comfortable"
+			noValidate
+		>
 			{/* Website Type */}
 			<div className="space-y-tight">
 				<Label htmlFor="websiteType">Website Type *</Label>
 				<Select
 					name="websiteType"
-					value={websiteType}
-					onValueChange={setWebsiteType}
+					value={websiteType ?? ''}
+					onValueChange={handleTypeChange}
 					required
 				>
 					<SelectTrigger id="websiteType">
 						<SelectValue placeholder="Select a type..." />
 					</SelectTrigger>
 					<SelectContent>
-						{websiteTypes.map(type => (
+						{WEBSITE_TYPES.map(type => (
 							<SelectItem key={type.value} value={type.value}>
-								{type.label} (from {formatCurrency(type.basePrice)})
+								{type.label}
 							</SelectItem>
 						))}
 					</SelectContent>
@@ -275,61 +191,65 @@ export function CostEstimatorClient() {
 				label="Number of Pages"
 				id="numberOfPages"
 				type="number"
-				min="1"
-				max="100"
+				inputMode="numeric"
+				min={MIN_PAGES}
+				max={MAX_PAGES}
 				step="1"
-				value={numberOfPages || ''}
-				onChange={e => setNumberOfPages(parseInt(e.target.value, 10) || 1)}
+				value={params.pages}
+				onChange={e => setParams({ pages: e.target.value })}
 				helpText="Estimated number of unique pages"
+				error={pages === null ? PAGES_ERROR : undefined}
+				aria-invalid={pages === null}
 				required
 			/>
 
 			{/* Features */}
-			<div className="space-y-tight">
-				<Label>Additional Features</Label>
+			<fieldset className="space-y-tight">
+				<legend className="text-sm leading-none font-medium">
+					Additional Features
+				</legend>
 				<div className="grid gap-3 sm:grid-cols-2">
-					{availableFeatures.map(feature => (
+					{FEATURES.map(feature => (
 						<label
 							key={feature.value}
 							className="relative flex cursor-pointer items-start rounded-lg border border-border p-4 hover:bg-muted"
 						>
 							<div className="flex h-5 items-center">
 								<Checkbox
-									checked={inputs.features.includes(feature.value)}
+									checked={features.includes(feature.value)}
 									onCheckedChange={() => handleFeatureToggle(feature.value)}
 								/>
 							</div>
-							<div className="ml-3 text-sm">
-								<div className="font-medium text-foreground">
-									{feature.label}
-								</div>
-								<div className="text-muted-foreground">
-									+{formatCurrency(feature.price)}
-								</div>
+							<div className="ml-3 text-sm font-medium text-foreground">
+								{feature.label}
 							</div>
 						</label>
 					))}
 				</div>
-			</div>
+			</fieldset>
 
 			{/* Design Complexity */}
 			<div className="space-y-tight">
 				<Label htmlFor="designComplexity">Design Complexity</Label>
 				<Select
 					name="designComplexity"
-					value={designComplexity}
-					onValueChange={setDesignComplexity}
+					value={design}
+					onValueChange={value => {
+						const level = DESIGN_LEVELS.find(d => d.value === value)
+						if (level) {
+							setParams({ design: level.value })
+						}
+					}}
 				>
 					<SelectTrigger id="designComplexity">
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="basic">Basic Template (-20%)</SelectItem>
-						<SelectItem value="standard">Standard Custom Design</SelectItem>
-						<SelectItem value="custom">Fully Custom Design (+30%)</SelectItem>
-						<SelectItem value="premium">
-							Premium/Luxury Design (+60%)
-						</SelectItem>
+						{DESIGN_LEVELS.map(level => (
+							<SelectItem key={level.value} value={level.value}>
+								{level.label}
+							</SelectItem>
+						))}
 					</SelectContent>
 				</Select>
 			</div>
@@ -337,16 +257,25 @@ export function CostEstimatorClient() {
 			{/* Timeline */}
 			<div className="space-y-tight">
 				<Label htmlFor="timeline">Project Timeline</Label>
-				<Select name="timeline" value={timeline} onValueChange={setTimeline}>
+				<Select
+					name="timeline"
+					value={timeline}
+					onValueChange={value => {
+						const option = TIMELINES.find(t => t.value === value)
+						if (option) {
+							setParams({ timeline: option.value })
+						}
+					}}
+				>
 					<SelectTrigger id="timeline">
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="flexible">Flexible</SelectItem>
-						<SelectItem value="normal">Normal (4-12 weeks)</SelectItem>
-						<SelectItem value="urgent">
-							Urgent (rush work typically +25%)
-						</SelectItem>
+						{TIMELINES.map(option => (
+							<SelectItem key={option.value} value={option.value}>
+								{option.label}
+							</SelectItem>
+						))}
 					</SelectContent>
 				</Select>
 			</div>
@@ -355,66 +284,96 @@ export function CostEstimatorClient() {
 			<div className="flex items-start gap-3">
 				<Checkbox
 					id="maintenance"
-					checked={maintenanceNeeded}
+					checked={maint}
 					onCheckedChange={value => {
 						if (typeof value === 'boolean') {
-							setMaintenanceNeeded(value)
+							setParams({ maint: value })
 						}
 					}}
 				/>
 				<div className="text-sm">
 					<Label htmlFor="maintenance" className="font-medium">
-						Include Maintenance Package
+						Include ongoing maintenance
 					</Label>
 					<p className="text-muted-foreground">
-						Ongoing updates, security patches, and technical support
+						Ongoing updates, security patches and technical support
 					</p>
 				</div>
 			</div>
 
-			<Button type="submit" disabled={!inputs.websiteType} className="w-full">
-				Calculate Estimate
-			</Button>
-
-			{showResults && (
+			{websiteType && (
 				<Button
 					type="button"
 					variant="outline"
-					onClick={handleReset}
+					onClick={handleStartOver}
 					className="w-full"
 				>
-					Modify Estimate
+					Start over
 				</Button>
 			)}
 		</form>
 	)
 
-	// The numbers are a market ballpark: Richard prices every project after
-	// scoping it, so the result must never read as his quote.
-	const resultSlot = showResults ? (
-		<div className="space-y-comfortable">
-			<CalculatorResults
-				results={resultItems}
-				calculatorType="cost-estimator"
-				inputs={inputs}
-			/>
+	// The numbers are an illustrative model: Richard prices every project
+	// after scoping it, so the result must never read as his quote.
+	const resultSlot = estimate ? (
+		<CalculatorResults
+			results={resultItems}
+			calculatorType="cost-estimator"
+			inputs={{
+				websiteType,
+				numberOfPages: pages,
+				features,
+				designComplexity: design,
+				timeline,
+				maintenanceNeeded: maint
+			}}
+		>
 			<p className="text-sm text-muted-foreground">
-				This is a typical market range for planning, not a quote. I price every
-				project after a free website plan call, once I know what it will take.
-				You get the timeline and a real price on that call.
+				This is an illustrative planning model built on this tool&apos;s own
+				assumptions. It is not market data and not a quote. I price every
+				project after a free 30-minute website plan call, once I know what it
+				will take. You get the timeline and a real price on that call.
 			</p>
-		</div>
+			<Card size="sm" className="bg-muted">
+				<h4 className="mb-subheading text-base font-semibold text-foreground">
+					What published guides say
+				</h4>
+				<ul className="list-disc space-y-tight pl-5 text-sm text-muted-foreground">
+					{CLUTCH_FIGURES.map(figure => (
+						<li key={figure}>{figure}</li>
+					))}
+				</ul>
+				<p className="mt-heading text-xs text-muted-foreground">
+					Source:{' '}
+					<a
+						href={CLUTCH_URL}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="underline"
+					>
+						Clutch, How to Create a Budget for a New Website
+					</a>{' '}
+					(updated May 28, 2026). Shown for context, separate from this
+					tool&apos;s model.
+				</p>
+			</Card>
+		</CalculatorResults>
 	) : undefined
 
 	return (
 		<ToolPageLayout
 			title="Website Cost Estimator"
-			description="See what a website like yours typically costs on the market, by type, pages and features. A planning ballpark, not a quote"
+			description="An illustrative planning model that turns a website's type, pages and features into a cost range, shown beside published market ranges. It is not market data and not a quote."
 			columns="two"
 			formSlot={formSlot}
 			resultSlot={resultSlot}
-			hasResult={showResults}
-			resultPlaceholder="Configure your project to see an estimate"
+			hasResult={estimate !== null}
+			resultPlaceholder={
+				websiteType
+					? `Enter a page count from ${MIN_PAGES} to ${MAX_PAGES} to see the planning range`
+					: 'Pick a website type to see the planning range'
+			}
 			actions={actions}
 		/>
 	)

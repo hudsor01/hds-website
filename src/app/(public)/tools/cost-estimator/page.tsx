@@ -1,7 +1,8 @@
 /**
  * Website Cost Estimator
- * Typical market cost range for a website project (a planning ballpark,
- * not a quote: Hudson Digital prices every project after scoping it)
+ * Illustrative planning model for a website budget, shown beside Clutch's
+ * published market ranges (not market data and not a quote: Hudson Digital
+ * prices every project after scoping it)
  */
 
 import type { Metadata } from 'next'
@@ -11,11 +12,11 @@ import { CostEstimatorClient } from './CostEstimatorClient'
 export const metadata: Metadata = buildMetadata({
 	title: 'Website Cost Estimator and Calculator | Hudson Digital',
 	description:
-		'Free website cost calculator: get a website estimate by type, pages, features and design. It shows the typical market range for planning, not a quote.',
+		'Free website cost calculator: an illustrative planning range by type, pages, features and design, beside published market ranges. Not a quote.',
 	path: '/tools/cost-estimator',
 	socialTitle: 'Website Cost Estimator',
 	socialDescription:
-		'See the typical market cost range for a website like yours. A planning ballpark, not a quote.'
+		'An illustrative planning range for a website like yours, with published market ranges for context. Not a quote.'
 })
 
 export default function CostEstimatorPage() {
