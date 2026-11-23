@@ -1,6 +1,7 @@
 /**
- * Performance Savings Calculator
- * Analyzes website performance and calculates revenue lost due to slow load times
+ * Site Speed Revenue Calculator
+ * Real PageSpeed score and lab metrics for a URL, plus a revenue scenario
+ * built on a conversion lift the visitor chooses
  */
 
 import type { Metadata } from 'next'
@@ -8,12 +9,13 @@ import { buildMetadata } from '@/lib/seo-config'
 import PerformanceCalculatorClient from './PerformanceCalculatorClient'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Performance Savings Calculator | Hudson Digital Solutions',
+	title: 'Site Speed Revenue Calculator | Hudson Digital Solutions',
 	description:
-		'Analyze how website load times affect your revenue. Calculate potential savings from performance optimization with this free calculator.',
+		'Run a free mobile PageSpeed test on your site, see your score and lab metrics, then model the revenue at stake with a conversion lift you choose.',
 	path: '/tools/performance-calculator',
-	socialTitle: 'Performance Savings Calculator',
-	socialDescription: 'Calculate revenue lost due to slow website load times.'
+	socialTitle: 'Site Speed Revenue Calculator',
+	socialDescription:
+		'Your real PageSpeed score, plus a revenue scenario you control.'
 })
 
 export default function PerformanceCalculatorPage() {

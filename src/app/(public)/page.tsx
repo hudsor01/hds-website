@@ -321,7 +321,7 @@ export default function HomePage() {
 							</div>
 						</Link>
 
-						{/* Performance Savings Calculator */}
+						{/* Site Speed Revenue Calculator */}
 						<Link
 							href={TOOL_ROUTES.PERFORMANCE_CALCULATOR}
 							className="group block"
@@ -331,11 +331,11 @@ export default function HomePage() {
 									<Zap className="w-7 h-7 text-accent" />
 								</div>
 								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent transition-colors">
-									Performance Savings Calculator
+									Site Speed Revenue Calculator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
-									See how much revenue a slow site is costing you every month.
-									Speed moves sales. The math is rarely small.
+									Run a real mobile PageSpeed test, then see what a faster site
+									could be worth at a conversion lift you choose.
 								</p>
 								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
 									Analyze Site
