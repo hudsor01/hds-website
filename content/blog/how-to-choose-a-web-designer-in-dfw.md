@@ -85,7 +85,7 @@ None of these is automatically bad. The trap is not knowing which one you're in.
 
 When you compare quotes, line them up item by item. One quote might include copywriting, local SEO setup and CRM integration while a cheaper one covers a template and nothing else. Those aren't the same product. I explain how to read every line in [what goes into a website quote](/blog/what-goes-into-a-website-quote).
 
-Want a ballpark before you start calling around? Run your scope through the free [website cost estimator](/tools/cost-estimator). You'll walk into the first call knowing roughly what your project should cost, which makes an inflated or suspiciously low number easy to spot.
+Want a ballpark before you start calling around? Run your scope through the free [website cost estimator](/tools/cost-estimator). You'll walk into the first call knowing roughly what your project should cost, which makes an inflated or suspiciously low number easy to spot. My guide to [estimating website cost before the first call](/blog/how-to-estimate-website-cost) shows what each input does to that number.
 
 If you're still deciding between a shop, a solo freelancer or doing it yourself, my [agency vs freelancer vs DIY breakdown](/blog/agency-vs-freelancer-vs-diy-website-cost) walks through the tradeoffs.
 
