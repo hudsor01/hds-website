@@ -8,6 +8,7 @@
 import { CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
 import { type ReactNode, useState } from 'react'
+import { z } from 'zod'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -15,6 +16,19 @@ import { Input } from '@/components/ui/input'
 import { trackConversion } from '@/lib/analytics'
 import { csrfFetch } from '@/lib/api/csrf-fetch'
 import { logger } from '@/lib/logger'
+
+const SEND_ERROR = 'Could not send your results. Please try again.'
+
+const submitErrorSchema = z.object({ error: z.string() })
+
+async function readSubmitError(response: Response): Promise<string> {
+	try {
+		const parsed = submitErrorSchema.safeParse(await response.json())
+		return parsed.success ? parsed.data.error : SEND_ERROR
+	} catch {
+		return SEND_ERROR
+	}
+}
 
 interface ResultItem {
 	label: string
@@ -42,9 +56,14 @@ export function CalculatorResults({
 	children
 }: CalculatorResultsProps) {
 	const [email, setEmail] = useState('')
-	const [emailSubmitted, setEmailSubmitted] = useState(false)
+	// The results that were emailed. Comparing against the current results
+	// resets the confirmation as soon as the numbers change.
+	const [submittedKey, setSubmittedKey] = useState<string | null>(null)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [error, setError] = useState('')
+	const resultsKey = JSON.stringify(results.map(r => [r.label, r.value]))
+	const emailSubmitted = submittedKey === resultsKey
+
 	const handleEmailSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setIsSubmitting(true)
@@ -64,7 +83,8 @@ export function CalculatorResults({
 			})
 
 			if (!response.ok) {
-				throw new Error('Failed to submit calculator results')
+				setError(await readSubmitError(response))
+				return
 			}
 
 			// Track conversion
@@ -73,13 +93,13 @@ export function CalculatorResults({
 				email
 			})
 
-			setEmailSubmitted(true)
+			setSubmittedKey(resultsKey)
 			if (onEmailSubmit) {
 				onEmailSubmit(email)
 			}
 		} catch (err) {
-			setError('Failed to send results. Please try again.')
-			logger.error('Calculator submission error:', err as Error)
+			setError(SEND_ERROR)
+			logger.error('Calculator submission error', err)
 		} finally {
 			setIsSubmitting(false)
 		}
@@ -133,11 +153,10 @@ export function CalculatorResults({
 					className="border-2 border-dashed border-accent/60 bg-accent/10 card-padding"
 				>
 					<h4 className="mb-subheading text-lg font-semibold text-foreground">
-						Get Your Detailed Report
+						Email me these results
 					</h4>
 					<p className="mb-heading text-sm text-muted-foreground">
-						Enter your email to receive a detailed breakdown and personalized
-						recommendations.
+						Get a copy of the numbers above in your inbox.
 					</p>
 
 					<form onSubmit={handleEmailSubmit} className="space-y-3">
@@ -147,19 +166,23 @@ export function CalculatorResults({
 								value={email}
 								onChange={e => setEmail(e.target.value)}
 								placeholder="your@email.com"
+								aria-label="Email address"
 								required
 							/>
 							{error && (
-								<p className="text-xs text-destructive-text">{error}</p>
+								<p role="alert" className="text-xs text-destructive-text">
+									{error}
+								</p>
 							)}
 						</div>
 
 						<Button type="submit" disabled={isSubmitting} className="w-full">
-							{isSubmitting ? 'Sending...' : 'Get Detailed Report'}
+							{isSubmitting ? 'Sending...' : 'Email me these results'}
 						</Button>
 
 						<p className="text-xs text-muted-foreground">
-							I&apos;ll never spam you. Unsubscribe anytime.
+							I&apos;ll also send one follow-up note. No spam. Unsubscribe
+							anytime.
 						</p>
 					</form>
 				</Card>
@@ -168,12 +191,15 @@ export function CalculatorResults({
 			{/* Success Message */}
 			{emailSubmitted && (
 				<Alert className="border-success/50 bg-success/10">
-					<CheckCircle2 className="h-5 w-5 text-success-text" />
+					<CheckCircle2
+						className="h-5 w-5 text-success-text"
+						aria-hidden="true"
+					/>
 					<AlertTitle className="text-success-text dark:text-success-text">
-						Report sent successfully!
+						Thanks, your results are on the way
 					</AlertTitle>
 					<AlertDescription className="text-success-text dark:text-success-text">
-						Check your email for the detailed breakdown and next steps.
+						They should reach your inbox in a few minutes.
 					</AlertDescription>
 				</Alert>
 			)}
@@ -181,13 +207,14 @@ export function CalculatorResults({
 			{/* CTA */}
 			<Card className="text-center">
 				<h4 className="mb-subheading text-lg font-semibold text-foreground">
-					Want to improve these numbers?
+					Want to talk through your results?
 				</h4>
 				<p className="mb-heading text-sm text-muted-foreground">
-					Let&apos;s discuss how I can help you achieve better results.
+					Book a free 30-minute website plan call. I&apos;ll go over these
+					numbers with you, then give you a timeline and a real price.
 				</p>
 				<Button asChild>
-					<Link href="/contact">Schedule Free Consultation</Link>
+					<Link href="/contact">Book a Free Website Plan Call</Link>
 				</Button>
 			</Card>
 		</div>

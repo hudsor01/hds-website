@@ -90,8 +90,8 @@ export function CalculatorResults({
 
 			<Section style={BODY_SECTION_STYLE}>
 				<Text style={{ fontSize: '16px', marginBottom: '20px', margin: 0 }}>
-					Thank you for using the {calculatorName}! Here&apos;s a summary of
-					your results:
+					Thanks for using the {calculatorName}. Here are the results you asked
+					me to send:
 				</Text>
 
 				<Section style={RESULTS_BOX_STYLE}>
@@ -120,15 +120,15 @@ export function CalculatorResults({
 
 				<Section style={NEXT_STEPS_BOX_STYLE}>
 					<Text style={{ margin: 0, fontSize: '14px', lineHeight: 1.6 }}>
-						<strong>Next Steps:</strong> Book a free website plan call and I'll
-						walk through these results with you, then give you a timeline and a
-						real price.
+						<strong>Next Steps:</strong> Book a free 30-minute website plan call
+						and I'll walk through these results with you, then give you a
+						timeline and a real price.
 					</Text>
 				</Section>
 
 				<Section style={CTA_WRAP_STYLE}>
 					<BrandButton href="https://hudsondigitalsolutions.com/contact">
-						Schedule Free Consultation
+						Book a Free Website Plan Call
 					</BrandButton>
 				</Section>
 			</Section>

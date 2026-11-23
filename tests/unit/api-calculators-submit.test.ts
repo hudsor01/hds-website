@@ -202,9 +202,7 @@ describe('POST /api/calculators/submit', () => {
 			manyKeys[`k${i}`] = i
 		}
 		const { POST } = await import('@/app/api/calculators/submit/route')
-		const res = await POST(
-			makeRequest({ ...VALID_BODY, inputs: manyKeys })
-		)
+		const res = await POST(makeRequest({ ...VALID_BODY, inputs: manyKeys }))
 
 		expect(res.status).toBe(400)
 		expect(insertSpy).not.toHaveBeenCalled()
@@ -225,6 +223,67 @@ describe('POST /api/calculators/submit', () => {
 		)
 
 		expect(res.status).toBe(400)
+		expect(insertSpy).not.toHaveBeenCalled()
+	})
+
+	// Lead scoring must read the keys each client actually sends: the
+	// performance tool sends performanceScore (not pageSpeedScore) and the
+	// estimator sends websiteType (it never sent a budget).
+	it('scores a slow, busy site from the performance tool as hot', async () => {
+		mockDbReturningOneRow({ id: 'calc-lead-perf' })
+		const { POST } = await import('@/app/api/calculators/submit/route')
+		const res = await POST(
+			makeRequest({
+				...VALID_BODY,
+				calculator_type: 'performance-calculator',
+				inputs: { performanceScore: 35, monthlyVisitors: 60000 }
+			})
+		)
+		const json = (await res.json()) as {
+			data: { lead_score: number; lead_quality: string }
+		}
+		expect(json.data.lead_score).toBe(85)
+		expect(json.data.lead_quality).toBe('hot')
+	})
+
+	it('scores a large estimator build from the keys the estimator sends', async () => {
+		mockDbReturningOneRow({ id: 'calc-lead-est' })
+		const { POST } = await import('@/app/api/calculators/submit/route')
+		const res = await POST(
+			makeRequest({
+				...VALID_BODY,
+				calculator_type: 'cost-estimator',
+				inputs: {
+					websiteType: 'e-commerce',
+					numberOfPages: 12,
+					features: ['blog'],
+					designComplexity: 'standard',
+					timeline: 'normal',
+					maintenanceNeeded: false
+				}
+			})
+		)
+		const json = (await res.json()) as { data: { lead_score: number } }
+		expect(json.data.lead_score).toBe(75)
+	})
+
+	it('returns 503 and stores nothing when Resend is not configured', async () => {
+		const insertSpy = mock().mockReturnValue({
+			values: mock().mockReturnValue({
+				returning: mock().mockResolvedValue([{ id: 'never' }])
+			})
+		})
+		mock.module('@/lib/db', () => ({ db: { insert: insertSpy } }))
+		mock.module('@/lib/resend-client', () => ({
+			isResendConfigured: mock().mockReturnValue(false),
+			getResendClient: mock()
+		}))
+		const { POST } = await import('@/app/api/calculators/submit/route')
+		const res = await POST(makeRequest(VALID_BODY))
+		const json = (await res.json()) as { success: boolean; error: string }
+		expect(res.status).toBe(503)
+		expect(json.success).toBe(false)
+		expect(json.error).toMatch(/can't send your results/)
 		expect(insertSpy).not.toHaveBeenCalled()
 	})
 })
