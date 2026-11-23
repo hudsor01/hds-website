@@ -1,5 +1,5 @@
 /**
- * Time Card / Hours Calculator
+ * Time Card / Hours Calculator (one workweek)
  */
 
 import type { Metadata } from 'next'
@@ -9,7 +9,7 @@ import TimeCardCalculatorClient from './TimeCardCalculatorClient'
 export const metadata: Metadata = buildMetadata({
 	title: 'Time Card Calculator with Breaks & Overtime | Hudson Digital',
 	description:
-		'Free time card calculator. Add clock-in and clock-out times with lunch breaks to total daily and weekly hours, split overtime, and calculate gross pay.',
+		'Free time card calculator for one workweek. Add clock-in and clock-out times with unpaid meal breaks to total hours, weekly overtime and gross pay.',
 	path: '/tools/time-card-calculator'
 })
 
