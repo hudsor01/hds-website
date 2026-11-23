@@ -1,15 +1,13 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { logger } from '@/lib/logger'
-import { calculatePayment, calculateTTL } from '@/lib/ttl-calculator/calculator'
-import { calculateLeaseComparison } from '@/lib/ttl-calculator/lease'
+import { calculateResults } from '@/lib/ttl-calculator/calculator'
 import {
 	clearAllCalculations,
 	deleteCalculation,
 	getSavedCalculations,
 	saveCalculation
 } from '@/lib/ttl-calculator/storage'
-import { calculateTCO } from '@/lib/ttl-calculator/tco'
 import type {
 	CalculationResults,
 	SavedCalculation,
@@ -42,9 +40,27 @@ function ensureVehicleInputsComplete(
 		leaseMileage: input.leaseMileage ?? 12000,
 		leaseBuyout: input.leaseBuyout ?? 0,
 		residualValue: input.residualValue ?? 0,
-		moneyFactor: input.moneyFactor ?? 0
+		moneyFactor: input.moneyFactor ?? 0,
+		rebateAmount: input.rebateAmount ?? 0
 	}
 	return result
+}
+
+// Results are always derived from the inputs: every input change, saved or
+// shared calculation load and storage rehydrate recomputes them, so the
+// panel can never show results for different inputs (or none at all).
+function resultsFor(
+	input: VehicleInputs
+): Pick<CalculatorState, 'calculationResults' | 'error'> {
+	try {
+		return { calculationResults: calculateResults(input), error: null }
+	} catch (err) {
+		logger.error('TTL calculation failed', err)
+		return {
+			calculationResults: null,
+			error: err instanceof Error ? err.message : 'Calculation failed'
+		}
+	}
 }
 
 interface CalculatorState {
@@ -78,13 +94,16 @@ export const useCalculatorStore = create<CalculatorState>()(
 		(set, get) => ({
 			// Initial state
 			vehicleInput: ensureVehicleInputsComplete({}),
-			calculationResults: null,
+			...resultsFor(ensureVehicleInputsComplete({})),
 			isLoading: false,
 			error: null,
 			savedCalculations: [],
 
 			// Actions
-			setVehicleInput: input => set({ vehicleInput: input }),
+			setVehicleInput: input => {
+				const complete = ensureVehicleInputsComplete(input)
+				set({ vehicleInput: complete, ...resultsFor(complete) })
+			},
 
 			updateInput: (field, value) => {
 				set(state => {
@@ -114,12 +133,11 @@ export const useCalculatorStore = create<CalculatorState>()(
 						safeValue = '75201'
 					}
 
-					return {
-						vehicleInput: {
-							...state.vehicleInput,
-							[field]: safeValue
-						}
+					const vehicleInput = {
+						...state.vehicleInput,
+						[field]: safeValue
 					}
+					return { vehicleInput, ...resultsFor(vehicleInput) }
 				})
 			},
 
@@ -129,37 +147,8 @@ export const useCalculatorStore = create<CalculatorState>()(
 
 			// Calculation logic (placeholder - will integrate with calculation functions)
 			calculate: () => {
-				try {
-					set({ isLoading: true, error: null })
-					const input = ensureVehicleInputsComplete(get().vehicleInput)
-
-					const ttlResults = calculateTTL(input)
-					const paymentResults = calculatePayment(
-						input.purchasePrice,
-						input.downPayment,
-						ttlResults.totalTTL,
-						input.interestRate,
-						input.loanTermMonths
-					)
-					const tcoResults = calculateTCO(input)
-					const leaseComparisonResults = calculateLeaseComparison(input)
-
-					set({
-						calculationResults: {
-							ttlResults,
-							paymentResults,
-							tcoResults,
-							leaseComparisonResults
-						},
-						isLoading: false
-					})
-				} catch (err) {
-					set({
-						error: err instanceof Error ? err.message : 'Calculation failed',
-						isLoading: false
-					})
-					logger.error('Calculation error:', err as Error)
-				}
+				const input = ensureVehicleInputsComplete(get().vehicleInput)
+				set({ vehicleInput: input, isLoading: false, ...resultsFor(input) })
 			},
 
 			saveCurrentCalculation: async (_name?: string) => {
@@ -187,10 +176,8 @@ export const useCalculatorStore = create<CalculatorState>()(
 						calc => calc.id === id
 					)
 					if (calculation) {
-						set({
-							vehicleInput: calculation.inputs,
-							calculationResults: calculation.results
-						})
+						const input = ensureVehicleInputsComplete(calculation.inputs)
+						set({ vehicleInput: input, ...resultsFor(input) })
 					}
 				} catch (err) {
 					set({ error: 'Failed to load saved calculation' })
@@ -233,7 +220,11 @@ export const useCalculatorStore = create<CalculatorState>()(
 			partialize: state => ({
 				vehicleInput: state.vehicleInput,
 				savedCalculations: state.savedCalculations
-			})
+			}),
+			// Persisted inputs come back without results; derive them
+			onRehydrateStorage: () => state => {
+				state?.calculate()
+			}
 		}
 	)
 )

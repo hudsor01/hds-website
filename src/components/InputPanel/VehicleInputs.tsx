@@ -121,7 +121,7 @@ export function VehicleInputs({
 						htmlFor="electric-vehicle"
 						className="text-sm font-normal cursor-pointer"
 					>
-						Electric Vehicle (+$200 annual fee)
+						Electric Vehicle ($200 a year, $400 for a new car's first two years)
 					</Label>
 				</div>
 			</div>

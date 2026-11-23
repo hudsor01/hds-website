@@ -29,7 +29,8 @@ const vehicleInputsSchema = z.object({
 	leaseMileage: z.number().optional(),
 	leaseBuyout: z.number().optional(),
 	residualValue: z.number().optional(),
-	moneyFactor: z.number().optional()
+	moneyFactor: z.number().optional(),
+	rebateAmount: z.number().optional()
 })
 
 const calculationResultsSchema = z.object({
@@ -279,7 +280,7 @@ export async function emailResults(
 
 		const inputs = parsedEmailInputs.data as VehicleInputs
 		const results = parsedEmailResults.data as CalculationResults
-		const shareUrl = `${env.NEXT_PUBLIC_SITE_URL || 'https://hudsondigitalsolutions.com'}/texas-ttl-calculator?c=${shareCode}`
+		const shareUrl = `${env.NEXT_PUBLIC_SITE_URL || 'https://hudsondigitalsolutions.com'}/tools/ttl-calculator?c=${shareCode}`
 
 		// Ensure results have required properties
 		const ttl = results.ttlResults || {

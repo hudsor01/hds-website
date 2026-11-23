@@ -195,7 +195,7 @@ export function TtlCalculatorResults({
 				</Row>
 				<Row>
 					<Column style={{ width: '70%' }}>
-						<Text style={BREAKDOWN_LABEL_STYLE}>Title &amp; Fees</Text>
+						<Text style={BREAKDOWN_LABEL_STYLE}>Title Fee</Text>
 					</Column>
 					<Column style={{ width: '30%' }}>
 						<Text style={BREAKDOWN_VALUE_STYLE}>{titleFee}</Text>
@@ -203,7 +203,9 @@ export function TtlCalculatorResults({
 				</Row>
 				<Row>
 					<Column style={{ width: '70%' }}>
-						<Text style={BREAKDOWN_LABEL_STYLE}>Registration</Text>
+						<Text style={BREAKDOWN_LABEL_STYLE}>
+							Registration and Local Fees
+						</Text>
 					</Column>
 					<Column style={{ width: '30%' }}>
 						<Text style={BREAKDOWN_VALUE_STYLE}>{registrationFees}</Text>

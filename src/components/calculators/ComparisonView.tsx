@@ -3,6 +3,7 @@
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { formatCurrency } from '@/lib/utils'
 import type {
 	PaymentResults,
 	TTLResults,
@@ -91,19 +92,19 @@ export function ComparisonView({
 									${vehicle.input.tradeInValue.toLocaleString()}
 								</td>
 								<td className="py-3 px-3 text-right">
-									${vehicle.ttl.salesTax.toFixed(2)}
+									{formatCurrency(vehicle.ttl.salesTax)}
 								</td>
 								<td className="py-3 px-3 text-right">
-									${vehicle.ttl.titleFee.toFixed(2)}
+									{formatCurrency(vehicle.ttl.titleFee)}
 								</td>
 								<td className="py-3 px-3 text-right">
-									${vehicle.ttl.registrationFees.toFixed(2)}
+									{formatCurrency(vehicle.ttl.registrationFees)}
 								</td>
 								<td className="py-3 px-3 text-right font-semibold">
-									${vehicle.ttl.totalTTL.toFixed(2)}
+									{formatCurrency(vehicle.ttl.totalTTL)}
 								</td>
 								<td className="py-3 px-3 text-right">
-									${vehicle.payment.monthlyPayment.toFixed(2)}
+									{formatCurrency(vehicle.payment.monthlyPayment)}
 								</td>
 								<td className="py-3 px-3 text-right">
 									<Button

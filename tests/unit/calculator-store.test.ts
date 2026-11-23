@@ -92,11 +92,32 @@ describe('Calculator Store', () => {
 		expect(typeof id).toBe('string')
 	})
 
-	it('should handle calculate method (placeholder implementation)', () => {
+	it('derives results from the inputs on every change', () => {
+		const { updateInput } = useCalculatorStore.getState()
+		updateInput('tradeInValue', 0)
+		updateInput('rebateAmount', 0)
+		updateInput('purchasePrice', 40000)
+		const first = useCalculatorStore.getState().calculationResults
+		expect(first?.ttlResults?.salesTax).toBe(2500)
+		updateInput('purchasePrice', 20000)
+		const second = useCalculatorStore.getState().calculationResults
+		expect(second?.ttlResults?.salesTax).toBe(1250)
+		expect(second?.paymentResults?.monthlyPayment).toBeGreaterThan(0)
+	})
+
+	it('calculate() recomputes results and clears loading', () => {
 		const { calculate } = useCalculatorStore.getState()
 		calculate()
-		// Should not throw and should set loading to false
 		expect(useCalculatorStore.getState().isLoading).toBe(false)
+		expect(useCalculatorStore.getState().calculationResults).not.toBeNull()
+	})
+
+	it('setVehicleInput (shared link load) recomputes results', () => {
+		const { setVehicleInput, vehicleInput } = useCalculatorStore.getState()
+		setVehicleInput({ ...vehicleInput, purchasePrice: 10000, tradeInValue: 0 })
+		expect(
+			useCalculatorStore.getState().calculationResults?.ttlResults?.salesTax
+		).toBe(625)
 	})
 
 	it('should handle saveCurrentCalculation with custom name', async () => {

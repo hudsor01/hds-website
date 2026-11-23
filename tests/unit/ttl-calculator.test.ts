@@ -1,5 +1,9 @@
 import { describe, expect, test } from 'bun:test'
-import { calculateTTL } from '@/lib/ttl-calculator/calculator'
+import {
+	calculatePayment,
+	calculateResults,
+	calculateTTL
+} from '@/lib/ttl-calculator/calculator'
 import type { VehicleInputs } from '@/types/ttl-types'
 
 // Expected values come from TxDMV Fee Chart 1C (2026), the Motor Vehicle
@@ -88,5 +92,58 @@ describe('calculateTTL', () => {
 		expect(base(18001)).toBeCloseTo(205)
 		expect(base(80000)).toBeCloseTo(840)
 		expect(() => base(80001)).toThrow(/80001 lbs/)
+	})
+})
+
+describe('rebates and trade-ins (Comptroller Motor Vehicle Tax Guide)', () => {
+	test('a dealer-applied rebate comes off the taxable value', () => {
+		// (30,000 - 5,000 trade - 1,000 rebate) x 6.25%
+		expect(calculateTTL(inputs({ rebateAmount: 1000 })).salesTax).toBe(1500)
+	})
+
+	test('taxable value never goes below zero', () => {
+		expect(calculateTTL(inputs({ tradeInValue: 40000 })).salesTax).toBe(0)
+	})
+})
+
+describe('calculatePayment', () => {
+	test('finances price less trade-in plus TTL', () => {
+		// Dallas used: 1,562.50 tax + 33 title + 75.50 registration + 2.75 emissions
+		const r = calculateResults(inputs())
+		expect(r.ttlResults?.totalTTL).toBeCloseTo(1673.75, 2)
+		expect(r.paymentResults?.loanAmount).toBeCloseTo(26673.75, 2)
+		expect(r.paymentResults?.monthlyPayment).toBeCloseTo(515.68, 2)
+	})
+
+	test('a rebate lowers both the tax and the loan', () => {
+		const r = calculateResults(inputs({ rebateAmount: 1000 }))
+		expect(r.paymentResults?.loanAmount).toBeCloseTo(25611.25, 2)
+		expect(r.paymentResults?.monthlyPayment).toBeCloseTo(495.14, 2)
+	})
+
+	test('the down payment comes off the total, never below zero', () => {
+		const ttl = 1673.75
+		expect(
+			calculatePayment(inputs({ downPayment: 5000 }), ttl).loanAmount
+		).toBeCloseTo(21673.75, 2)
+		const cash = calculatePayment(inputs({ downPayment: 30000 }), ttl)
+		expect(cash.loanAmount).toBe(0)
+		expect(cash.monthlyPayment).toBe(0)
+	})
+
+	test('0% financing divides evenly over the term', () => {
+		const r = calculatePayment(
+			inputs({ interestRate: 0, loanTermMonths: 48, tradeInValue: 0 }),
+			0
+		)
+		expect(r.monthlyPayment).toBe(625)
+		expect(r.totalInterest).toBe(0)
+	})
+
+	test('the loan term changes the payment', () => {
+		const short = calculatePayment(inputs({ loanTermMonths: 36 }), 0)
+		const long = calculatePayment(inputs({ loanTermMonths: 72 }), 0)
+		expect(short.monthlyPayment).toBeGreaterThan(long.monthlyPayment)
+		expect(short.totalInterest).toBeLessThan(long.totalInterest)
 	})
 })
