@@ -38,7 +38,7 @@ Set up distinct call tracking numbers or dynamic number insertion on each city p
 
 I built forecasting models that hit 95 percent accuracy by tracking lead velocity and source attribution. Apply that same rigor to local search. Map your target keywords to service tiers, install UTM parameters on every city link and monitor form drop off rates in Google Analytics. When a Fort Worth page ranks in the top five but converts at half the rate of your Dallas hub, you run a simple A B test on the call to action placement and the emergency service wording. Small tweaks compound fast when you measure them correctly.
 
-Use a [roi calculator](/tools/roi-calculator) to project how many booked jobs each city page needs to justify the content and development costs. If a new location requires three hundred dollars in monthly maintenance, you calculate the break even point based on your average ticket size. I always run these numbers before approval because local SEO is not a marketing expense. It is a revenue stream with clear unit economics.
+Use my [ROI calculator](/tools/roi-calculator) to put numbers on each city page. Enter your traffic, conversion rate and average ticket size, set the lift you expect and add the content and development cost to see first-year ROI and payback months. If a new location requires three hundred dollars in monthly maintenance, you calculate the break even point based on your average ticket size. I always run these numbers before approval because local SEO is not a marketing expense. It is a revenue stream with clear unit economics.
 
 ## Build the plumbing before you pour the concrete
 

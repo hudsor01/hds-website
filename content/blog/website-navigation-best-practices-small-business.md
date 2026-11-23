@@ -79,7 +79,7 @@ I flag items that generate traffic but zero pipeline movement. If About Us gets 
 
 I run quarterly navigation audits with A/B tests on label copy, dropdown depth and call to action placement. I usually test three variations per menu section over fourteen days. The winner gets pushed live based on signed deal velocity, not vanity clicks. I document everything so the client can replicate the process without me.
 
-You can model your own navigation ROI before I touch a single page. My [roi calculator](/tools/roi-calculator) takes your current traffic, conversion rate and average deal size to show exactly what a streamlined navigation structure returns. The math always favors fixing the top of the funnel first. If your current site sends most visitors to dead ends, you are paying for traffic that never had a chance to convert.
+You can model your own navigation ROI before I touch a single page. My [ROI calculator](/tools/roi-calculator) takes your current traffic, conversion rate and average deal size, applies the conversion lift you expect from cleaner navigation and shows the added monthly and annual revenue. Add the cost of the change to see payback months. The math always favors fixing the top of the funnel first. If your current site sends most visitors to dead ends, you are paying for traffic that never had a chance to convert.
 
 ### Build navigation that scales with your pipeline
 

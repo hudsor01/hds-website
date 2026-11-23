@@ -68,7 +68,7 @@ Track these specific data points to keep your forecasting models honest:
 * Appointment show rate and no show frequency
 * Closed deal value per landing page or campaign
 
-Run your current metrics through [my free tool](/tools/roi-calculator) before you commit to another marketing tactic. The math will tell you exactly which buttons need revision and which ones are already driving revenue.
+Run your current traffic, conversion rate and order value through [my free tool](/tools/roi-calculator) before you commit to another marketing tactic. The math shows what a better-converting call to action is worth each month. Add what the change would cost and it shows how many months it takes to pay back.
 
 ## Your Next Step in the System
 You do not need a complete website overhaul to fix your conversion problem. Start by mapping your current visitor journey and identifying where friction kills momentum. Replace vague buttons with specific action steps that match buyer intent. Connect your forms to a CRM and verify every tracking parameter works before you scale ad spend. The mathematics of forecasting only work when the data is clean and the pathways are direct.
