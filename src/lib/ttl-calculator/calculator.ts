@@ -46,12 +46,26 @@ export const COUNTY_FEES: CountyFees = {
 }
 
 // Texas state fees (TxDMV "Register Your Vehicle" and Fee Chart 1C, 2026)
+//
+// New vehicles: a passenger car or light truck sold in Texas, never
+// registered, of the current or preceding model year must get a 24-month
+// registration (Transportation Code 502.044(a-1), SB 1729, Sept 1, 2025)
+// "on payment of all fees for each year of registration" (43 TAC
+// 217.27(c)(2)(B)). So the base fee, TexasSure fee and county fees are
+// charged twice; processing and handling is per transaction (43 TAC
+// 217.183) and the $16.75 inspection replacement fee is one-time (Transp.
+// Code 548.510(b)). TxDMV's webDEALER fee page for a new vehicle (Dealer
+// User Guide, July 2026, Figure 53) shows exactly this.
 export const TEXAS_SALES_TAX_RATE = 0.0625
-const BASE_REGISTRATION_FEE = 50.75 // 6,000 lbs or less
-const PROCESSING_FEE = 4.75
-const INSURANCE_VERIFICATION_FEE = 1.0 // TexasSure
-const INSPECTION_FEE = 7.5 // Inspection Program Replacement Fee
-const NEW_VEHICLE_INSPECTION_FEE = 16.75 // Two-year initial inspection
+const BASE_REGISTRATION_FEE = 50.75 // 6,000 lbs or less, per registration year
+const PROCESSING_FEE = 4.75 // per transaction
+const INSURANCE_VERIFICATION_FEE = 1.0 // TexasSure, per registration year
+const INSPECTION_FEE = 7.5 // Inspection Program Replacement Fee, yearly
+const NEW_VEHICLE_INSPECTION_FEE = 16.75 // One-time, covers the 24 months
+const NEW_VEHICLE_REGISTRATION_YEARS = 2
+// Every dealer sale pays the $10 buyer plate fee (HB 718, July 1, 2025;
+// TxDMV Motor Vehicle Dealer Manual 2026)
+export const BUYER_PLATE_FEE = 10
 const EV_FEE_ANNUAL = 200
 const EV_FEE_NEW_TWO_YEAR = 400
 
@@ -79,7 +93,8 @@ function baseRegistrationFee(weight: number): number {
 
 /**
  * Registration line: base fee by weight, the county's local fees and the
- * fees TxDMV collects with every registration.
+ * TexasSure fee for each registration year, plus processing and the
+ * inspection replacement fee once.
  */
 function calculateRegistrationFee(
 	isNewVehicle: boolean,
@@ -87,15 +102,15 @@ function calculateRegistrationFee(
 	localFees: number
 ): number {
 	const weight = vehicleWeight || 4000 // Default to average car weight if not provided
+	const years = isNewVehicle ? NEW_VEHICLE_REGISTRATION_YEARS : 1
 	const inspectionFee = isNewVehicle
 		? NEW_VEHICLE_INSPECTION_FEE
 		: INSPECTION_FEE
 
 	return (
-		baseRegistrationFee(weight) +
-		localFees +
+		(baseRegistrationFee(weight) + localFees + INSURANCE_VERIFICATION_FEE) *
+			years +
 		PROCESSING_FEE +
-		INSURANCE_VERIFICATION_FEE +
 		inspectionFee
 	)
 }
@@ -146,13 +161,16 @@ export function calculateTTL(input: VehicleInputs): TTLResults {
 	const emissions =
 		input.isNewVehicle || input.isElectric ? 0 : countyData.emissionsFee
 
-	// Total TTL
-	const totalTTL = salesTax + titleFee + registrationFees + evFee + emissions
+	const plateFee = BUYER_PLATE_FEE
+
+	const totalTTL =
+		salesTax + titleFee + registrationFees + plateFee + evFee + emissions
 
 	return {
 		salesTax,
 		titleFee,
 		registrationFees,
+		plateFee,
 		evFee,
 		emissions,
 		totalTTL

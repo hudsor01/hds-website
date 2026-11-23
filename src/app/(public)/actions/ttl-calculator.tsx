@@ -38,6 +38,7 @@ const calculationResultsSchema = z.object({
 		salesTax: z.number(),
 		titleFee: z.number(),
 		registrationFees: z.number(),
+		plateFee: z.number().optional(),
 		evFee: z.number().optional(),
 		emissions: z.number().optional(),
 		totalTTL: z.number()
@@ -309,6 +310,9 @@ export async function emailResults(
 					salesTax={formatCurrency(ttl.salesTax)}
 					titleFee={formatCurrency(ttl.titleFee)}
 					registrationFees={formatCurrency(ttl.registrationFees)}
+					otherFees={formatCurrency(
+						ttl.totalTTL - ttl.salesTax - ttl.titleFee - ttl.registrationFees
+					)}
 					totalTTL={formatCurrency(ttl.totalTTL)}
 					monthlyPayment={formatCurrency(payment.monthlyPayment)}
 					loanTermMonths={inputs.loanTermMonths || 60}

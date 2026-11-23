@@ -68,6 +68,9 @@ export function ComparisonView({
 								Registration
 							</th>
 							<th scope="col" className="text-right py-2 px-3">
+								Other Fees
+							</th>
+							<th scope="col" className="text-right py-2 px-3">
 								Total TTL
 							</th>
 							<th scope="col" className="text-right py-2 px-3">
@@ -99,6 +102,13 @@ export function ComparisonView({
 								</td>
 								<td className="py-3 px-3 text-right">
 									{formatCurrency(vehicle.ttl.registrationFees)}
+								</td>
+								<td className="py-3 px-3 text-right">
+									{formatCurrency(
+										(vehicle.ttl.plateFee ?? 0) +
+											vehicle.ttl.evFee +
+											vehicle.ttl.emissions
+									)}
 								</td>
 								<td className="py-3 px-3 text-right font-semibold">
 									{formatCurrency(vehicle.ttl.totalTTL)}

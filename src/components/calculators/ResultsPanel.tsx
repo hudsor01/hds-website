@@ -105,9 +105,16 @@ export function ResultsPanel({
 								<ResultRow label="Sales Tax (6.25%)" value={ttl?.salesTax} />
 								<ResultRow label="Title Fee" value={ttl?.titleFee} />
 								<ResultRow
-									label="Registration and Local Fees"
+									label={
+										vehicleInput.isNewVehicle
+											? 'Registration and Local Fees (2 years)'
+											: 'Registration and Local Fees'
+									}
 									value={ttl?.registrationFees}
 								/>
+								{(ttl?.plateFee ?? 0) > 0 && (
+									<ResultRow label="License Plate Fee" value={ttl?.plateFee} />
+								)}
 								{(ttl?.evFee ?? 0) > 0 && (
 									<ResultRow label="Electric Vehicle Fee" value={ttl?.evFee} />
 								)}

@@ -168,6 +168,7 @@ export function Calculator() {
 					titleFee: calculationResults?.ttlResults?.titleFee ?? 0,
 					registrationFees:
 						calculationResults?.ttlResults?.registrationFees ?? 0,
+					plateFee: calculationResults?.ttlResults?.plateFee ?? 0,
 					evFee: calculationResults?.ttlResults?.evFee ?? 0,
 					emissions: calculationResults?.ttlResults?.emissions ?? 0,
 					totalTTL: calculationResults?.ttlResults?.totalTTL ?? 0
