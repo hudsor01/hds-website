@@ -20,6 +20,7 @@ jobs:
   publish:
     name: Publish due posts
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -62,3 +63,21 @@ jobs:
           fi
           curl -fsS -X POST "$DEPLOY_HOOK_URL" > /dev/null
           echo "Production rebuild triggered"
+
+      # The deploy hook only queues a build. Wait for it and confirm every due
+      # post now answers 200, so a post that fails to go live fails this run
+      # (GitHub emails the repo owner) instead of passing silently.
+      - name: Confirm due posts are live
+        if: steps.pending.outputs.count != '0'
+        run: |
+          for attempt in $(seq 1 20); do
+            sleep 30
+            still=$(bun run scripts/blog/pending.ts https://hudsondigitalsolutions.com)
+            if [ -z "$still" ]; then
+              echo "All due posts are live (check $attempt)"
+              exit 0
+            fi
+            echo "Check $attempt: not live yet: $still"
+          done
+          echo "::error::Still not live 10 minutes after the rebuild: $still"
+          exit 1
