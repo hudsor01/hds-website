@@ -1,318 +1,374 @@
 /**
  * ROI Calculator Client Component
- * Contains the interactive ROI calculation form with URL state management
+ *
+ * Results are derived live from the validated inputs, which live in the
+ * URL (?traffic=&conv=&aov=&impr=&invest=) so a shared link shows its
+ * results on load. Reading the URL with nuqs suspends prerendering, so
+ * only that part sits behind Suspense: the fallback renders the same page
+ * (heading, description and form) with default values, which keeps the H1
+ * and form in the server HTML.
  */
 
 'use client'
 
-import { parseAsFloat, parseAsInteger, useQueryState } from 'nuqs'
-import { useState } from 'react'
+import { parseAsString, useQueryStates } from 'nuqs'
+import { Suspense, useEffect, useMemo, useRef } from 'react'
+import { toast } from 'sonner'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
 import type { ToolAction } from '@/components/layout/ToolPageLayout'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
+import {
+	calculateRoi,
+	parseRoiInput,
+	type RoiField,
+	type RoiInput,
+	type RoiRawInput,
+	type RoiResult
+} from '@/lib/roi-calculator'
 import { formatCurrency } from '@/lib/utils'
 
-interface CalculatorInputs {
-	monthlyTraffic: number
-	conversionRate: number
-	averageOrderValue: number
-	improvementPercentage: number
+interface RoiCalculatorViewProps {
+	raw: RoiRawInput
+	interactive: boolean
+	onFieldChange: (field: RoiField, value: string) => void
+	onReset: () => void
 }
 
-interface CalculatorResultsType {
-	currentMonthlyRevenue: string
-	currentAnnualRevenue: string
-	projectedMonthlyRevenue: string
-	projectedAnnualRevenue: string
-	monthlyIncrease: string
-	annualIncrease: string
-	roiPercentage: string
+interface ResultItem {
+	label: string
+	value: string
+	description: string
+	highlight?: boolean
 }
 
-export function ROICalculatorClient() {
-	const [monthlyTraffic, setMonthlyTraffic] = useQueryState(
-		'traffic',
-		parseAsInteger.withDefault(0)
-	)
-	const [conversionRate, setConversionRate] = useQueryState(
-		'conv',
-		parseAsFloat.withDefault(0)
-	)
-	const [averageOrderValue, setAverageOrderValue] = useQueryState(
-		'aov',
-		parseAsFloat.withDefault(0)
-	)
-	const [improvementPercentage, setImprovementPercentage] = useQueryState(
-		'impr',
-		parseAsInteger.withDefault(20)
-	)
+const DEFAULT_IMPROVEMENT = '20'
 
-	const [results, setResults] = useState<CalculatorResultsType | null>(null)
+const DEFAULT_RAW: RoiRawInput = {
+	monthlyTraffic: '',
+	conversionRate: '',
+	averageOrderValue: '',
+	improvementPercentage: DEFAULT_IMPROVEMENT,
+	investment: ''
+}
 
-	const inputs: CalculatorInputs = {
-		monthlyTraffic,
-		conversionRate,
-		averageOrderValue,
-		improvementPercentage
-	}
+// Every field is kept as the exact text typed (no integer rounding, no
+// "0" for a cleared field) and validated in parseRoiInput.
+const URL_PARSERS = {
+	monthlyTraffic: parseAsString.withDefault(''),
+	conversionRate: parseAsString.withDefault(''),
+	averageOrderValue: parseAsString.withDefault(''),
+	improvementPercentage: parseAsString.withDefault(DEFAULT_IMPROVEMENT),
+	investment: parseAsString.withDefault('')
+}
 
-	const handleInputChange = (field: keyof CalculatorInputs, value: string) => {
-		const numValue = parseFloat(value) || 0
-		switch (field) {
-			case 'monthlyTraffic':
-				setMonthlyTraffic(numValue)
-				break
-			case 'conversionRate':
-				setConversionRate(numValue)
-				break
-			case 'averageOrderValue':
-				setAverageOrderValue(numValue)
-				break
-			case 'improvementPercentage':
-				setImprovementPercentage(numValue)
-				break
-			default:
-				break
+const URL_KEYS = {
+	monthlyTraffic: 'traffic',
+	conversionRate: 'conv',
+	averageOrderValue: 'aov',
+	improvementPercentage: 'impr',
+	investment: 'invest'
+}
+
+const TRACK_DELAY_MS = 1500
+
+const NUMBER = new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 })
+const ONE_DECIMAL = new Intl.NumberFormat('en-US', {
+	maximumFractionDigits: 1
+})
+
+const noop = () => undefined
+
+function formatPercent(value: number): string {
+	return `${NUMBER.format(value)}%`
+}
+
+function formatMonths(value: number): string {
+	const text = ONE_DECIMAL.format(value)
+	return text === '1' ? '1 month' : `${text} months`
+}
+
+function buildResultItems(input: RoiInput, result: RoiResult): ResultItem[] {
+	const projectedDescription = result.improvedRateCapped
+		? `At a 100% conversion rate. A ${formatPercent(input.improvementPercentage)} lift on ${formatPercent(input.conversionRate)} would pass 100%, so it is capped.`
+		: `At a ${formatPercent(result.improvedConversionRate)} conversion rate, a ${formatPercent(input.improvementPercentage)} relative lift`
+
+	const items: ResultItem[] = [
+		{
+			label: 'Current Annual Revenue',
+			value: formatCurrency(result.currentAnnualRevenue),
+			description: `At your current ${formatPercent(input.conversionRate)} conversion rate`
+		},
+		{
+			label: 'Projected Annual Revenue',
+			value: formatCurrency(result.projectedAnnualRevenue),
+			description: projectedDescription,
+			highlight: true
+		},
+		{
+			label: 'Additional Monthly Revenue',
+			value: formatCurrency(result.monthlyIncrease),
+			description: 'Extra revenue per month',
+			highlight: true
+		},
+		{
+			label: 'Additional Annual Revenue',
+			value: formatCurrency(result.annualIncrease),
+			description: 'Extra revenue over 12 months',
+			highlight: true
 		}
+	]
+
+	if (input.investment !== null && result.roiPercentage !== null) {
+		const investment = formatCurrency(input.investment)
+		items.push(
+			{
+				label: 'First-Year ROI',
+				value: `${ONE_DECIMAL.format(result.roiPercentage)}%`,
+				description: `Additional annual revenue minus your ${investment} investment, divided by that investment. Based on revenue, not profit.`
+			},
+			{
+				label: 'Payback Period',
+				value:
+					result.paybackMonths === null
+						? 'Not reached'
+						: formatMonths(result.paybackMonths),
+				description:
+					result.paybackMonths === null
+						? 'There is no added monthly revenue to pay back the investment.'
+						: `Your ${investment} investment divided by the additional monthly revenue`
+			}
+		)
 	}
 
-	const calculateROI = () => {
-		const {
-			monthlyTraffic,
-			conversionRate,
-			averageOrderValue,
-			improvementPercentage
-		} = inputs
+	return items
+}
 
-		// Current metrics
-		const currentConversionRate = conversionRate / 100
-		const currentMonthlyConversions = monthlyTraffic * currentConversionRate
-		const currentMonthlyRevenue = currentMonthlyConversions * averageOrderValue
-		const currentAnnualRevenue = currentMonthlyRevenue * 12
-
-		// Improved metrics
-		const improvedConversionRate =
-			currentConversionRate * (1 + improvementPercentage / 100)
-		const improvedMonthlyConversions = monthlyTraffic * improvedConversionRate
-		const improvedMonthlyRevenue =
-			improvedMonthlyConversions * averageOrderValue
-		const improvedAnnualRevenue = improvedMonthlyRevenue * 12
-
-		// Calculate increases
-		const monthlyIncrease = improvedMonthlyRevenue - currentMonthlyRevenue
-		const annualIncrease = improvedAnnualRevenue - currentAnnualRevenue
-		const roiPercentage = (monthlyIncrease / currentMonthlyRevenue) * 100 || 0
-
-		const calculatedResults: CalculatorResultsType = {
-			currentMonthlyRevenue: formatCurrency(currentMonthlyRevenue),
-			currentAnnualRevenue: formatCurrency(currentAnnualRevenue),
-			projectedMonthlyRevenue: formatCurrency(improvedMonthlyRevenue),
-			projectedAnnualRevenue: formatCurrency(improvedAnnualRevenue),
-			monthlyIncrease: formatCurrency(monthlyIncrease),
-			annualIncrease: formatCurrency(annualIncrease),
-			roiPercentage: `${roiPercentage.toFixed(1)}%`
+function RoiCalculatorView({
+	raw,
+	interactive,
+	onFieldChange,
+	onReset
+}: RoiCalculatorViewProps) {
+	const parsed = useMemo(() => parseRoiInput(raw), [raw])
+	const outcome = useMemo(() => {
+		if (parsed.status !== 'ok') {
+			return null
 		}
+		const result = calculateRoi(parsed.data)
+		return {
+			input: parsed.data,
+			result,
+			items: buildResultItems(parsed.data, result)
+		}
+	}, [parsed])
+	const errors = parsed.status === 'ok' ? {} : parsed.errors
 
-		setResults(calculatedResults)
+	// Results update on every keystroke, so record usage once per visit
+	// after the inputs settle rather than on each change.
+	const tracked = useRef(false)
+	useEffect(() => {
+		if (!interactive || tracked.current || outcome === null) {
+			return
+		}
+		const timer = setTimeout(() => {
+			tracked.current = true
+			trackEvent('calculator_used', {
+				calculator_type: 'roi-calculator',
+				monthly_traffic: outcome.input.monthlyTraffic,
+				conversion_rate: outcome.input.conversionRate,
+				potential_increase: outcome.result.annualIncrease
+			})
+		}, TRACK_DELAY_MS)
+		return () => clearTimeout(timer)
+	}, [interactive, outcome])
 
-		// Track calculator usage
-		trackEvent('calculator_used', {
-			calculator_type: 'roi-calculator',
-			monthly_traffic: monthlyTraffic,
-			conversion_rate: conversionRate,
-			potential_increase: annualIncrease
-		})
-	}
+	const canReset = (Object.keys(DEFAULT_RAW) as RoiField[]).some(
+		field => raw[field] !== DEFAULT_RAW[field]
+	)
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault()
-		calculateROI()
-	}
-
-	const handleReset = () => {
-		setResults(null)
-		setMonthlyTraffic(0)
-		setConversionRate(0)
-		setAverageOrderValue(0)
-		setImprovementPercentage(20)
-	}
-
-	const handleCopy = () => {
-		if (!results) {
+	const handleCopy = async () => {
+		if (outcome === null) {
 			return
 		}
 		const text = [
 			'ROI Calculator Results',
-			`Current Annual Revenue: ${results.currentAnnualRevenue}`,
-			`Projected Annual Revenue: ${results.projectedAnnualRevenue}`,
-			`Additional Monthly Revenue: ${results.monthlyIncrease}`,
-			`Additional Annual Revenue: ${results.annualIncrease}`,
-			`ROI Percentage: ${results.roiPercentage}`
+			...outcome.items.map(item => `${item.label}: ${item.value}`)
 		].join('\n')
-		navigator.clipboard.writeText(text).catch(() => undefined)
+		try {
+			await navigator.clipboard.writeText(text)
+			toast.success('Results copied')
+		} catch {
+			toast.error('Could not copy the results. Select them and copy by hand.')
+		}
 	}
 
-	const resultItems = results
-		? [
-				{
-					label: 'Current Annual Revenue',
-					value: results.currentAnnualRevenue,
-					description: 'Based on your current conversion rate'
-				},
-				{
-					label: 'Projected Annual Revenue',
-					value: results.projectedAnnualRevenue,
-					description: `With a ${improvementPercentage}% conversion improvement`,
-					highlight: true
-				},
-				{
-					label: 'Additional Monthly Revenue',
-					value: results.monthlyIncrease,
-					description: 'Extra revenue per month',
-					highlight: true
-				},
-				{
-					label: 'Additional Annual Revenue',
-					value: results.annualIncrease,
-					description: 'Total additional revenue per year',
-					highlight: true
-				},
-				{
-					label: 'ROI Percentage',
-					value: results.roiPercentage,
-					description: 'Revenue increase percentage'
-				}
-			]
-		: []
+	const actions: ToolAction[] | undefined =
+		outcome === null
+			? undefined
+			: [
+					{
+						type: 'copy',
+						label: 'Copy Results',
+						onClick: () => {
+							void handleCopy()
+						}
+					}
+				]
 
-	const actions: ToolAction[] = [
-		{ type: 'copy', label: 'Copy Results', onClick: handleCopy }
-	]
+	const fieldProps = (field: RoiField) => ({
+		id: field,
+		value: raw[field],
+		onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+			onFieldChange(field, e.target.value),
+		error: errors[field],
+		'aria-invalid': errors[field] ? true : undefined
+	})
 
 	const formSlot = (
-		<form onSubmit={handleSubmit} className="space-y-comfortable">
+		<form
+			onSubmit={e => e.preventDefault()}
+			className="space-y-comfortable"
+			noValidate
+		>
 			<div className="grid gap-comfortable md:grid-cols-2">
 				<CalculatorInput
 					label="Monthly Website Traffic"
-					id="monthlyTraffic"
 					type="number"
+					inputMode="numeric"
 					min="0"
 					step="1"
-					value={monthlyTraffic || ''}
-					onChange={e => handleInputChange('monthlyTraffic', e.target.value)}
 					helpText="Average number of visitors per month"
 					required
+					{...fieldProps('monthlyTraffic')}
 				/>
 
 				<CalculatorInput
 					label="Current Conversion Rate"
-					id="conversionRate"
 					type="number"
+					inputMode="decimal"
 					min="0"
 					max="100"
 					step="0.1"
-					value={conversionRate || ''}
-					onChange={e => handleInputChange('conversionRate', e.target.value)}
 					suffix="%"
-					helpText="Percentage of visitors who convert"
+					helpText="Percentage of visitors who buy or become a lead"
 					required
+					{...fieldProps('conversionRate')}
 				/>
 
 				<CalculatorInput
 					label="Average Order Value"
-					id="averageOrderValue"
 					type="number"
+					inputMode="decimal"
 					min="0"
 					step="0.01"
-					value={averageOrderValue || ''}
-					onChange={e => handleInputChange('averageOrderValue', e.target.value)}
 					prefix="$"
-					helpText="Average value per conversion/sale"
+					helpText="Average revenue per conversion or sale"
 					required
+					{...fieldProps('averageOrderValue')}
 				/>
 
 				<CalculatorInput
 					label="Target Improvement"
-					id="improvementPercentage"
 					type="number"
-					min="1"
-					max="500"
+					inputMode="decimal"
+					min="0"
 					step="1"
-					value={improvementPercentage}
-					onChange={e =>
-						handleInputChange('improvementPercentage', e.target.value)
-					}
 					suffix="%"
-					helpText="Expected conversion rate improvement"
+					helpText="A relative lift: 2% with a 20% lift is 2.4%. The 20% default is an example assumption, not a forecast."
 					required
+					{...fieldProps('improvementPercentage')}
+				/>
+
+				<CalculatorInput
+					label="Your Investment (optional)"
+					type="number"
+					inputMode="decimal"
+					min="0"
+					step="1"
+					prefix="$"
+					helpText="Your own estimate of what the improvement would cost. Leave it blank to see revenue only."
+					{...fieldProps('investment')}
 				/>
 			</div>
 
-			<Card size="sm" className="bg-info-light">
-				<div className="flex">
-					<div className="shrink-0">
-						<svg
-							className="h-5 w-5 text-info-text"
-							viewBox="0 0 20 20"
-							fill="currentColor"
-							aria-hidden="true"
-						>
-							<path
-								fillRule="evenodd"
-								d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-								clipRule="evenodd"
-							/>
-						</svg>
-					</div>
-					<div className="ml-3 flex-1">
-						<p className="text-sm text-info-text">
-							<strong>Industry Average:</strong> Most businesses see 15-50%
-							conversion rate improvements with professional website
-							optimization.
-						</p>
-					</div>
-				</div>
-			</Card>
-
-			<Button type="submit" variant="accent" className="w-full">
-				Calculate My ROI
-			</Button>
-
-			{results !== null && (
+			{canReset && (
 				<Button
 					type="button"
 					variant="outline"
-					onClick={handleReset}
+					onClick={onReset}
 					className="w-full"
 				>
-					Recalculate
+					Start over
 				</Button>
 			)}
 		</form>
 	)
 
-	const resultSlot = results ? (
+	const resultSlot = outcome ? (
 		<CalculatorResults
-			results={resultItems}
+			results={outcome.items}
 			calculatorType="roi-calculator"
-			inputs={inputs}
+			inputs={outcome.input}
 		/>
 	) : undefined
 
 	return (
 		<ToolPageLayout
 			title="ROI Calculator"
-			description="Calculate how much additional revenue you could generate by improving your website's conversion rate"
+			description="See how much added revenue a higher website conversion rate could bring in. Add what you would spend to see first-year ROI and how many months it takes to pay back."
 			columns="two"
 			formSlot={formSlot}
 			resultSlot={resultSlot}
-			hasResult={results !== null}
-			resultPlaceholder="Fill in the form to calculate your ROI"
+			hasResult={outcome !== null}
+			resultPlaceholder="Enter your traffic, conversion rate and order value to see your results"
 			actions={actions}
 		/>
+	)
+}
+
+function RoiCalculatorWithUrlState() {
+	const [raw, setRaw] = useQueryStates(URL_PARSERS, { urlKeys: URL_KEYS })
+
+	const handleFieldChange = (field: RoiField, value: string) => {
+		// A cleared improvement stays blank (impr=) instead of snapping back
+		// to the 20% default; other cleared fields drop out of the URL.
+		if (value === '' && field !== 'improvementPercentage') {
+			void setRaw({ [field]: null })
+			return
+		}
+		void setRaw({ [field]: value })
+	}
+
+	const handleReset = () => {
+		void setRaw(null)
+	}
+
+	return (
+		<RoiCalculatorView
+			raw={raw}
+			interactive
+			onFieldChange={handleFieldChange}
+			onReset={handleReset}
+		/>
+	)
+}
+
+export function ROICalculatorClient() {
+	return (
+		<Suspense
+			fallback={
+				<RoiCalculatorView
+					raw={DEFAULT_RAW}
+					interactive={false}
+					onFieldChange={noop}
+					onReset={noop}
+				/>
+			}
+		>
+			<RoiCalculatorWithUrlState />
+		</Suspense>
 	)
 }
