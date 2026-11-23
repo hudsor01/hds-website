@@ -1,27 +1,39 @@
-import type { PayPeriod, PaystubData, TaxData } from '@/types/paystub'
-import { calculateStateTax } from './state-tax-calculations'
 import {
-	calculateFederalTax,
-	calculateMedicare,
-	calculateSocialSecurity
+	DEFAULT_WITHHOLDING,
+	type FilingStatus,
+	PAY_PERIODS_PER_YEAR,
+	type PayFrequency,
+	type PayPeriod,
+	type PaystubTotals,
+	type WithholdingInputs
+} from '@/types/paystub'
+import { roundCents } from './schedule'
+import { calculateStatePeriod, EMPTY_STATE_YTD } from './state-tax-calculations'
+import {
+	federalWithholding,
+	medicareTax,
+	socialSecurityTax
 } from './tax-calculations'
+import { getTaxDataForYear } from './tax-data'
 import { validatePaystubInputs } from './validation'
 
 export interface PaystubCalculationParams {
 	hourlyRate: number
 	hoursPerPeriod: number
-	filingStatus: keyof TaxData['federalBrackets']
+	filingStatus: FilingStatus
 	taxYear: number
 	state: string
-	payFrequency: 'weekly' | 'biweekly' | 'semimonthly' | 'monthly'
+	payFrequency: PayFrequency
 	overtimeHours?: number
 	overtimeRate?: number
+	/** Post-tax deductions per pay period */
 	additionalDeductions?: Array<{ name: string; amount: number }>
+	withholding?: WithholdingInputs
 }
 
 export interface PaystubCalculationResult {
 	payPeriods: PayPeriod[]
-	totals: PaystubData['totals']
+	totals: PaystubTotals
 }
 
 export const calculatePaystubTotals = (
@@ -36,7 +48,8 @@ export const calculatePaystubTotals = (
 		payFrequency,
 		overtimeHours = 0,
 		overtimeRate = hourlyRate * 1.5,
-		additionalDeductions = []
+		additionalDeductions = [],
+		withholding = DEFAULT_WITHHOLDING
 	} = params
 
 	const validation = validatePaystubInputs(params)
@@ -45,16 +58,8 @@ export const calculatePaystubTotals = (
 		throw new Error(message)
 	}
 
-	// Calculate number of pay periods based on frequency
-	const payPeriodsCount =
-		(
-			{
-				weekly: 52,
-				biweekly: 26,
-				semimonthly: 24,
-				monthly: 12
-			} as const
-		)[payFrequency] ?? 26
+	const payPeriodsCount = PAY_PERIODS_PER_YEAR[payFrequency]
+	const { ssWageBase } = getTaxDataForYear(taxYear)
 
 	// Generate pay dates
 	const generatePayDates = (frequency: typeof payFrequency) => {
@@ -121,88 +126,110 @@ export const calculatePaystubTotals = (
 
 	const payDates = generatePayDates(payFrequency).slice(0, payPeriodsCount)
 	const payPeriods: PayPeriod[] = []
-	let ytdGross = 0
-
-	const totals = {
+	const totals: PaystubTotals = {
 		hours: 0,
 		grossPay: 0,
+		preTaxDeductions: 0,
 		federalTax: 0,
 		socialSecurity: 0,
 		medicare: 0,
 		stateTax: 0,
+		stateInsurance: 0,
 		otherDeductions: 0,
 		netPay: 0
 	}
+	let ytdFicaWages = 0
+	let stateYtd = EMPTY_STATE_YTD
+
+	// Every period has the same pay; only the yearly caps (Social Security
+	// wage base, Additional Medicare threshold, state caps) change over the year.
+	const grossPay = roundCents(
+		hourlyRate * hoursPerPeriod + overtimeHours * overtimeRate
+	)
+	const retirement = withholding.retirementPerPeriod
+	const health = withholding.healthPerPeriod
+	const preTaxDeductions = roundCents(retirement + health)
+	const federalWages = grossPay - retirement - health
+	const ficaWages = grossPay - health
+	const otherDeductions = roundCents(
+		additionalDeductions.reduce((sum, d) => sum + d.amount, 0)
+	)
 
 	for (let i = 0; i < payPeriodsCount; i++) {
-		// Calculate gross pay including overtime
-		const regularPay = hourlyRate * hoursPerPeriod
-		const overtimePay = overtimeHours * overtimeRate
-		const currentGrossPay = regularPay + overtimePay
+		const federalTax = roundCents(
+			federalWithholding(
+				federalWages,
+				payPeriodsCount,
+				filingStatus,
+				withholding,
+				taxYear
+			)
+		)
+		const socialSecurity = roundCents(
+			socialSecurityTax(ficaWages, ytdFicaWages, taxYear)
+		)
+		const medicare = roundCents(medicareTax(ficaWages, ytdFicaWages, taxYear))
+		const statePeriod = calculateStatePeriod(
+			{
+				state,
+				filingStatus,
+				payFrequency,
+				grossPay,
+				retirement,
+				health,
+				ficaTax: socialSecurity + medicare,
+				allowances: withholding.stateAllowances,
+				additionalAllowances: withholding.stateAdditionalAllowances
+			},
+			stateYtd,
+			ssWageBase
+		)
+		stateYtd = statePeriod.ytd
+		const stateTax = roundCents(statePeriod.incomeTax)
+		const stateInsurance = roundCents(statePeriod.insurance)
 
-		// Calculate taxes
-		const federalTax = calculateFederalTax(
-			currentGrossPay,
-			filingStatus,
-			ytdGross,
-			taxYear
+		const netPay = roundCents(
+			grossPay -
+				preTaxDeductions -
+				federalTax -
+				socialSecurity -
+				medicare -
+				stateTax -
+				stateInsurance -
+				otherDeductions
 		)
-		const socialSecurity = calculateSocialSecurity(
-			currentGrossPay,
-			ytdGross,
-			taxYear
-		)
-		const medicare = calculateMedicare(
-			currentGrossPay,
-			ytdGross,
-			filingStatus,
-			taxYear
-		)
-		const stateTax = calculateStateTax(
-			currentGrossPay,
-			ytdGross,
-			state,
-			filingStatus,
-			taxYear
-		)
+		const hours = hoursPerPeriod + overtimeHours
 
-		// Calculate other deductions
-		const otherDeductions = additionalDeductions.reduce(
-			(sum, deduction) => sum + deduction.amount,
-			0
-		)
-
-		// Calculate net pay
-		const totalDeductions =
-			federalTax + socialSecurity + medicare + stateTax + otherDeductions
-		const netPay = currentGrossPay - totalDeductions
-
-		const payPeriod: PayPeriod = {
+		payPeriods.push({
 			period: i + 1,
 			payDate: payDates[i]?.toISOString() || new Date().toISOString(),
-			hours: hoursPerPeriod + overtimeHours,
-			grossPay: currentGrossPay,
+			hours,
+			grossPay,
+			preTaxDeductions,
 			federalTax,
 			socialSecurity,
 			medicare,
 			stateTax,
+			stateInsurance,
 			otherDeductions,
 			netPay
-		}
+		})
 
-		payPeriods.push(payPeriod)
-
-		// Update YTD totals
-		ytdGross += currentGrossPay
-
-		totals.hours += hoursPerPeriod + overtimeHours
-		totals.grossPay += currentGrossPay
+		ytdFicaWages += ficaWages
+		totals.hours += hours
+		totals.grossPay += grossPay
+		totals.preTaxDeductions += preTaxDeductions
 		totals.federalTax += federalTax
 		totals.socialSecurity += socialSecurity
 		totals.medicare += medicare
 		totals.stateTax += stateTax
+		totals.stateInsurance += stateInsurance
 		totals.otherDeductions += otherDeductions
 		totals.netPay += netPay
+	}
+
+	for (const key of Object.keys(totals) as Array<keyof PaystubTotals>) {
+		totals[key] = roundCents(totals[key])
 	}
 
 	return { payPeriods, totals }

@@ -8,10 +8,12 @@ const samplePeriods = [
 		payDate: '2024-01-15T00:00:00.000Z',
 		hours: 80,
 		grossPay: 2000,
+		preTaxDeductions: 0,
 		federalTax: 200,
 		socialSecurity: 124,
 		medicare: 29,
 		stateTax: 0,
+		stateInsurance: 0,
 		otherDeductions: 0,
 		netPay: 1647
 	},
@@ -20,10 +22,12 @@ const samplePeriods = [
 		payDate: '2024-01-29T00:00:00.000Z',
 		hours: 80,
 		grossPay: 2000,
+		preTaxDeductions: 0,
 		federalTax: 200,
 		socialSecurity: 124,
 		medicare: 29,
 		stateTax: 0,
+		stateInsurance: 0,
 		otherDeductions: 0,
 		netPay: 1647
 	}

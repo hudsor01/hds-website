@@ -7,11 +7,13 @@ export function payPeriodsToCsv(payPeriods: PayPeriod[]): string {
 		'Pay Date',
 		'Hours',
 		'Gross Pay',
+		'Pre-Tax Deductions',
 		'Federal Tax',
 		'Social Security',
 		'Medicare',
 		'State Tax',
-		'Other Deductions',
+		'State Insurance',
+		'After-Tax Deductions',
 		'Net Pay'
 	]
 
@@ -20,10 +22,12 @@ export function payPeriodsToCsv(payPeriods: PayPeriod[]): string {
 		formatDate(p.payDate),
 		p.hours,
 		p.grossPay,
+		p.preTaxDeductions,
 		p.federalTax,
 		p.socialSecurity,
 		p.medicare,
 		p.stateTax,
+		p.stateInsurance,
 		p.otherDeductions,
 		p.netPay
 	])

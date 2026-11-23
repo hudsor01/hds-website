@@ -1,5 +1,11 @@
 import { useState } from 'react'
-import type { PayFrequency, PaystubData } from '@/types/paystub'
+import { getSupportedTaxYears } from '@/lib/paystub-calculator/tax-data'
+import {
+	DEFAULT_WITHHOLDING,
+	type PayFrequency,
+	type PaystubData,
+	type WithholdingInputs
+} from '@/types/paystub'
 
 const DEFAULT_PAY_FREQUENCY: PayFrequency = 'biweekly'
 
@@ -10,15 +16,17 @@ const INITIAL_PAYSTUB: PaystubData = {
 	hourlyRate: 0,
 	hoursPerPeriod: 0,
 	filingStatus: 'single',
-	taxYear: 2025,
+	taxYear: getSupportedTaxYears()[0] ?? new Date().getFullYear(),
 	payPeriods: [],
 	totals: {
 		hours: 0,
 		grossPay: 0,
+		preTaxDeductions: 0,
 		federalTax: 0,
 		socialSecurity: 0,
 		medicare: 0,
 		stateTax: 0,
+		stateInsurance: 0,
 		otherDeductions: 0,
 		netPay: 0
 	}
@@ -36,6 +44,8 @@ export function usePaystubForm() {
 	const [additionalDeductions, setAdditionalDeductions] = useState<
 		Array<{ name: string; amount: number }>
 	>([])
+	const [withholding, setWithholding] =
+		useState<WithholdingInputs>(DEFAULT_WITHHOLDING)
 
 	const setPaystubData = (
 		update: Partial<PaystubData> | ((prev: PaystubData) => PaystubData)
@@ -54,6 +64,7 @@ export function usePaystubForm() {
 		setOvertimeHours(0)
 		setOvertimeRate(0)
 		setAdditionalDeductions([])
+		setWithholding(DEFAULT_WITHHOLDING)
 	}
 
 	return {
@@ -69,6 +80,8 @@ export function usePaystubForm() {
 		setOvertimeRate,
 		additionalDeductions,
 		setAdditionalDeductions,
+		withholding,
+		setWithholding,
 		resetForm
 	}
 }

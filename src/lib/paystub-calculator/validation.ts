@@ -1,3 +1,4 @@
+import { FILING_STATUSES } from '@/types/paystub'
 import type { PaystubCalculationParams } from './calculate-paystub-totals'
 import { getSupportedTaxYears } from './tax-data'
 
@@ -63,15 +64,8 @@ export const validatePaystubInputs = (
 		errors.payFrequency = 'Invalid pay frequency'
 	}
 
-	// Validate filing status
-	const validFilingStatuses: Array<PaystubCalculationParams['filingStatus']> = [
-		'single',
-		'marriedJoint',
-		'marriedSeparate',
-		'headOfHousehold',
-		'qualifyingSurvivingSpouse'
-	]
-	if (!validFilingStatuses.includes(params.filingStatus)) {
+	// Validate filing status (the three Form W-4 statuses)
+	if (!FILING_STATUSES.includes(params.filingStatus)) {
 		errors.filingStatus = 'Invalid filing status'
 	}
 
@@ -92,6 +86,45 @@ export const validatePaystubInputs = (
 					`Deduction ${index + 1} name is required`
 			}
 		})
+	}
+
+	// Validate Form W-4, pre-tax deductions and state certificate entries
+	const w = params.withholding
+	if (w) {
+		const money: Array<[keyof typeof w, string]> = [
+			['dependentsCredit', 'Dependents credit'],
+			['otherIncome', 'Other income'],
+			['deductions', 'Deductions'],
+			['extraWithholding', 'Extra withholding'],
+			['retirementPerPeriod', '401(k) contribution'],
+			['healthPerPeriod', 'Health premiums']
+		]
+		for (const [key, label] of money) {
+			const value = w[key]
+			if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
+				errors[key] = `${label} must be zero or more`
+			}
+		}
+		for (const key of [
+			'stateAllowances',
+			'stateAdditionalAllowances'
+		] as const) {
+			if (!Number.isInteger(w[key]) || w[key] < 0 || w[key] > 99) {
+				errors[key] = 'Allowances must be a whole number from 0 to 99'
+			}
+		}
+		const gross =
+			params.hourlyRate * params.hoursPerPeriod +
+			(params.overtimeHours ?? 0) *
+				(params.overtimeRate ?? params.hourlyRate * 1.5)
+		if (
+			!errors.retirementPerPeriod &&
+			!errors.healthPerPeriod &&
+			w.retirementPerPeriod + w.healthPerPeriod > gross
+		) {
+			errors.retirementPerPeriod =
+				'Pre-tax deductions cannot be more than gross pay'
+		}
 	}
 
 	return {

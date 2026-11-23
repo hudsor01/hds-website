@@ -11,6 +11,7 @@ interface PaystubFormData {
 	filingStatus: string
 	taxYear: number
 	state?: string
+	withholding?: unknown
 	savedAt?: number
 }
 

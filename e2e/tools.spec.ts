@@ -67,14 +67,11 @@ test.describe('Paystub Calculator', () => {
 		expect(await inputs.count()).toBeGreaterThan(0)
 	})
 
-	test('tax year dropdown offers only 2025 (no 2023/2024)', async ({
-		page
-	}) => {
+	test('tax year dropdown offers only 2026 (no 2025)', async ({ page }) => {
 		await page.locator('#taxYear').click()
 		const options = page.locator('[role="option"]')
-		await expect(options.filter({ hasText: '2025' })).toHaveCount(1)
-		await expect(options.filter({ hasText: '2024' })).toHaveCount(0)
-		await expect(options.filter({ hasText: '2023' })).toHaveCount(0)
+		await expect(options.filter({ hasText: '2026' })).toHaveCount(1)
+		await expect(options.filter({ hasText: '2025' })).toHaveCount(0)
 	})
 })
 
@@ -102,14 +99,14 @@ test.describe('Paystub Calculator URL restore (PAYSTUB-10 intersect)', () => {
 		await expect(page.locator('#state')).toContainText(/texas/i)
 	})
 
-	test('?year=2024 (stale) clamps to 2025, does not block the form', async ({
+	test('?year=2025 (stale) clamps to 2026, does not block the form', async ({
 		page
 	}) => {
-		await page.goto('/tools/paystub-calculator?year=2024')
+		await page.goto('/tools/paystub-calculator?year=2025')
 		await page.waitForLoadState('networkidle')
-		// A stale year is clamped to the supported default; the trigger shows 2025.
-		await expect(page.locator('#taxYear')).toContainText('2025')
-		await expect(page.locator('#taxYear')).not.toContainText('2024')
+		// A stale year is clamped to the supported default; the trigger shows 2026.
+		await expect(page.locator('#taxYear')).toContainText('2026')
+		await expect(page.locator('#taxYear')).not.toContainText('2025')
 	})
 })
 

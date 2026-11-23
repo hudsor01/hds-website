@@ -13,12 +13,12 @@ import {
  * Mocking the React hooks + localStorage is heavy, so per the plan we unit-test
  * the shared predicates and the exact clamp expressions the hooks use. This proves
  * a returning user whose localStorage carries `taxYear: 2024` and an unsupported
- * state has the year clamped to 2025 and the unsupported state dropped.
+ * state has the year clamped to 2026 and the unsupported state dropped.
  */
 describe('supported-inputs predicates', () => {
 	describe('isSupportedTaxYear', () => {
-		it('accepts 2025 (the only backed year)', () => {
-			expect(isSupportedTaxYear(2025)).toBe(true)
+		it('accepts 2026 (the only backed year)', () => {
+			expect(isSupportedTaxYear(2026)).toBe(true)
 		})
 
 		it('rejects a stale 2024 (no backing data)', () => {
@@ -60,15 +60,15 @@ describe('supported-inputs predicates', () => {
 describe('stale-restore clamp (returning user with taxYear:2024 + unsupported state)', () => {
 	// Mirror of the seed a returning user would have in localStorage.
 	const savedData = { taxYear: 2024, state: 'AL' }
-	const prevTaxYear = 2025 // form default
+	const prevTaxYear = 2026 // form default
 
-	it('clamps a stale taxYear:2024 to the supported default (2025)', () => {
+	it('clamps a stale taxYear:2024 to the supported default (2026)', () => {
 		// Exact clamp expression from use-paystub-persistence / use-paystub-generator.
 		const restoredYear =
 			savedData.taxYear != null && isSupportedTaxYear(savedData.taxYear)
 				? savedData.taxYear
 				: prevTaxYear
-		expect(restoredYear).toBe(2025)
+		expect(restoredYear).toBe(2026)
 	})
 
 	it('drops the unsupported state (AL) so it never reaches the calc', () => {
@@ -79,7 +79,7 @@ describe('stale-restore clamp (returning user with taxYear:2024 + unsupported st
 	})
 
 	it('restores a valid persisted year/state unchanged', () => {
-		const valid = { taxYear: 2025, state: 'ca' }
+		const valid = { taxYear: 2026, state: 'ca' }
 		const restoredYear =
 			valid.taxYear != null && isSupportedTaxYear(valid.taxYear)
 				? valid.taxYear
@@ -88,7 +88,7 @@ describe('stale-restore clamp (returning user with taxYear:2024 + unsupported st
 			valid.state && isSupportedStateCode(valid.state)
 				? valid.state.toUpperCase()
 				: null
-		expect(restoredYear).toBe(2025)
+		expect(restoredYear).toBe(2026)
 		expect(restoredState).toBe('CA')
 	})
 })

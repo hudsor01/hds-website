@@ -1,133 +1,81 @@
-import type { TaxData } from '@/types/paystub'
-import { getCurrentTaxData } from './paystub-utils'
+import type { FilingStatus, WithholdingInputs } from '@/types/paystub'
+import { scheduleTax } from './schedule'
+import { getTaxDataForYear } from './tax-data'
 
-export const calculateFederalTax = (
-	grossPay: number,
-	filingStatus: keyof TaxData['federalBrackets'],
-	ytdGross: number,
-	year?: number
-) => {
-	const yearData = getCurrentTaxData(year)
-	if (!yearData) {
-		return 0
-	}
+type W4 = Pick<
+	WithholdingInputs,
+	| 'multipleJobs'
+	| 'dependentsCredit'
+	| 'otherIncome'
+	| 'deductions'
+	| 'extraWithholding'
+>
 
-	const brackets =
-		yearData.federalBrackets?.[filingStatus] || yearData.federalBrackets?.single
-
-	if (!brackets || brackets.length === 0) {
-		return 0
-	}
-
-	let tax = 0
-	let previousLimit = 0
-	let remainingGrossPay = grossPay
-	const taxableIncome = ytdGross + grossPay
-
-	for (let i = 0; i < brackets.length; i++) {
-		const bracket = brackets[i]
-		if (!bracket) {
-			continue
-		}
-
-		const bracketLimit = bracket.limit === Infinity ? Infinity : bracket.limit
-
-		// Calculate the portion of annual income that falls in this bracket
-		const bracketStart = previousLimit
-		const bracketEnd = bracketLimit
-		const taxableInThisBracket = Math.max(
-			0,
-			Math.min(taxableIncome, bracketEnd) - bracketStart
-		)
-
-		// If this bracket has no taxable income, skip it
-		if (taxableInThisBracket <= 0) {
-			previousLimit = bracketLimit
-			continue
-		}
-
-		// Calculate how much of the current pay period falls in this bracket
-		let portionInBracket = 0
-		if (ytdGross < bracketEnd) {
-			// Current pay period overlaps with this bracket
-			const bracketOverlapStart = Math.max(ytdGross, bracketStart)
-			const bracketOverlapEnd = Math.min(taxableIncome, bracketEnd)
-			portionInBracket = Math.min(
-				remainingGrossPay,
-				bracketOverlapEnd - bracketOverlapStart
-			)
-		}
-
-		if (portionInBracket > 0) {
-			tax += portionInBracket * bracket.rate
-			remainingGrossPay -= portionInBracket
-
-			if (remainingGrossPay <= 0) {
-				break
-			}
-		}
-
-		previousLimit = bracketLimit
-	}
-
-	return tax
+/**
+ * Federal income tax withholding for one pay period: IRS Pub. 15-T
+ * Worksheet 1A, percentage method for automated payroll systems, Form W-4
+ * 2020 or later.
+ *
+ * @param wages taxable wages for the period (gross less pre-tax 401(k) and
+ *   Section 125 deductions)
+ */
+export function federalWithholding(
+	wages: number,
+	periodsPerYear: number,
+	filingStatus: FilingStatus,
+	w4: W4,
+	year: number
+): number {
+	const data = getTaxDataForYear(year)
+	// Step 1: adjusted annual wage amount (lines 1a to 1i)
+	const annualWages = wages * periodsPerYear + w4.otherIncome
+	const line1g = w4.multipleJobs ? 0 : data.line1g[filingStatus]
+	const adjusted = Math.max(0, annualWages - (w4.deductions + line1g))
+	// Step 2: tentative withholding (lines 2a to 2h)
+	const schedules = w4.multipleJobs
+		? data.checkboxSchedules
+		: data.standardSchedules
+	const tentative =
+		scheduleTax(schedules[filingStatus], adjusted) / periodsPerYear
+	// Step 3: dependent credits (lines 3a to 3c)
+	const afterCredits = Math.max(
+		0,
+		tentative - w4.dependentsCredit / periodsPerYear
+	)
+	// Step 4: extra withholding (lines 4a and 4b)
+	return afterCredits + w4.extraWithholding
 }
 
-export const calculateSocialSecurity = (
-	grossPay: number,
-	ytdGross: number,
-	year?: number
-) => {
-	const yearData = getCurrentTaxData(year)
-	if (!yearData) {
-		return 0
-	}
-
-	const ssRate = yearData.ssRate
-	const ssWageBase = yearData.ssWageBase
-
-	if (ytdGross >= ssWageBase) {
-		return 0
-	}
-
-	if (ytdGross + grossPay > ssWageBase) {
-		return (ssWageBase - ytdGross) * ssRate
-	}
-
-	return grossPay * ssRate
+/** Employee Social Security tax: 6.2% up to the yearly wage base */
+export function socialSecurityTax(
+	ficaWages: number,
+	ytdFicaWages: number,
+	year: number
+): number {
+	const data = getTaxDataForYear(year)
+	const taxable = Math.min(
+		ficaWages,
+		Math.max(0, data.ssWageBase - ytdFicaWages)
+	)
+	return taxable * data.ssRate
 }
 
-export const calculateMedicare = (
-	grossPay: number,
-	ytdGross: number,
-	filingStatus: keyof TaxData['additionalMedicareThreshold'],
-	year?: number
-) => {
-	const yearData = getCurrentTaxData(year)
-	if (!yearData) {
-		return 0
-	}
-
-	const medicareRate = yearData.medicareRate
-	const additionalMedicareRate = yearData.additionalMedicareRate
-	const threshold =
-		yearData.additionalMedicareThreshold?.[filingStatus] ||
-		yearData.additionalMedicareThreshold?.single ||
-		getCurrentTaxData()?.additionalMedicareThreshold?.single ||
-		0
-
-	const medicare = grossPay * medicareRate
-	let additionalMedicare = 0
-
-	if (ytdGross > threshold) {
-		additionalMedicare = grossPay * additionalMedicareRate
-	} else if (ytdGross + grossPay > threshold) {
-		additionalMedicare =
-			(ytdGross + grossPay - threshold) * additionalMedicareRate
-	}
-
-	return medicare + additionalMedicare
+/**
+ * Employee Medicare tax: 1.45% of all wages, plus the 0.9% Additional
+ * Medicare Tax on wages over $200,000 in the calendar year. Employers
+ * withhold it at $200,000 for every filing status (IRS Pub. 15, section 9).
+ */
+export function medicareTax(
+	ficaWages: number,
+	ytdFicaWages: number,
+	year: number
+): number {
+	const data = getTaxDataForYear(year)
+	const threshold = data.additionalMedicareThreshold
+	const overBefore = Math.max(0, ytdFicaWages - threshold)
+	const overAfter = Math.max(0, ytdFicaWages + ficaWages - threshold)
+	return (
+		ficaWages * data.medicareRate +
+		(overAfter - overBefore) * data.additionalMedicareRate
+	)
 }
-
-// Remove the wrapper function and just export the state tax calculation directly
-// The state tax calculation is now in its own file to avoid circular dependencies

@@ -20,7 +20,7 @@ describe('calculatePaystubTotals validation', () => {
 			hourlyRate: 25,
 			hoursPerPeriod: 80,
 			filingStatus: 'single' as const,
-			taxYear: 2025,
+			taxYear: 2026,
 			state: 'TX',
 			payFrequency: 'biweekly' as const
 		}
@@ -83,7 +83,7 @@ describe('calculatePaystubTotals validation', () => {
 		expect(validation.errors.taxYear).toBeDefined()
 	})
 
-	it('accepts the supported tax year 2025', () => {
+	it('accepts the supported tax year 2026', () => {
 		// PAYSTUB-03: the only backed year passes the membership check.
 		if (!validBase) {
 			return

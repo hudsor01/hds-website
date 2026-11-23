@@ -1,11 +1,14 @@
 // Native states utilities - logic only, no data bloat
 
 import statesData from '@/data/states.json'
-import { getSupportedIncomeTaxStateCodes } from './state-tax-data'
+import {
+	getSupportedIncomeTaxStateCodes,
+	NO_INCOME_TAX_STATE_CODES
+} from './state-tax-data'
 
-const NO_INCOME_TAX_CODES = ['AK', 'FL', 'NV', 'SD', 'TN', 'TX', 'WA', 'WY']
+const NO_INCOME_TAX_CODES = new Set<string>(NO_INCOME_TAX_STATE_CODES)
 const NO_INCOME_TAX_STATES_CACHE = statesData.states.filter(state =>
-	NO_INCOME_TAX_CODES.includes(state.value)
+	NO_INCOME_TAX_CODES.has(state.value)
 )
 // Single source of truth: the selectable income-tax states are exactly the codes
 // that have bracket data (getSupportedIncomeTaxStateCodes), mapped to states.json

@@ -8,22 +8,28 @@ import {
 } from '@/lib/paystub-calculator/storage'
 import {
 	isSupportedStateCode,
-	isSupportedTaxYear
+	isSupportedTaxYear,
+	normalizeFilingStatus,
+	restoreWithholding
 } from '@/lib/paystub-calculator/supported-inputs'
-import type { FilingStatus, PaystubData } from '@/types/paystub'
+import type { PaystubData, WithholdingInputs } from '@/types/paystub'
 
 interface UsePaystubPersistenceProps {
 	paystubData: PaystubData
 	selectedState: string
 	setPaystubData: React.Dispatch<React.SetStateAction<PaystubData>>
 	setSelectedState: (state: string) => void
+	withholding: WithholdingInputs
+	setWithholding: (withholding: WithholdingInputs) => void
 }
 
 export function usePaystubPersistence({
 	paystubData,
 	selectedState,
 	setPaystubData,
-	setSelectedState
+	setSelectedState,
+	withholding,
+	setWithholding
 }: UsePaystubPersistenceProps) {
 	// Track if initial load has completed to avoid save-on-load cycle
 	const hasLoadedRef = useRef(false)
@@ -49,7 +55,7 @@ export function usePaystubPersistence({
 			businessValue: 'medium'
 		})
 
-		// Restore form data (cast filingStatus to proper type)
+		// Restore form data
 		setPaystubData(prev => ({
 			...prev,
 			employeeName: savedData.employeeName || prev.employeeName,
@@ -58,7 +64,7 @@ export function usePaystubPersistence({
 			hourlyRate: savedData.hourlyRate || prev.hourlyRate,
 			hoursPerPeriod: savedData.hoursPerPeriod || prev.hoursPerPeriod,
 			filingStatus:
-				(savedData.filingStatus as FilingStatus) || prev.filingStatus,
+				normalizeFilingStatus(savedData.filingStatus) ?? prev.filingStatus,
 			// Clamp a stale persisted year (e.g. a returning user with taxYear:2024)
 			// to a supported year rather than carrying it into the calculation, which
 			// would dead-end on an unbacked year (HIGH).
@@ -74,8 +80,12 @@ export function usePaystubPersistence({
 			setSelectedState(savedData.state.toUpperCase())
 		}
 
+		if (savedData.withholding) {
+			setWithholding(restoreWithholding(savedData.withholding))
+		}
+
 		hasLoadedRef.current = true
-	}, [setPaystubData, setSelectedState])
+	}, [setPaystubData, setSelectedState, setWithholding])
 
 	// Auto-save form data when it changes (after initial load)
 	useEffect(() => {
@@ -107,7 +117,8 @@ export function usePaystubPersistence({
 			hoursPerPeriod: paystubData.hoursPerPeriod,
 			filingStatus: paystubData.filingStatus,
 			taxYear: paystubData.taxYear,
-			state: selectedState
+			state: selectedState,
+			withholding
 		})
 	}, [
 		paystubData.employeeName,
@@ -117,7 +128,8 @@ export function usePaystubPersistence({
 		paystubData.hoursPerPeriod,
 		paystubData.filingStatus,
 		paystubData.taxYear,
-		selectedState
+		selectedState,
+		withholding
 	])
 
 	const clearForm = useCallback(() => {

@@ -4,6 +4,7 @@ import { CurrencyInput } from '@/components/forms/CurrencyInput'
 import { FormField } from '@/components/forms/FormField'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -21,7 +22,14 @@ import {
 } from '@/lib/paystub-calculator/states-utils'
 import { getSupportedTaxYears } from '@/lib/paystub-calculator/tax-data'
 import type { FormErrors } from '@/types/common'
-import type { FilingStatus, PayFrequency, PaystubData } from '@/types/paystub'
+import {
+	FILING_STATUS_LABELS,
+	FILING_STATUSES,
+	type FilingStatus,
+	type PayFrequency,
+	type PaystubData,
+	type WithholdingInputs
+} from '@/types/paystub'
 
 interface PaystubFormProps {
 	paystubData: PaystubData
@@ -38,6 +46,8 @@ interface PaystubFormProps {
 	setAdditionalDeductions: React.Dispatch<
 		React.SetStateAction<Array<{ name: string; amount: number }>>
 	>
+	withholding: WithholdingInputs
+	setWithholding: React.Dispatch<React.SetStateAction<WithholdingInputs>>
 	formErrors: FormErrors
 	onGenerate: () => void
 	onClear: () => void
@@ -57,6 +67,8 @@ export function PaystubForm({
 	setOvertimeRate,
 	additionalDeductions,
 	setAdditionalDeductions,
+	withholding,
+	setWithholding,
 	formErrors,
 	onGenerate,
 	onClear,
@@ -166,19 +178,11 @@ export function PaystubForm({
 								<SelectValue placeholder="Select status" />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="single">Single</SelectItem>
-								<SelectItem value="marriedJoint">
-									Married Filing Jointly
-								</SelectItem>
-								<SelectItem value="marriedSeparate">
-									Married Filing Separately
-								</SelectItem>
-								<SelectItem value="headOfHousehold">
-									Head of Household
-								</SelectItem>
-								<SelectItem value="qualifyingSurvivingSpouse">
-									Qualifying Surviving Spouse
-								</SelectItem>
+								{FILING_STATUSES.map(status => (
+									<SelectItem key={status} value={status}>
+										{FILING_STATUS_LABELS[status]}
+									</SelectItem>
+								))}
 							</SelectContent>
 						</Select>
 					</div>
@@ -247,6 +251,13 @@ export function PaystubForm({
 				</div>
 			</Card>
 
+			<WithholdingSection
+				withholding={withholding}
+				setWithholding={setWithholding}
+				selectedState={selectedState}
+				formErrors={formErrors}
+			/>
+
 			{/* Pay Frequency */}
 			<Card className="mb-comfortable">
 				<h2 className="text-xl font-bold mb-5 text-foreground">
@@ -302,13 +313,13 @@ export function PaystubForm({
 			{/* Additional Deductions */}
 			<Card className="mb-comfortable">
 				<h2 className="text-xl font-bold mb-5 text-foreground">
-					Additional Deductions
+					After-Tax Deductions
 				</h2>
 				<div className="space-y-3">
 					{additionalDeductions.map((deduction, index) => (
 						<div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-3">
 							<Input
-								placeholder="Deduction name (e.g., Health Insurance)"
+								placeholder="Deduction name (for example, union dues)"
 								value={deduction.name}
 								onChange={e => {
 									const newDeductions = [...additionalDeductions]
@@ -390,5 +401,178 @@ export function PaystubForm({
 				</Button>
 			</div>
 		</div>
+	)
+}
+
+interface WithholdingSectionProps {
+	withholding: WithholdingInputs
+	setWithholding: React.Dispatch<React.SetStateAction<WithholdingInputs>>
+	selectedState: string
+	formErrors: FormErrors
+}
+
+interface StateAllowanceField {
+	key: 'stateAllowances' | 'stateAdditionalAllowances'
+	label: string
+}
+
+// State withholding certificate fields, labelled as they appear on each form
+const STATE_ALLOWANCE_FIELDS: Record<string, StateAllowanceField[]> = {
+	CA: [
+		{ key: 'stateAllowances', label: 'DE 4 regular allowances' },
+		{
+			key: 'stateAdditionalAllowances',
+			label: 'DE 4 allowances for estimated deductions'
+		}
+	],
+	NY: [{ key: 'stateAllowances', label: 'IT-2104 allowances' }],
+	IL: [
+		{ key: 'stateAllowances', label: 'IL-W-4 line 1 allowances' },
+		{ key: 'stateAdditionalAllowances', label: 'IL-W-4 line 2 allowances' }
+	],
+	MA: [{ key: 'stateAllowances', label: 'M-4 exemptions' }]
+}
+
+function WithholdingSection({
+	withholding,
+	setWithholding,
+	selectedState,
+	formErrors
+}: WithholdingSectionProps) {
+	const update = <K extends keyof WithholdingInputs>(
+		key: K,
+		value: WithholdingInputs[K]
+	) => setWithholding(prev => ({ ...prev, [key]: value }))
+	const stateFields = STATE_ALLOWANCE_FIELDS[selectedState] ?? []
+
+	return (
+		<>
+			<Card className="mb-comfortable">
+				<h2 className="text-xl font-bold mb-heading text-foreground">
+					Form W-4
+				</h2>
+				<p className="text-sm text-muted-foreground mb-5">
+					Enter what is on your 2026 Form W-4. Leave a field at zero if that
+					step is blank.
+				</p>
+				<div className="flex items-start gap-3 mb-5">
+					<Checkbox
+						id="multipleJobs"
+						checked={withholding.multipleJobs}
+						onCheckedChange={value => {
+							if (typeof value === 'boolean') {
+								update('multipleJobs', value)
+							}
+						}}
+					/>
+					<Label htmlFor="multipleJobs" className="font-normal leading-snug">
+						Step 2(c): I checked the box for multiple jobs or a spouse who works
+					</Label>
+				</div>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+					<CurrencyInput
+						label="Step 3: Dependents credit (per year)"
+						id="dependentsCredit"
+						value={withholding.dependentsCredit}
+						onChange={value => update('dependentsCredit', value)}
+						error={formErrors.dependentsCredit}
+						step="1"
+						placeholder="0"
+					/>
+					<CurrencyInput
+						label="Step 4(a): Other income (per year)"
+						id="otherIncome"
+						value={withholding.otherIncome}
+						onChange={value => update('otherIncome', value)}
+						error={formErrors.otherIncome}
+						step="1"
+						placeholder="0"
+					/>
+					<CurrencyInput
+						label="Step 4(b): Deductions (per year)"
+						id="deductions"
+						value={withholding.deductions}
+						onChange={value => update('deductions', value)}
+						error={formErrors.deductions}
+						step="1"
+						placeholder="0"
+					/>
+					<CurrencyInput
+						label="Step 4(c): Extra withholding (per paycheck)"
+						id="extraWithholding"
+						value={withholding.extraWithholding}
+						onChange={value => update('extraWithholding', value)}
+						error={formErrors.extraWithholding}
+						placeholder="0.00"
+					/>
+				</div>
+				<p className="text-xs text-muted-foreground mt-content">
+					Step 3 is $2,200 for each child under 17 and $500 for each other
+					dependent. The 2026 deductions for tips, overtime and seniors go in
+					Step 4(b).
+				</p>
+			</Card>
+
+			<Card className="mb-comfortable">
+				<h2 className="text-xl font-bold mb-heading text-foreground">
+					Pre-Tax Deductions
+				</h2>
+				<p className="text-sm text-muted-foreground mb-5">
+					Taken out before taxes, per paycheck.
+				</p>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+					<CurrencyInput
+						label="Traditional 401(k) or 403(b)"
+						id="retirementPerPeriod"
+						value={withholding.retirementPerPeriod}
+						onChange={value => update('retirementPerPeriod', value)}
+						error={formErrors.retirementPerPeriod}
+					/>
+					<CurrencyInput
+						label="Health, dental and vision premiums"
+						id="healthPerPeriod"
+						value={withholding.healthPerPeriod}
+						onChange={value => update('healthPerPeriod', value)}
+						error={formErrors.healthPerPeriod}
+					/>
+				</div>
+				<p className="text-xs text-muted-foreground mt-content">
+					401(k) contributions lower income tax but not Social Security or
+					Medicare, and Pennsylvania taxes them. Premiums paid through a
+					cafeteria plan lower all of them. Roth contributions are after tax.
+				</p>
+			</Card>
+
+			{stateFields.length > 0 && (
+				<Card className="mb-comfortable">
+					<h2 className="text-xl font-bold mb-heading text-foreground">
+						State Withholding Form
+					</h2>
+					<p className="text-sm text-muted-foreground mb-5">
+						From the state withholding certificate you gave your employer.
+					</p>
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+						{stateFields.map(field => (
+							<FormField
+								key={field.key}
+								label={field.label}
+								id={field.key}
+								type="number"
+								step="1"
+								value={withholding[field.key]}
+								onChange={value =>
+									update(
+										field.key,
+										Math.max(0, Number.parseInt(value, 10) || 0)
+									)
+								}
+								error={formErrors[field.key]}
+								placeholder="0"
+							/>
+						))}
+					</div>
+				</Card>
+			)}
+		</>
 	)
 }

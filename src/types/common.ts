@@ -8,4 +8,12 @@ export interface FormErrors {
 	hourlyRate?: string
 	hoursPerPeriod?: string
 	taxYear?: string
+	dependentsCredit?: string
+	otherIncome?: string
+	deductions?: string
+	extraWithholding?: string
+	retirementPerPeriod?: string
+	healthPerPeriod?: string
+	stateAllowances?: string
+	stateAdditionalAllowances?: string
 }

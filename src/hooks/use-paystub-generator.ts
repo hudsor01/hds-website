@@ -3,7 +3,8 @@
 import { useEffect, useRef } from 'react'
 import {
 	isSupportedStateCode,
-	isSupportedTaxYear
+	isSupportedTaxYear,
+	normalizeFilingStatus
 } from '@/lib/paystub-calculator/supported-inputs'
 import { usePaystubCalculations } from './use-paystub-calculations'
 import { usePaystubForm } from './use-paystub-form'
@@ -27,7 +28,8 @@ export function usePaystubGenerator() {
 		payFrequency: formState.payFrequency,
 		overtimeHours: formState.overtimeHours,
 		overtimeRate: formState.overtimeRate,
-		additionalDeductions: formState.additionalDeductions
+		additionalDeductions: formState.additionalDeductions,
+		withholding: formState.withholding
 	})
 
 	const calculations = usePaystubCalculations({
@@ -37,6 +39,7 @@ export function usePaystubGenerator() {
 		overtimeHours: formState.overtimeHours,
 		overtimeRate: formState.overtimeRate,
 		additionalDeductions: formState.additionalDeductions,
+		withholding: formState.withholding,
 		setPaystubData: formState.setPaystubData,
 		setResultsVisible: uiState.setResultsVisible,
 		setDocumentType: uiState.setDocumentType,
@@ -47,7 +50,9 @@ export function usePaystubGenerator() {
 		paystubData: formState.paystubData,
 		selectedState: formState.selectedState,
 		setPaystubData: formState.setPaystubData,
-		setSelectedState: formState.setSelectedState
+		setSelectedState: formState.setSelectedState,
+		withholding: formState.withholding,
+		setWithholding: formState.setWithholding
 	})
 
 	// Initialize form from URL params on first load (URL takes priority over localStorage)
@@ -70,7 +75,7 @@ export function usePaystubGenerator() {
 			employerName: urlState.employer ?? prev.employerName,
 			hourlyRate: urlState.rate ?? prev.hourlyRate,
 			hoursPerPeriod: urlState.hours ?? prev.hoursPerPeriod,
-			filingStatus: urlState.status ?? prev.filingStatus,
+			filingStatus: normalizeFilingStatus(urlState.status) ?? prev.filingStatus,
 			// Clamp a restored year to the supported set; a stale shared ?year=2024
 			// (HIGH/LOW asymmetry: nuqs passes it through unchanged) falls back to the
 			// form default rather than feeding an unbacked year into the calculation.
@@ -164,6 +169,8 @@ export function usePaystubGenerator() {
 		setOvertimeRate: formState.setOvertimeRate,
 		additionalDeductions: formState.additionalDeductions,
 		setAdditionalDeductions: formState.setAdditionalDeductions,
+		withholding: formState.withholding,
+		setWithholding: formState.setWithholding,
 
 		// UI state
 		resultsVisible: uiState.resultsVisible,
