@@ -9,7 +9,8 @@ import {
 	vaFundingFeeRate
 } from '@/lib/mortgage-calculator/calculate'
 
-// FHA figures: HUD Mortgagee Letter 2023-05. VA figures: va.gov funding fee
+// FHA figures: HUD Mortgagee Letter 2023-05. USDA: RD Instruction 440.1 Exhibit K
+// and HB-1-3555. VA figures: va.gov funding fee
 // table (effective April 7, 2023). PMI end rules: CFPB, Homeowners
 // Protection Act. Payment math checked against the standard amortization
 // formula ($280,000 at 6.5% for 30 years is $1,769.79).
@@ -194,6 +195,52 @@ describe('VA loan', () => {
 		)
 		expect(r.upfrontFee).toBe(0)
 		expect(r.loanAmount).toBe(350000)
+	})
+})
+
+describe('USDA loan', () => {
+	// RD Instruction 440.1 Exhibit K: 1.00% upfront, 0.35% annual.
+	// HB-1-3555 16.4: financing the whole fee makes the loan base / (1 - 1%).
+	test('zero down, fee financed: total loan is base / 0.99', () => {
+		const r = calculateMortgage(
+			inputs({ program: 'usda', downPayment: 0, homePrice: 250000 })
+		)
+		expect(r.loanAmount).toBeCloseTo(250000 / 0.99, 1)
+		expect(r.upfrontFee).toBeCloseTo(250000 / 0.99 - 250000, 1)
+		expect(r.upfrontFeeLabel).toBe('USDA guarantee fee')
+		expect(r.mortgageInsuranceLabel).toBe('USDA annual fee')
+		// Life of the loan, stepping down with the scheduled balance
+		expect(r.mortgageInsuranceEndsAfterPayment).toBeNull()
+		expect(r.monthlyMortgageInsurance).toBeLessThan(
+			(r.loanAmount * 0.0035) / 12
+		)
+		expect(r.monthlyMortgageInsurance).toBeGreaterThan(
+			(r.loanAmount * 0.0035 * 0.98) / 12
+		)
+		const [y1, y2] = r.schedule
+		expect((y2?.mortgageInsurance ?? 0) < (y1?.mortgageInsurance ?? 0)).toBe(
+			true
+		)
+	})
+
+	test('paying the guarantee fee at closing: 1% of the base loan', () => {
+		const r = calculateMortgage(
+			inputs({
+				program: 'usda',
+				downPayment: 0,
+				homePrice: 250000,
+				financeUpfrontFee: false
+			})
+		)
+		expect(r.loanAmount).toBe(250000)
+		expect(r.upfrontFee).toBe(2500)
+		expect(r.cashToClose).toBe(8000 + 2500)
+	})
+
+	test('only a 30-year term is allowed', () => {
+		expect(() =>
+			calculateMortgage(inputs({ program: 'usda', termYears: 15 }))
+		).toThrow('USDA guaranteed loans are 30-year fixed. Choose a 30 year term.')
 	})
 })
 
