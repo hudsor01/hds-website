@@ -21,7 +21,7 @@ export const metadata: Metadata = buildMetadata({
 	description:
 		'Website migration services for small businesses. I move you to a site you own and protect your rankings with domain recovery, 301 redirects and a faster build.',
 	path: '/website-migration',
-	socialTitle: 'Website Migration - Keep Your Rankings, Lose the Fees',
+	socialTitle: 'Website Migration - Keep Your Domain, Lose the Fees',
 	socialDescription:
 		'I move your site to a platform you own. No contracts, no monthly hostage fees.'
 })
@@ -76,7 +76,7 @@ const migrationSteps: MigrationStep[] = [
 		step: '04',
 		title: 'SEO Preservation',
 		description:
-			'I set up the redirects, submit fresh sitemaps, then confirm your Google Business Profile stays connected. Your rankings are covered the whole way through.'
+			'I set up the redirects, submit fresh sitemaps, then confirm your Google Business Profile stays connected. After launch I watch Search Console and fix crawl errors as they show up.'
 	}
 ]
 
@@ -129,7 +129,7 @@ export default function WebsiteMigrationPage() {
 				name: 'How long does a website migration take?',
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text: 'Most migrations wrap in 1-2 weeks. Your new site goes live before I touch anything on the old platform, so there is zero downtime.'
+					text: 'Most migrations take 1 to 4 weeks. Your new site goes live before I touch anything on the old platform, so there is zero downtime.'
 				}
 			},
 			{
@@ -137,7 +137,7 @@ export default function WebsiteMigrationPage() {
 				name: 'Will I lose my Google rankings?',
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text: 'Not if the move is done right. I map every old URL to a 301 redirect, update your Google Business Profile, then submit fresh sitemaps so Google carries your rankings over to the new site.'
+					text: 'A short dip while Google recrawls the new site is normal. Nobody can honestly guarantee rankings. What I can do is protect them: I map every old URL to a 301 redirect, update your Google Business Profile, submit fresh sitemaps and watch Search Console after launch so Google can carry your rankings over.'
 				}
 			},
 			{
@@ -145,7 +145,7 @@ export default function WebsiteMigrationPage() {
 				name: "What if my provider won't release my domain?",
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text: 'I run the domain transfer directly with your provider. If they stall, I know the ICANN dispute process and have gotten domains back for clients in exactly this spot.'
+					text: 'I run the domain transfer directly with your provider. If they stall, I know the ICANN dispute process and will use it to get your domain back.'
 				}
 			}
 		]
@@ -176,7 +176,7 @@ export default function WebsiteMigrationPage() {
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
 						Paying hundreds a month for a website you don&apos;t even own? I
 						move everything to a faster site that is 100% yours, with zero
-						downtime and your SEO rankings kept intact.
+						downtime and a redirect for every old page to protect your rankings.
 					</p>
 					<div className="flex flex-col sm:flex-row gap-3 justify-center">
 						<Button asChild variant="accent" size="xl">
@@ -342,7 +342,7 @@ export default function WebsiteMigrationPage() {
 							'Google Business Profile connected and verified',
 							'Pages that load in under 2 seconds',
 							'A design that works on every phone',
-							'SEO rankings kept or improved',
+							'Every old URL redirected to protect your SEO',
 							'Contact forms that email you directly',
 							'An analytics dashboard so you can see your visitors',
 							'Training so you can update the site yourself',
@@ -379,7 +379,7 @@ export default function WebsiteMigrationPage() {
 								<Zap className="w-5 h-5 text-accent" />
 							</div>
 							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
-								1-2 wks
+								1-4 wks
 							</div>
 							<div className="text-sm text-muted-foreground">
 								Typical time to move you over with zero downtime
