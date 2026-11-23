@@ -11,11 +11,16 @@ import { PaystubNavigation } from '@/components/paystub/PaystubNavigation'
 import { Card } from '@/components/ui/card'
 import { usePaystubGenerator } from '@/hooks/use-paystub-generator'
 import { stateInsuranceLabel } from '@/lib/paystub-calculator/state-tax-calculations'
+import { getSupportedIncomeTaxStateCodes } from '@/lib/paystub-calculator/state-tax-data'
 import { formatCurrency, formatDate } from '@/lib/utils'
 
 export default function PaystubCalculatorClient() {
 	const generator = usePaystubGenerator()
 	const insuranceLabel = stateInsuranceLabel(generator.selectedState)
+	// No state income tax line for TX, FL and the other no-tax states
+	const hasStateIncomeTax = getSupportedIncomeTaxStateCodes().includes(
+		generator.selectedState
+	)
 	const { totals } = generator.paystubData
 
 	const formSlot = (
@@ -107,12 +112,14 @@ export default function PaystubCalculatorClient() {
 											-{formatCurrency(period.medicare)}
 										</span>
 									</div>
-									<div className="flex justify-between text-sm">
-										<span className="text-muted-foreground">State Tax</span>
-										<span className="text-destructive-text">
-											-{formatCurrency(period.stateTax)}
-										</span>
-									</div>
+									{hasStateIncomeTax && (
+										<div className="flex justify-between text-sm">
+											<span className="text-muted-foreground">State Tax</span>
+											<span className="text-destructive-text">
+												-{formatCurrency(period.stateTax)}
+											</span>
+										</div>
+									)}
 									{period.stateInsurance > 0 && (
 										<div className="flex justify-between text-sm">
 											<span className="text-muted-foreground">
