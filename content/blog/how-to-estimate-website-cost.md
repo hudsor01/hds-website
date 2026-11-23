@@ -31,7 +31,7 @@ Six inputs drive almost every website estimate. If you know where you stand on e
 
 **Page count.** More pages means more layout, more copy and more to test. Service businesses underestimate this one all the time. A plumber who covers eight cities and offers six services can easily need a page for each.
 
-**Features.** Online booking, payments, a members area, a blog, a connection to your CRM. Clutch's cost guide says features and functionality affect a website budget more than anything else. I agree. The feature list is where scope quietly grows.
+**Features.** Online booking, payments, a members area, a blog, a connection to your CRM. I'd put features at the top of the list of what moves a website budget. The feature list is where scope quietly grows.
 
 **Design complexity.** A tuned template, a custom design and a high-end brand build each take a different amount of design time. Design also sets how much work every page and feature takes after it.
 
@@ -43,7 +43,7 @@ One more driver hides in plain sight. If you're moving off a platform like Wix, 
 
 ## How to Read an Estimator's Output
 
-I built a free [website cost calculator](/tools/cost-estimator) so owners can watch these inputs move a range in real time. Here's how to read it, using its own inputs as the worked example.
+I built a free [website cost calculator](/tools/cost-estimator) so owners can see how these inputs move a range. Here's how to read it, using its own inputs as the worked example.
 
 Picture a Frisco HVAC company that wants a business website with a page for each city it serves, online booking and a blog. Walk it through the tool one input at a time.
 
@@ -51,7 +51,7 @@ Start with **Website Type**. The estimator offers five: Landing Page, Business W
 
 Next is **Number of Pages**. The first five pages are part of the base. Every page past five adds to the range. A company with a page per city plus its service pages lands well past five, so this input matters more than owners expect.
 
-Then **Additional Features**. There are ten to choose from: Blog/News, Advanced Contact Forms, Payment Processing, User Authentication, Booking System, Membership Area, Advanced Analytics, Multi-language Support, Third-party API Integration and Custom Dashboard. Each one you check adds its own amount to the range and one week to the typical timeline. The HVAC company checks Booking System and Blog/News. Watch this section closely. It's where Clutch says budgets move most.
+Then **Additional Features**. There are ten to choose from: Blog/News Section, Advanced Contact Forms, Payment Processing, User Authentication, Booking System, Membership Area, Advanced Analytics, Multi-language Support, Third-party API Integration and Custom Dashboard. Each one you check adds its own amount to the range and one week to the typical timeline. The HVAC company checks Booking System and Blog/News Section. Watch this section closely. It's where budgets move most.
 
 **Design Complexity** works as a multiplier on everything above it. In this tool, Basic Template takes 20% off the range, Standard Custom Design leaves it as is, Fully Custom Design adds 30% and Premium/Luxury Design adds 60%. Those percentages are how this estimator adjusts its range. They aren't an industry rule and they aren't how I price a project.
 
@@ -68,25 +68,21 @@ The results come back in four parts:
 
 Two details make the tool more useful. Your inputs live in the page URL, so you can bookmark the exact scope or send it to a business partner. The Copy Range button copies the results as plain text you can paste into an email or a brief.
 
-Read the output as what the tool says it is: a typical market range for planning, not a quote. It can't see your content, your existing systems or the quirks of your business. What it does show is which choices move the number. Turn booking off and watch the range drop. Switch from Fully Custom to Standard and see what the design ambition is adding.
+Read the output as what the tool says it is: a typical market range for planning, not a quote. It can't see your content, your existing systems or the quirks of your business. What it does show is which choices move the number. Turn booking off, hit Calculate Estimate again and watch the range drop. Switch from Fully Custom to Standard, recalculate and see what the design ambition is adding.
 
 ## What the Market Range Looks Like
 
-An estimator gives you one view of the market. Published cost guides give you more. They disagree with each other by a wide margin.
+An estimator gives you one view of the market. Published cost guides give you more. They disagree with each other by a wide margin. Each guide draws on different shops and different project sizes, so their averages land in different places.
 
-[Clutch's cost guide](https://clutch.co/web-developers/resources/web-development-budget) says building a website from scratch usually costs less than $10,000. The same Clutch guide puts a basic 5 to 10 page site from a freelancer at $500 to $5,000, DIY site builders at $10 to $50 per month and complex agency projects such as online stores or membership portals past $100,000.
+That spread is the point. A figure that averages a one-page freelancer site with an online store built by an agency describes neither project. Read any published number for what it measured, not as the price of your site.
 
-Hourly rates vary just as much. Clutch's data puts web design companies at $100 to $149 per hour. Clutch also notes that agency development rates run from $25 to $150 per hour depending on region and expertise.
+Hourly rates spread just as wide. A solo designer and an agency with a full project team both call themselves web designers. Their rates reflect very different costs of doing business.
 
-Clutch lists the smaller recurring costs too: a domain at $0 to $20 per year and hosting at $2 to $80 per month. Maintenance on top of that varies far more from site to site. I break that line down in [website maintenance costs](/blog/website-maintenance-costs-explained).
+The recurring costs are smaller but they add up: a domain renewal every year, hosting every month and maintenance on top of that. Maintenance varies far more from site to site than the domain or the hosting. I break that line down in [website maintenance costs](/blog/website-maintenance-costs-explained).
 
-The [Bureau of Labor Statistics](https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm) gives a useful reference point from the other side of the table. The BLS reports that the median pay for web developers and digital designers was $99,520 per year in May 2025, or $47.85 per hour.
+It also helps to know what a billed rate has to cover. A developer's wage is only part of it. A shop's rate also pays for overhead, software, insurance and the hours nobody can bill: sales calls, project management, fixing things after launch. So a rate that sits well above what a developer earns isn't proof of padding. Part of that gap is the cost of running a business.
 
-That's a wage, not a billing rate. A billed rate also has to cover overhead, software, insurance and the hours nobody can bill: sales calls, project management, fixing things after launch. So a shop's hourly rate sitting well above the median wage isn't proof of padding. Part of that gap is the cost of running a business.
-
-Cost still keeps some owners offline entirely. In [Clutch's 2025 survey of 406 US small business owners](https://clutch.co/resources/state-of-small-business-websites-2025), 16% named cost as the main reason they don't have a website, down from 26% in 2018.
-
-Put it together and the honest answer to "what does a website cost" is a range too wide to use on its own. Clutch's figures alone run from a few hundred dollars to past $100,000. That's why your estimate has to start from your scope, not from somebody's average. For the tiers and line items behind those market numbers, see [what a small business website costs](/blog/small-business-website-cost-2025).
+Put it together and the honest answer to "what does a website cost" is a range too wide to use on its own. That's why your estimate has to start from your scope, not from somebody's average. For the tiers and line items behind the market numbers, see [what a small business website costs](/blog/small-business-website-cost-2025).
 
 ## Turn the Range Into a Brief Before You Ask for Quotes
 

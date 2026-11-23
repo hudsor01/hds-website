@@ -120,6 +120,6 @@ For a deeper planning walkthrough, see [how to set a website budget](/blog/how-t
 
 ## Get a Real Number for Your Business
 
-Ranges only go so far. Before you run the numbers, read [how I estimate a website's cost from the inputs up](/blog/how-to-estimate-website-cost) so you know which choices move the range. Your number depends on your pages, your integrations and what you need the site to do once it's live. Run your scope through my [free cost estimator](/tools/cost-estimator) for a starting figure in two minutes.
+Ranges only go so far. Before you run the numbers, read [how to estimate a website's cost from the inputs up](/blog/how-to-estimate-website-cost) so you know which choices move the range. Your number depends on your pages, your integrations and what you need the site to do once it's live. Run your scope through my [free cost estimator](/tools/cost-estimator) for a starting figure in two minutes.
 
 When you want a quote built around your actual sales process, [reach out through my contact page](/contact). I'll ask what a lead is worth and where it should go, then price the site around that answer.

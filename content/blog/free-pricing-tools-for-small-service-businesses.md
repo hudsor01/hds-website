@@ -17,11 +17,11 @@ featureImage: ''
 readingTime: 0
 ---
 
-Free pricing tools cover more of the money side of a service business than most owners expect. Most quoting and invoicing software is sold as a monthly subscription, which makes sense for a sales team with a dozen reps and an approval chain. A small service business with one or two crews doesn't need that to price a job, put the price in writing, bill it and chase a late payer.
+Free pricing tools cover more of the money side of a service business than most owners expect. A lot of quoting and invoicing software is sold as a monthly subscription, which makes sense for a sales team with a dozen reps and an approval chain. A small service business with one or two crews doesn't need that to price a job, put the price in writing, bill it and chase a late payer.
 
 So I built free tools for those four jobs. There's no account to create and no signup. For the proposal, invoice and contract generators, drafts save in your browser when you hit Save Draft, so you can close the tab and pick up where you left off.
 
-I spent nearly a decade in revenue operations. A lot of that time went into pricing and forecasting inside Salesforce and HubSpot. Those platforms earn their fees when a team needs quote templates, discount approvals and pipeline reports. A plumber quoting a water heater swap doesn't need any of that. What that owner needs is the math done right and a clean document the customer can say yes to.
+I spent nearly a decade in revenue operations. A lot of that time went into forecasting inside Salesforce and HubSpot. Those platforms earn their fees when a team needs quote templates, discount approvals and pipeline reports. A plumber quoting a water heater swap doesn't need any of that. What that owner needs is the math done right and a clean document the customer can say yes to.
 
 Here's what each tool does, which job it fits and where it stops.
 
