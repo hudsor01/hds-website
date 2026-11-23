@@ -4,9 +4,7 @@ import type {
 	SavedCalculation,
 	VehicleInputs
 } from '@/types/ttl-types'
-import { calculatePayment, calculateTTL } from './calculator'
-import { calculateLeaseComparison } from './lease'
-import { calculateTCO } from './tco'
+import { calculateResults } from './calculator'
 
 const STORAGE_KEY = 'texas-ttl-saved-calculations'
 const MAX_SAVED = 20
@@ -48,27 +46,7 @@ export function saveCalculation(
 		const calculations = getSavedCalculations()
 
 		// Calculate all results if not provided (lazy evaluation)
-		const calculationResults =
-			results ||
-			(() => {
-				const ttlResults = calculateTTL(input)
-				const paymentResults = calculatePayment(
-					input.purchasePrice,
-					input.downPayment,
-					ttlResults.totalTTL,
-					input.interestRate,
-					input.loanTermMonths
-				)
-				const tcoResults = calculateTCO(input)
-				const leaseComparisonResults = calculateLeaseComparison(input)
-
-				return {
-					ttlResults: ttlResults,
-					paymentResults: paymentResults,
-					tcoResults: tcoResults,
-					leaseComparisonResults: leaseComparisonResults
-				}
-			})()
+		const calculationResults = results || calculateResults(input)
 
 		const id = `calc_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`
 		const calculation: SavedCalculation = {

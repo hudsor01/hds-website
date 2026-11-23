@@ -1,8 +1,11 @@
 import type {
+	CalculationResults,
 	PaymentResults,
 	TTLResults,
 	VehicleInputs
 } from '@/types/ttl-types'
+import { calculateLeaseComparison } from './lease'
+import { calculateTCO } from './tco'
 
 // Per-county fees. Sources (re-check each January):
 // - titleFee: TxDMV Motor Vehicle Title Manual, Table 3-1. $33 in
@@ -43,12 +46,26 @@ export const COUNTY_FEES: CountyFees = {
 }
 
 // Texas state fees (TxDMV "Register Your Vehicle" and Fee Chart 1C, 2026)
+//
+// New vehicles: a passenger car or light truck sold in Texas, never
+// registered, of the current or preceding model year must get a 24-month
+// registration (Transportation Code 502.044(a-1), SB 1729, Sept 1, 2025)
+// "on payment of all fees for each year of registration" (43 TAC
+// 217.27(c)(2)(B)). So the base fee, TexasSure fee and county fees are
+// charged twice; processing and handling is per transaction (43 TAC
+// 217.183) and the $16.75 inspection replacement fee is one-time (Transp.
+// Code 548.510(b)). TxDMV's webDEALER fee page for a new vehicle (Dealer
+// User Guide, July 2026, Figure 53) shows exactly this.
 export const TEXAS_SALES_TAX_RATE = 0.0625
-const BASE_REGISTRATION_FEE = 50.75 // 6,000 lbs or less
-const PROCESSING_FEE = 4.75
-const INSURANCE_VERIFICATION_FEE = 1.0 // TexasSure
-const INSPECTION_FEE = 7.5 // Inspection Program Replacement Fee
-const NEW_VEHICLE_INSPECTION_FEE = 16.75 // Two-year initial inspection
+const BASE_REGISTRATION_FEE = 50.75 // 6,000 lbs or less, per registration year
+const PROCESSING_FEE = 4.75 // per transaction
+const INSURANCE_VERIFICATION_FEE = 1.0 // TexasSure, per registration year
+const INSPECTION_FEE = 7.5 // Inspection Program Replacement Fee, yearly
+const NEW_VEHICLE_INSPECTION_FEE = 16.75 // One-time, covers the 24 months
+const NEW_VEHICLE_REGISTRATION_YEARS = 2
+// Every dealer sale pays the $10 buyer plate fee (HB 718, July 1, 2025;
+// TxDMV Motor Vehicle Dealer Manual 2026)
+export const BUYER_PLATE_FEE = 10
 const EV_FEE_ANNUAL = 200
 const EV_FEE_NEW_TWO_YEAR = 400
 
@@ -76,7 +93,8 @@ function baseRegistrationFee(weight: number): number {
 
 /**
  * Registration line: base fee by weight, the county's local fees and the
- * fees TxDMV collects with every registration.
+ * TexasSure fee for each registration year, plus processing and the
+ * inspection replacement fee once.
  */
 function calculateRegistrationFee(
 	isNewVehicle: boolean,
@@ -84,15 +102,15 @@ function calculateRegistrationFee(
 	localFees: number
 ): number {
 	const weight = vehicleWeight || 4000 // Default to average car weight if not provided
+	const years = isNewVehicle ? NEW_VEHICLE_REGISTRATION_YEARS : 1
 	const inspectionFee = isNewVehicle
 		? NEW_VEHICLE_INSPECTION_FEE
 		: INSPECTION_FEE
 
 	return (
-		baseRegistrationFee(weight) +
-		localFees +
+		(baseRegistrationFee(weight) + localFees + INSURANCE_VERIFICATION_FEE) *
+			years +
 		PROCESSING_FEE +
-		INSURANCE_VERIFICATION_FEE +
 		inspectionFee
 	)
 }
@@ -109,8 +127,14 @@ export function calculateTTL(input: VehicleInputs): TTLResults {
 		)
 	}
 
-	// Calculate taxable amount (purchase price minus trade-in)
-	const taxableAmount = Math.max(0, input.purchasePrice - input.tradeInValue)
+	// Taxable value: sales price less trade-in and dealer discounts
+	// (Comptroller Motor Vehicle Tax Guide). A manufacturer rebate the dealer
+	// passes to the buyer counts as a cash discount (Comptroller letter ruling
+	// 202503002P), so it comes off too.
+	const taxableAmount = Math.max(
+		0,
+		input.purchasePrice - input.tradeInValue - (input.rebateAmount ?? 0)
+	)
 
 	// Sales tax
 	const salesTax = taxableAmount * TEXAS_SALES_TAX_RATE
@@ -137,13 +161,16 @@ export function calculateTTL(input: VehicleInputs): TTLResults {
 	const emissions =
 		input.isNewVehicle || input.isElectric ? 0 : countyData.emissionsFee
 
-	// Total TTL
-	const totalTTL = salesTax + titleFee + registrationFees + evFee + emissions
+	const plateFee = BUYER_PLATE_FEE
+
+	const totalTTL =
+		salesTax + titleFee + registrationFees + plateFee + evFee + emissions
 
 	return {
 		salesTax,
 		titleFee,
 		registrationFees,
+		plateFee,
 		evFee,
 		emissions,
 		totalTTL
@@ -151,20 +178,29 @@ export function calculateTTL(input: VehicleInputs): TTLResults {
 }
 
 /**
- * Calculate monthly payment using standard amortization formula.
- * Pure. Has two early-return guards: zero loan/term -> all zeros;
- * zero interest -> simple division (avoids divide-by-zero in the
- * amortization expression).
+ * Loan payment. The buyer owes the price less rebate and trade-in, plus TTL
+ * (rolled into the loan, as dealers usually do); the down payment comes off
+ * that total. Standard amortization; a zero rate divides evenly.
  */
 export function calculatePayment(
-	purchasePrice: number,
-	downPayment: number,
-	ttlAmount: number,
-	interestRate: number,
-	termMonths: number
+	input: Pick<
+		VehicleInputs,
+		| 'purchasePrice'
+		| 'tradeInValue'
+		| 'rebateAmount'
+		| 'downPayment'
+		| 'interestRate'
+		| 'loanTermMonths'
+	>,
+	ttlAmount: number
 ): PaymentResults {
-	// Total amount to finance
-	const loanAmount = purchasePrice - downPayment + ttlAmount
+	const amountDue =
+		input.purchasePrice -
+		(input.rebateAmount ?? 0) -
+		input.tradeInValue +
+		ttlAmount
+	const loanAmount = Math.max(0, amountDue - input.downPayment)
+	const termMonths = input.loanTermMonths
 
 	if (loanAmount <= 0 || termMonths <= 0) {
 		return {
@@ -176,10 +212,9 @@ export function calculatePayment(
 		}
 	}
 
-	// If interest rate is 0, simple division
-	if (interestRate === 0) {
+	if (input.interestRate === 0) {
 		return {
-			loanAmount: loanAmount,
+			loanAmount,
 			monthlyPayment: loanAmount / termMonths,
 			biweeklyPayment: loanAmount / termMonths / 2,
 			totalInterest: 0,
@@ -187,22 +222,27 @@ export function calculatePayment(
 		}
 	}
 
-	// Monthly interest rate
-	const monthlyRate = interestRate / 100 / 12
-
-	// Monthly payment formula: P * [r(1+r)^n] / [(1+r)^n - 1]
-	const monthlyPayment =
-		(loanAmount * (monthlyRate * (1 + monthlyRate) ** termMonths)) /
-		((1 + monthlyRate) ** termMonths - 1)
-
+	const monthlyRate = input.interestRate / 100 / 12
+	const growth = (1 + monthlyRate) ** termMonths
+	const monthlyPayment = (loanAmount * monthlyRate * growth) / (growth - 1)
 	const totalFinanced = monthlyPayment * termMonths
-	const totalInterest = totalFinanced - loanAmount
 
 	return {
 		loanAmount,
 		monthlyPayment,
 		biweeklyPayment: monthlyPayment / 2,
-		totalInterest,
+		totalInterest: totalFinanced - loanAmount,
 		totalFinanced
+	}
+}
+
+/** Every result the calculator shows, from one set of inputs */
+export function calculateResults(input: VehicleInputs): CalculationResults {
+	const ttlResults = calculateTTL(input)
+	return {
+		ttlResults,
+		paymentResults: calculatePayment(input, ttlResults.totalTTL),
+		tcoResults: calculateTCO(input),
+		leaseComparisonResults: calculateLeaseComparison(input)
 	}
 }

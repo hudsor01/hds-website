@@ -1,10 +1,9 @@
 'use client'
 
 import { Plus, Settings } from 'lucide-react'
+import { CurrencyInput } from '@/components/forms/CurrencyInput'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import type {
 	PaymentResults,
 	TTLResults,
@@ -36,35 +35,17 @@ export function AdvancedOptions({
 				<h3 className="text-lg font-medium">Advanced Options</h3>
 			</div>
 
-			<div className="grid grid-cols-2 gap-content">
-				{/* Credit Score */}
-				<div className="space-y-tight">
-					<Label htmlFor="creditScore">Credit Score</Label>
-					<Input
-						id="creditScore"
-						name="creditScore"
-						type="number"
-						min="300"
-						max="850"
-						value={vehicleInput.creditScore}
-						onChange={e => updateInput('creditScore', Number(e.target.value))}
-						placeholder="700"
-					/>
-				</div>
-
-				{/* Rebate Amount */}
-				<div className="space-y-tight">
-					<Label htmlFor="rebateAmount">Rebate Amount</Label>
-					<Input
-						id="rebateAmount"
-						name="rebateAmount"
-						type="number"
-						value={vehicleInput.rebateAmount}
-						onChange={e => updateInput('rebateAmount', Number(e.target.value))}
-						placeholder="0"
-					/>
-				</div>
-			</div>
+			<CurrencyInput
+				label="Manufacturer Rebate"
+				id="rebateAmount"
+				value={vehicleInput.rebateAmount ?? 0}
+				onChange={value => updateInput('rebateAmount', value)}
+				placeholder="0"
+			/>
+			<p className="text-xs text-muted-foreground mt-2">
+				A rebate the dealer applies to the price lowers both the sales tax and
+				the loan.
+			</p>
 
 			{/* Comparison Button */}
 			<div className="mt-4 pt-4 border-t">

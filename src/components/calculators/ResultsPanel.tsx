@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { formatCurrency } from '@/lib/utils'
 import type {
 	CalculationResults,
 	PaymentResults,
@@ -40,6 +41,7 @@ interface ResultsPanelProps {
 }
 
 export function ResultsPanel({
+	vehicleInput,
 	calculationResults,
 	isLoading,
 	error,
@@ -51,6 +53,8 @@ export function ResultsPanel({
 	addToComparison,
 	comparisonVehicles
 }: ResultsPanelProps) {
+	const ttl = calculationResults?.ttlResults
+	const payment = calculationResults?.paymentResults
 	return (
 		<Card>
 			<CardContent className="card-padding space-y-comfortable">
@@ -98,51 +102,29 @@ export function ResultsPanel({
 								</div>
 							</CardHeader>
 							<CardContent className="space-y-3">
-								<div className="flex justify-between items-center">
-									<span>Sales Tax (6.25%)</span>
-									<span className="font-medium">
-										${calculationResults.ttlResults?.salesTax.toFixed(2) || 0}
-									</span>
-								</div>
-								<div className="flex justify-between items-center">
-									<span>Title & Local Fees</span>
-									<span className="font-medium">
-										${calculationResults.ttlResults?.titleFee.toFixed(2) || 0}
-									</span>
-								</div>
-								<div className="flex justify-between items-center">
-									<span>Registration</span>
-									<span className="font-medium">
-										$
-										{calculationResults.ttlResults?.registrationFees.toFixed(
-											2
-										) || 0}
-									</span>
-								</div>
-								{calculationResults.ttlResults?.evFee &&
-									calculationResults.ttlResults.evFee > 0 && (
-										<div className="flex justify-between items-center">
-											<span>EV Fee</span>
-											<span className="font-medium">
-												${calculationResults.ttlResults?.evFee.toFixed(2)}
-											</span>
-										</div>
-									)}
-								{calculationResults.ttlResults?.emissions &&
-									calculationResults.ttlResults.emissions > 0 && (
-										<div className="flex justify-between items-center">
-											<span>Emissions</span>
-											<span className="font-medium">
-												${calculationResults.ttlResults?.emissions.toFixed(2)}
-											</span>
-										</div>
-									)}
+								<ResultRow label="Sales Tax (6.25%)" value={ttl?.salesTax} />
+								<ResultRow label="Title Fee" value={ttl?.titleFee} />
+								<ResultRow
+									label={
+										vehicleInput.isNewVehicle
+											? 'Registration and Local Fees (2 years)'
+											: 'Registration and Local Fees'
+									}
+									value={ttl?.registrationFees}
+								/>
+								{(ttl?.plateFee ?? 0) > 0 && (
+									<ResultRow label="License Plate Fee" value={ttl?.plateFee} />
+								)}
+								{(ttl?.evFee ?? 0) > 0 && (
+									<ResultRow label="Electric Vehicle Fee" value={ttl?.evFee} />
+								)}
+								{(ttl?.emissions ?? 0) > 0 && (
+									<ResultRow label="Emissions Fee" value={ttl?.emissions} />
+								)}
 								<div className="border-t pt-3 mt-3">
 									<div className="flex justify-between items-center font-bold text-lg">
 										<span>Total TTL</span>
-										<span>
-											${calculationResults.ttlResults?.totalTTL.toFixed(2) || 0}
-										</span>
+										<span>{formatCurrency(ttl?.totalTTL ?? 0)}</span>
 									</div>
 								</div>
 							</CardContent>
@@ -157,41 +139,35 @@ export function ResultsPanel({
 								</div>
 							</CardHeader>
 							<CardContent className="space-y-3">
-								<div className="flex justify-between items-center">
-									<span>Loan Amount</span>
-									<span className="font-medium">
-										$
-										{calculationResults.paymentResults?.loanAmount.toFixed(2) ||
-											0}
-									</span>
-								</div>
-								<div className="flex justify-between items-center">
-									<span>Monthly Payment</span>
-									<span className="font-bold text-xl">
-										$
-										{calculationResults.paymentResults?.monthlyPayment.toFixed(
-											2
-										) || 0}
-									</span>
-								</div>
-								<div className="flex justify-between items-center">
-									<span>Total Interest</span>
-									<span className="font-medium">
-										$
-										{calculationResults.paymentResults?.totalInterest.toFixed(
-											2
-										) || 0}
-									</span>
-								</div>
-								<div className="flex justify-between items-center">
-									<span>Total Amount Financed</span>
-									<span className="font-medium">
-										$
-										{calculationResults.paymentResults?.totalFinanced.toFixed(
-											2
-										) || 0}
-									</span>
-								</div>
+								{(payment?.loanAmount ?? 0) > 0 ? (
+									<>
+										<ResultRow
+											label="Loan Amount"
+											value={payment?.loanAmount}
+										/>
+										<div className="flex justify-between items-center">
+											<span>
+												Monthly Payment ({vehicleInput.loanTermMonths} months)
+											</span>
+											<span className="font-bold text-xl">
+												{formatCurrency(payment?.monthlyPayment ?? 0)}
+											</span>
+										</div>
+										<ResultRow
+											label="Total Interest"
+											value={payment?.totalInterest}
+										/>
+										<ResultRow
+											label="Total of Payments"
+											value={payment?.totalFinanced}
+										/>
+									</>
+								) : (
+									<p className="text-muted-foreground">
+										No loan needed. The down payment, trade-in and rebate cover
+										the price and TTL.
+									</p>
+								)}
 							</CardContent>
 						</Card>
 
@@ -263,5 +239,14 @@ export function ResultsPanel({
 				</div>
 			</CardContent>
 		</Card>
+	)
+}
+
+function ResultRow({ label, value }: { label: string; value?: number }) {
+	return (
+		<div className="flex justify-between items-center">
+			<span>{label}</span>
+			<span className="font-medium">{formatCurrency(value ?? 0)}</span>
+		</div>
 	)
 }

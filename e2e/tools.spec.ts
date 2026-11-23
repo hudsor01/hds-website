@@ -110,6 +110,30 @@ test.describe('Paystub Calculator URL restore (PAYSTUB-10 intersect)', () => {
 	})
 })
 
+test.describe('Texas TTL Calculator', () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto('/tools/ttl-calculator')
+		await page.evaluate(() => localStorage.removeItem('calculator-store'))
+		await page.reload()
+		await page.waitForLoadState('networkidle')
+	})
+
+	test('shows results for the default inputs without any action', async ({
+		page
+	}) => {
+		// $30,000 new car in Dallas: 6.25% tax, $33 title, $148 for 24 months of
+		// registration, $10 plate fee
+		await expect(page.getByText('$1,875.00')).toBeVisible()
+		await expect(page.getByText('$2,066.00')).toBeVisible()
+	})
+
+	test('recalculates when the price changes', async ({ page }) => {
+		await page.locator('#purchasePrice').fill('40000')
+		await expect(page.getByText('$2,500.00')).toBeVisible()
+		await expect(page.getByText('$2,691.00')).toBeVisible()
+	})
+})
+
 test.describe('Invoice Generator', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/tools/invoice-generator')

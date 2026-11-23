@@ -3,6 +3,8 @@ export interface TTLResults {
 	salesTax: number
 	titleFee: number
 	registrationFees: number
+	/** $10 buyer plate fee on every dealer sale; absent in older saved results */
+	plateFee?: number
 	evFee: number
 	emissions: number
 	totalTTL: number

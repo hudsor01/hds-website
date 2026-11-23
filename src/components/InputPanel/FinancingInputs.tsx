@@ -12,6 +12,8 @@ import {
 } from '@/components/ui/select'
 import type { VehicleInputs } from '@/types/ttl-types'
 
+const LOAN_TERMS = [24, 36, 48, 60, 72, 84] as const
+
 interface FinancingInputsProps {
 	vehicleInput: VehicleInputs
 	updateInput: (field: string, value: unknown) => void
@@ -40,18 +42,22 @@ export function FinancingInputs({
 				</div>
 
 				<div className="space-y-tight">
-					<Label htmlFor="paymentFrequency">Payment Frequency</Label>
+					<Label htmlFor="loanTermMonths">Loan Term</Label>
 					<Select
-						value={vehicleInput.paymentFrequency}
-						onValueChange={value => updateInput('paymentFrequency', value)}
+						value={String(vehicleInput.loanTermMonths)}
+						onValueChange={value =>
+							updateInput('loanTermMonths', Number(value))
+						}
 					>
-						<SelectTrigger id="paymentFrequency">
+						<SelectTrigger id="loanTermMonths">
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="monthly">Monthly</SelectItem>
-							<SelectItem value="biweekly">Bi-weekly</SelectItem>
-							<SelectItem value="weekly">Weekly</SelectItem>
+							{LOAN_TERMS.map(months => (
+								<SelectItem key={months} value={String(months)}>
+									{months} months
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
 				</div>

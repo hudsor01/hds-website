@@ -11,6 +11,8 @@ interface TtlCalculatorResultsProps {
 	salesTax: string
 	titleFee: string
 	registrationFees: string
+	/** Plate, electric vehicle and emissions fees combined */
+	otherFees: string
 	totalTTL: string
 	monthlyPayment: string
 	loanTermMonths: number
@@ -152,6 +154,7 @@ export function TtlCalculatorResults({
 	salesTax,
 	titleFee,
 	registrationFees,
+	otherFees,
 	totalTTL,
 	monthlyPayment,
 	loanTermMonths,
@@ -195,7 +198,7 @@ export function TtlCalculatorResults({
 				</Row>
 				<Row>
 					<Column style={{ width: '70%' }}>
-						<Text style={BREAKDOWN_LABEL_STYLE}>Title &amp; Fees</Text>
+						<Text style={BREAKDOWN_LABEL_STYLE}>Title Fee</Text>
 					</Column>
 					<Column style={{ width: '30%' }}>
 						<Text style={BREAKDOWN_VALUE_STYLE}>{titleFee}</Text>
@@ -203,10 +206,22 @@ export function TtlCalculatorResults({
 				</Row>
 				<Row>
 					<Column style={{ width: '70%' }}>
-						<Text style={BREAKDOWN_LABEL_STYLE}>Registration</Text>
+						<Text style={BREAKDOWN_LABEL_STYLE}>
+							Registration and Local Fees
+						</Text>
 					</Column>
 					<Column style={{ width: '30%' }}>
 						<Text style={BREAKDOWN_VALUE_STYLE}>{registrationFees}</Text>
+					</Column>
+				</Row>
+				<Row>
+					<Column style={{ width: '70%' }}>
+						<Text style={BREAKDOWN_LABEL_STYLE}>
+							Plate, EV and Emissions Fees
+						</Text>
+					</Column>
+					<Column style={{ width: '30%' }}>
+						<Text style={BREAKDOWN_VALUE_STYLE}>{otherFees}</Text>
 					</Column>
 				</Row>
 				<Row>

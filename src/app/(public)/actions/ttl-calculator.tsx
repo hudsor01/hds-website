@@ -29,7 +29,8 @@ const vehicleInputsSchema = z.object({
 	leaseMileage: z.number().optional(),
 	leaseBuyout: z.number().optional(),
 	residualValue: z.number().optional(),
-	moneyFactor: z.number().optional()
+	moneyFactor: z.number().optional(),
+	rebateAmount: z.number().optional()
 })
 
 const calculationResultsSchema = z.object({
@@ -37,6 +38,7 @@ const calculationResultsSchema = z.object({
 		salesTax: z.number(),
 		titleFee: z.number(),
 		registrationFees: z.number(),
+		plateFee: z.number().optional(),
 		evFee: z.number().optional(),
 		emissions: z.number().optional(),
 		totalTTL: z.number()
@@ -279,7 +281,7 @@ export async function emailResults(
 
 		const inputs = parsedEmailInputs.data as VehicleInputs
 		const results = parsedEmailResults.data as CalculationResults
-		const shareUrl = `${env.NEXT_PUBLIC_SITE_URL || 'https://hudsondigitalsolutions.com'}/texas-ttl-calculator?c=${shareCode}`
+		const shareUrl = `${env.NEXT_PUBLIC_SITE_URL || 'https://hudsondigitalsolutions.com'}/tools/ttl-calculator?c=${shareCode}`
 
 		// Ensure results have required properties
 		const ttl = results.ttlResults || {
@@ -308,6 +310,9 @@ export async function emailResults(
 					salesTax={formatCurrency(ttl.salesTax)}
 					titleFee={formatCurrency(ttl.titleFee)}
 					registrationFees={formatCurrency(ttl.registrationFees)}
+					otherFees={formatCurrency(
+						ttl.totalTTL - ttl.salesTax - ttl.titleFee - ttl.registrationFees
+					)}
 					totalTTL={formatCurrency(ttl.totalTTL)}
 					monthlyPayment={formatCurrency(payment.monthlyPayment)}
 					loanTermMonths={inputs.loanTermMonths || 60}

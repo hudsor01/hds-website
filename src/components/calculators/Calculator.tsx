@@ -1,10 +1,11 @@
 'use client'
 
 import { Copy, Mail, Printer, Share2 } from 'lucide-react'
-import { useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import {
 	emailResults,
+	loadCalculation,
 	saveCalculation
 } from '@/app/(public)/actions/ttl-calculator'
 import { InputPanel } from '@/components/InputPanel/InputPanel'
@@ -27,6 +28,7 @@ export function Calculator() {
 		isLoading,
 		error,
 		updateInput,
+		setVehicleInput,
 		saveCurrentCalculation
 	} = useCalculatorStore()
 
@@ -46,6 +48,29 @@ export function Calculator() {
 	const [shareCode, setShareCode] = useState<string | null>(null)
 	const [emailInput, setEmailInput] = useState('')
 	const [isPending, startTransition] = useTransition()
+
+	// Open a shared link (?c=CODE): load the saved inputs; results are derived
+	useEffect(() => {
+		const code = new URLSearchParams(window.location.search).get('c')
+		if (!code) {
+			return
+		}
+		let cancelled = false
+		loadCalculation(code).then(result => {
+			if (cancelled) {
+				return
+			}
+			if (result.success && result.data) {
+				setVehicleInput(result.data.inputs)
+				setShareCode(code)
+			} else {
+				toast.error(result.error || 'Could not load the shared calculation')
+			}
+		})
+		return () => {
+			cancelled = true
+		}
+	}, [setVehicleInput])
 
 	const handleSaveCalculation = async () => {
 		try {
@@ -143,6 +168,7 @@ export function Calculator() {
 					titleFee: calculationResults?.ttlResults?.titleFee ?? 0,
 					registrationFees:
 						calculationResults?.ttlResults?.registrationFees ?? 0,
+					plateFee: calculationResults?.ttlResults?.plateFee ?? 0,
 					evFee: calculationResults?.ttlResults?.evFee ?? 0,
 					emissions: calculationResults?.ttlResults?.emissions ?? 0,
 					totalTTL: calculationResults?.ttlResults?.totalTTL ?? 0
