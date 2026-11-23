@@ -31,7 +31,7 @@ Six inputs drive almost every website estimate. If you know where you stand on e
 
 **Page count.** More pages means more layout, more copy and more to test. Service businesses underestimate this one all the time. A plumber who covers eight cities and offers six services can easily need a page for each.
 
-**Features.** Online booking, payments, a members area, a blog, a connection to your CRM. I'd put features at the top of the list of what moves a website budget. The feature list is where scope quietly grows.
+**Features.** Online booking, payments, a members area, a blog, a connection to your CRM. Clutch's budget guide lists features and functionality first among the factors that drive a website's cost. The feature list is where scope quietly grows.
 
 **Design complexity.** A tuned template, a custom design and a high-end brand build each take a different amount of design time. Design also sets how much work every page and feature takes after it.
 
@@ -72,17 +72,21 @@ Read the output as what the tool says it is: a typical market range for planning
 
 ## What the Market Range Looks Like
 
-An estimator gives you one view of the market. Published cost guides give you more. They disagree with each other by a wide margin. Each guide draws on different shops and different project sizes, so their averages land in different places.
+An estimator gives you one view of the market. Published cost guides give you more. They disagree with each other by a wide margin, because each one draws on different shops and different project sizes.
 
-That spread is the point. A figure that averages a one-page freelancer site with an online store built by an agency describes neither project. Read any published number for what it measured, not as the price of your site.
+[Clutch's website budget guide](https://clutch.co/resources/how-to-create-a-budget-for-a-new-website) says most websites built from scratch cost under $10,000. The same guide puts a basic 5 to 10 page site from a freelancer at $500 to $5,000, DIY site builders at $10 to $50 per month and larger projects such as online stores or membership portals past $100,000.
 
-Hourly rates spread just as wide. A solo designer and an agency with a full project team both call themselves web designers. Their rates reflect very different costs of doing business.
+Hourly rates spread just as wide. Clutch's data puts web design companies at $100 to $149 per hour. The same guide says agency rates run from $25 to $150 per hour depending on region and expertise.
 
-The recurring costs are smaller but they add up: a domain renewal every year, hosting every month and maintenance on top of that. Maintenance varies far more from site to site than the domain or the hosting. I break that line down in [website maintenance costs](/blog/website-maintenance-costs-explained).
+Clutch lists the smaller recurring costs too: a domain at $0 to $20 per year and hosting at $2 to $80 per month. Maintenance on top of that varies far more from site to site. I break that line down in [website maintenance costs](/blog/website-maintenance-costs-explained).
 
-It also helps to know what a billed rate has to cover. A developer's wage is only part of it. A shop's rate also pays for overhead, software, insurance and the hours nobody can bill: sales calls, project management, fixing things after launch. So a rate that sits well above what a developer earns isn't proof of padding. Part of that gap is the cost of running a business.
+The [Bureau of Labor Statistics](https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm) gives a reference point from the other side of the table. It reports a 2025 median pay of $99,520 per year, or $47.85 per hour, for web developers and digital designers.
 
-Put it together and the honest answer to "what does a website cost" is a range too wide to use on its own. That's why your estimate has to start from your scope, not from somebody's average. For the tiers and line items behind the market numbers, see [what a small business website costs](/blog/small-business-website-cost-2025).
+That's a wage, not a billing rate. A billed rate also has to cover overhead, software, insurance and the hours nobody can bill: sales calls, project management, fixing things after launch. So a rate that sits well above the median wage isn't proof of padding. Part of that gap is the cost of running a business.
+
+Cost still keeps some owners offline. In [Clutch's 2025 survey of 406 US small business owners](https://clutch.co/resources/state-of-small-business-websites-2025), 16% of those without a website named cost as the main reason, down from 26% in 2018.
+
+Put it together and the honest answer to "what does a website cost" is a range too wide to use on its own. Clutch's figures alone run from a few hundred dollars to past $100,000. That's why your estimate has to start from your scope, not from somebody's average. For the tiers and line items behind those market numbers, see [what a small business website costs](/blog/small-business-website-cost-2025).
 
 ## Turn the Range Into a Brief Before You Ask for Quotes
 
