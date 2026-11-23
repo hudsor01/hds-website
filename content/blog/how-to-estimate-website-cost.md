@@ -39,7 +39,7 @@ Six inputs drive almost every website estimate. If you know where you stand on e
 
 **Ongoing maintenance.** Hosting, updates, backups and small changes after launch. It's a separate line from the build, but it belongs in the estimate because you'll pay it for as long as the site runs.
 
-One more driver hides in plain sight. If you're moving off a platform like Wix, Squarespace or Thryv, the move itself is work: mapping old URLs to new ones, setting up redirects and rebuilding tracking. A good estimate names that migration work as its own line instead of burying it inside "setup."
+One more driver hides in plain sight. If you're moving off a platform like Wix, Squarespace or Thryv, the move itself is work: mapping old URLs to new ones, setting up redirects and rebuilding tracking. A good estimate names that migration work as its own line instead of burying it inside "setup." If you hire that part out, here's [how to choose a website migration expert](/blog/how-to-choose-a-website-migration-expert).
 
 ## How to Read an Estimator's Output
 
@@ -128,5 +128,7 @@ When the quotes come back, [reading a website quote line by line](/blog/what-goe
 I've run Hudson Digital Solutions since 2020 and I build sites for service businesses across Dallas-Fort Worth. My [website design](/services/web-design) work starts from the same inputs in this post: what the site has to do, which features earn their keep and what it will take to keep it running. A simple site typically takes 1 to 4 weeks.
 
 I don't publish package prices. I price every project after a free 30-minute website plan call, once I actually know the scope.
+
+Pricing your own jobs is a different problem. For that, start with these [free pricing tools for quoting your own jobs](/blog/free-pricing-tools-for-small-service-businesses).
 
 Run your numbers first. Then [book the free website plan call](/contact) and bring your range and your brief. I'll tell you where your scope sits, what I'd cut and what I'd keep.
