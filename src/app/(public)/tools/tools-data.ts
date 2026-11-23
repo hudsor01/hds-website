@@ -225,7 +225,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Time Card Calculator',
 		description:
-			'Enter one workweek of clock-in and clock-out times with breaks to total the hours, split overtime at 1.5x and get gross pay. Built for running a small crew.',
+			'Enter one workweek of clock-in and clock-out times with unpaid meal breaks to total the hours, split overtime at 1.5x under the federal weekly rule and get gross pay.',
 		href: TOOL_ROUTES.TIME_CARD_CALCULATOR,
 		Icon: Clock,
 		benefits: [

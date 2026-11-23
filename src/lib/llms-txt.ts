@@ -105,7 +105,7 @@ export function buildLlmsTxt({ services, tools, posts }: LlmsTxtInput): string {
 		'',
 		`> Web design studio in ${location.city}, ${location.stateCode}, run by founder Richard Hudson. It builds fast, mobile-ready websites for Dallas-Fort Worth small businesses, then wires in local search, online booking, payments and lead follow-up so the site brings in work.`,
 		'',
-		'Richard spent nearly a decade in revenue operations (Salesforce, HubSpot, Power BI, Workato) before building websites. Work is in person across the Dallas-Fort Worth metroplex and remote for clients elsewhere. There are no fixed prices or packages: every project is priced after a free website plan call, once its scope is clear. The Website Cost Estimator shows a typical market range for planning, not a quote.',
+		'Richard spent nearly a decade in revenue operations (Salesforce, HubSpot, Power BI, Workato) before building websites. Work is in person across the Dallas-Fort Worth metroplex and remote for clients elsewhere. There are no fixed prices or packages: every project is priced after a free website plan call, once its scope is clear. The Website Cost Estimator is an illustrative planning model for scoping a project, not market data and not a quote.',
 		'',
 		`Contact: ${BUSINESS_INFO.email}, ${BUSINESS_INFO.phone}. ${location.streetAddress}, ${location.city}, ${location.stateCode} ${location.postalCode}.`
 	].join('\n')
