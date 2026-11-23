@@ -142,8 +142,14 @@ describe('GET /api/pagespeed (upstream call and response contract)', () => {
 		const { GET } = await import('@/app/api/pagespeed/route')
 		await GET(makeRequest('https://example.com/'))
 
-		expect(fetchSpy).toHaveBeenCalledTimes(1)
-		const requested = new URL(String(fetchSpy.mock.calls[0]?.[0]))
+		// Count only calls to Google: other modules loaded by the route (rate
+		// limiter, logging) may use fetch too, and CI runs them, so a raw call
+		// count is environment-dependent.
+		const psiCalls = fetchSpy.mock.calls.filter(([input]) =>
+			String(input).startsWith('https://www.googleapis.com/')
+		)
+		expect(psiCalls).toHaveLength(1)
+		const requested = new URL(String(psiCalls[0]?.[0]))
 		expect(`${requested.origin}${requested.pathname}`).toBe(PSI_ENDPOINT)
 		expect(requested.searchParams.get('url')).toBe('https://example.com/')
 		expect(requested.searchParams.get('strategy')).toBe('mobile')
