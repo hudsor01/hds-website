@@ -108,9 +108,8 @@ export function CalculatorResults({
 	return (
 		<div className="space-y-comfortable">
 			{/* Results Display */}
+			{/* The page's action bar already shows a "Results" heading */}
 			<div className="space-y-content">
-				<h3 className="text-h4 text-foreground">Your Results</h3>
-
 				<div className="space-y-3">
 					{results.map((result, index) => (
 						<Card
