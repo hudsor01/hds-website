@@ -1,11 +1,13 @@
 /**
  * LocalBusiness Schema Generator
- * Build schema.org LocalBusiness JSON-LD for local SEO.
+ * Build schema.org LocalBusiness JSON-LD that follows Google's
+ * LocalBusiness structured data guidelines.
  */
 
 'use client'
 
 import { useId, useMemo, useState } from 'react'
+import { toast } from 'sonner'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import type { ToolAction } from '@/components/layout/ToolPageLayout'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
@@ -13,37 +15,71 @@ import { trackEvent } from '@/lib/analytics'
 import { logger } from '@/lib/logger'
 import {
 	buildLocalBusinessSchema,
+	DAYS_OF_WEEK,
+	type DayOfWeek,
+	LOCAL_BUSINESS_TYPES,
+	type LocalBusinessInput,
 	type LocalBusinessType,
-	serializeSchema
+	type SchemaField,
+	serializeSchema,
+	validateLocalBusinessInput
 } from '@/lib/schema-generator'
 
-const BUSINESS_TYPES: ReadonlyArray<{
-	value: LocalBusinessType
-	label: string
-}> = [
-	{ value: 'LocalBusiness', label: 'Local Business (general)' },
-	{ value: 'ProfessionalService', label: 'Professional Service' },
-	{ value: 'Store', label: 'Store / Retail' },
-	{ value: 'Restaurant', label: 'Restaurant' },
-	{ value: 'FoodEstablishment', label: 'Food Establishment' },
-	{ value: 'MedicalBusiness', label: 'Medical Business' },
-	{ value: 'HealthAndBeautyBusiness', label: 'Health & Beauty' },
-	{ value: 'HomeAndConstructionBusiness', label: 'Home & Construction' },
-	{ value: 'AutomotiveBusiness', label: 'Automotive' },
-	{ value: 'LegalService', label: 'Legal Service' },
-	{ value: 'FinancialService', label: 'Financial Service' },
-	{ value: 'EntertainmentBusiness', label: 'Entertainment' }
-]
+const TYPE_LABELS: Record<LocalBusinessType, string> = {
+	LocalBusiness: 'Local business (general)',
+	AutoRepair: 'Auto repair',
+	AutomotiveBusiness: 'Automotive (other)',
+	BeautySalon: 'Beauty salon',
+	DaySpa: 'Day spa',
+	Dentist: 'Dentist',
+	Electrician: 'Electrician',
+	EntertainmentBusiness: 'Entertainment',
+	FinancialService: 'Financial service',
+	FoodEstablishment: 'Food establishment (other)',
+	HairSalon: 'Hair salon',
+	HealthAndBeautyBusiness: 'Health and beauty (other)',
+	HomeAndConstructionBusiness: 'Home and construction (other)',
+	HVACBusiness: 'HVAC',
+	LegalService: 'Legal service or attorney',
+	MedicalBusiness: 'Medical business (other)',
+	MedicalClinic: 'Medical clinic',
+	Plumber: 'Plumber',
+	RealEstateAgent: 'Real estate agent',
+	Restaurant: 'Restaurant',
+	RoofingContractor: 'Roofing contractor',
+	Store: 'Store or retail'
+}
 
-const DAYS = [
-	'Monday',
-	'Tuesday',
-	'Wednesday',
-	'Thursday',
-	'Friday',
-	'Saturday',
-	'Sunday'
-] as const
+const BUSINESS_TYPES = LOCAL_BUSINESS_TYPES.map(value => ({
+	value,
+	label: TYPE_LABELS[value]
+})).sort((a, b) =>
+	a.value === 'LocalBusiness'
+		? -1
+		: b.value === 'LocalBusiness'
+			? 1
+			: a.label.localeCompare(b.label)
+)
+
+const FIELD_LABELS: Record<SchemaField, string> = {
+	name: 'Business name',
+	street: 'Street',
+	city: 'City',
+	region: 'State or region',
+	postalCode: 'Postal code',
+	country: 'Country',
+	latitude: 'Latitude',
+	longitude: 'Longitude',
+	priceRange: 'Price range'
+}
+
+function isLocalBusinessType(value: string): value is LocalBusinessType {
+	return (LOCAL_BUSINESS_TYPES as readonly string[]).includes(value)
+}
+
+function lines(value: string): string[] {
+	return value.split('\n')
+}
 
 export default function SchemaGeneratorClient() {
 	const [type, setType] = useState<LocalBusinessType>('LocalBusiness')
@@ -64,18 +100,28 @@ export default function SchemaGeneratorClient() {
 	const [latitude, setLatitude] = useState('')
 	const [longitude, setLongitude] = useState('')
 
-	const [days, setDays] = useState<string[]>([])
+	const [days, setDays] = useState<DayOfWeek[]>([])
 	const [opens, setOpens] = useState('')
 	const [closes, setCloses] = useState('')
 
+	const [areaServed, setAreaServed] = useState('')
 	const [socials, setSocials] = useState('')
 	const [includeScriptTag, setIncludeScriptTag] = useState(true)
+	// The copy message only shows for the output it was produced for.
+	const [copyResult, setCopyResult] = useState<{
+		output: string
+		message: string
+	} | null>(null)
 
-	const typeFieldId = useId()
-	const scriptTagFieldId = useId()
+	const baseId = useId()
+	const typeFieldId = `${baseId}-type`
+	const scriptTagFieldId = `${baseId}-script`
+	const areaFieldId = `${baseId}-area`
+	const socialsFieldId = `${baseId}-socials`
+	const hoursHelpId = `${baseId}-hours-help`
 
-	const output = useMemo(() => {
-		const schema = buildLocalBusinessSchema({
+	const input: LocalBusinessInput = useMemo(
+		() => ({
 			type,
 			name,
 			description,
@@ -87,54 +133,64 @@ export default function SchemaGeneratorClient() {
 			address: { street, city, region, postalCode, country },
 			geo: { latitude, longitude },
 			openingHours: [{ days, opens, closes }],
-			sameAs: socials.split('\n')
-		})
-		return serializeSchema(schema, {
-			pretty: true,
-			scriptTag: includeScriptTag
-		})
-	}, [
-		type,
-		name,
-		description,
-		url,
-		telephone,
-		email,
-		image,
-		priceRange,
-		street,
-		city,
-		region,
-		postalCode,
-		country,
-		latitude,
-		longitude,
-		days,
-		opens,
-		closes,
-		socials,
-		includeScriptTag
-	])
+			areaServed: lines(areaServed),
+			sameAs: lines(socials)
+		}),
+		[
+			type,
+			name,
+			description,
+			url,
+			telephone,
+			email,
+			image,
+			priceRange,
+			street,
+			city,
+			region,
+			postalCode,
+			country,
+			latitude,
+			longitude,
+			days,
+			opens,
+			closes,
+			areaServed,
+			socials
+		]
+	)
 
-	const hasResult = name.trim().length > 0
+	const { errors, warnings } = useMemo(
+		() => validateLocalBusinessInput(input),
+		[input]
+	)
+	const hasResult = Object.keys(errors).length === 0
 
-	// Inline feedback when a coordinate isn't a single decimal number — the
-	// most common mistake is pasting "lat, lng" into one field, which the
-	// generator silently drops. Mirror the generator's decimal-only rule.
-	const coordError = (raw: string, limit: number): string | undefined => {
-		const trimmed = raw.trim()
-		if (trimmed === '') {
-			return undefined
-		}
-		if (!/^[+-]?\d+(\.\d+)?$/.test(trimmed)) {
-			return `Enter a single decimal number (${limit === 90 ? '-90 to 90' : '-180 to 180'}). Put latitude and longitude in separate fields.`
-		}
-		return undefined
-	}
-	const latError = coordError(latitude, 90)
-	const lngError = coordError(longitude, 180)
+	const output = useMemo(
+		() =>
+			hasResult
+				? serializeSchema(buildLocalBusinessSchema(input), {
+						pretty: true,
+						scriptTag: includeScriptTag
+					})
+				: '',
+		[hasResult, input, includeScriptTag]
+	)
 
-	const toggleDay = (day: string) => {
+	// Format problems show inline as soon as the field has a value; missing
+	// required fields are listed in the result panel instead of shouting at
+	// an empty form.
+	const formatError = (field: SchemaField, value: string) =>
+		value.trim() ? errors[field] : undefined
+	const latitudeError =
+		latitude.trim() || longitude.trim() ? errors.latitude : undefined
+	const longitudeError =
+		latitude.trim() || longitude.trim() ? errors.longitude : undefined
+	const missingFields = (Object.keys(errors) as SchemaField[]).map(
+		field => FIELD_LABELS[field]
+	)
+
+	const toggleDay = (day: DayOfWeek) => {
 		setDays(prev =>
 			prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
 		)
@@ -146,27 +202,28 @@ export default function SchemaGeneratorClient() {
 		}
 		try {
 			await navigator.clipboard.writeText(output)
+			setCopyResult({ output, message: 'JSON-LD copied to the clipboard.' })
+			toast.success('JSON-LD copied')
 			trackEvent('calculator_used', {
 				calculator_type: 'schema-generator',
 				action: 'copy',
 				business_type: type
 			})
 		} catch (error) {
-			logger.debug('Clipboard API unavailable, using fallback', {
-				error: error instanceof Error ? error.message : String(error)
+			logger.error('Copy schema failed', error)
+			setCopyResult({
+				output,
+				message: 'Copy failed. Select the code and copy it instead.'
 			})
-			const textArea = document.createElement('textarea')
-			textArea.value = output
-			document.body.appendChild(textArea)
-			textArea.select()
-			document.execCommand('copy')
-			document.body.removeChild(textArea)
+			toast.error(
+				'Could not copy the JSON-LD. Select the code and copy it instead.'
+			)
 		}
 	}
 
-	const actions: ToolAction[] = [
-		{ type: 'copy', label: 'Copy', onClick: copyToClipboard }
-	]
+	const actions: ToolAction[] = hasResult
+		? [{ type: 'copy', label: 'Copy', onClick: copyToClipboard }]
+		: []
 
 	const formSlot = (
 		<div className="space-y-comfortable">
@@ -182,7 +239,13 @@ export default function SchemaGeneratorClient() {
 					<select
 						id={typeFieldId}
 						value={type}
-						onChange={event => setType(event.target.value as LocalBusinessType)}
+						onChange={event => {
+							const next = event.target.value
+							if (isLocalBusinessType(next)) {
+								setType(next)
+							}
+						}}
+						aria-describedby={`${typeFieldId}-help`}
 						className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
 					>
 						{BUSINESS_TYPES.map(option => (
@@ -191,14 +254,21 @@ export default function SchemaGeneratorClient() {
 							</option>
 						))}
 					</select>
+					<p
+						id={`${typeFieldId}-help`}
+						className="mt-1 text-xs text-muted-foreground"
+					>
+						Google asks for the most specific type that fits.
+					</p>
 				</div>
 
 				<CalculatorInput
 					id="schema-name"
-					label="Business name"
+					label="Business name (required)"
 					value={name}
 					onChange={event => setName(event.target.value)}
 					placeholder="Acme Plumbing Co."
+					required
 				/>
 				<CalculatorInput
 					id="schema-description"
@@ -214,7 +284,7 @@ export default function SchemaGeneratorClient() {
 					value={url}
 					onChange={event => setUrl(event.target.value)}
 					placeholder="https://example.com"
-					helpText="Use the full URL including https://."
+					helpText="Use the full URL. https:// is added if you leave it off."
 				/>
 				<CalculatorInput
 					id="schema-phone"
@@ -222,7 +292,8 @@ export default function SchemaGeneratorClient() {
 					type="tel"
 					value={telephone}
 					onChange={event => setTelephone(event.target.value)}
-					placeholder="(555) 123-4567"
+					placeholder="+1 214 555 0100"
+					helpText="Google asks you to include the country code and area code."
 				/>
 				<CalculatorInput
 					id="schema-email"
@@ -234,12 +305,12 @@ export default function SchemaGeneratorClient() {
 				/>
 				<CalculatorInput
 					id="schema-image"
-					label="Logo / image URL"
+					label="Image URL"
 					type="url"
 					value={image}
 					onChange={event => setImage(event.target.value)}
-					placeholder="https://example.com/logo.png"
-					helpText="Use the full URL including https://."
+					placeholder="https://example.com/storefront.jpg"
+					helpText="A photo of the business. Use the full URL."
 				/>
 				<CalculatorInput
 					id="schema-price"
@@ -247,14 +318,15 @@ export default function SchemaGeneratorClient() {
 					value={priceRange}
 					onChange={event => setPriceRange(event.target.value)}
 					placeholder="$$"
-					helpText="$ to $$$$, or a range like $50-$200."
+					helpText="$ to $$$$, or a range like $50-$200. Google requires fewer than 100 characters."
+					error={formatError('priceRange', priceRange)}
 				/>
 			</div>
 
 			{/* Address */}
 			<fieldset className="space-y-content border-t border-border pt-comfortable">
 				<legend className="text-sm font-semibold text-foreground">
-					Address
+					Address (required by Google)
 				</legend>
 				<CalculatorInput
 					id="schema-street"
@@ -262,6 +334,7 @@ export default function SchemaGeneratorClient() {
 					value={street}
 					onChange={event => setStreet(event.target.value)}
 					placeholder="123 Main St"
+					required
 				/>
 				<div className="grid grid-cols-2 gap-content">
 					<CalculatorInput
@@ -270,13 +343,15 @@ export default function SchemaGeneratorClient() {
 						value={city}
 						onChange={event => setCity(event.target.value)}
 						placeholder="Dallas"
+						required
 					/>
 					<CalculatorInput
 						id="schema-region"
-						label="State / region"
+						label="State or region"
 						value={region}
 						onChange={event => setRegion(event.target.value)}
 						placeholder="TX"
+						required
 					/>
 				</div>
 				<div className="grid grid-cols-2 gap-content">
@@ -286,6 +361,7 @@ export default function SchemaGeneratorClient() {
 						value={postalCode}
 						onChange={event => setPostalCode(event.target.value)}
 						placeholder="75201"
+						required
 					/>
 					<CalculatorInput
 						id="schema-country"
@@ -293,6 +369,11 @@ export default function SchemaGeneratorClient() {
 						value={country}
 						onChange={event => setCountry(event.target.value)}
 						placeholder="US"
+						helpText="2-letter code, for example US."
+						error={formatError('country', country)}
+						maxLength={2}
+						autoComplete="country"
+						required
 					/>
 				</div>
 			</fieldset>
@@ -306,38 +387,45 @@ export default function SchemaGeneratorClient() {
 					<CalculatorInput
 						id="schema-lat"
 						label="Latitude"
+						inputMode="decimal"
 						value={latitude}
 						onChange={event => setLatitude(event.target.value)}
-						placeholder="32.7767"
-						error={latError}
+						placeholder="32.77670"
+						helpText="At least 5 decimal places (Google)."
+						error={latitudeError}
 					/>
 					<CalculatorInput
 						id="schema-lng"
 						label="Longitude"
+						inputMode="decimal"
 						value={longitude}
 						onChange={event => setLongitude(event.target.value)}
-						placeholder="-96.7970"
-						error={lngError}
+						placeholder="-96.79700"
+						helpText="At least 5 decimal places (Google)."
+						error={longitudeError}
 					/>
 				</div>
 			</fieldset>
 
 			{/* Hours */}
-			<fieldset className="space-y-content border-t border-border pt-comfortable">
+			<fieldset
+				className="space-y-content border-t border-border pt-comfortable"
+				aria-describedby={hoursHelpId}
+			>
 				<legend className="text-sm font-semibold text-foreground">
 					Opening hours (optional)
 				</legend>
-				<p className="text-xs text-muted-foreground">
+				<p id={hoursHelpId} className="text-xs text-muted-foreground">
 					These hours apply to every selected day. For days with different
 					hours, leave them unchecked rather than entering the wrong times.
 				</p>
 				<div className="flex flex-wrap gap-2">
-					{DAYS.map(day => {
+					{DAYS_OF_WEEK.map(day => {
 						const checked = days.includes(day)
 						return (
 							<label
 								key={day}
-								className={`cursor-pointer rounded-md border px-2.5 py-1 text-xs transition-colors ${
+								className={`cursor-pointer rounded-md border px-2.5 py-1 text-xs transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background ${
 									checked
 										? 'border-accent bg-accent/10 text-accent'
 										: 'border-border text-muted-foreground hover:text-foreground'
@@ -349,7 +437,8 @@ export default function SchemaGeneratorClient() {
 									onChange={() => toggleDay(day)}
 									className="sr-only"
 								/>
-								{day.slice(0, 3)}
+								<span aria-hidden="true">{day.slice(0, 3)}</span>
+								<span className="sr-only">{day}</span>
 							</label>
 						)
 					})}
@@ -370,6 +459,38 @@ export default function SchemaGeneratorClient() {
 						onChange={event => setCloses(event.target.value)}
 					/>
 				</div>
+				<div aria-live="polite">
+					{warnings.map(warning => (
+						<p key={warning} className="text-xs text-warning-text">
+							{warning}
+						</p>
+					))}
+				</div>
+			</fieldset>
+
+			{/* Service area */}
+			<fieldset className="space-y-content border-t border-border pt-comfortable">
+				<legend className="text-sm font-semibold text-foreground">
+					Service area (optional)
+				</legend>
+				<label
+					htmlFor={areaFieldId}
+					className="block text-sm font-medium text-foreground"
+				>
+					Cities or areas you serve
+				</label>
+				<textarea
+					id={areaFieldId}
+					value={areaServed}
+					onChange={event => setAreaServed(event.target.value)}
+					aria-describedby={`${areaFieldId}-help`}
+					className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-accent"
+					rows={3}
+					placeholder={'Dallas\nPlano\nIrving'}
+				/>
+				<p id={`${areaFieldId}-help`} className="text-xs text-muted-foreground">
+					One per line. These become the schema.org areaServed property.
+				</p>
 			</fieldset>
 
 			{/* Social profiles */}
@@ -377,9 +498,17 @@ export default function SchemaGeneratorClient() {
 				<legend className="text-sm font-semibold text-foreground">
 					Social profiles (optional)
 				</legend>
+				<label
+					htmlFor={socialsFieldId}
+					className="block text-sm font-medium text-foreground"
+				>
+					Profile URLs
+				</label>
 				<textarea
+					id={socialsFieldId}
 					value={socials}
 					onChange={event => setSocials(event.target.value)}
+					aria-describedby={`${socialsFieldId}-help`}
 					className="w-full rounded-md border border-border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-accent"
 					rows={4}
 					placeholder={
@@ -387,9 +516,12 @@ export default function SchemaGeneratorClient() {
 					}
 					spellCheck={false}
 				/>
-				<p className="text-xs text-muted-foreground">
-					One full profile URL per line (include https://). These become the
-					schema&apos;s sameAs links.
+				<p
+					id={`${socialsFieldId}-help`}
+					className="text-xs text-muted-foreground"
+				>
+					One profile URL per line. https:// is added if you leave it off. These
+					become the schema&apos;s sameAs links.
 				</p>
 			</fieldset>
 
@@ -420,18 +552,25 @@ export default function SchemaGeneratorClient() {
 				Paste this into the &lt;head&gt; of your page, then validate it with
 				Google&apos;s Rich Results Test.
 			</p>
+			<p
+				role="status"
+				aria-live="polite"
+				className="mt-1 text-xs text-muted-foreground"
+			>
+				{copyResult?.output === output ? copyResult.message : ''}
+			</p>
 		</div>
 	) : undefined
 
 	return (
 		<ToolPageLayout
 			title="LocalBusiness Schema Generator"
-			description="Build schema.org LocalBusiness JSON-LD to help Google understand your business and show you in local results."
+			description="Build schema.org LocalBusiness JSON-LD that tells Google your business name, address, hours and contact details."
 			columns="two"
 			formSlot={formSlot}
 			resultSlot={resultSlot}
 			hasResult={hasResult}
-			resultPlaceholder="Enter your business name to generate the JSON-LD"
+			resultPlaceholder={`Google requires a name and full address. Fix or fill in: ${missingFields.join(', ')}.`}
 			actions={actions}
 		/>
 	)
