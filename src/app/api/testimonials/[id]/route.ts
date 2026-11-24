@@ -2,6 +2,11 @@
  * API Route: Individual Testimonial
  * PATCH /api/testimonials/[id] - Update testimonial (approve/feature)
  * DELETE /api/testimonials/[id] - Delete testimonial
+ *
+ * Bearer auth for automation. Both responses are
+ * { success: true, data: { id } }. Every change purges the public
+ * testimonial cache immediately so an unpublished or deleted review
+ * disappears from /testimonials on the next request.
  */
 
 import type { NextRequest } from 'next/server'
@@ -10,7 +15,11 @@ import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper'
 import { errorResponse, successResponse } from '@/lib/api/responses'
 import { validateAdminAuth } from '@/lib/auth/admin'
 import { logger } from '@/lib/logger'
-import { deleteTestimonial, updateTestimonialStatus } from '@/lib/testimonials'
+import {
+	deleteTestimonial,
+	purgeTestimonialCaches,
+	updateTestimonialStatus
+} from '@/lib/testimonials'
 
 interface RouteParams {
 	params: Promise<{ id: string }>
@@ -38,7 +47,7 @@ async function handlePatchTestimonial(
 			return errorResponse('Invalid testimonial id', 400)
 		}
 
-		const rawBody = await request.json()
+		const rawBody: unknown = await request.json()
 		const parsed = updateSchema.safeParse(rawBody)
 		if (!parsed.success) {
 			return errorResponse('Invalid input', 400)
@@ -54,6 +63,7 @@ async function handlePatchTestimonial(
 		if (!success) {
 			return errorResponse('Testimonial not found', 404)
 		}
+		purgeTestimonialCaches()
 
 		logger.info('Testimonial updated', {
 			component: 'TestimonialAPI',
@@ -62,13 +72,9 @@ async function handlePatchTestimonial(
 			updates: body
 		})
 
-		return successResponse({ success: true })
+		return successResponse({ id })
 	} catch (error) {
-		logger.error('Error updating testimonial', {
-			error: error instanceof Error ? error.message : String(error),
-			component: 'TestimonialAPI',
-			action: 'update'
-		})
+		logger.error('Error updating testimonial', error)
 
 		return errorResponse('Failed to update testimonial', 500)
 	}
@@ -94,6 +100,7 @@ async function handleDeleteTestimonial(
 		if (!success) {
 			return errorResponse('Testimonial not found', 404)
 		}
+		purgeTestimonialCaches()
 
 		logger.info('Testimonial deleted', {
 			component: 'TestimonialAPI',
@@ -101,13 +108,9 @@ async function handleDeleteTestimonial(
 			testimonialId: id
 		})
 
-		return successResponse({ success: true })
+		return successResponse({ id })
 	} catch (error) {
-		logger.error('Error deleting testimonial', {
-			error: error instanceof Error ? error.message : String(error),
-			component: 'TestimonialAPI',
-			action: 'delete'
-		})
+		logger.error('Error deleting testimonial', error)
 
 		return errorResponse('Failed to delete testimonial', 500)
 	}

@@ -1,6 +1,8 @@
 /**
  * API Route: Individual Testimonial Request
  * DELETE /api/testimonials/requests/[id] - Delete testimonial request
+ *
+ * Bearer auth for automation. Response: { success: true, data: { id } }.
  */
 
 import type { NextRequest } from 'next/server'
@@ -9,7 +11,10 @@ import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper'
 import { errorResponse, successResponse } from '@/lib/api/responses'
 import { validateAdminAuth } from '@/lib/auth/admin'
 import { logger } from '@/lib/logger'
-import { deleteTestimonialRequest } from '@/lib/testimonials'
+import {
+	deleteTestimonialRequest,
+	purgeTestimonialCaches
+} from '@/lib/testimonials'
 
 interface RouteParams {
 	params: Promise<{ id: string }>
@@ -32,11 +37,13 @@ async function handleTestimonialRequestDelete(
 			return errorResponse('Invalid request id', 400)
 		}
 
-		const success = await deleteTestimonialRequest(id)
+		const deletedToken = await deleteTestimonialRequest(id)
 
-		if (!success) {
+		if (!deletedToken) {
 			return errorResponse('Request not found', 404)
 		}
+		// The token page must stop offering the form for a revoked link.
+		purgeTestimonialCaches(deletedToken)
 
 		logger.info('Testimonial request deleted', {
 			component: 'TestimonialRequestAPI',
@@ -44,13 +51,9 @@ async function handleTestimonialRequestDelete(
 			requestId: id
 		})
 
-		return successResponse({ success: true })
+		return successResponse({ id })
 	} catch (error) {
-		logger.error('Error deleting testimonial request', {
-			error: error instanceof Error ? error.message : String(error),
-			component: 'TestimonialRequestAPI',
-			action: 'delete'
-		})
+		logger.error('Error deleting testimonial request', error)
 
 		return errorResponse('Failed to delete request', 500)
 	}

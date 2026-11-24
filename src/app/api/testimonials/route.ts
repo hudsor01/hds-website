@@ -3,7 +3,10 @@
  * GET /api/testimonials - List testimonials
  *
  * Query params:
- *   - all=true: Return all testimonials including unapproved
+ *   - all=true: Return all testimonials including unapproved (Bearer auth,
+ *     for automation; the browser admin UI lives in /admin/testimonials)
+ *
+ * Response: { success: true, data: { testimonials: Testimonial[] } }
  */
 
 import type { NextRequest } from 'next/server'
@@ -41,11 +44,7 @@ async function handleGetTestimonials(request: NextRequest) {
 		const testimonials = await getApprovedTestimonials()
 		return successResponse({ testimonials })
 	} catch (error) {
-		logger.error('Error fetching testimonials', {
-			error: error instanceof Error ? error.message : String(error),
-			component: 'TestimonialsAPI',
-			action: 'list'
-		})
+		logger.error('Error fetching testimonials', error)
 
 		return errorResponse('Failed to fetch testimonials', 500)
 	}

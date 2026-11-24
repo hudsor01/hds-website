@@ -24,7 +24,9 @@ export const testimonials = pgTable(
 		imageUrl: text('image_url'),
 		videoUrl: text('video_url'),
 		featured: boolean('featured').default(false),
-		published: boolean('published').default(true),
+		// New rows start unpublished: nothing goes live without the owner's
+		// approval. DDL: ALTER TABLE testimonials ALTER COLUMN published SET DEFAULT false
+		published: boolean('published').default(false),
 		createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
 		updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow()
 	},

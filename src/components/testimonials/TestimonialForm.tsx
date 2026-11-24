@@ -1,6 +1,7 @@
 /**
  * Testimonial Form Component
- * Used for both public and private testimonial submission
+ * Rendered only on the private, token-gated submit page. The token is
+ * required: the server rejects any submit without a valid, unused link.
  */
 
 'use client'
@@ -12,77 +13,126 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
 import { csrfFetch } from '@/lib/api/csrf-fetch'
-import { SERVICE_TYPES } from '@/types/testimonials'
+import {
+	TESTIMONIAL_MAX_LENGTH,
+	TESTIMONIAL_MIN_LENGTH
+} from '@/lib/schemas/query-params'
 
 interface TestimonialFormProps {
-	requestId?: string
-	token?: string
+	token: string
 	defaultName?: string
 }
 
-export function TestimonialForm({
-	requestId,
-	token,
-	defaultName
-}: TestimonialFormProps) {
-	const [formData, setFormData] = useState({
-		client_name: defaultName || '',
+interface FormState {
+	client_name: string
+	company: string
+	role: string
+	content: string
+	video_url: string
+}
+
+const STARS = [1, 2, 3, 4, 5] as const
+
+const RATING_LABELS: Record<number, string> = {
+	1: 'Poor',
+	2: 'Fair',
+	3: 'Good',
+	4: 'Great',
+	5: 'Excellent'
+}
+
+const INPUT_CLS =
+	'w-full rounded-md border border-border bg-background px-4 py-2.5 text-foreground'
+
+function starLabel(star: number): string {
+	return star === 1 ? 'Rate 1 star' : `Rate ${star} stars`
+}
+
+function isHttpUrl(value: string): boolean {
+	try {
+		const url = new URL(value)
+		return url.protocol === 'http:' || url.protocol === 'https:'
+	} catch {
+		return false
+	}
+}
+
+export function TestimonialForm({ token, defaultName }: TestimonialFormProps) {
+	const [formData, setFormData] = useState<FormState>({
+		client_name: defaultName ?? '',
 		company: '',
 		role: '',
-		rating: 5,
 		content: '',
-		video_url: '',
-		service_type: ''
+		video_url: ''
 	})
-
+	// No default: a review must carry the rating the client actually chose.
+	const [rating, setRating] = useState<number | null>(null)
 	const [hoveredRating, setHoveredRating] = useState<number | null>(null)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [isSubmitted, setIsSubmitted] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 
-	const handleChange = (field: string, value: string | number) => {
+	const contentLength = formData.content.trim().length
+
+	const handleChange = (field: keyof FormState, value: string) => {
 		setFormData(prev => ({ ...prev, [field]: value }))
+	}
+
+	const validate = (): string | null => {
+		if (rating === null) {
+			return 'Please choose a star rating'
+		}
+		if (formData.client_name.trim().length < 2) {
+			return 'Please enter your name'
+		}
+		if (contentLength < TESTIMONIAL_MIN_LENGTH) {
+			return `Please write a testimonial of at least ${TESTIMONIAL_MIN_LENGTH} characters`
+		}
+		if (contentLength > TESTIMONIAL_MAX_LENGTH) {
+			return `Please keep your testimonial under ${TESTIMONIAL_MAX_LENGTH} characters`
+		}
+		const videoUrl = formData.video_url.trim()
+		if (videoUrl && !isHttpUrl(videoUrl)) {
+			return 'Video links must start with http:// or https://'
+		}
+		return null
 	}
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setError(null)
+
+		const validationError = validate()
+		if (validationError) {
+			setError(validationError)
+			return
+		}
+
 		setIsSubmitting(true)
-
-		// Validation
-		if (!formData.client_name.trim()) {
-			setError('Please enter your name')
-			setIsSubmitting(false)
-			return
-		}
-
-		if (!formData.content.trim() || formData.content.length < 20) {
-			setError('Please write a testimonial of at least 20 characters')
-			setIsSubmitting(false)
-			return
-		}
-
 		try {
 			const response = await csrfFetch('/api/testimonials/submit', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
-					...formData,
-					request_id: requestId,
-					token
+					token,
+					rating,
+					client_name: formData.client_name.trim(),
+					company: formData.company.trim(),
+					role: formData.role.trim(),
+					content: formData.content.trim(),
+					video_url: formData.video_url.trim()
 				})
 			})
 
 			if (!response.ok) {
-				const data = await response.json()
-				throw new Error(data.error || 'Failed to submit testimonial')
+				const data: { error?: string } = await response.json().catch(() => ({}))
+				throw new Error(data.error ?? 'Failed to submit testimonial')
 			}
 
 			setIsSubmitted(true)
 			trackEvent('testimonial_submitted', {
-				rating: formData.rating,
-				service_type: formData.service_type,
-				is_private_link: !!token
+				rating: rating ?? 0,
+				is_private_link: true
 			})
 		} catch (err) {
 			setError(
@@ -100,36 +150,42 @@ export function TestimonialForm({
 			<div className="py-12">
 				<FormSuccessMessage
 					title="Thank You!"
-					message="Your testimonial has been submitted successfully. I appreciate you taking the time to share your feedback!"
+					message="Your testimonial is in. I read every review before it goes live, and I appreciate you taking the time."
 				/>
 			</div>
 		)
 	}
 
+	const shownRating = hoveredRating ?? rating ?? 0
+
 	return (
-		<form onSubmit={handleSubmit} className="space-y-comfortable">
-			{/* Rating */}
-			<div>
-				<label className="block text-sm font-medium text-foreground mb-3">
+		<form onSubmit={handleSubmit} noValidate className="space-y-comfortable">
+			<fieldset>
+				<legend className="block text-sm font-medium text-foreground mb-3">
 					How would you rate your experience?{' '}
-					<span className="text-destructive">*</span>
-				</label>
+					<span className="text-destructive" aria-hidden="true">
+						*
+					</span>
+					<span className="sr-only">(required)</span>
+				</legend>
 				<div className="flex gap-1">
-					{[1, 2, 3, 4, 5].map(star => (
+					{STARS.map(star => (
 						<Button
 							key={star}
 							type="button"
-							onClick={() => handleChange('rating', star)}
+							onClick={() => setRating(star)}
 							onMouseEnter={() => setHoveredRating(star)}
 							onMouseLeave={() => setHoveredRating(null)}
 							variant="ghost"
 							size="icon"
 							className="hover:scale-110"
-							aria-label={`Rate ${star} stars`}
+							aria-label={starLabel(star)}
+							aria-pressed={rating === star}
 						>
 							<Star
+								aria-hidden="true"
 								className={`w-8 h-8 ${
-									star <= (hoveredRating ?? formData.rating)
+									star <= shownRating
 										? 'fill-yellow-400 text-warning-text'
 										: 'text-muted-foreground'
 								}`}
@@ -137,16 +193,13 @@ export function TestimonialForm({
 						</Button>
 					))}
 				</div>
-				<p className="text-sm text-muted-foreground mt-1">
-					{formData.rating === 5 && 'Excellent!'}
-					{formData.rating === 4 && 'Great!'}
-					{formData.rating === 3 && 'Good'}
-					{formData.rating === 2 && 'Fair'}
-					{formData.rating === 1 && 'Poor'}
+				<p className="text-sm text-muted-foreground mt-1" aria-live="polite">
+					{rating === null
+						? 'Choose 1 to 5 stars'
+						: `${rating} of 5: ${RATING_LABELS[rating]}`}
 				</p>
-			</div>
+			</fieldset>
 
-			{/* Name */}
 			<div>
 				<label
 					htmlFor="client_name"
@@ -159,13 +212,14 @@ export function TestimonialForm({
 					type="text"
 					value={formData.client_name}
 					onChange={e => handleChange('client_name', e.target.value)}
-					className="w-full rounded-md border border-border bg-background px-4 py-2.5 text-foreground"
-					placeholder="John Smith"
+					className={INPUT_CLS}
+					placeholder="Jane Smith"
+					autoComplete="name"
+					maxLength={100}
 					required
 				/>
 			</div>
 
-			{/* Company & Role */}
 			<div className="grid gap-content sm:grid-cols-2">
 				<div>
 					<label
@@ -179,8 +233,10 @@ export function TestimonialForm({
 						type="text"
 						value={formData.company}
 						onChange={e => handleChange('company', e.target.value)}
-						className="w-full rounded-md border border-border bg-background px-4 py-2.5 text-foreground"
-						placeholder="Acme Inc."
+						className={INPUT_CLS}
+						placeholder="Acme Plumbing"
+						autoComplete="organization"
+						maxLength={100}
 					/>
 				</div>
 				<div>
@@ -195,36 +251,14 @@ export function TestimonialForm({
 						type="text"
 						value={formData.role}
 						onChange={e => handleChange('role', e.target.value)}
-						className="w-full rounded-md border border-border bg-background px-4 py-2.5 text-foreground"
-						placeholder="CEO, Marketing Director, etc."
+						className={INPUT_CLS}
+						placeholder="Owner"
+						autoComplete="organization-title"
+						maxLength={100}
 					/>
 				</div>
 			</div>
 
-			{/* Service Type */}
-			<div>
-				<label
-					htmlFor="service_type"
-					className="block text-sm font-medium text-foreground mb-1"
-				>
-					Service Used (Optional)
-				</label>
-				<select
-					id="service_type"
-					value={formData.service_type}
-					onChange={e => handleChange('service_type', e.target.value)}
-					className="w-full rounded-md border border-border bg-background px-4 py-2.5 text-foreground"
-				>
-					<option value="">Select a service...</option>
-					{SERVICE_TYPES.map(service => (
-						<option key={service.value} value={service.value}>
-							{service.label}
-						</option>
-					))}
-				</select>
-			</div>
-
-			{/* Testimonial Content */}
 			<div>
 				<label
 					htmlFor="content"
@@ -239,15 +273,15 @@ export function TestimonialForm({
 					rows={5}
 					className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground"
 					placeholder="Tell me about your experience working with Hudson Digital Solutions..."
+					aria-describedby="content-count"
 					required
-					minLength={20}
 				/>
-				<p className="text-xs text-muted-foreground mt-1">
-					{formData.content.length} characters (minimum 20)
+				<p id="content-count" className="text-xs text-muted-foreground mt-1">
+					{contentLength} characters (minimum {TESTIMONIAL_MIN_LENGTH}, maximum{' '}
+					{TESTIMONIAL_MAX_LENGTH})
 				</p>
 			</div>
 
-			{/* Video URL (Optional) */}
 			<div>
 				<label
 					htmlFor="video_url"
@@ -258,27 +292,28 @@ export function TestimonialForm({
 				<input
 					id="video_url"
 					type="url"
+					inputMode="url"
 					value={formData.video_url}
 					onChange={e => handleChange('video_url', e.target.value)}
-					className="w-full rounded-md border border-border bg-background px-4 py-2.5 text-foreground"
+					className={INPUT_CLS}
 					placeholder="https://youtube.com/watch?v=... or https://loom.com/..."
+					aria-describedby="video_url-help"
 				/>
-				<p className="text-xs text-muted-foreground mt-1">
-					Share a YouTube, Loom, or other video link
+				<p id="video_url-help" className="text-xs text-muted-foreground mt-1">
+					A YouTube, Loom or other video link starting with https://
 				</p>
 			</div>
 
-			{/* Error Message */}
 			{error && (
 				<Card
 					size="sm"
+					role="alert"
 					className="bg-destructive-light text-destructive-text text-sm"
 				>
 					{error}
 				</Card>
 			)}
 
-			{/* Submit Button */}
 			<Button
 				type="submit"
 				disabled={isSubmitting}
@@ -289,7 +324,7 @@ export function TestimonialForm({
 					'Submitting...'
 				) : (
 					<>
-						<Send className="w-5 h-5" />
+						<Send className="w-5 h-5" aria-hidden="true" />
 						Submit Testimonial
 					</>
 				)}

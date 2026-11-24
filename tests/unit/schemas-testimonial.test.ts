@@ -17,7 +17,7 @@ const validSubmit = {
 	client_name: 'Sarah Mitchell',
 	rating: 5,
 	content:
-		'They built a website that doubled our lead volume in the first month.'
+		'Clear communication from kickoff to launch, and the site went live on schedule.'
 }
 
 describe('testimonialSubmitSchema', () => {
@@ -71,17 +71,58 @@ describe('testimonialSubmitSchema', () => {
 		).toBe(true)
 	})
 
-	it('treats empty optional URLs as undefined', () => {
+	it('treats an empty video URL as undefined', () => {
 		const result = testimonialSubmitSchema.safeParse({
 			...validSubmit,
-			photo_url: '',
 			video_url: ''
 		})
 		expect(result.success).toBe(true)
 		if (result.success) {
-			expect(result.data.photo_url).toBeUndefined()
 			expect(result.data.video_url).toBeUndefined()
 		}
+	})
+
+	it('accepts only http(s) video URLs', () => {
+		for (const video_url of [
+			'javascript:alert(1)',
+			'data:text/html,hi',
+			'ftp://example.com/video.mp4'
+		]) {
+			expect(
+				testimonialSubmitSchema.safeParse({ ...validSubmit, video_url }).success
+			).toBe(false)
+		}
+		expect(
+			testimonialSubmitSchema.safeParse({
+				...validSubmit,
+				video_url: 'https://youtube.com/watch?v=abc'
+			}).success
+		).toBe(true)
+	})
+
+	it('requires a rating (no default)', () => {
+		const { rating, ...withoutRating } = validSubmit
+		void rating
+		expect(testimonialSubmitSchema.safeParse(withoutRating).success).toBe(false)
+		expect(
+			testimonialSubmitSchema.safeParse({ ...validSubmit, rating: null })
+				.success
+		).toBe(false)
+	})
+
+	it('trims text before the length checks', () => {
+		// 19 real characters padded with spaces must not pass the 20 minimum.
+		expect(
+			testimonialSubmitSchema.safeParse({
+				...validSubmit,
+				content: `   ${'a'.repeat(19)}   `
+			}).success
+		).toBe(false)
+		const result = testimonialSubmitSchema.safeParse({
+			...validSubmit,
+			client_name: '  Ana  '
+		})
+		expect(result.success && result.data.client_name).toBe('Ana')
 	})
 })
 
