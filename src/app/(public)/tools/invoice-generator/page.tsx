@@ -10,7 +10,7 @@ import InvoiceGeneratorClient from './InvoiceGeneratorClient'
 export const metadata: Metadata = buildMetadata({
 	title: 'Invoice Generator | Hudson Digital Solutions',
 	description:
-		'Create professional invoices with PDF download. Free invoice generator with customizable line items, tax calculations, and branding.',
+		'Create a professional invoice and download it as a PDF. Free invoice generator with line items, sales tax and due dates that follow your payment terms.',
 	path: '/tools/invoice-generator',
 	socialTitle: 'Invoice Generator',
 	socialDescription: 'Create professional invoices with PDF download.'
