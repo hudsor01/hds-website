@@ -1,6 +1,6 @@
 /**
  * Meta Tag Generator
- * Generate SEO-optimized meta tags, Open Graph, and Twitter Card markup
+ * Generate title, description, Open Graph and X (Twitter) Card tags
  */
 
 import type { Metadata } from 'next'
@@ -10,11 +10,11 @@ import MetaTagGeneratorClient from './MetaTagGeneratorClient'
 export const metadata: Metadata = buildMetadata({
 	title: 'Meta Tag Generator | Hudson Digital Solutions',
 	description:
-		'Generate SEO-optimized meta tags, Open Graph, and Twitter Card markup for your web pages. Free meta tag generator with live preview.',
+		'Generate title, description, canonical, Open Graph and X (Twitter) Card tags for your web pages. Free meta tag generator with a live preview.',
 	path: '/tools/meta-tag-generator',
 	socialTitle: 'Meta Tag Generator',
 	socialDescription:
-		'Generate SEO-optimized meta tags, Open Graph, and Twitter Card markup.'
+		'Generate title, description, Open Graph and X (Twitter) Card tags.'
 })
 
 export default function MetaTagGeneratorPage() {
