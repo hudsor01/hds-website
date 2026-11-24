@@ -10,9 +10,9 @@
  * Image and video fields are URL-paste only per CONTEXT.md D-04 -- no
  * upload UI in this phase.
  *
- * The `published` checkbox defaults to false even though the DB default
- * is true: the admin create form intentionally yields an unpublished row
- * so the operator can review before flipping it on (CONTEXT.md 5.3 +
+ * The `published` checkbox defaults to false, matching the DB default:
+ * the admin create form yields an unpublished row so the operator can
+ * review before flipping it on (CONTEXT.md 5.3 +
  * createAdminTestimonialSchema default).
  *
  * Submission seam mirrors `CreateShowcaseForm`: packs values into

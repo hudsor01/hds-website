@@ -320,8 +320,7 @@ export const TOOLS: readonly ToolEntry[] = [
 		cta: 'Count Words',
 		category: 'developers'
 	}
-	// The Testimonial Collector tool is admin-only (gated behind an
-	// ADMIN_SECRET bearer). It was de-listed in audit #242 and the
-	// route is intentionally left in place so an operator can hit it
-	// directly with the token.
+	// The old Testimonial Collector is not a public tool: review request
+	// links are managed in /admin/testimonials behind the admin session,
+	// and /tools/testimonial-collector redirects there.
 ] as const

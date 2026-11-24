@@ -46,7 +46,11 @@ import type {
 	UpdateAdminTestimonialInput
 } from '@/lib/schemas/admin-testimonials'
 import { type Testimonial, testimonials } from '@/lib/schemas/schema'
-import { deleteTestimonial as deleteTestimonialBase } from '@/lib/testimonials'
+import {
+	deleteTestimonial as deleteTestimonialBase,
+	getTestimonialRequests,
+	type TestimonialRequest
+} from '@/lib/testimonials'
 
 export type TestimonialRow = Testimonial
 
@@ -280,4 +284,42 @@ export async function toggleTestimonialPublished(
 		.where(eq(testimonials.id, id))
 		.returning()
 	return row ?? null
+}
+
+export async function toggleTestimonialFeatured(
+	id: string
+): Promise<TestimonialRow | null> {
+	const result = await getTestimonialById(id)
+	const existing = result.status === 'found' ? result.data : null
+	if (!existing) {
+		return null
+	}
+	const [row] = await db
+		.update(testimonials)
+		.set({
+			featured: !(existing.featured ?? false),
+			updatedAt: new Date()
+		})
+		.where(eq(testimonials.id, id))
+		.returning()
+	return row ?? null
+}
+
+/**
+ * Every private request link, newest first, for the admin requests page.
+ * Returns `err()` on a DB failure so the page renders the error state
+ * instead of a misleading empty list.
+ */
+export async function listTestimonialRequestsForAdmin(): Promise<
+	AdminQueryResult<TestimonialRequest[]>
+> {
+	try {
+		return ok(await getTestimonialRequests())
+	} catch (error) {
+		logger.error(
+			'testimonials-queries.listTestimonialRequestsForAdmin failed',
+			error
+		)
+		return err()
+	}
 }

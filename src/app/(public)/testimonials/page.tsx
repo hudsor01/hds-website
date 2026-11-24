@@ -1,9 +1,10 @@
 /**
  * Testimonials Page
- * Shows only reviews real clients submitted (via /testimonials/submit or a
- * request link) and the owner published in /admin/testimonials. Review and
- * AggregateRating JSON-LD render only when such reviews exist. With none,
- * the page says so honestly and stays out of the index.
+ * Shows only reviews real clients submitted through a private request link
+ * (or the owner entered) and the owner published in /admin/testimonials.
+ * Review JSON-LD renders only when such reviews exist, and AggregateRating
+ * only counts the rated ones. Unrated reviews show no stars. With none, the
+ * page says so honestly and stays out of the index.
  */
 
 import { ArrowRight, MessageCircle, Star } from 'lucide-react'
@@ -88,9 +89,11 @@ export default async function TestimonialsPage() {
 									key={testimonial.id}
 									className="rounded-xl border border-border bg-surface-raised p-8 flex flex-col"
 								>
-									<div className="mb-4">
-										<StarRating rating={testimonial.rating} />
-									</div>
+									{testimonial.rating !== null && (
+										<div className="mb-4">
+											<StarRating rating={testimonial.rating} />
+										</div>
+									)}
 									<blockquote className="mb-6 flex-grow">
 										<MessageCircle
 											className="w-8 h-8 text-accent/30 mb-3"
@@ -132,12 +135,16 @@ export default async function TestimonialsPage() {
 										<ArrowRight className="w-4 h-4" aria-hidden="true" />
 									</Link>
 								</Button>
-								<Button asChild variant="outline" size="lg">
-									<Link href="/testimonials/submit">
-										Worked With Me? Leave a Review
-									</Link>
-								</Button>
 							</div>
+							<p className="text-sm text-muted-foreground mt-6">
+								Worked with me?{' '}
+								<Link
+									href="/contact"
+									className="text-accent-text underline-offset-4 hover:underline"
+								>
+									Ask me for a review link.
+								</Link>
+							</p>
 						</div>
 					)}
 				</div>

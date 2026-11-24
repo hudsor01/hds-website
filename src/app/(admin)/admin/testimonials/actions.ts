@@ -20,6 +20,11 @@
  * Delete and toggle return `void` because they redirect / let
  * `revalidatePath` re-render. Create and update return the
  * `{ ok, errors }` envelope for the TanStack Form to consume.
+ *
+ * Request links (the private, single-use URLs clients use to submit a
+ * review) are created, listed and deleted here too, behind the admin
+ * session. The browser never sees ADMIN_SECRET; the Bearer-token API routes
+ * remain only for server-to-server automation.
  */
 'use server'
 
@@ -30,6 +35,7 @@ import { formDataToObject } from '@/lib/admin/form-data'
 import {
 	createTestimonial,
 	deleteTestimonial,
+	toggleTestimonialFeatured,
 	toggleTestimonialPublished,
 	updateTestimonial
 } from '@/lib/admin/testimonials-queries'
@@ -37,12 +43,21 @@ import { flattenZod } from '@/lib/admin/zod-errors'
 import { logger } from '@/lib/logger'
 import {
 	createAdminTestimonialSchema,
+	createTestimonialRequestFormSchema,
 	updateAdminTestimonialSchema
 } from '@/lib/schemas/admin-testimonials'
+import {
+	createTestimonialRequest,
+	deleteTestimonialRequest,
+	TESTIMONIALS_APPROVED_TAG,
+	testimonialTokenTag
+} from '@/lib/testimonials'
 
 export type ActionResult =
 	| { ok: true; id?: string }
 	| { ok: false; errors: Record<string, string> }
+
+const REQUESTS_PATH = '/admin/testimonials/requests'
 
 export async function createTestimonialAction(
 	formData: FormData
@@ -103,7 +118,11 @@ export async function deleteTestimonialAction(
 	if (!id) {
 		redirect('/admin/testimonials')
 	}
-	await deleteTestimonial(id)
+	try {
+		await deleteTestimonial(id)
+	} catch (e) {
+		logger.error('deleteTestimonialAction failed', e)
+	}
 	refreshPublicTestimonials()
 	redirect('/admin/testimonials')
 }
@@ -120,6 +139,69 @@ export async function toggleTestimonialPublishedAction(
 	refreshPublicTestimonials()
 }
 
+export async function toggleTestimonialFeaturedAction(
+	formData: FormData
+): Promise<void> {
+	await requireAdminSession()
+	const id = String(formData.get('id') ?? '')
+	if (!id) {
+		redirect('/admin/testimonials')
+	}
+	await toggleTestimonialFeatured(id)
+	refreshPublicTestimonials()
+}
+
+export type CreateRequestResult =
+	| { ok: true; token: string }
+	| { ok: false; errors: Record<string, string> }
+
+export async function createTestimonialRequestAction(
+	formData: FormData
+): Promise<CreateRequestResult> {
+	await requireAdminSession()
+	const parsed = createTestimonialRequestFormSchema.safeParse(
+		formDataToObject(formData)
+	)
+	if (!parsed.success) {
+		return { ok: false, errors: flattenZod(parsed.error) }
+	}
+	const { clientName, clientEmail, projectName } = parsed.data
+	try {
+		const request = await createTestimonialRequest({
+			clientName,
+			clientEmail: clientEmail || undefined,
+			projectName: projectName || undefined
+		})
+		revalidatePath(REQUESTS_PATH)
+		return { ok: true, token: request.token }
+	} catch (e) {
+		logger.error('createTestimonialRequestAction failed', e)
+		return {
+			ok: false,
+			errors: { _form: 'Could not create the link. Please try again.' }
+		}
+	}
+}
+
+export async function deleteTestimonialRequestAction(
+	formData: FormData
+): Promise<void> {
+	await requireAdminSession()
+	const id = String(formData.get('id') ?? '')
+	if (id) {
+		try {
+			const token = await deleteTestimonialRequest(id)
+			// A revoked link must stop showing the form right away.
+			if (token) {
+				updateTag(testimonialTokenTag(token))
+			}
+		} catch (e) {
+			logger.error('deleteTestimonialRequestAction failed', e)
+		}
+	}
+	revalidatePath(REQUESTS_PATH)
+}
+
 /**
  * Every mutation can change what /testimonials shows (and its Review
  * JSON-LD), so expire the public cache along with the admin list. Without
@@ -127,5 +209,5 @@ export async function toggleTestimonialPublishedAction(
  */
 function refreshPublicTestimonials(): void {
 	revalidatePath('/admin/testimonials')
-	updateTag('testimonials-approved')
+	updateTag(TESTIMONIALS_APPROVED_TAG)
 }

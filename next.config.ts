@@ -54,6 +54,21 @@ const nextConfig: NextConfig = {
 				destination: '/showcase',
 				permanent: false
 			},
+			// The public testimonial collector asked for the raw ADMIN_SECRET in
+			// the browser. Its link management now lives behind the admin
+			// session gate, so old bookmarks land there (sign-in first).
+			{
+				source: '/tools/testimonial-collector',
+				destination: '/admin/testimonials',
+				statusCode: 301
+			},
+			// The no-token submit form could never succeed (every submit needs
+			// a private request link), so the old URL goes to the reviews page.
+			{
+				source: '/testimonials/submit',
+				destination: '/testimonials',
+				statusCode: 301
+			},
 			// Out-of-area city pages, retired for good (see the file's note).
 			...RETIRED_LOCATION_SLUGS.map(slug => ({
 				source: `/locations/${slug}`,

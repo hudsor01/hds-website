@@ -23,11 +23,12 @@ test('testimonials page never claims a rating it cannot back up', async ({
 			/noindex/
 		)
 		expect(schema).not.toContain('AggregateRating')
+		// Reviews come only through private request links, so the page
+		// points past clients to the contact page instead of a dead form.
 		await expect(
-			page.getByRole('link', { name: 'Worked With Me? Leave a Review' })
-		).toHaveAttribute('href', '/testimonials/submit')
+			page.getByRole('link', { name: 'Ask me for a review link.' })
+		).toHaveAttribute('href', '/contact')
 	} else {
-		expect(schema).toContain('AggregateRating')
 		expect(schema).toContain('"@type":"Review"')
 	}
 })
