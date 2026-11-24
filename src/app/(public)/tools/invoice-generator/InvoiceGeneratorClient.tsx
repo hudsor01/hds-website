@@ -5,34 +5,64 @@
 
 'use client'
 
-import { Plus, RotateCcw, Save, Trash2 } from 'lucide-react'
-import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
+import { Plus, Trash2 } from 'lucide-react'
+import { useCallback, useMemo, useState } from 'react'
+import { toast } from 'sonner'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
+import { DocumentDownloadPanel } from '@/components/tools/DocumentDownloadPanel'
+import { DraftActions } from '@/components/tools/DraftActions'
+import { TextAreaField } from '@/components/tools/TextAreaField'
 import { Card } from '@/components/ui/card'
+import { useClientDefaults } from '@/hooks/use-client-defaults'
 import { useHydrated } from '@/hooks/use-hydrated'
 import {
-	clearLocalStorageDraft,
-	useLocalStorageDraft,
-	writeLocalStorageDraft
+	createLocalStorageDraft,
+	useLocalStorageDraft
 } from '@/hooks/use-local-storage-draft'
+import { usePdfDownload } from '@/hooks/use-pdf-download'
 import { trackEvent } from '@/lib/analytics'
-import { BUSINESS_INFO } from '@/lib/constants/business'
-import { logger } from '@/lib/logger'
-import type { InvoiceData, InvoiceLineItem } from '@/lib/pdf/invoice-template'
-import { formatCurrency } from '@/lib/utils'
+import {
+	defaultInvoiceNote,
+	dueDateForTerms,
+	toDateInputValue
+} from '@/lib/documents/dates'
+import { toFileSlug } from '@/lib/documents/format'
+import {
+	computeInvoiceTotals,
+	getInvoiceIssues,
+	lineAmountCents
+} from '@/lib/documents/invoice'
+import { formatCents, parseNumberInput } from '@/lib/documents/money'
+import {
+	type InvoiceFormState,
+	invoiceDraftSchema
+} from '@/lib/schemas/documents'
+import {
+	INVOICE_PAYMENT_TERMS,
+	type InvoiceLineItem,
+	type InvoicePaymentTerms
+} from '@/types/pdf-templates'
 
-const STORAGE_KEY = 'hds-invoice-draft'
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
 
-const DEFAULT_COMPANY = {
-	companyName: 'Hudson Digital Solutions',
-	companyAddress: '',
-	companyCity: 'Dallas',
-	companyState: 'TX',
-	companyZip: '',
-	companyEmail: BUSINESS_INFO.email,
-	companyPhone: ''
-}
+const invoiceDraft = createLocalStorageDraft(
+	'hds-invoice-draft',
+	invoiceDraftSchema,
+	'invoice'
+)
+
+const DEFAULT_TERMS: InvoicePaymentTerms = 'Net 30'
+
+const IRS_RECORDS_URL =
+	'https://www.irs.gov/businesses/small-businesses-self-employed/how-long-should-i-keep-records'
+
+const LINE_INPUT_CLASS =
+	'w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground'
+
+const LINE_LABEL_CLASS = 'text-xs text-muted-foreground sm:sr-only'
 
 const generateInvoiceNumber = (): string => {
 	const date = new Date()
@@ -44,330 +74,272 @@ const generateInvoiceNumber = (): string => {
 	return `INV-${year}${month}-${random}`
 }
 
-const formatDateForInput = (date: Date): string => {
-	return date.toISOString().split('T')[0] ?? ''
-}
-
-// Only call crypto.randomUUID() on the client
 const createEmptyLineItem = (): InvoiceLineItem => ({
-	id:
-		typeof crypto !== 'undefined' ? crypto.randomUUID() : `line-${Date.now()}`,
+	id: crypto.randomUUID(),
 	description: '',
 	quantity: 1,
-	rate: 0,
-	amount: 0
+	rate: 0
 })
 
-// Empty subscribe for useSyncExternalStore (no-op)
-const emptySubscribe = () => () => {}
-
-// Module-level cache for generated defaults (persists across renders)
-let cachedDefaults: {
-	invoiceNumber: string
-	invoiceDate: string
-	dueDate: string
-	lineItem: InvoiceLineItem
-} | null = null
-
-const getDefaultsSnapshot = () => {
-	if (cachedDefaults === null) {
-		cachedDefaults = {
-			invoiceNumber: generateInvoiceNumber(),
-			invoiceDate: formatDateForInput(new Date()),
-			dueDate: formatDateForInput(
-				new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-			),
-			lineItem: createEmptyLineItem()
-		}
-	}
-	return cachedDefaults
-}
-
-const getServerDefaultsSnapshot = () => ({
+const EMPTY_INVOICE: InvoiceFormState = {
+	companyName: '',
+	companyAddress: '',
+	companyCity: '',
+	companyState: '',
+	companyZip: '',
+	companyEmail: '',
+	companyPhone: '',
+	clientName: '',
+	clientCompany: '',
+	clientAddress: '',
+	clientCity: '',
+	clientState: '',
+	clientZip: '',
+	clientEmail: '',
 	invoiceNumber: '',
 	invoiceDate: '',
 	dueDate: '',
-	lineItem: { id: '', description: '', quantity: 1, rate: 0, amount: 0 }
-})
+	paymentTerms: DEFAULT_TERMS,
+	lineItems: [{ id: 'line-1', description: '', quantity: 1, rate: 0 }],
+	taxRate: 0,
+	notes: defaultInvoiceNote(DEFAULT_TERMS),
+	dueDateEdited: false,
+	notesEdited: false
+}
+
+/** Fresh defaults for each visit: a new number, today's local date, Net 30. */
+const createInvoiceDefaults = (): InvoiceFormState => {
+	const invoiceDate = toDateInputValue(new Date())
+	return {
+		...EMPTY_INVOICE,
+		invoiceNumber: generateInvoiceNumber(),
+		invoiceDate,
+		dueDate: dueDateForTerms(invoiceDate, DEFAULT_TERMS),
+		lineItems: [createEmptyLineItem()]
+	}
+}
+
+type TextField = {
+	[K in keyof InvoiceFormState]: InvoiceFormState[K] extends string ? K : never
+}[keyof InvoiceFormState]
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 export default function InvoiceGeneratorClient() {
-	// Use hydration-safe hook
 	const isHydrated = useHydrated()
-
-	// Get generated defaults via useSyncExternalStore (no refs during render)
-	const generatedDefaults = useSyncExternalStore(
-		emptySubscribe,
-		getDefaultsSnapshot,
-		getServerDefaultsSnapshot
+	const [defaults, regenerateDefaults] = useClientDefaults(
+		createInvoiceDefaults,
+		EMPTY_INVOICE
 	)
-
-	// Load draft from localStorage. Hydration-safe via useSyncExternalStore.
-	const savedDraft = useLocalStorageDraft<InvoiceData>(STORAGE_KEY, 'invoice')
-
-	// Track if we have a draft (derived from savedDraft)
+	const savedDraft = useLocalStorageDraft(invoiceDraft)
 	const hasDraft = savedDraft !== null
 
-	// User-entered state (starts empty, user modifications go here)
-	const [userModifiedData, setUserModifiedData] = useState<
-		Partial<InvoiceData>
-	>({})
+	// Edits made in this visit. Until the first edit the form shows the saved
+	// draft, or fresh defaults when there is none.
+	const [edits, setEdits] = useState<InvoiceFormState | null>(null)
+	const baseData = savedDraft ?? defaults
+	const invoiceData = edits ?? baseData
 
-	// Compute effective invoice data by merging: defaults < savedDraft < userModified
-	const invoiceData = useMemo((): InvoiceData => {
-		const baseData: InvoiceData = {
-			...DEFAULT_COMPANY,
-			clientName: '',
-			clientCompany: '',
-			clientAddress: '',
-			clientCity: '',
-			clientState: '',
-			clientZip: '',
-			clientEmail: '',
-			invoiceNumber: generatedDefaults.invoiceNumber,
-			invoiceDate: generatedDefaults.invoiceDate,
-			dueDate: generatedDefaults.dueDate,
-			lineItems: generatedDefaults.lineItem.id
-				? [generatedDefaults.lineItem]
-				: [],
-			subtotal: 0,
-			taxRate: 0,
-			taxAmount: 0,
-			total: 0,
-			notes:
-				'Payment is due within 30 days. Please include invoice number with your payment.',
-			paymentTerms: 'Net 30'
-		}
-
-		// Apply saved draft if exists
-		if (savedDraft) {
-			Object.assign(baseData, savedDraft)
-		}
-
-		// Apply user modifications (takes precedence)
-		Object.assign(baseData, userModifiedData)
-
-		return baseData
-	}, [generatedDefaults, savedDraft, userModifiedData])
-
-	// Helper to update invoice data (stores in userModifiedData)
-	const setInvoiceData = useCallback(
-		(updater: InvoiceData | ((prev: InvoiceData) => InvoiceData)) => {
-			setUserModifiedData(prev => {
-				const currentFull: InvoiceData = {
-					...DEFAULT_COMPANY,
-					clientName: '',
-					clientCompany: '',
-					clientAddress: '',
-					clientCity: '',
-					clientState: '',
-					clientZip: '',
-					clientEmail: '',
-					invoiceNumber: generatedDefaults.invoiceNumber,
-					invoiceDate: generatedDefaults.invoiceDate,
-					dueDate: generatedDefaults.dueDate,
-					lineItems: generatedDefaults.lineItem.id
-						? [generatedDefaults.lineItem]
-						: [],
-					subtotal: 0,
-					taxRate: 0,
-					taxAmount: 0,
-					total: 0,
-					notes:
-						'Payment is due within 30 days. Please include invoice number with your payment.',
-					paymentTerms: 'Net 30',
-					...savedDraft,
-					...prev
-				}
-				const newData =
-					typeof updater === 'function' ? updater(currentFull) : updater
-				return newData
-			})
+	const updateInvoice = useCallback(
+		(updater: (prev: InvoiceFormState) => InvoiceFormState) => {
+			setEdits(prev => updater(prev ?? baseData))
 		},
-		[generatedDefaults, savedDraft]
+		[baseData]
 	)
 
-	// Calculate totals (derived values, used directly in render and PDF)
-	const computedTotals = useMemo(() => {
-		const subtotal = invoiceData.lineItems.reduce(
-			(sum, item) => sum + item.amount,
-			0
-		)
-		const taxAmount = subtotal * (invoiceData.taxRate / 100)
-		const total = subtotal + taxAmount
-		return { subtotal, taxAmount, total }
-	}, [invoiceData.lineItems, invoiceData.taxRate])
+	const totals = useMemo(() => computeInvoiceTotals(invoiceData), [invoiceData])
+	const issues = useMemo(() => getInvoiceIssues(invoiceData), [invoiceData])
+	const { isGenerating, download } = usePdfDownload()
 
-	const handleInputChange = (
-		field: keyof InvoiceData,
-		value: string | number
-	) => {
-		setInvoiceData(prev => ({ ...prev, [field]: value }))
+	const handleTextChange = (field: TextField, value: string) => {
+		updateInvoice(prev => ({ ...prev, [field]: value }))
 	}
 
-	const handleLineItemChange = useCallback(
-		(id: string, field: keyof InvoiceLineItem, value: string | number) => {
-			setInvoiceData(prev => ({
-				...prev,
-				lineItems: prev.lineItems.map(item => {
-					if (item.id !== id) {
-						return item
-					}
+	const handleInvoiceDateChange = (invoiceDate: string) => {
+		updateInvoice(prev => ({
+			...prev,
+			invoiceDate,
+			dueDate: prev.dueDateEdited
+				? prev.dueDate
+				: dueDateForTerms(invoiceDate, prev.paymentTerms)
+		}))
+	}
 
-					const updated = { ...item, [field]: value }
-					// Recalculate amount when quantity or rate changes
-					if (field === 'quantity' || field === 'rate') {
-						updated.amount = Number(updated.quantity) * Number(updated.rate)
-					}
-					return updated
-				})
-			}))
-		},
-		[setInvoiceData]
-	)
+	const handleDueDateChange = (dueDate: string) => {
+		updateInvoice(prev => ({ ...prev, dueDate, dueDateEdited: true }))
+	}
+
+	const handlePaymentTermsChange = (value: string) => {
+		const paymentTerms = INVOICE_PAYMENT_TERMS.find(term => term === value)
+		if (!paymentTerms) {
+			return
+		}
+		updateInvoice(prev => ({
+			...prev,
+			paymentTerms,
+			dueDate: prev.dueDateEdited
+				? prev.dueDate
+				: dueDateForTerms(prev.invoiceDate, paymentTerms),
+			notes: prev.notesEdited ? prev.notes : defaultInvoiceNote(paymentTerms)
+		}))
+	}
+
+	const handleNotesChange = (notes: string) => {
+		updateInvoice(prev => ({ ...prev, notes, notesEdited: true }))
+	}
+
+	const handleLineItemChange = (
+		id: string,
+		patch: Partial<Omit<InvoiceLineItem, 'id'>>
+	) => {
+		updateInvoice(prev => ({
+			...prev,
+			lineItems: prev.lineItems.map(item =>
+				item.id === id ? { ...item, ...patch } : item
+			)
+		}))
+	}
 
 	const addLineItem = () => {
-		setInvoiceData(prev => ({
+		updateInvoice(prev => ({
 			...prev,
 			lineItems: [...prev.lineItems, createEmptyLineItem()]
 		}))
 	}
 
 	const removeLineItem = (id: string) => {
-		if (invoiceData.lineItems.length === 1) {
-			return
-		}
-		setInvoiceData(prev => ({
-			...prev,
-			lineItems: prev.lineItems.filter(item => item.id !== id)
-		}))
+		updateInvoice(prev =>
+			prev.lineItems.length === 1
+				? prev
+				: { ...prev, lineItems: prev.lineItems.filter(item => item.id !== id) }
+		)
 	}
 
 	const saveDraft = () => {
-		writeLocalStorageDraft(STORAGE_KEY, invoiceData)
-		// Dispatch storage event to trigger useSyncExternalStore update
-		window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }))
+		if (!invoiceDraft.write(invoiceData)) {
+			toast.error('Your browser blocked saving the draft.')
+			return
+		}
+		toast.success('Draft saved in this browser.')
 		trackEvent('invoice_draft_saved', {
-			invoice_number: invoiceData.invoiceNumber,
-			line_items: invoiceData.lineItems.length
+			line_items: totals.lines.length
 		})
 	}
 
 	const clearDraft = () => {
-		clearLocalStorageDraft(STORAGE_KEY)
-		// Dispatch storage event to trigger useSyncExternalStore update
-		window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }))
-		// Reset user modifications and regenerate defaults
-		setUserModifiedData({})
-		// Reset cached defaults so new ones are generated
-		cachedDefaults = null
+		invoiceDraft.clear()
+		setEdits(null)
+		// A fresh form gets a new invoice number and today's dates.
+		regenerateDefaults()
+		toast.success('Draft cleared.')
 	}
-	const isValid =
-		invoiceData.clientName.trim() !== '' &&
-		invoiceData.lineItems.some(
-			item => item.description.trim() !== '' && item.amount > 0
-		)
 
-	const handleDownload = useCallback(async () => {
-		if (!isHydrated || !isValid) {
+	const handleDownload = () => {
+		if (!isHydrated || issues.length > 0) {
 			return
 		}
-		try {
-			// Import the template module directly: a next/dynamic wrapper
-			// suspends via use(), which react-pdf's reconciler rejects (#438).
-			const [{ pdf }, { InvoiceDocument }] = await Promise.all([
-				import('@react-pdf/renderer'),
-				import('@/lib/pdf/invoice-template')
-			])
-			const blob = await pdf(
-				<InvoiceDocument data={{ ...invoiceData, ...computedTotals }} />
-			).toBlob()
-			const url = URL.createObjectURL(blob)
-			const a = document.createElement('a')
-			a.href = url
-			a.download = `${invoiceData.invoiceNumber}.pdf`
-			a.click()
-			setTimeout(() => URL.revokeObjectURL(url), 10_000)
-			trackEvent('invoice_downloaded', {
-				invoice_number: invoiceData.invoiceNumber,
-				total: computedTotals.total,
-				line_items: invoiceData.lineItems.length
-			})
-		} catch (err) {
-			logger.error(
-				'Invoice PDF download failed',
-				err instanceof Error ? err : new Error(String(err))
-			)
-		}
-	}, [isHydrated, isValid, invoiceData, computedTotals])
+		const snapshot = invoiceData
+		void download({
+			documentLabel: 'invoice',
+			fileName: `${toFileSlug(snapshot.invoiceNumber, 'invoice')}.pdf`,
+			createBlob: async () => {
+				// Import the template module directly: a next/dynamic wrapper
+				// suspends via use(), which react-pdf's reconciler rejects (#438).
+				const [{ pdf }, { InvoiceDocument }] = await Promise.all([
+					import('@react-pdf/renderer'),
+					import('@/lib/pdf/invoice-template')
+				])
+				return pdf(<InvoiceDocument data={snapshot} />).toBlob()
+			},
+			onSuccess: () => {
+				trackEvent('invoice_downloaded', {
+					line_items: totals.lines.length,
+					has_tax: snapshot.taxRate > 0,
+					payment_terms: snapshot.paymentTerms
+				})
+			}
+		})
+	}
 
-	const resultSlot =
-		isHydrated && isValid ? (
-			<div className="space-y-4">
-				<p className="text-sm text-muted-foreground">
-					Your invoice is ready to download.
-				</p>
+	const resultSlot = (
+		<DocumentDownloadPanel
+			documentLabel="invoice"
+			issues={issues}
+			isGenerating={isGenerating}
+			onDownload={handleDownload}
+			summary={
 				<dl className="space-y-2 text-sm">
-					<div className="flex justify-between">
+					<div className="flex justify-between gap-content">
 						<dt className="text-muted-foreground">Invoice #</dt>
 						<dd className="font-medium text-foreground">
 							{invoiceData.invoiceNumber}
 						</dd>
 					</div>
-					<div className="flex justify-between">
+					<div className="flex justify-between gap-content">
 						<dt className="text-muted-foreground">Client</dt>
 						<dd className="font-medium text-foreground">
 							{invoiceData.clientName}
 						</dd>
 					</div>
-					<div className="flex justify-between">
+					<div className="flex justify-between gap-content">
 						<dt className="text-muted-foreground">Total</dt>
 						<dd className="font-bold text-accent">
-							{formatCurrency(computedTotals.total)}
+							{formatCents(totals.totalCents)}
 						</dd>
 					</div>
 				</dl>
-			</div>
-		) : null
+			}
+		/>
+	)
 
 	const formSlot = (
 		<div>
 			<div className="space-y-sections">
-				{/* Your Company Info */}
+				{/* Your Business Info */}
 				<section className="space-y-content">
 					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Your Company Information
+						Your Business
 					</h2>
 					<div className="grid gap-content sm:grid-cols-2">
 						<CalculatorInput
-							label="Company Name"
+							label="Business Name"
 							id="companyName"
 							type="text"
+							autoComplete="organization"
 							value={invoiceData.companyName}
-							onChange={e => handleInputChange('companyName', e.target.value)}
-							helpText="Your business name"
+							onChange={e => handleTextChange('companyName', e.target.value)}
+							placeholder="Your business name"
+							helpText="Required. Prints at the top of the invoice."
+							required
 						/>
 						<CalculatorInput
 							label="Email"
 							id="companyEmail"
 							type="email"
+							autoComplete="email"
 							value={invoiceData.companyEmail}
-							onChange={e => handleInputChange('companyEmail', e.target.value)}
+							onChange={e => handleTextChange('companyEmail', e.target.value)}
+							placeholder="you@yourbusiness.com"
 						/>
 						<CalculatorInput
 							label="Address"
 							id="companyAddress"
 							type="text"
+							autoComplete="street-address"
 							value={invoiceData.companyAddress}
-							onChange={e =>
-								handleInputChange('companyAddress', e.target.value)
-							}
+							onChange={e => handleTextChange('companyAddress', e.target.value)}
+							placeholder="123 Main St"
 						/>
 						<CalculatorInput
 							label="Phone"
 							id="companyPhone"
 							type="tel"
+							autoComplete="tel"
 							value={invoiceData.companyPhone}
-							onChange={e => handleInputChange('companyPhone', e.target.value)}
+							onChange={e => handleTextChange('companyPhone', e.target.value)}
+							placeholder="(555) 555-0123"
 						/>
 						<div className="grid grid-cols-3 gap-tight">
 							<CalculatorInput
@@ -375,23 +347,22 @@ export default function InvoiceGeneratorClient() {
 								id="companyCity"
 								type="text"
 								value={invoiceData.companyCity}
-								onChange={e => handleInputChange('companyCity', e.target.value)}
+								onChange={e => handleTextChange('companyCity', e.target.value)}
 							/>
 							<CalculatorInput
 								label="State"
 								id="companyState"
 								type="text"
 								value={invoiceData.companyState}
-								onChange={e =>
-									handleInputChange('companyState', e.target.value)
-								}
+								onChange={e => handleTextChange('companyState', e.target.value)}
 							/>
 							<CalculatorInput
 								label="ZIP"
 								id="companyZip"
 								type="text"
+								inputMode="numeric"
 								value={invoiceData.companyZip}
-								onChange={e => handleInputChange('companyZip', e.target.value)}
+								onChange={e => handleTextChange('companyZip', e.target.value)}
 							/>
 						</div>
 					</div>
@@ -408,7 +379,7 @@ export default function InvoiceGeneratorClient() {
 							id="clientName"
 							type="text"
 							value={invoiceData.clientName}
-							onChange={e => handleInputChange('clientName', e.target.value)}
+							onChange={e => handleTextChange('clientName', e.target.value)}
 							helpText="Required"
 							required
 						/>
@@ -417,21 +388,21 @@ export default function InvoiceGeneratorClient() {
 							id="clientCompany"
 							type="text"
 							value={invoiceData.clientCompany}
-							onChange={e => handleInputChange('clientCompany', e.target.value)}
+							onChange={e => handleTextChange('clientCompany', e.target.value)}
 						/>
 						<CalculatorInput
 							label="Address"
 							id="clientAddress"
 							type="text"
 							value={invoiceData.clientAddress}
-							onChange={e => handleInputChange('clientAddress', e.target.value)}
+							onChange={e => handleTextChange('clientAddress', e.target.value)}
 						/>
 						<CalculatorInput
 							label="Email"
 							id="clientEmail"
 							type="email"
 							value={invoiceData.clientEmail}
-							onChange={e => handleInputChange('clientEmail', e.target.value)}
+							onChange={e => handleTextChange('clientEmail', e.target.value)}
 						/>
 						<div className="grid grid-cols-3 gap-tight">
 							<CalculatorInput
@@ -439,21 +410,22 @@ export default function InvoiceGeneratorClient() {
 								id="clientCity"
 								type="text"
 								value={invoiceData.clientCity}
-								onChange={e => handleInputChange('clientCity', e.target.value)}
+								onChange={e => handleTextChange('clientCity', e.target.value)}
 							/>
 							<CalculatorInput
 								label="State"
 								id="clientState"
 								type="text"
 								value={invoiceData.clientState}
-								onChange={e => handleInputChange('clientState', e.target.value)}
+								onChange={e => handleTextChange('clientState', e.target.value)}
 							/>
 							<CalculatorInput
 								label="ZIP"
 								id="clientZip"
 								type="text"
+								inputMode="numeric"
 								value={invoiceData.clientZip}
-								onChange={e => handleInputChange('clientZip', e.target.value)}
+								onChange={e => handleTextChange('clientZip', e.target.value)}
 							/>
 						</div>
 					</div>
@@ -464,32 +436,25 @@ export default function InvoiceGeneratorClient() {
 					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
 						Invoice Details
 					</h2>
-					<div className="grid gap-content sm:grid-cols-4">
+					<div className="grid gap-content sm:grid-cols-2 lg:grid-cols-4">
 						<CalculatorInput
 							label="Invoice Number"
 							id="invoiceNumber"
 							type="text"
 							value={invoiceData.invoiceNumber}
-							onChange={e => handleInputChange('invoiceNumber', e.target.value)}
+							onChange={e => handleTextChange('invoiceNumber', e.target.value)}
 						/>
 						<CalculatorInput
 							label="Invoice Date"
 							id="invoiceDate"
 							type="date"
 							value={invoiceData.invoiceDate}
-							onChange={e => handleInputChange('invoiceDate', e.target.value)}
+							onChange={e => handleInvoiceDateChange(e.target.value)}
 						/>
-						<CalculatorInput
-							label="Due Date"
-							id="dueDate"
-							type="date"
-							value={invoiceData.dueDate}
-							onChange={e => handleInputChange('dueDate', e.target.value)}
-						/>
-						<div>
+						<div className="space-y-tight">
 							<label
 								htmlFor="paymentTerms"
-								className="block text-sm font-medium text-foreground mb-1"
+								className="block text-sm font-medium text-foreground"
 							>
 								Payment Terms
 							</label>
@@ -497,18 +462,29 @@ export default function InvoiceGeneratorClient() {
 								id="paymentTerms"
 								name="paymentTerms"
 								value={invoiceData.paymentTerms}
-								onChange={e =>
-									handleInputChange('paymentTerms', e.target.value)
-								}
+								onChange={e => handlePaymentTermsChange(e.target.value)}
 								className="w-full rounded-md border border-border bg-background px-4 py-2.5 text-foreground"
 							>
-								<option value="Due on Receipt">Due on Receipt</option>
-								<option value="Net 15">Net 15</option>
-								<option value="Net 30">Net 30</option>
-								<option value="Net 45">Net 45</option>
-								<option value="Net 60">Net 60</option>
+								{INVOICE_PAYMENT_TERMS.map(term => (
+									<option key={term} value={term}>
+										{term}
+									</option>
+								))}
 							</select>
 						</div>
+						<CalculatorInput
+							label="Due Date"
+							id="dueDate"
+							type="date"
+							min={invoiceData.invoiceDate || undefined}
+							value={invoiceData.dueDate}
+							onChange={e => handleDueDateChange(e.target.value)}
+							helpText={
+								invoiceData.dueDateEdited
+									? 'You set this date, so the terms no longer change it.'
+									: 'Set from the payment terms.'
+							}
+						/>
 					</div>
 				</section>
 
@@ -523,13 +499,16 @@ export default function InvoiceGeneratorClient() {
 							onClick={addLineItem}
 							className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 						>
-							<Plus className="w-4 h-4" />
+							<Plus className="w-4 h-4" aria-hidden="true" />
 							Add Item
 						</button>
 					</div>
 
-					{/* Table Header */}
-					<div className="hidden sm:grid sm:grid-cols-12 gap-tight text-xs font-medium text-muted-foreground uppercase tracking-wide pb-2 border-b border-border">
+					{/* Column headings for sighted desktop users; inputs keep their own labels */}
+					<div
+						aria-hidden="true"
+						className="hidden sm:grid sm:grid-cols-12 gap-tight text-xs font-medium text-muted-foreground uppercase tracking-wide pb-2 border-b border-border"
+					>
 						<div className="col-span-5">Description</div>
 						<div className="col-span-2 text-center">Qty</div>
 						<div className="col-span-2 text-right">Rate</div>
@@ -537,111 +516,116 @@ export default function InvoiceGeneratorClient() {
 						<div className="col-span-1"></div>
 					</div>
 
-					{/* Line Items */}
-					{invoiceData.lineItems.map(item => (
-						<div
-							key={item.id}
-							className="grid grid-cols-1 sm:grid-cols-12 gap-tight items-start pb-3 border-b border-border last:border-0"
-						>
-							<div className="sm:col-span-5">
-								<label
-									htmlFor={`description-${item.id}`}
-									className="sm:hidden text-xs text-muted-foreground"
-								>
-									Description
-								</label>
-								<input
-									id={`description-${item.id}`}
-									name={`description-${item.id}`}
-									type="text"
-									value={item.description}
-									onChange={e =>
-										handleLineItemChange(item.id, 'description', e.target.value)
-									}
-									placeholder="Service or product description"
-									className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-								/>
-							</div>
-							<div className="sm:col-span-2">
-								<label
-									htmlFor={`quantity-${item.id}`}
-									className="sm:hidden text-xs text-muted-foreground"
-								>
-									Quantity
-								</label>
-								<input
-									id={`quantity-${item.id}`}
-									name={`quantity-${item.id}`}
-									type="number"
-									min="1"
-									step="1"
-									value={item.quantity}
-									onChange={e =>
-										handleLineItemChange(
-											item.id,
-											'quantity',
-											parseFloat(e.target.value) || 0
-										)
-									}
-									className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground text-center"
-								/>
-							</div>
-							<div className="sm:col-span-2">
-								<label
-									htmlFor={`rate-${item.id}`}
-									className="sm:hidden text-xs text-muted-foreground"
-								>
-									Rate
-								</label>
-								<input
-									id={`rate-${item.id}`}
-									name={`rate-${item.id}`}
-									type="number"
-									min="0"
-									step="0.01"
-									value={item.rate || ''}
-									onChange={e =>
-										handleLineItemChange(
-											item.id,
-											'rate',
-											parseFloat(e.target.value) || 0
-										)
-									}
-									placeholder="0.00"
-									className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground text-right"
-								/>
-							</div>
-							<div className="sm:col-span-2">
-								<label className="sm:hidden text-xs text-muted-foreground">
-									Amount
-								</label>
-								<div className="px-3 py-2 text-sm font-medium text-foreground text-right">
-									{formatCurrency(item.amount)}
+					{invoiceData.lineItems.map((item, index) => {
+						const line = index + 1
+						return (
+							<div
+								key={item.id}
+								className="grid grid-cols-1 sm:grid-cols-12 gap-tight items-start pb-3 border-b border-border last:border-0"
+							>
+								<div className="sm:col-span-5">
+									<label
+										htmlFor={`description-${item.id}`}
+										className={LINE_LABEL_CLASS}
+									>
+										Line {line} description
+									</label>
+									<input
+										id={`description-${item.id}`}
+										name={`description-${item.id}`}
+										type="text"
+										value={item.description}
+										onChange={e =>
+											handleLineItemChange(item.id, {
+												description: e.target.value
+											})
+										}
+										placeholder="Service or product description"
+										className={LINE_INPUT_CLASS}
+									/>
+								</div>
+								<div className="sm:col-span-2">
+									<label
+										htmlFor={`quantity-${item.id}`}
+										className={LINE_LABEL_CLASS}
+									>
+										Line {line} quantity
+									</label>
+									<input
+										id={`quantity-${item.id}`}
+										name={`quantity-${item.id}`}
+										type="number"
+										min="0"
+										step="any"
+										inputMode="decimal"
+										value={item.quantity}
+										onChange={e =>
+											handleLineItemChange(item.id, {
+												quantity: parseNumberInput(e.target.value)
+											})
+										}
+										className={`${LINE_INPUT_CLASS} text-center`}
+									/>
+								</div>
+								<div className="sm:col-span-2">
+									<label
+										htmlFor={`rate-${item.id}`}
+										className={LINE_LABEL_CLASS}
+									>
+										Line {line} rate
+									</label>
+									<input
+										id={`rate-${item.id}`}
+										name={`rate-${item.id}`}
+										type="number"
+										min="0"
+										step="0.01"
+										inputMode="decimal"
+										value={item.rate || ''}
+										onChange={e =>
+											handleLineItemChange(item.id, {
+												rate: parseNumberInput(e.target.value)
+											})
+										}
+										placeholder="0.00"
+										className={`${LINE_INPUT_CLASS} text-right`}
+									/>
+								</div>
+								<p className="sm:col-span-2 px-3 py-2 text-sm text-right">
+									<span className={`${LINE_LABEL_CLASS} mr-2`}>
+										Line {line} amount
+									</span>
+									<span className="font-medium text-foreground">
+										{formatCents(lineAmountCents(item))}
+									</span>
+								</p>
+								<div className="sm:col-span-1 flex justify-end">
+									<button
+										type="button"
+										onClick={() => removeLineItem(item.id)}
+										disabled={invoiceData.lineItems.length === 1}
+										className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30 disabled:cursor-not-allowed"
+										aria-label={`Remove line item ${line}`}
+									>
+										<Trash2 className="w-4 h-4" aria-hidden="true" />
+									</button>
 								</div>
 							</div>
-							<div className="sm:col-span-1 flex justify-end">
-								<button
-									type="button"
-									onClick={() => removeLineItem(item.id)}
-									disabled={invoiceData.lineItems.length === 1}
-									className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30 disabled:cursor-not-allowed"
-									aria-label="Remove line item"
-								>
-									<Trash2 className="w-4 h-4" />
-								</button>
-							</div>
-						</div>
-					))}
+						)
+					})}
 				</section>
 
 				{/* Totals */}
-				<section className="space-y-content border-t border-border pt-6">
+				<section
+					aria-label="Totals"
+					className="space-y-content border-t border-border pt-6"
+				>
 					<div className="flex justify-end">
 						<div className="w-full sm:w-80 space-y-3">
 							<div className="flex justify-between text-sm">
 								<span className="text-muted-foreground">Subtotal</span>
 								<span className="font-medium">
-									{formatCurrency(computedTotals.subtotal)}
+									{formatCents(totals.subtotalCents)}
 								</span>
 							</div>
 							<div className="flex items-center justify-between gap-content">
@@ -649,27 +633,26 @@ export default function InvoiceGeneratorClient() {
 									htmlFor="taxRate"
 									className="text-sm text-muted-foreground"
 								>
-									Tax Rate
+									Tax Rate (%)
 								</label>
-								<div className="flex items-center gap-tight">
-									<input
-										id="taxRate"
-										name="taxRate"
-										type="number"
-										min="0"
-										max="100"
-										step="0.5"
-										value={invoiceData.taxRate || ''}
-										onChange={e =>
-											handleInputChange(
-												'taxRate',
-												parseFloat(e.target.value) || 0
-											)
-										}
-										className="w-20 rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground text-right"
-									/>
-									<span className="text-sm text-muted-foreground">%</span>
-								</div>
+								<input
+									id="taxRate"
+									name="taxRate"
+									type="number"
+									min="0"
+									max="100"
+									step="any"
+									inputMode="decimal"
+									value={invoiceData.taxRate || ''}
+									onChange={e =>
+										updateInvoice(prev => ({
+											...prev,
+											taxRate: parseNumberInput(e.target.value)
+										}))
+									}
+									placeholder="0"
+									className="w-24 rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground text-right"
+								/>
 							</div>
 							{invoiceData.taxRate > 0 && (
 								<div className="flex justify-between text-sm">
@@ -677,7 +660,7 @@ export default function InvoiceGeneratorClient() {
 										Tax ({invoiceData.taxRate}%)
 									</span>
 									<span className="font-medium">
-										{formatCurrency(computedTotals.taxAmount)}
+										{formatCents(totals.taxCents)}
 									</span>
 								</div>
 							)}
@@ -686,7 +669,7 @@ export default function InvoiceGeneratorClient() {
 									Total
 								</span>
 								<span className="text-xl font-bold text-accent">
-									{formatCurrency(computedTotals.total)}
+									{formatCents(totals.totalCents)}
 								</span>
 							</div>
 						</div>
@@ -695,45 +678,25 @@ export default function InvoiceGeneratorClient() {
 
 				{/* Notes */}
 				<section className="space-y-content border-t border-border pt-6">
-					<label
-						htmlFor="notes"
-						className="block text-sm font-medium text-foreground"
-					>
-						Notes / Terms
-					</label>
-					<textarea
+					<TextAreaField
 						id="notes"
-						name="notes"
+						label="Notes / Terms"
 						value={invoiceData.notes}
-						onChange={e => handleInputChange('notes', e.target.value)}
-						rows={3}
-						className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
+						onChange={e => handleNotesChange(e.target.value)}
 						placeholder="Payment instructions, thank you message, etc."
+						helpText={
+							invoiceData.notesEdited
+								? undefined
+								: 'Matches your payment terms until you edit it.'
+						}
 					/>
 				</section>
 
-				{/* Actions */}
-				<section className="flex flex-wrap gap-3 pt-4">
-					<button
-						type="button"
-						onClick={saveDraft}
-						className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted"
-					>
-						<Save className="w-4 h-4" />
-						Save Draft
-					</button>
-
-					{hasDraft && (
-						<button
-							type="button"
-							onClick={clearDraft}
-							className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted"
-						>
-							<RotateCcw className="w-4 h-4" />
-							Clear Draft
-						</button>
-					)}
-				</section>
+				<DraftActions
+					hasDraft={hasDraft}
+					onSave={saveDraft}
+					onClear={clearDraft}
+				/>
 			</div>
 
 			{/* Educational Content */}
@@ -765,11 +728,11 @@ export default function InvoiceGeneratorClient() {
 
 					<Card size="sm">
 						<h3 className="mb-subheading font-semibold text-foreground">
-							Sequential Numbering
+							Consistent Numbering
 						</h3>
 						<p className="text-sm text-muted-foreground">
-							Use a consistent invoice numbering system. This helps with
-							organization and is often required for tax purposes.
+							Give every invoice its own number in a consistent sequence. It
+							makes payments easy to match and old invoices easy to find.
 						</p>
 					</Card>
 
@@ -778,8 +741,17 @@ export default function InvoiceGeneratorClient() {
 							Keep Records
 						</h3>
 						<p className="text-sm text-muted-foreground">
-							Save copies of all invoices for at least 7 years for tax and legal
-							purposes.
+							The IRS generally says to keep tax records for 3 years. Some cases
+							call for longer.{' '}
+							<a
+								href={IRS_RECORDS_URL}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="text-accent underline underline-offset-2 hover:text-accent/80"
+							>
+								See how long the IRS says to keep records
+							</a>
+							.
 						</p>
 					</Card>
 				</div>
@@ -794,14 +766,7 @@ export default function InvoiceGeneratorClient() {
 			columns="single"
 			formSlot={formSlot}
 			resultSlot={resultSlot}
-			hasResult={isHydrated && isValid}
-			actions={[
-				{
-					type: 'download',
-					label: 'Download PDF',
-					onClick: handleDownload
-				}
-			]}
+			hasResult={isHydrated}
 		/>
 	)
 }

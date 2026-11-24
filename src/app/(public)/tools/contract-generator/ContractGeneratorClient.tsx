@@ -5,333 +5,339 @@
 
 'use client'
 
-import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
+import { AlertTriangle } from 'lucide-react'
+import { useCallback, useMemo, useState } from 'react'
+import { toast } from 'sonner'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
+import { DocumentDownloadPanel } from '@/components/tools/DocumentDownloadPanel'
 import { DraftActions } from '@/components/tools/DraftActions'
+import { TextAreaField } from '@/components/tools/TextAreaField'
 import { Card } from '@/components/ui/card'
+import { useClientDefaults } from '@/hooks/use-client-defaults'
 import { useHydrated } from '@/hooks/use-hydrated'
 import {
-	clearLocalStorageDraft,
-	useLocalStorageDraft,
-	writeLocalStorageDraft
+	createLocalStorageDraft,
+	useLocalStorageDraft
 } from '@/hooks/use-local-storage-draft'
+import { usePdfDownload } from '@/hooks/use-pdf-download'
 import { trackEvent } from '@/lib/analytics'
-import { BUSINESS_INFO } from '@/lib/constants/business'
-import { logger } from '@/lib/logger'
-import type {
-	ContractData,
-	ContractTemplate
-} from '@/lib/pdf/contract-template'
+import {
+	buildContractClauses,
+	CONTRACT_TEMPLATE_TITLES,
+	contractDisclaimer,
+	contractPartyNames,
+	contractRoles,
+	getContractIssues,
+	TEXAS_INTEREST_CAP
+} from '@/lib/documents/contract'
+import { toDateInputValue } from '@/lib/documents/dates'
+import { isTexas, legalStateName, toFileSlug } from '@/lib/documents/format'
+import { contractDraftSchema } from '@/lib/schemas/documents'
+import type { ContractData, ContractTemplate } from '@/types/pdf-templates'
 
-const STORAGE_KEY = 'hds-contract-draft'
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
 
-const DEFAULT_PROVIDER = {
-	providerName: 'Hudson Digital Solutions',
-	providerAddress: '',
-	providerCity: 'Dallas',
-	providerState: 'TX',
-	providerZip: '',
-	providerEmail: BUSINESS_INFO.email
-}
-
-const formatDateForInput = (date: Date): string => {
-	return date.toISOString().split('T')[0] ?? ''
-}
+const contractDraft = createLocalStorageDraft(
+	'hds-contract-draft',
+	contractDraftSchema,
+	'contract'
+)
 
 const TEMPLATES: {
 	value: ContractTemplate
-	label: string
 	description: string
 }[] = [
 	{
 		value: 'service-agreement',
-		label: 'Service Agreement',
 		description:
 			'General agreement for professional services with payment terms and deliverables'
 	},
 	{
 		value: 'nda',
-		label: 'Non-Disclosure Agreement (NDA)',
-		description: 'Protect confidential information shared between parties'
+		description:
+			'Mutual agreement to protect confidential information both sides share'
 	},
 	{
 		value: 'freelance-contract',
-		label: 'Freelance Contract',
 		description:
-			'Independent contractor agreement with scope, payment, and ownership terms'
+			'Independent contractor agreement with scope, payment and ownership terms'
 	}
 ]
 
-// Empty subscribe for useSyncExternalStore
-const emptySubscribe = () => () => {}
-
-// Module-level cache for generated defaults
-let cachedDefaults: { effectiveDate: string } | null = null
-
-const getDefaultsSnapshot = () => {
-	if (cachedDefaults === null) {
-		cachedDefaults = {
-			effectiveDate: formatDateForInput(new Date())
-		}
-	}
-	return cachedDefaults
+const EMPTY_CONTRACT: ContractData = {
+	template: 'service-agreement',
+	providerName: '',
+	providerSignerName: '',
+	providerSignerTitle: '',
+	providerAddress: '',
+	providerCity: '',
+	providerState: '',
+	providerZip: '',
+	providerEmail: '',
+	clientName: '',
+	clientCompany: '',
+	clientSignerTitle: '',
+	clientAddress: '',
+	clientCity: '',
+	clientState: '',
+	clientZip: '',
+	clientEmail: '',
+	effectiveDate: '',
+	endDate: '',
+	scopeOfWork: '',
+	paymentTerms: '',
+	paymentAmount: '',
+	timeline: '',
+	lateInterestRate: '',
+	venueCounty: '',
+	customClauses: ''
 }
 
-const getServerDefaultsSnapshot = () => ({
-	effectiveDate: ''
+/** Fresh defaults for each visit: today's local date as the effective date. */
+const createContractDefaults = (): ContractData => ({
+	...EMPTY_CONTRACT,
+	effectiveDate: toDateInputValue(new Date())
 })
 
+type TextField = Exclude<keyof ContractData, 'template'>
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
 export default function ContractGeneratorClient() {
-	// Use hydration-safe hook
 	const isHydrated = useHydrated()
-
-	// Get generated defaults via useSyncExternalStore
-	const generatedDefaults = useSyncExternalStore(
-		emptySubscribe,
-		getDefaultsSnapshot,
-		getServerDefaultsSnapshot
+	const [defaults, regenerateDefaults] = useClientDefaults(
+		createContractDefaults,
+		EMPTY_CONTRACT
 	)
-
-	// Load draft from localStorage. Hydration-safe via useSyncExternalStore.
-	const savedDraft = useLocalStorageDraft<ContractData>(STORAGE_KEY, 'contract')
-
-	// Track if we have a draft (derived)
+	const savedDraft = useLocalStorageDraft(contractDraft)
 	const hasDraft = savedDraft !== null
 
-	// User-entered state
-	const [userModifiedData, setUserModifiedData] = useState<
-		Partial<ContractData>
-	>({})
+	const [edits, setEdits] = useState<ContractData | null>(null)
+	const baseData = savedDraft ?? defaults
+	const contractData = edits ?? baseData
 
-	// Compute effective contract data by merging: defaults < savedDraft < userModified
-	const contractData = useMemo((): ContractData => {
-		const baseData: ContractData = {
-			template: 'service-agreement',
-			...DEFAULT_PROVIDER,
-			clientName: '',
-			clientCompany: '',
-			clientAddress: '',
-			clientCity: '',
-			clientState: '',
-			clientZip: '',
-			clientEmail: '',
-			effectiveDate: generatedDefaults.effectiveDate,
-			endDate: '',
-			scopeOfWork: '',
-			paymentTerms: '',
-			paymentAmount: '',
-			timeline: '',
-			customClauses: ''
-		}
-
-		if (savedDraft) {
-			Object.assign(baseData, savedDraft)
-		}
-		Object.assign(baseData, userModifiedData)
-
-		return baseData
-	}, [generatedDefaults, savedDraft, userModifiedData])
-
-	// Helper to update contract data
-	const setContractData = useCallback(
-		(updater: ContractData | ((prev: ContractData) => ContractData)) => {
-			setUserModifiedData(prev => {
-				const currentFull: ContractData = {
-					template: 'service-agreement',
-					...DEFAULT_PROVIDER,
-					clientName: '',
-					clientCompany: '',
-					clientAddress: '',
-					clientCity: '',
-					clientState: '',
-					clientZip: '',
-					clientEmail: '',
-					effectiveDate: generatedDefaults.effectiveDate,
-					endDate: '',
-					scopeOfWork: '',
-					paymentTerms: '',
-					paymentAmount: '',
-					timeline: '',
-					customClauses: '',
-					...savedDraft,
-					...prev
-				}
-				const newData =
-					typeof updater === 'function' ? updater(currentFull) : updater
-				return newData
-			})
+	const updateContract = useCallback(
+		(updater: (prev: ContractData) => ContractData) => {
+			setEdits(prev => updater(prev ?? baseData))
 		},
-		[generatedDefaults, savedDraft]
+		[baseData]
 	)
 
-	const handleInputChange = (field: keyof ContractData, value: string) => {
-		setContractData(prev => ({ ...prev, [field]: value }))
+	const issues = useMemo(() => getContractIssues(contractData), [contractData])
+	const clauses = useMemo(
+		() => buildContractClauses(contractData),
+		[contractData]
+	)
+	const { isGenerating, download } = usePdfDownload()
+
+	const isNda = contractData.template === 'nda'
+	const roles = contractRoles(contractData.template)
+	const names = contractPartyNames(contractData)
+	const governingState = legalStateName(contractData.providerState)
+	const texasDefault = isTexas(contractData.providerState)
+
+	const handleTextChange = (field: TextField, value: string) => {
+		updateContract(prev => ({ ...prev, [field]: value }))
 	}
 
 	const handleTemplateChange = (template: ContractTemplate) => {
-		setContractData(prev => ({ ...prev, template }))
+		updateContract(prev => ({ ...prev, template }))
 		trackEvent('contract_template_selected', { template })
 	}
 
 	const saveDraft = () => {
-		writeLocalStorageDraft(STORAGE_KEY, contractData)
-		window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }))
-		trackEvent('contract_draft_saved', {
-			template: contractData.template
-		})
+		if (!contractDraft.write(contractData)) {
+			toast.error('Your browser blocked saving the draft.')
+			return
+		}
+		toast.success('Draft saved in this browser.')
+		trackEvent('contract_draft_saved', { template: contractData.template })
 	}
 
 	const clearDraft = () => {
-		clearLocalStorageDraft(STORAGE_KEY)
-		window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }))
-		setUserModifiedData({})
-		// Reset cached defaults so new ones are generated
-		cachedDefaults = null
+		contractDraft.clear()
+		setEdits(null)
+		regenerateDefaults()
+		toast.success('Draft cleared.')
 	}
 
-	const isValid =
-		contractData.providerName.trim() !== '' &&
-		(contractData.clientName.trim() !== '' ||
-			contractData.clientCompany.trim() !== '')
-
-	const getFileName = useCallback(() => {
-		const templateName = contractData.template.replace('-', '_')
-		const clientName = (
-			contractData.clientName ||
-			contractData.clientCompany ||
-			'client'
-		)
-			.toLowerCase()
-			.replace(/\s+/g, '_')
-		return `${templateName}_${clientName}.pdf`
-	}, [
-		contractData.template,
-		contractData.clientName,
-		contractData.clientCompany
-	])
-
-	const handleDownload = useCallback(async () => {
-		if (!isHydrated || !isValid) {
+	const handleDownload = () => {
+		if (!isHydrated || issues.length > 0) {
 			return
 		}
-		try {
-			// Import the template module directly: a next/dynamic wrapper
-			// suspends via use(), which react-pdf's reconciler rejects (#438).
-			const [{ pdf }, { ContractDocument }] = await Promise.all([
-				import('@react-pdf/renderer'),
-				import('@/lib/pdf/contract-template')
-			])
-			const blob = await pdf(<ContractDocument data={contractData} />).toBlob()
-			const url = URL.createObjectURL(blob)
-			const a = document.createElement('a')
-			a.href = url
-			a.download = getFileName()
-			a.click()
-			setTimeout(() => URL.revokeObjectURL(url), 10_000)
-			trackEvent('contract_downloaded', {
-				template: contractData.template,
-				has_scope: !!contractData.scopeOfWork,
-				has_payment: !!contractData.paymentAmount
-			})
-		} catch (err) {
-			logger.error(
-				'PDF download failed',
-				err instanceof Error ? err : new Error(String(err))
-			)
-		}
-	}, [isHydrated, isValid, contractData, getFileName])
+		const snapshot = contractData
+		const templateName = snapshot.template.replaceAll('-', '_')
+		const partyName = toFileSlug(
+			snapshot.clientCompany || snapshot.clientName,
+			'client'
+		)
+		void download({
+			documentLabel: 'contract',
+			fileName: `${templateName}_${partyName}.pdf`,
+			createBlob: async () => {
+				// Import the template module directly: a next/dynamic wrapper
+				// suspends via use(), which react-pdf's reconciler rejects (#438).
+				const [{ pdf }, { ContractDocument }] = await Promise.all([
+					import('@react-pdf/renderer'),
+					import('@/lib/pdf/contract-template')
+				])
+				return pdf(<ContractDocument data={snapshot} />).toBlob()
+			},
+			onSuccess: () => {
+				trackEvent('contract_downloaded', {
+					template: snapshot.template,
+					has_scope: snapshot.scopeOfWork.trim() !== '',
+					has_payment: snapshot.paymentAmount.trim() !== '',
+					has_late_interest: snapshot.lateInterestRate.trim() !== ''
+				})
+			}
+		})
+	}
 
-	const resultSlot =
-		isHydrated && isValid ? (
-			<div className="space-y-4">
-				<p className="text-sm text-muted-foreground">
-					Your contract is ready to download. Review the details on the left and
-					click &ldquo;Download PDF&rdquo; to save your document.
-				</p>
-				<dl className="space-y-2 text-sm">
-					<div className="flex justify-between">
-						<dt className="text-muted-foreground">Template</dt>
-						<dd className="font-medium text-foreground">
-							{TEMPLATES.find(t => t.value === contractData.template)?.label ??
-								contractData.template}
-						</dd>
-					</div>
-					<div className="flex justify-between">
-						<dt className="text-muted-foreground">Provider</dt>
-						<dd className="font-medium text-foreground">
-							{contractData.providerName}
-						</dd>
-					</div>
-					<div className="flex justify-between">
-						<dt className="text-muted-foreground">Client</dt>
-						<dd className="font-medium text-foreground">
-							{contractData.clientName || contractData.clientCompany}
-						</dd>
-					</div>
-				</dl>
-			</div>
-		) : null
+	const resultSlot = (
+		<DocumentDownloadPanel
+			documentLabel="contract"
+			issues={issues}
+			isGenerating={isGenerating}
+			onDownload={handleDownload}
+			summary={
+				<div className="space-y-3">
+					<dl className="space-y-2 text-sm">
+						<div className="flex justify-between gap-content">
+							<dt className="text-muted-foreground">Template</dt>
+							<dd className="font-medium text-foreground">
+								{CONTRACT_TEMPLATE_TITLES[contractData.template]}
+							</dd>
+						</div>
+						<div className="flex justify-between gap-content">
+							<dt className="text-muted-foreground">{roles.provider}</dt>
+							<dd className="font-medium text-foreground">{names.provider}</dd>
+						</div>
+						<div className="flex justify-between gap-content">
+							<dt className="text-muted-foreground">{roles.client}</dt>
+							<dd className="font-medium text-foreground">{names.client}</dd>
+						</div>
+					</dl>
+					<p className="text-sm text-muted-foreground">
+						Read every clause in &ldquo;What this contract says&rdquo; above
+						before you download and sign.
+					</p>
+				</div>
+			}
+		/>
+	)
 
 	const formSlot = (
 		<div className="space-y-sections">
+			{/* Not legal advice: first thing on the page */}
+			<Card size="sm" className="bg-warning-light">
+				<p className="flex gap-tight text-sm text-warning-text">
+					<AlertTriangle
+						className="mt-0.5 h-4 w-4 shrink-0"
+						aria-hidden="true"
+					/>
+					<span>
+						<strong>{contractDisclaimer(contractData.providerState)}</strong>{' '}
+						These are plain-English starting points with {governingState} as the
+						governing law. Laws change and every deal is different.
+					</span>
+				</p>
+			</Card>
+
 			{/* Template Selection */}
 			<section className="space-y-content">
 				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
 					Select Contract Type
 				</h2>
 				<div className="grid gap-3 sm:grid-cols-3">
-					{TEMPLATES.map(template => (
-						<button
-							key={template.value}
-							type="button"
-							onClick={() => handleTemplateChange(template.value)}
-							className={`p-4 rounded-lg border text-left transition-colors ${
-								contractData.template === template.value
-									? 'border-accent bg-accent/10'
-									: 'border-border hover:border-accent hover:bg-muted/50'
-							}`}
-						>
-							<div className="font-semibold text-foreground">
-								{template.label}
-							</div>
-							<div className="text-xs text-muted-foreground mt-1">
-								{template.description}
-							</div>
-						</button>
-					))}
+					{TEMPLATES.map(template => {
+						const selected = contractData.template === template.value
+						return (
+							<button
+								key={template.value}
+								type="button"
+								aria-pressed={selected}
+								onClick={() => handleTemplateChange(template.value)}
+								className={`p-4 rounded-lg border text-left transition-colors ${
+									selected
+										? 'border-accent bg-accent/10'
+										: 'border-border hover:border-accent hover:bg-muted/50'
+								}`}
+							>
+								<span className="block font-semibold text-foreground">
+									{CONTRACT_TEMPLATE_TITLES[template.value]}
+								</span>
+								<span className="block text-xs text-muted-foreground mt-1">
+									{template.description}
+								</span>
+							</button>
+						)
+					})}
 				</div>
 			</section>
 
-			{/* Provider/Your Info */}
+			{/* Provider / Your Info */}
 			<section className="space-y-content border-t border-border pt-6">
 				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-					{contractData.template === 'nda'
-						? 'Party A (Disclosing Party)'
-						: 'Service Provider'}
+					{isNda ? 'Party A (You)' : `${roles.provider} (You)`}
 				</h2>
 				<div className="grid gap-content sm:grid-cols-2">
 					<CalculatorInput
-						label="Name / Company"
+						label="Business or Legal Name"
 						id="providerName"
 						type="text"
+						autoComplete="organization"
 						value={contractData.providerName}
-						onChange={e => handleInputChange('providerName', e.target.value)}
+						onChange={e => handleTextChange('providerName', e.target.value)}
+						placeholder="Your business or full legal name"
+						helpText="Required"
 						required
 					/>
 					<CalculatorInput
 						label="Email"
 						id="providerEmail"
 						type="email"
+						autoComplete="email"
 						value={contractData.providerEmail}
-						onChange={e => handleInputChange('providerEmail', e.target.value)}
+						onChange={e => handleTextChange('providerEmail', e.target.value)}
+						placeholder="you@yourbusiness.com"
+						helpText="Used for notices under the contract."
+					/>
+					<CalculatorInput
+						label="Person Signing (Optional)"
+						id="providerSignerName"
+						type="text"
+						autoComplete="name"
+						value={contractData.providerSignerName}
+						onChange={e =>
+							handleTextChange('providerSignerName', e.target.value)
+						}
+						placeholder="Full name"
+						helpText="Leave blank to write it in by hand."
+					/>
+					<CalculatorInput
+						label="Signer Title (Optional)"
+						id="providerSignerTitle"
+						type="text"
+						value={contractData.providerSignerTitle}
+						onChange={e =>
+							handleTextChange('providerSignerTitle', e.target.value)
+						}
+						placeholder="Owner, Managing Member, etc."
 					/>
 					<CalculatorInput
 						label="Address"
 						id="providerAddress"
 						type="text"
+						autoComplete="street-address"
 						value={contractData.providerAddress}
-						onChange={e => handleInputChange('providerAddress', e.target.value)}
+						onChange={e => handleTextChange('providerAddress', e.target.value)}
+						placeholder="123 Main St"
 					/>
 					<div className="grid grid-cols-3 gap-tight">
 						<CalculatorInput
@@ -339,21 +345,23 @@ export default function ContractGeneratorClient() {
 							id="providerCity"
 							type="text"
 							value={contractData.providerCity}
-							onChange={e => handleInputChange('providerCity', e.target.value)}
+							onChange={e => handleTextChange('providerCity', e.target.value)}
 						/>
 						<CalculatorInput
 							label="State"
 							id="providerState"
 							type="text"
 							value={contractData.providerState}
-							onChange={e => handleInputChange('providerState', e.target.value)}
+							onChange={e => handleTextChange('providerState', e.target.value)}
+							placeholder="TX"
 						/>
 						<CalculatorInput
 							label="ZIP"
 							id="providerZip"
 							type="text"
+							inputMode="numeric"
 							value={contractData.providerZip}
-							onChange={e => handleInputChange('providerZip', e.target.value)}
+							onChange={e => handleTextChange('providerZip', e.target.value)}
 						/>
 					</div>
 				</div>
@@ -362,9 +370,7 @@ export default function ContractGeneratorClient() {
 			{/* Client Info */}
 			<section className="space-y-content border-t border-border pt-6">
 				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-					{contractData.template === 'nda'
-						? 'Party B (Receiving Party)'
-						: 'Client'}
+					{isNda ? 'Party B' : roles.client}
 				</h2>
 				<div className="grid gap-content sm:grid-cols-2">
 					<CalculatorInput
@@ -372,30 +378,40 @@ export default function ContractGeneratorClient() {
 						id="clientName"
 						type="text"
 						value={contractData.clientName}
-						onChange={e => handleInputChange('clientName', e.target.value)}
-						helpText="Required"
-						required
+						onChange={e => handleTextChange('clientName', e.target.value)}
+						helpText="Enter a contact name, a company or both."
 					/>
 					<CalculatorInput
-						label="Company Name (Optional)"
+						label="Company Name"
 						id="clientCompany"
 						type="text"
 						value={contractData.clientCompany}
-						onChange={e => handleInputChange('clientCompany', e.target.value)}
+						onChange={e => handleTextChange('clientCompany', e.target.value)}
+						helpText="When filled in, the company is the party and the contact signs for it."
 					/>
 					<CalculatorInput
-						label="Address"
-						id="clientAddress"
+						label="Signer Title (Optional)"
+						id="clientSignerTitle"
 						type="text"
-						value={contractData.clientAddress}
-						onChange={e => handleInputChange('clientAddress', e.target.value)}
+						value={contractData.clientSignerTitle}
+						onChange={e =>
+							handleTextChange('clientSignerTitle', e.target.value)
+						}
+						placeholder="CEO, Owner, etc."
 					/>
 					<CalculatorInput
 						label="Email"
 						id="clientEmail"
 						type="email"
 						value={contractData.clientEmail}
-						onChange={e => handleInputChange('clientEmail', e.target.value)}
+						onChange={e => handleTextChange('clientEmail', e.target.value)}
+					/>
+					<CalculatorInput
+						label="Address"
+						id="clientAddress"
+						type="text"
+						value={contractData.clientAddress}
+						onChange={e => handleTextChange('clientAddress', e.target.value)}
 					/>
 					<div className="grid grid-cols-3 gap-tight">
 						<CalculatorInput
@@ -403,21 +419,22 @@ export default function ContractGeneratorClient() {
 							id="clientCity"
 							type="text"
 							value={contractData.clientCity}
-							onChange={e => handleInputChange('clientCity', e.target.value)}
+							onChange={e => handleTextChange('clientCity', e.target.value)}
 						/>
 						<CalculatorInput
 							label="State"
 							id="clientState"
 							type="text"
 							value={contractData.clientState}
-							onChange={e => handleInputChange('clientState', e.target.value)}
+							onChange={e => handleTextChange('clientState', e.target.value)}
 						/>
 						<CalculatorInput
 							label="ZIP"
 							id="clientZip"
 							type="text"
+							inputMode="numeric"
 							value={contractData.clientZip}
-							onChange={e => handleInputChange('clientZip', e.target.value)}
+							onChange={e => handleTextChange('clientZip', e.target.value)}
 						/>
 					</div>
 				</div>
@@ -426,7 +443,7 @@ export default function ContractGeneratorClient() {
 			{/* Contract Details */}
 			<section className="space-y-content border-t border-border pt-6">
 				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-					Contract Details
+					Contract Dates
 				</h2>
 				<div className="grid gap-content sm:grid-cols-2">
 					<CalculatorInput
@@ -434,38 +451,39 @@ export default function ContractGeneratorClient() {
 						id="effectiveDate"
 						type="date"
 						value={contractData.effectiveDate}
-						onChange={e => handleInputChange('effectiveDate', e.target.value)}
+						onChange={e => handleTextChange('effectiveDate', e.target.value)}
 					/>
 					<CalculatorInput
 						label="End Date (Optional)"
 						id="endDate"
 						type="date"
+						min={contractData.effectiveDate || undefined}
 						value={contractData.endDate}
-						onChange={e => handleInputChange('endDate', e.target.value)}
-						helpText="Leave blank for ongoing agreements"
+						onChange={e => handleTextChange('endDate', e.target.value)}
+						helpText={
+							isNda
+								? "Leave blank to run until either party ends it with 30 days' notice."
+								: 'Leave blank to run until the work is complete.'
+						}
 					/>
 				</div>
 			</section>
 
-			{/* Terms - Not shown for NDA */}
-			{contractData.template !== 'nda' && (
+			{/* Terms: not shown for NDA */}
+			{!isNda && (
 				<section className="space-y-content border-t border-border pt-6">
 					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Terms
+						Work and Payment
 					</h2>
 					<div className="space-y-content">
-						<div>
-							<label className="block text-sm font-medium text-foreground mb-1">
-								Scope of Work
-							</label>
-							<textarea
-								value={contractData.scopeOfWork}
-								onChange={e => handleInputChange('scopeOfWork', e.target.value)}
-								rows={4}
-								className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
-								placeholder="Describe the services to be provided..."
-							/>
-						</div>
+						<TextAreaField
+							id="scopeOfWork"
+							label="Scope of Work"
+							rows={4}
+							value={contractData.scopeOfWork}
+							onChange={e => handleTextChange('scopeOfWork', e.target.value)}
+							placeholder="Describe the services to be provided..."
+						/>
 						<div className="grid gap-content sm:grid-cols-2">
 							<CalculatorInput
 								label="Payment Amount"
@@ -473,7 +491,7 @@ export default function ContractGeneratorClient() {
 								type="text"
 								value={contractData.paymentAmount}
 								onChange={e =>
-									handleInputChange('paymentAmount', e.target.value)
+									handleTextChange('paymentAmount', e.target.value)
 								}
 								placeholder="e.g., $5,000 or $150/hour"
 							/>
@@ -482,61 +500,151 @@ export default function ContractGeneratorClient() {
 								id="paymentTerms"
 								type="text"
 								value={contractData.paymentTerms}
-								onChange={e =>
-									handleInputChange('paymentTerms', e.target.value)
-								}
+								onChange={e => handleTextChange('paymentTerms', e.target.value)}
 								placeholder="e.g., 50% upfront, 50% on completion"
 							/>
 						</div>
-						<div>
-							<label className="block text-sm font-medium text-foreground mb-1">
-								Timeline / Milestones
-							</label>
-							<textarea
-								value={contractData.timeline}
-								onChange={e => handleInputChange('timeline', e.target.value)}
-								rows={3}
-								className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
-								placeholder="Describe the project timeline and any key milestones..."
-							/>
-						</div>
-					</div>
-				</section>
-			)}
-
-			{/* Scope for NDA */}
-			{contractData.template === 'nda' && (
-				<section className="space-y-content border-t border-border pt-6">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Purpose of Disclosure
-					</h2>
-					<div>
-						<label className="block text-sm font-medium text-foreground mb-1">
-							Purpose
-						</label>
-						<textarea
-							value={contractData.scopeOfWork}
-							onChange={e => handleInputChange('scopeOfWork', e.target.value)}
-							rows={3}
-							className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
-							placeholder="e.g., Evaluating a potential business partnership..."
+						<CalculatorInput
+							label="Late Payment Interest, % a Year (Optional)"
+							id="lateInterestRate"
+							type="number"
+							min="0"
+							max={texasDefault ? TEXAS_INTEREST_CAP : 100}
+							step="any"
+							inputMode="decimal"
+							value={contractData.lateInterestRate}
+							onChange={e =>
+								handleTextChange('lateInterestRate', e.target.value)
+							}
+							placeholder="e.g., 10"
+							helpText={
+								texasDefault
+									? 'Adds simple interest on overdue amounts. Texas generally caps contract interest at 10% a year unless another law allows more (Tex. Fin. Code 302.001). With no agreed rate, the default is 6% a year starting on the 30th day after the due date (302.002).'
+									: "Adds simple interest on overdue amounts. Interest limits vary by state, so check your state's limit before you pick a rate."
+							}
+						/>
+						<TextAreaField
+							id="timeline"
+							label="Timeline / Milestones"
+							value={contractData.timeline}
+							onChange={e => handleTextChange('timeline', e.target.value)}
+							placeholder="Describe the project timeline and any key milestones..."
 						/>
 					</div>
 				</section>
 			)}
+
+			{/* Purpose for NDA */}
+			{isNda && (
+				<section className="space-y-content border-t border-border pt-6">
+					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+						Purpose of Disclosure
+					</h2>
+					<TextAreaField
+						id="ndaPurpose"
+						label="Purpose"
+						value={contractData.scopeOfWork}
+						onChange={e => handleTextChange('scopeOfWork', e.target.value)}
+						placeholder="e.g., Evaluating a potential business partnership..."
+					/>
+				</section>
+			)}
+
+			{/* Disputes */}
+			<section className="space-y-content border-t border-border pt-6">
+				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					Disputes
+				</h2>
+				<CalculatorInput
+					label="County for Lawsuits (Optional)"
+					id="venueCounty"
+					type="text"
+					value={contractData.venueCounty}
+					onChange={e => handleTextChange('venueCounty', e.target.value)}
+					placeholder="e.g., Dallas"
+					helpText={`Any lawsuit goes to the courts in this ${governingState} county. Leave blank to use the county where your business is located.`}
+				/>
+			</section>
 
 			{/* Custom Clauses */}
 			<section className="space-y-content border-t border-border pt-6">
 				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
 					Additional Terms (Optional)
 				</h2>
-				<textarea
-					value={contractData.customClauses}
-					onChange={e => handleInputChange('customClauses', e.target.value)}
+				<TextAreaField
+					id="customClauses"
+					label="Additional terms"
 					rows={4}
-					className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
+					value={contractData.customClauses}
+					onChange={e => handleTextChange('customClauses', e.target.value)}
 					placeholder="Add any custom clauses or special terms..."
 				/>
+			</section>
+
+			{/* Every clause, on screen, before download */}
+			<section className="space-y-content border-t border-border pt-6">
+				<details className="group rounded-lg border border-border bg-surface-raised">
+					<summary className="cursor-pointer list-none px-4 py-3 font-semibold text-foreground">
+						<span className="flex items-center justify-between gap-content">
+							<span>What this contract says ({clauses.length} sections)</span>
+							<span
+								className="text-sm font-normal text-accent group-open:hidden"
+								aria-hidden="true"
+							>
+								Show
+							</span>
+							<span
+								className="hidden text-sm font-normal text-accent group-open:inline"
+								aria-hidden="true"
+							>
+								Hide
+							</span>
+						</span>
+					</summary>
+					<div className="space-y-content border-t border-border px-4 py-4 text-sm text-foreground">
+						<h2 className="text-base font-semibold">
+							{CONTRACT_TEMPLATE_TITLES[contractData.template]}
+						</h2>
+						<ol className="space-y-content">
+							{clauses.map((clause, index) => (
+								<li key={clause.id} className="space-y-2">
+									<h3
+										className={
+											clause.conspicuous
+												? 'font-bold uppercase'
+												: 'font-semibold'
+										}
+									>
+										{index + 1}. {clause.title}
+									</h3>
+									{clause.blocks.map((block, blockIndex) =>
+										block.kind === 'bullets' ? (
+											<ul
+												key={blockIndex}
+												className="list-disc space-y-1 pl-5 text-muted-foreground"
+											>
+												{block.items.map(item => (
+													<li key={item}>{item}</li>
+												))}
+											</ul>
+										) : (
+											<p
+												key={blockIndex}
+												className={
+													clause.conspicuous || block.conspicuous
+														? 'font-bold text-foreground'
+														: 'whitespace-pre-line text-muted-foreground'
+												}
+											>
+												{block.text}
+											</p>
+										)
+									)}
+								</li>
+							))}
+						</ol>
+					</div>
+				</details>
 			</section>
 
 			<DraftActions
@@ -555,7 +663,7 @@ export default function ContractGeneratorClient() {
 							Be Specific
 						</h3>
 						<p className="text-sm text-muted-foreground">
-							Clearly define the scope of work, deliverables, and timelines to
+							Clearly define the scope of work, deliverables and timelines to
 							avoid misunderstandings.
 						</p>
 					</Card>
@@ -565,8 +673,8 @@ export default function ContractGeneratorClient() {
 							Payment Terms
 						</h3>
 						<p className="text-sm text-muted-foreground">
-							Include specific payment amounts, due dates, and any late payment
-							penalties.
+							Spell out the amount and when each payment is due. Add a late
+							payment interest rate if you want one in writing.
 						</p>
 					</Card>
 
@@ -575,8 +683,8 @@ export default function ContractGeneratorClient() {
 							Legal Review
 						</h3>
 						<p className="text-sm text-muted-foreground">
-							For significant contracts, have an attorney review the terms
-							before signing.
+							Have an attorney review the terms before you sign, especially for
+							larger or longer engagements.
 						</p>
 					</Card>
 
@@ -589,15 +697,6 @@ export default function ContractGeneratorClient() {
 						</p>
 					</Card>
 				</div>
-
-				<Card size="sm" className="bg-warning-light">
-					<p className="text-sm text-warning-text">
-						<strong>Disclaimer:</strong> These contract templates are provided
-						for informational purposes only and do not constitute legal advice.
-						Consult with a qualified attorney for legal matters specific to your
-						situation.
-					</p>
-				</Card>
 			</div>
 		</div>
 	)
@@ -609,14 +708,7 @@ export default function ContractGeneratorClient() {
 			columns="single"
 			formSlot={formSlot}
 			resultSlot={resultSlot}
-			hasResult={isHydrated && isValid}
-			actions={[
-				{
-					type: 'download',
-					label: 'Download PDF',
-					onClick: handleDownload
-				}
-			]}
+			hasResult={isHydrated}
 		/>
 	)
 }

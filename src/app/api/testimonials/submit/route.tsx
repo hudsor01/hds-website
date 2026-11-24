@@ -2,13 +2,13 @@
  * API Route: Submit Testimonial
  * POST /api/testimonials/submit
  *
- * Always token-gated — every public submission must come from an admin-
- * issued testimonial-request link. The token proves the submitter received
- * an invite (no anonymous public submissions). withMutationGuards adds
+ * Always token-gated: every public submission must come from an admin-
+ * issued testimonial-request link. The token is claimed atomically together
+ * with the insert (claimTokenAndSubmitTestimonial), so a link is truly
+ * single use even under concurrent submits. withMutationGuards adds
  * same-origin + CSRF + rate-limit on top.
  */
 
-import { revalidateTag } from 'next/cache'
 import type { NextRequest } from 'next/server'
 import { after } from 'next/server'
 import { TestimonialAdminNotification } from '@/emails/testimonial-admin-notification'
@@ -23,15 +23,21 @@ import { logger } from '@/lib/logger'
 import { getResendClient, isResendConfigured } from '@/lib/resend-client'
 import { testimonialSubmitSchema } from '@/lib/schemas/query-params'
 import {
-	getTestimonialRequestByToken,
-	markRequestSubmitted,
-	submitTestimonial
+	type ClaimFailure,
+	claimTokenAndSubmitTestimonial,
+	purgeTestimonialCaches
 } from '@/lib/testimonials'
 import { sanitizeEmailHeader } from '@/lib/utils'
 
+const CLAIM_FAILURE_MESSAGES: Record<ClaimFailure, string> = {
+	invalid: 'Invalid testimonial link',
+	used: 'This link has already been used',
+	expired: 'This link has expired'
+}
+
 async function handleTestimonialSubmit(request: NextRequest) {
 	try {
-		const rawBody = await request.json()
+		const rawBody: unknown = await request.json()
 		const parseResult = testimonialSubmitSchema.safeParse(rawBody)
 		if (!parseResult.success) {
 			return validationErrorResponse(parseResult.error)
@@ -39,52 +45,28 @@ async function handleTestimonialSubmit(request: NextRequest) {
 
 		const body = parseResult.data
 
-		// Token is required by the schema; verify it backs a real, unused,
-		// unexpired request before doing anything else.
-		const testimonialRequest = await getTestimonialRequestByToken(body.token)
-		if (!testimonialRequest) {
-			return errorResponse('Invalid testimonial link', 400)
-		}
-		if (testimonialRequest.submitted) {
-			return errorResponse('This link has already been used', 400)
-		}
-		if (new Date(testimonialRequest.expires_at) < new Date()) {
-			return errorResponse('This link has expired', 400)
-		}
-
-		const testimonial = await submitTestimonial({
+		const claim = await claimTokenAndSubmitTestimonial(body.token, {
 			client_name: body.client_name,
 			company: body.company,
 			role: body.role,
 			rating: body.rating,
 			content: body.content,
-			photo_url: body.photo_url,
-			video_url: body.video_url,
-			service_type: body.service_type
+			video_url: body.video_url
 		})
 
-		if (!testimonial) {
-			throw new Error('Failed to save testimonial')
+		if (!claim.ok) {
+			return errorResponse(CLAIM_FAILURE_MESSAGES[claim.reason], 400)
 		}
 
-		// Hard-purge cache so subsequent requests see `submitted: true`.
-		// Pass the new testimonial id so the request -> testimonial back-link
-		// (testimonial_requests.testimonial_id) is recorded.
-		const marked = await markRequestSubmitted(body.token, testimonial.id)
-		if (!marked) {
-			logger.error(
-				'Failed to mark testimonial request as submitted; cache not invalidated',
-				{ metadata: { testimonialId: testimonial.id } }
-			)
-			return errorResponse('Failed to finalize submission', 500)
-		}
-		revalidateTag(`testimonial-token:${body.token}`, 'max')
+		// The token page now shows "Already submitted". The approved list is
+		// unchanged (new rows start unpublished), so only the token is purged.
+		purgeTestimonialCaches(body.token)
 
 		logger.info('Testimonial submitted', {
 			component: 'TestimonialAPI',
 			action: 'submit',
 			metadata: {
-				testimonialId: testimonial.id,
+				testimonialId: claim.testimonialId,
 				rating: body.rating
 			}
 		})
@@ -92,7 +74,7 @@ async function handleTestimonialSubmit(request: NextRequest) {
 		if (isResendConfigured()) {
 			after(async () => {
 				try {
-					// Sanitize the subject — schema .trim() doesn't strip CRLF,
+					// Sanitize the subject: schema .trim() doesn't strip CRLF,
 					// and an attacker-crafted client_name with embedded \r\n
 					// could inject additional headers in the Resend API call.
 					await getResendClient().emails.send({
@@ -107,9 +89,9 @@ async function handleTestimonialSubmit(request: NextRequest) {
 								company={body.company}
 								role={body.role}
 								rating={body.rating}
-								serviceType={body.service_type}
 								content={body.content}
-								isPrivateLink={true}
+								videoUrl={body.video_url}
+								submittedAt={new Date()}
 							/>
 						)
 					})

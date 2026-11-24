@@ -47,6 +47,5 @@ export const TOOL_ROUTES = {
 	META_TAG_GENERATOR: '/tools/meta-tag-generator',
 	SCHEMA_GENERATOR: '/tools/schema-generator',
 	COMMA_SEPARATOR: '/tools/comma-separator',
-	WORD_COUNTER: '/tools/word-counter',
-	TESTIMONIAL_COLLECTOR: '/tools/testimonial-collector'
+	WORD_COUNTER: '/tools/word-counter'
 } as const

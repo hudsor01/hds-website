@@ -6,414 +6,344 @@
 'use client'
 
 import { Plus, Trash2 } from 'lucide-react'
-import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import { toast } from 'sonner'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
+import { DocumentDownloadPanel } from '@/components/tools/DocumentDownloadPanel'
 import { DraftActions } from '@/components/tools/DraftActions'
+import { TextAreaField } from '@/components/tools/TextAreaField'
 import { Card } from '@/components/ui/card'
+import { useClientDefaults } from '@/hooks/use-client-defaults'
 import { useHydrated } from '@/hooks/use-hydrated'
 import {
-	clearLocalStorageDraft,
-	useLocalStorageDraft,
-	writeLocalStorageDraft
+	createLocalStorageDraft,
+	useLocalStorageDraft
 } from '@/hooks/use-local-storage-draft'
+import { usePdfDownload } from '@/hooks/use-pdf-download'
 import { trackEvent } from '@/lib/analytics'
-import { BUSINESS_INFO } from '@/lib/constants/business'
-import { logger } from '@/lib/logger'
+import { addDaysToDateInput, toDateInputValue } from '@/lib/documents/dates'
+import { toFileSlug } from '@/lib/documents/format'
+import { formatCents, parseNumberInput } from '@/lib/documents/money'
+import {
+	computeProposalPricing,
+	getProposalIssues
+} from '@/lib/documents/proposal'
+import { proposalDraftSchema } from '@/lib/schemas/documents'
 import type {
 	ProposalData,
 	ProposalMilestone,
 	ProposalPricingItem
-} from '@/lib/pdf/proposal-template'
-import { formatCurrency } from '@/lib/utils'
+} from '@/types/pdf-templates'
 
-const STORAGE_KEY = 'hds-proposal-draft'
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
 
-const DEFAULT_COMPANY = {
-	companyName: 'Hudson Digital Solutions',
-	companyAddress: '',
-	companyCity: 'Dallas',
-	companyState: 'TX',
-	companyZip: '',
-	companyEmail: BUSINESS_INFO.email,
-	companyPhone: '',
-	companyDescription:
-		'Hudson Digital Solutions is a Texas-based web design agency that builds professional websites for small businesses. I design, build and launch the website your business needs to turn its reputation into booked customers.'
-}
+const proposalDraft = createLocalStorageDraft(
+	'hds-proposal-draft',
+	proposalDraftSchema,
+	'proposal'
+)
 
-const formatDateForInput = (date: Date): string => {
-	return date.toISOString().split('T')[0] ?? ''
-}
+const VALIDITY_DAYS = 30
 
-// Only call crypto.randomUUID() on the client
-const createEmptyPricingItem = (): ProposalPricingItem => ({
-	id:
-		typeof crypto !== 'undefined' ? crypto.randomUUID() : `price-${Date.now()}`,
+const ROW_INPUT_CLASS =
+	'w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground'
+
+const createPricingItem = (): ProposalPricingItem => ({
+	id: crypto.randomUUID(),
 	description: '',
 	price: 0
 })
 
-// Empty subscribe for useSyncExternalStore
-const emptySubscribe = () => () => {}
-
-// Module-level cache for generated defaults
-let cachedDefaults: {
-	projectDate: string
-	validUntil: string
-	milestones: ProposalMilestone[]
-	pricingItems: ProposalPricingItem[]
-} | null = null
-
-const getDefaultsSnapshot = () => {
-	if (cachedDefaults === null) {
-		cachedDefaults = {
-			projectDate: formatDateForInput(new Date()),
-			validUntil: formatDateForInput(
-				new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-			),
-			milestones: [
-				{
-					id: crypto.randomUUID(),
-					phase: 'Phase 1',
-					description: '',
-					duration: ''
-				},
-				{
-					id: crypto.randomUUID(),
-					phase: 'Phase 2',
-					description: '',
-					duration: ''
-				}
-			],
-			pricingItems: [createEmptyPricingItem()]
-		}
-	}
-	return cachedDefaults
-}
-
-const getServerDefaultsSnapshot = () => ({
-	projectDate: '',
-	validUntil: '',
-	milestones: [] as ProposalMilestone[],
-	pricingItems: [] as ProposalPricingItem[]
+const createMilestone = (phaseNumber: number): ProposalMilestone => ({
+	id: crypto.randomUUID(),
+	phase: `Phase ${phaseNumber}`,
+	description: '',
+	duration: ''
 })
 
+const EMPTY_PROPOSAL: ProposalData = {
+	companyName: '',
+	companyAddress: '',
+	companyCity: '',
+	companyState: '',
+	companyZip: '',
+	companyEmail: '',
+	companyPhone: '',
+	companyDescription: '',
+	clientName: '',
+	clientCompany: '',
+	clientEmail: '',
+	projectName: '',
+	projectDate: '',
+	validUntil: '',
+	overview: '',
+	scopeItems: ['', '', ''],
+	milestones: [
+		{ id: 'milestone-1', phase: 'Phase 1', description: '', duration: '' },
+		{ id: 'milestone-2', phase: 'Phase 2', description: '', duration: '' }
+	],
+	pricingItems: [{ id: 'price-1', description: '', price: 0 }],
+	paymentTerms: '50% deposit to begin work, 50% upon completion',
+	terms:
+		'This proposal is based on the scope defined above. Any changes to the scope may affect the timeline and pricing. All work remains the property of the provider until full payment is received. Client agrees to provide timely feedback and necessary materials to maintain the project timeline.'
+}
+
+/** Fresh defaults for each visit: today's local date, valid for 30 days. */
+const createProposalDefaults = (): ProposalData => {
+	const projectDate = toDateInputValue(new Date())
+	return {
+		...EMPTY_PROPOSAL,
+		projectDate,
+		validUntil: addDaysToDateInput(projectDate, VALIDITY_DAYS),
+		milestones: [createMilestone(1), createMilestone(2)],
+		pricingItems: [createPricingItem()]
+	}
+}
+
+type TextField = {
+	[K in keyof ProposalData]: ProposalData[K] extends string ? K : never
+}[keyof ProposalData]
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
 export default function ProposalGeneratorClient() {
-	// Use hydration-safe hook
 	const isHydrated = useHydrated()
-
-	// Get generated defaults via useSyncExternalStore
-	const generatedDefaults = useSyncExternalStore(
-		emptySubscribe,
-		getDefaultsSnapshot,
-		getServerDefaultsSnapshot
+	const [defaults, regenerateDefaults] = useClientDefaults(
+		createProposalDefaults,
+		EMPTY_PROPOSAL
 	)
-
-	// Load draft from localStorage. Hydration-safe via useSyncExternalStore.
-	const savedDraft = useLocalStorageDraft<ProposalData>(STORAGE_KEY, 'proposal')
-
-	// Track if we have a draft (derived)
+	const savedDraft = useLocalStorageDraft(proposalDraft)
 	const hasDraft = savedDraft !== null
 
-	// User-entered state
-	const [userModifiedData, setUserModifiedData] = useState<
-		Partial<ProposalData>
-	>({})
+	const [edits, setEdits] = useState<ProposalData | null>(null)
+	const baseData = savedDraft ?? defaults
+	const proposalData = edits ?? baseData
 
-	// Compute effective proposal data by merging: defaults < savedDraft < userModified
-	const proposalData = useMemo((): ProposalData => {
-		const baseData: ProposalData = {
-			...DEFAULT_COMPANY,
-			clientName: '',
-			clientCompany: '',
-			clientEmail: '',
-			projectName: '',
-			projectDate: generatedDefaults.projectDate,
-			validUntil: generatedDefaults.validUntil,
-			overview: '',
-			scopeItems: ['', '', ''],
-			milestones: generatedDefaults.milestones,
-			pricingItems: generatedDefaults.pricingItems,
-			total: 0,
-			paymentTerms: '50% deposit to begin work, 50% upon completion',
-			terms:
-				'This proposal is based on the scope defined above. Any changes to the scope may affect the timeline and pricing. All work remains the property of the provider until full payment is received. Client agrees to provide timely feedback and necessary materials to maintain the project timeline.'
-		}
-
-		if (savedDraft) {
-			Object.assign(baseData, savedDraft)
-		}
-		Object.assign(baseData, userModifiedData)
-
-		return baseData
-	}, [generatedDefaults, savedDraft, userModifiedData])
-
-	// Helper to update proposal data
-	const setProposalData = useCallback(
-		(updater: ProposalData | ((prev: ProposalData) => ProposalData)) => {
-			setUserModifiedData(prev => {
-				const currentFull: ProposalData = {
-					...DEFAULT_COMPANY,
-					clientName: '',
-					clientCompany: '',
-					clientEmail: '',
-					projectName: '',
-					projectDate: generatedDefaults.projectDate,
-					validUntil: generatedDefaults.validUntil,
-					overview: '',
-					scopeItems: ['', '', ''],
-					milestones: generatedDefaults.milestones,
-					pricingItems: generatedDefaults.pricingItems,
-					total: 0,
-					paymentTerms: '50% deposit to begin work, 50% upon completion',
-					terms:
-						'This proposal is based on the scope defined above. Any changes to the scope may affect the timeline and pricing. All work remains the property of the provider until full payment is received. Client agrees to provide timely feedback and necessary materials to maintain the project timeline.',
-					...savedDraft,
-					...prev
-				}
-				const newData =
-					typeof updater === 'function' ? updater(currentFull) : updater
-				return newData
-			})
+	const updateProposal = useCallback(
+		(updater: (prev: ProposalData) => ProposalData) => {
+			setEdits(prev => updater(prev ?? baseData))
 		},
-		[generatedDefaults, savedDraft]
+		[baseData]
 	)
 
-	// Calculate total (derived from pricingItems, used directly in render)
-	const computedTotal = useMemo(() => {
-		return proposalData.pricingItems.reduce(
-			(sum, item) => sum + (item.price || 0),
-			0
-		)
-	}, [proposalData.pricingItems])
+	const pricing = useMemo(
+		() => computeProposalPricing(proposalData.pricingItems),
+		[proposalData.pricingItems]
+	)
+	const issues = useMemo(() => getProposalIssues(proposalData), [proposalData])
+	const { isGenerating, download } = usePdfDownload()
 
-	const handleInputChange = (field: keyof ProposalData, value: string) => {
-		setProposalData(prev => ({ ...prev, [field]: value }))
+	const handleTextChange = (field: TextField, value: string) => {
+		updateProposal(prev => ({ ...prev, [field]: value }))
 	}
 
-	const handleScopeItemChange = useCallback(
-		(index: number, value: string) => {
-			setProposalData(prev => ({
-				...prev,
-				scopeItems: prev.scopeItems.map((item, i) =>
-					i === index ? value : item
-				)
-			}))
-		},
-		[setProposalData]
-	)
+	const handleScopeItemChange = (index: number, value: string) => {
+		updateProposal(prev => ({
+			...prev,
+			scopeItems: prev.scopeItems.map((item, i) => (i === index ? value : item))
+		}))
+	}
 
 	const addScopeItem = () => {
-		setProposalData(prev => ({
-			...prev,
-			scopeItems: [...prev.scopeItems, '']
-		}))
+		updateProposal(prev => ({ ...prev, scopeItems: [...prev.scopeItems, ''] }))
 	}
 
 	const removeScopeItem = (index: number) => {
-		if (proposalData.scopeItems.length === 1) {
-			return
-		}
-		setProposalData(prev => ({
+		updateProposal(prev =>
+			prev.scopeItems.length === 1
+				? prev
+				: { ...prev, scopeItems: prev.scopeItems.filter((_, i) => i !== index) }
+		)
+	}
+
+	const handleMilestoneChange = (
+		id: string,
+		field: Exclude<keyof ProposalMilestone, 'id'>,
+		value: string
+	) => {
+		updateProposal(prev => ({
 			...prev,
-			scopeItems: prev.scopeItems.filter((_, i) => i !== index)
+			milestones: prev.milestones.map(m =>
+				m.id === id ? { ...m, [field]: value } : m
+			)
 		}))
 	}
 
-	const handleMilestoneChange = useCallback(
-		(id: string, field: keyof ProposalMilestone, value: string) => {
-			setProposalData(prev => ({
-				...prev,
-				milestones: prev.milestones.map(m =>
-					m.id === id ? { ...m, [field]: value } : m
-				)
-			}))
-		},
-		[setProposalData]
-	)
-
 	const addMilestone = () => {
-		const nextPhaseNum = proposalData.milestones.length + 1
-		setProposalData(prev => ({
+		updateProposal(prev => ({
 			...prev,
 			milestones: [
 				...prev.milestones,
-				{
-					id: crypto.randomUUID(),
-					phase: `Phase ${nextPhaseNum}`,
-					description: '',
-					duration: ''
-				}
+				createMilestone(prev.milestones.length + 1)
 			]
 		}))
 	}
 
 	const removeMilestone = (id: string) => {
-		if (proposalData.milestones.length === 1) {
-			return
-		}
-		setProposalData(prev => ({
+		updateProposal(prev =>
+			prev.milestones.length === 1
+				? prev
+				: { ...prev, milestones: prev.milestones.filter(m => m.id !== id) }
+		)
+	}
+
+	const handlePricingChange = (
+		id: string,
+		patch: Partial<Omit<ProposalPricingItem, 'id'>>
+	) => {
+		updateProposal(prev => ({
 			...prev,
-			milestones: prev.milestones.filter(m => m.id !== id)
+			pricingItems: prev.pricingItems.map(item =>
+				item.id === id ? { ...item, ...patch } : item
+			)
 		}))
 	}
 
-	const handlePricingChange = useCallback(
-		(id: string, field: keyof ProposalPricingItem, value: string | number) => {
-			setProposalData(prev => ({
-				...prev,
-				pricingItems: prev.pricingItems.map(item =>
-					item.id === id ? { ...item, [field]: value } : item
-				)
-			}))
-		},
-		[setProposalData]
-	)
-
 	const addPricingItem = () => {
-		setProposalData(prev => ({
+		updateProposal(prev => ({
 			...prev,
-			pricingItems: [...prev.pricingItems, createEmptyPricingItem()]
+			pricingItems: [...prev.pricingItems, createPricingItem()]
 		}))
 	}
 
 	const removePricingItem = (id: string) => {
-		if (proposalData.pricingItems.length === 1) {
-			return
-		}
-		setProposalData(prev => ({
-			...prev,
-			pricingItems: prev.pricingItems.filter(item => item.id !== id)
-		}))
+		updateProposal(prev =>
+			prev.pricingItems.length === 1
+				? prev
+				: {
+						...prev,
+						pricingItems: prev.pricingItems.filter(item => item.id !== id)
+					}
+		)
 	}
 
 	const saveDraft = () => {
-		writeLocalStorageDraft(STORAGE_KEY, proposalData)
-		window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }))
+		if (!proposalDraft.write(proposalData)) {
+			toast.error('Your browser blocked saving the draft.')
+			return
+		}
+		toast.success('Draft saved in this browser.')
 		trackEvent('proposal_draft_saved', {
-			project_name: proposalData.projectName,
-			total: computedTotal
+			pricing_items: pricing.rows.length
 		})
 	}
 
 	const clearDraft = () => {
-		clearLocalStorageDraft(STORAGE_KEY)
-		window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }))
-		setUserModifiedData({})
-		// Reset cached defaults so new ones are generated
-		cachedDefaults = null
+		proposalDraft.clear()
+		setEdits(null)
+		regenerateDefaults()
+		toast.success('Draft cleared.')
 	}
-	const isValid =
-		proposalData.projectName.trim() !== '' &&
-		(proposalData.clientName.trim() !== '' ||
-			proposalData.clientCompany.trim() !== '')
 
-	const getFileName = useCallback(() => {
-		const projectName = (proposalData.projectName || 'proposal')
-			.toLowerCase()
-			.replace(/\s+/g, '_')
-		return `proposal_${projectName}.pdf`
-	}, [proposalData.projectName])
-
-	const handleDownload = useCallback(async () => {
-		if (!isHydrated || !isValid) {
+	const handleDownload = () => {
+		if (!isHydrated || issues.length > 0) {
 			return
 		}
-		try {
-			// Import the template module directly: a next/dynamic wrapper
-			// suspends via use(), which react-pdf's reconciler rejects (#438).
-			const [{ pdf }, { ProposalDocument }] = await Promise.all([
-				import('@react-pdf/renderer'),
-				import('@/lib/pdf/proposal-template')
-			])
-			const blob = await pdf(
-				<ProposalDocument data={{ ...proposalData, total: computedTotal }} />
-			).toBlob()
-			const url = URL.createObjectURL(blob)
-			const a = document.createElement('a')
-			a.href = url
-			a.download = getFileName()
-			a.click()
-			setTimeout(() => URL.revokeObjectURL(url), 10_000)
-			trackEvent('proposal_downloaded', {
-				project_name: proposalData.projectName,
-				total: computedTotal,
-				scope_items: proposalData.scopeItems.filter(s => s.trim()).length,
-				milestones: proposalData.milestones.filter(m => m.description.trim())
-					.length
-			})
-		} catch (err) {
-			logger.error(
-				'Proposal PDF download failed',
-				err instanceof Error ? err : new Error(String(err))
-			)
-		}
-	}, [isHydrated, isValid, proposalData, computedTotal, getFileName])
+		const snapshot = proposalData
+		void download({
+			documentLabel: 'proposal',
+			fileName: `proposal_${toFileSlug(snapshot.projectName, 'project')}.pdf`,
+			createBlob: async () => {
+				// Import the template module directly: a next/dynamic wrapper
+				// suspends via use(), which react-pdf's reconciler rejects (#438).
+				const [{ pdf }, { ProposalDocument }] = await Promise.all([
+					import('@react-pdf/renderer'),
+					import('@/lib/pdf/proposal-template')
+				])
+				return pdf(<ProposalDocument data={snapshot} />).toBlob()
+			},
+			onSuccess: () => {
+				trackEvent('proposal_downloaded', {
+					scope_items: snapshot.scopeItems.filter(s => s.trim()).length,
+					milestones: snapshot.milestones.filter(m => m.description.trim())
+						.length,
+					pricing_items: pricing.rows.length
+				})
+			}
+		})
+	}
 
-	const resultSlot =
-		isHydrated && isValid ? (
-			<div className="space-y-4">
-				<p className="text-sm text-muted-foreground">
-					Your proposal is ready to download.
-				</p>
+	const resultSlot = (
+		<DocumentDownloadPanel
+			documentLabel="proposal"
+			issues={issues}
+			isGenerating={isGenerating}
+			onDownload={handleDownload}
+			summary={
 				<dl className="space-y-2 text-sm">
-					<div className="flex justify-between">
+					<div className="flex justify-between gap-content">
 						<dt className="text-muted-foreground">Project</dt>
 						<dd className="font-medium text-foreground">
 							{proposalData.projectName}
 						</dd>
 					</div>
-					<div className="flex justify-between">
+					<div className="flex justify-between gap-content">
 						<dt className="text-muted-foreground">Client</dt>
 						<dd className="font-medium text-foreground">
-							{proposalData.clientName || proposalData.clientCompany}
+							{proposalData.clientCompany || proposalData.clientName}
 						</dd>
 					</div>
-					<div className="flex justify-between">
+					<div className="flex justify-between gap-content">
 						<dt className="text-muted-foreground">Total</dt>
 						<dd className="font-bold text-accent">
-							{formatCurrency(computedTotal)}
+							{formatCents(pricing.totalCents)}
 						</dd>
 					</div>
 				</dl>
-			</div>
-		) : null
+			}
+		/>
+	)
 
 	const formSlot = (
 		<div className="space-y-sections">
-			{/* Your Company Info */}
+			{/* Your Business Info */}
 			<section className="space-y-content">
-				<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-					Your Company Information
-				</h3>
+				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					Your Business
+				</h2>
 				<div className="grid gap-content sm:grid-cols-2">
 					<CalculatorInput
-						label="Company Name"
+						label="Business Name"
 						id="companyName"
 						type="text"
+						autoComplete="organization"
 						value={proposalData.companyName}
-						onChange={e => handleInputChange('companyName', e.target.value)}
+						onChange={e => handleTextChange('companyName', e.target.value)}
+						placeholder="Your business name"
+						helpText="Required. Prints on the cover and every page."
+						required
 					/>
 					<CalculatorInput
 						label="Email"
 						id="companyEmail"
 						type="email"
+						autoComplete="email"
 						value={proposalData.companyEmail}
-						onChange={e => handleInputChange('companyEmail', e.target.value)}
+						onChange={e => handleTextChange('companyEmail', e.target.value)}
+						placeholder="you@yourbusiness.com"
 					/>
 					<CalculatorInput
 						label="Phone"
 						id="companyPhone"
 						type="tel"
+						autoComplete="tel"
 						value={proposalData.companyPhone}
-						onChange={e => handleInputChange('companyPhone', e.target.value)}
+						onChange={e => handleTextChange('companyPhone', e.target.value)}
+						placeholder="(555) 555-0123"
 					/>
 					<CalculatorInput
 						label="Address"
 						id="companyAddress"
 						type="text"
+						autoComplete="street-address"
 						value={proposalData.companyAddress}
-						onChange={e => handleInputChange('companyAddress', e.target.value)}
+						onChange={e => handleTextChange('companyAddress', e.target.value)}
+						placeholder="123 Main St"
 					/>
 					<div className="grid grid-cols-3 gap-tight">
 						<CalculatorInput
@@ -421,84 +351,78 @@ export default function ProposalGeneratorClient() {
 							id="companyCity"
 							type="text"
 							value={proposalData.companyCity}
-							onChange={e => handleInputChange('companyCity', e.target.value)}
+							onChange={e => handleTextChange('companyCity', e.target.value)}
 						/>
 						<CalculatorInput
 							label="State"
 							id="companyState"
 							type="text"
 							value={proposalData.companyState}
-							onChange={e => handleInputChange('companyState', e.target.value)}
+							onChange={e => handleTextChange('companyState', e.target.value)}
 						/>
 						<CalculatorInput
 							label="ZIP"
 							id="companyZip"
 							type="text"
+							inputMode="numeric"
 							value={proposalData.companyZip}
-							onChange={e => handleInputChange('companyZip', e.target.value)}
+							onChange={e => handleTextChange('companyZip', e.target.value)}
 						/>
 					</div>
 				</div>
-				<div>
-					<label className="block text-sm font-medium text-foreground mb-1">
-						About Your Company
-					</label>
-					<textarea
-						value={proposalData.companyDescription}
-						onChange={e =>
-							handleInputChange('companyDescription', e.target.value)
-						}
-						rows={3}
-						className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
-						placeholder="Brief description of your company..."
-					/>
-				</div>
+				<TextAreaField
+					id="companyDescription"
+					label="About Your Business (Optional)"
+					value={proposalData.companyDescription}
+					onChange={e => handleTextChange('companyDescription', e.target.value)}
+					placeholder="Two or three sentences on what you do, who you do it for and why a client should pick you."
+				/>
 			</section>
 
 			{/* Client Info */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
 					Client Information
-				</h3>
+				</h2>
 				<div className="grid gap-content sm:grid-cols-3">
 					<CalculatorInput
 						label="Client Name"
 						id="clientName"
 						type="text"
 						value={proposalData.clientName}
-						onChange={e => handleInputChange('clientName', e.target.value)}
-						helpText="Required"
-						required
+						onChange={e => handleTextChange('clientName', e.target.value)}
+						helpText="Enter a client name, a company or both."
 					/>
 					<CalculatorInput
-						label="Company"
+						label="Client Company"
 						id="clientCompany"
 						type="text"
 						value={proposalData.clientCompany}
-						onChange={e => handleInputChange('clientCompany', e.target.value)}
+						onChange={e => handleTextChange('clientCompany', e.target.value)}
+						helpText="Shown on the cover when you enter it."
 					/>
 					<CalculatorInput
-						label="Email"
+						label="Client Email"
 						id="clientEmail"
 						type="email"
 						value={proposalData.clientEmail}
-						onChange={e => handleInputChange('clientEmail', e.target.value)}
+						onChange={e => handleTextChange('clientEmail', e.target.value)}
 					/>
 				</div>
 			</section>
 
 			{/* Project Info */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
 					Project Details
-				</h3>
+				</h2>
 				<div className="grid gap-content sm:grid-cols-3">
 					<CalculatorInput
 						label="Project Name"
 						id="projectName"
 						type="text"
 						value={proposalData.projectName}
-						onChange={e => handleInputChange('projectName', e.target.value)}
+						onChange={e => handleTextChange('projectName', e.target.value)}
 						helpText="Required"
 						required
 					/>
@@ -507,211 +431,267 @@ export default function ProposalGeneratorClient() {
 						id="projectDate"
 						type="date"
 						value={proposalData.projectDate}
-						onChange={e => handleInputChange('projectDate', e.target.value)}
+						onChange={e => handleTextChange('projectDate', e.target.value)}
 					/>
 					<CalculatorInput
 						label="Valid Until"
 						id="validUntil"
 						type="date"
+						min={proposalData.projectDate || undefined}
 						value={proposalData.validUntil}
-						onChange={e => handleInputChange('validUntil', e.target.value)}
+						onChange={e => handleTextChange('validUntil', e.target.value)}
 					/>
 				</div>
-				<div>
-					<label className="block text-sm font-medium text-foreground mb-1">
-						Project Overview
-					</label>
-					<textarea
-						value={proposalData.overview}
-						onChange={e => handleInputChange('overview', e.target.value)}
-						rows={4}
-						className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
-						placeholder="Describe the project goals, background, and objectives..."
-					/>
-				</div>
+				<TextAreaField
+					id="overview"
+					label="Project Overview"
+					rows={4}
+					value={proposalData.overview}
+					onChange={e => handleTextChange('overview', e.target.value)}
+					placeholder="Describe the project goals, background and objectives..."
+				/>
 			</section>
 
 			{/* Scope of Work */}
 			<section className="space-y-content border-t border-border pt-6">
 				<div className="flex items-center justify-between">
-					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
 						Scope of Work
-					</h3>
+					</h2>
 					<button
 						type="button"
 						onClick={addScopeItem}
 						className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 					>
-						<Plus className="w-4 h-4" />
+						<Plus className="w-4 h-4" aria-hidden="true" />
 						Add Item
 					</button>
 				</div>
-				{proposalData.scopeItems.map((item, index) => (
-					<div key={index} className="flex gap-tight">
-						<input
-							type="text"
-							value={item}
-							onChange={e => handleScopeItemChange(index, e.target.value)}
-							placeholder={`Scope item ${index + 1}...`}
-							className="flex-1 rounded-md border border-border bg-background px-4 py-2 text-sm text-foreground"
-						/>
-						<button
-							type="button"
-							onClick={() => removeScopeItem(index)}
-							disabled={proposalData.scopeItems.length === 1}
-							className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
-							aria-label="Remove scope item"
-						>
-							<Trash2 className="w-4 h-4" />
-						</button>
-					</div>
-				))}
+				{proposalData.scopeItems.map((item, index) => {
+					const number = index + 1
+					return (
+						// Scope items are plain strings with no ID; position is the identity.
+						<div key={index} className="flex gap-tight">
+							<label htmlFor={`scope-${index}`} className="sr-only">
+								Scope item {number}
+							</label>
+							<input
+								id={`scope-${index}`}
+								name={`scope-${index}`}
+								type="text"
+								value={item}
+								onChange={e => handleScopeItemChange(index, e.target.value)}
+								placeholder={`Scope item ${number}...`}
+								className="flex-1 rounded-md border border-border bg-background px-4 py-2 text-sm text-foreground"
+							/>
+							<button
+								type="button"
+								onClick={() => removeScopeItem(index)}
+								disabled={proposalData.scopeItems.length === 1}
+								className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
+								aria-label={`Remove scope item ${number}`}
+							>
+								<Trash2 className="w-4 h-4" aria-hidden="true" />
+							</button>
+						</div>
+					)
+				})}
 			</section>
 
 			{/* Timeline / Milestones */}
 			<section className="space-y-content border-t border-border pt-6">
 				<div className="flex items-center justify-between">
-					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
 						Timeline / Milestones
-					</h3>
+					</h2>
 					<button
 						type="button"
 						onClick={addMilestone}
 						className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 					>
-						<Plus className="w-4 h-4" />
+						<Plus className="w-4 h-4" aria-hidden="true" />
 						Add Phase
 					</button>
 				</div>
-				{proposalData.milestones.map(milestone => (
-					<div
-						key={milestone.id}
-						className="grid grid-cols-12 gap-tight items-start"
-					>
-						<input
-							type="text"
-							value={milestone.phase}
-							onChange={e =>
-								handleMilestoneChange(milestone.id, 'phase', e.target.value)
-							}
-							placeholder="Phase"
-							className="col-span-2 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-						/>
-						<input
-							type="text"
-							value={milestone.description}
-							onChange={e =>
-								handleMilestoneChange(
-									milestone.id,
-									'description',
-									e.target.value
-								)
-							}
-							placeholder="Description of deliverables..."
-							className="col-span-7 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-						/>
-						<input
-							type="text"
-							value={milestone.duration}
-							onChange={e =>
-								handleMilestoneChange(milestone.id, 'duration', e.target.value)
-							}
-							placeholder="Duration"
-							className="col-span-2 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-						/>
-						<button
-							type="button"
-							onClick={() => removeMilestone(milestone.id)}
-							disabled={proposalData.milestones.length === 1}
-							className="col-span-1 p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
-							aria-label="Remove milestone"
+				{proposalData.milestones.map((milestone, index) => {
+					const number = index + 1
+					return (
+						<div
+							key={milestone.id}
+							className="grid grid-cols-1 gap-tight items-end border-b border-border pb-3 last:border-0 sm:grid-cols-12 sm:border-0 sm:pb-0"
 						>
-							<Trash2 className="w-4 h-4" />
-						</button>
-					</div>
-				))}
+							<div className="sm:col-span-2">
+								<label
+									htmlFor={`phase-${milestone.id}`}
+									className="text-xs text-muted-foreground sm:sr-only"
+								>
+									Milestone {number} phase
+								</label>
+								<input
+									id={`phase-${milestone.id}`}
+									type="text"
+									value={milestone.phase}
+									onChange={e =>
+										handleMilestoneChange(milestone.id, 'phase', e.target.value)
+									}
+									placeholder="Phase"
+									className={ROW_INPUT_CLASS}
+								/>
+							</div>
+							<div className="sm:col-span-7">
+								<label
+									htmlFor={`milestone-description-${milestone.id}`}
+									className="text-xs text-muted-foreground sm:sr-only"
+								>
+									Milestone {number} deliverables
+								</label>
+								<input
+									id={`milestone-description-${milestone.id}`}
+									type="text"
+									value={milestone.description}
+									onChange={e =>
+										handleMilestoneChange(
+											milestone.id,
+											'description',
+											e.target.value
+										)
+									}
+									placeholder="Description of deliverables..."
+									className={ROW_INPUT_CLASS}
+								/>
+							</div>
+							<div className="sm:col-span-2">
+								<label
+									htmlFor={`duration-${milestone.id}`}
+									className="text-xs text-muted-foreground sm:sr-only"
+								>
+									Milestone {number} duration
+								</label>
+								<input
+									id={`duration-${milestone.id}`}
+									type="text"
+									value={milestone.duration}
+									onChange={e =>
+										handleMilestoneChange(
+											milestone.id,
+											'duration',
+											e.target.value
+										)
+									}
+									placeholder="Duration"
+									className={ROW_INPUT_CLASS}
+								/>
+							</div>
+							<div className="flex justify-end sm:col-span-1">
+								<button
+									type="button"
+									onClick={() => removeMilestone(milestone.id)}
+									disabled={proposalData.milestones.length === 1}
+									className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
+									aria-label={`Remove milestone ${number}`}
+								>
+									<Trash2 className="w-4 h-4" aria-hidden="true" />
+								</button>
+							</div>
+						</div>
+					)
+				})}
 			</section>
 
 			{/* Pricing */}
 			<section className="space-y-content border-t border-border pt-6">
 				<div className="flex items-center justify-between">
-					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
 						Pricing
-					</h3>
+					</h2>
 					<button
 						type="button"
 						onClick={addPricingItem}
 						className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 					>
-						<Plus className="w-4 h-4" />
+						<Plus className="w-4 h-4" aria-hidden="true" />
 						Add Item
 					</button>
 				</div>
-				{proposalData.pricingItems.map(item => (
-					<div key={item.id} className="flex gap-tight items-start">
-						<input
-							type="text"
-							value={item.description}
-							onChange={e =>
-								handlePricingChange(item.id, 'description', e.target.value)
-							}
-							placeholder="Service or deliverable..."
-							className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-						/>
-						<input
-							type="number"
-							min="0"
-							step="0.01"
-							value={item.price || ''}
-							onChange={e =>
-								handlePricingChange(
-									item.id,
-									'price',
-									parseFloat(e.target.value) || 0
-								)
-							}
-							placeholder="0.00"
-							className="w-32 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground text-right"
-						/>
-						<button
-							type="button"
-							onClick={() => removePricingItem(item.id)}
-							disabled={proposalData.pricingItems.length === 1}
-							className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
-							aria-label="Remove pricing item"
-						>
-							<Trash2 className="w-4 h-4" />
-						</button>
-					</div>
-				))}
+				{proposalData.pricingItems.map((item, index) => {
+					const number = index + 1
+					return (
+						<div key={item.id} className="flex gap-tight items-start">
+							<label
+								htmlFor={`pricing-description-${item.id}`}
+								className="sr-only"
+							>
+								Pricing item {number} description
+							</label>
+							<input
+								id={`pricing-description-${item.id}`}
+								type="text"
+								value={item.description}
+								onChange={e =>
+									handlePricingChange(item.id, { description: e.target.value })
+								}
+								placeholder="Service or deliverable..."
+								className="flex-1 min-w-0 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+							/>
+							<label htmlFor={`pricing-price-${item.id}`} className="sr-only">
+								Pricing item {number} price in dollars
+							</label>
+							<input
+								id={`pricing-price-${item.id}`}
+								type="number"
+								min="0"
+								step="0.01"
+								inputMode="decimal"
+								value={item.price || ''}
+								onChange={e =>
+									handlePricingChange(item.id, {
+										price: parseNumberInput(e.target.value)
+									})
+								}
+								placeholder="0.00"
+								className="w-28 sm:w-32 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground text-right"
+							/>
+							<button
+								type="button"
+								onClick={() => removePricingItem(item.id)}
+								disabled={proposalData.pricingItems.length === 1}
+								className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
+								aria-label={`Remove pricing item ${number}`}
+							>
+								<Trash2 className="w-4 h-4" aria-hidden="true" />
+							</button>
+						</div>
+					)
+				})}
 				<div className="flex justify-end pt-4 border-t border-border">
-					<div className="text-right">
+					<p className="text-right">
 						<span className="text-sm text-muted-foreground mr-4">Total:</span>
 						<span className="text-xl font-bold text-accent">
-							{formatCurrency(computedTotal)}
+							{formatCents(pricing.totalCents)}
 						</span>
-					</div>
+					</p>
 				</div>
 				<CalculatorInput
 					label="Payment Terms"
 					id="paymentTerms"
 					type="text"
 					value={proposalData.paymentTerms}
-					onChange={e => handleInputChange('paymentTerms', e.target.value)}
+					onChange={e => handleTextChange('paymentTerms', e.target.value)}
 					placeholder="e.g., 50% deposit, 50% upon completion"
 				/>
 			</section>
 
 			{/* Terms */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-					Terms & Conditions
-				</h3>
-				<textarea
-					value={proposalData.terms}
-					onChange={e => handleInputChange('terms', e.target.value)}
+				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					Terms &amp; Conditions
+				</h2>
+				<TextAreaField
+					id="terms"
+					label="Terms and conditions"
 					rows={4}
-					className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
+					value={proposalData.terms}
+					onChange={e => handleTextChange('terms', e.target.value)}
 					placeholder="Terms and conditions..."
 				/>
 			</section>
@@ -724,13 +704,13 @@ export default function ProposalGeneratorClient() {
 
 			{/* Educational Content */}
 			<div className="mt-heading space-y-content border-t border-border pt-8">
-				<h3 className="text-lg font-semibold text-foreground">Proposal Tips</h3>
+				<h2 className="text-lg font-semibold text-foreground">Proposal Tips</h2>
 
 				<div className="grid gap-content sm:grid-cols-2">
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Clear Scope
-						</h4>
+						</h3>
 						<p className="text-sm text-muted-foreground">
 							Define exactly what&apos;s included (and excluded) to prevent
 							scope creep and set clear expectations.
@@ -738,9 +718,9 @@ export default function ProposalGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Value-Based Pricing
-						</h4>
+						</h3>
 						<p className="text-sm text-muted-foreground">
 							Focus on the value and outcomes you&apos;ll deliver rather than
 							just listing hours or tasks.
@@ -748,9 +728,9 @@ export default function ProposalGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Realistic Timeline
-						</h4>
+						</h3>
 						<p className="text-sm text-muted-foreground">
 							Include buffer time for revisions and unexpected delays.
 							Under-promise and over-deliver.
@@ -758,9 +738,9 @@ export default function ProposalGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Expiration Date
-						</h4>
+						</h3>
 						<p className="text-sm text-muted-foreground">
 							Set a proposal validity period (30 days is common) to create
 							urgency and protect your pricing.
@@ -778,14 +758,7 @@ export default function ProposalGeneratorClient() {
 			columns="single"
 			formSlot={formSlot}
 			resultSlot={resultSlot}
-			hasResult={isHydrated && isValid}
-			actions={[
-				{
-					type: 'download',
-					label: 'Download PDF',
-					onClick: handleDownload
-				}
-			]}
+			hasResult={isHydrated}
 		/>
 	)
 }

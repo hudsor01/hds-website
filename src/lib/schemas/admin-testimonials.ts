@@ -4,10 +4,9 @@
  * Separate from the public `testimonialSubmitSchema` in
  * `src/lib/schemas/query-params.ts` because the admin form lets the
  * operator pick `featured` + `published` explicitly and omits the
- * request token entirely. The DB defaults `published: true`, but the
- * admin create form intentionally defaults to `false` so a freshly
- * created row is unpublished by default and the operator can review
- * before flipping it on.
+ * request token entirely. Both the DB column and the admin create form
+ * default `published` to `false`, so a freshly created row stays
+ * unpublished until the operator reviews it and flips it on.
  *
  * Optional URL fields coerce empty strings (what a blank form input
  * submits) to `null` so the Drizzle insert sees a real null instead
@@ -55,3 +54,21 @@ export type CreateAdminTestimonialInput = z.infer<
 export type UpdateAdminTestimonialInput = z.infer<
 	typeof updateAdminTestimonialSchema
 >
+
+/**
+ * Admin "new review link" form. Every field arrives as a string (an empty
+ * input submits ''), so the input type matches the TanStack Form values.
+ * The JSON API for automation keeps `createTestimonialRequestSchema`.
+ */
+export const createTestimonialRequestFormSchema = z.object({
+	clientName: z
+		.string()
+		.trim()
+		.min(1, 'Client name is required')
+		.max(200, 'Client name too long'),
+	clientEmail: z.union([
+		z.literal(''),
+		z.email('Invalid email address').max(254)
+	]),
+	projectName: z.string().trim().max(200, 'Project name too long')
+})

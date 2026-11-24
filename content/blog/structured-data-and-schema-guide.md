@@ -23,12 +23,12 @@ Your website is losing money every day because search engines cannot read what y
 ## Why Schema Markup Is a Revenue System, Not a Tech Trick
 Most business owners treat schema as a checklist item. They run a plugin, paste a few tags and hope for better rankings. I look at it like forecasting accuracy. If your data is clean and properly labeled, your attribution model works. If your structured data is messy or missing, Google guesses wrong and sends you tire kickers instead of ready to buy customers.
 
-When I scaled a partner network by 2,200%, every downstream process had to speak the same data language. Your website needs that same discipline. Schema markup gives crawlers explicit fields for pricing, availability, service areas and customer ratings. Those fields control how your results appear in rich snippets. Rich snippets directly impact click through rates. Even a modest lift in organic CTR translates to more demo requests, more calls and eventually more closed deals. You can measure that with UTM parameters and a CRM pipeline view.
+When I scaled a partner network by 2,200%, every downstream process had to speak the same data language. Your website needs that same discipline. Schema markup gives crawlers explicit fields for pricing, availability, service areas and hours. Google uses those fields when it decides how your results appear. Rich snippets directly impact click through rates. Even a modest lift in organic CTR translates to more demo requests, more calls and eventually more closed deals. You can measure that with UTM parameters and a CRM pipeline view.
 
 I drove $3.7M through forecasting work by treating every metric as a live input into a revenue model. Your schema needs that same rigor. When you structure your data correctly, you reduce attribution guesswork and give sales teams clean lead sources to follow up on.
 
 ## How Google Actually Reads Your Pages
-Crawlers do not read your site like humans. They parse HTML tags and look for patterns. When you add JSON-LD structured data to your pages, you are handing Google a clean map. The crawler extracts the fields and matches them against its knowledge graph. That matching process determines whether your listing shows up with a star rating, a price range or an event date.
+Crawlers do not read your site like humans. They parse HTML tags and look for patterns. When you add JSON-LD structured data to your pages, you are handing Google a clean map. The crawler extracts the fields and matches them against its knowledge graph. Google still decides whether to show a rich result. It does not show review stars when a business marks up reviews it controls about itself.
 
 I track organic performance alongside conversion events in Power BI so the effect of markup shows up in revenue terms. Picture a plumbing company in Frisco that adds service schema to every service page. If its listings start earning rich results, more searchers click through to the booking funnel. Every one of those clicks is one it did not have to buy through paid search. The markup does not change the copy or the design. It just makes the data readable.
 
@@ -38,7 +38,7 @@ You do not need a developer to deploy this. You just need the right schema types
 - LocalBusiness markup for service area businesses like roofers, landscapers and HVAC contractors
 - Service schema to list each offering with pricing tiers and booking links
 - FAQPage markup to capture long tail questions your support team answers daily
-- Review schema to surface verified ratings directly in search results
+- No Review or AggregateRating markup for reviews of your own business, since Google makes those pages ineligible for review stars
 - Product markup for seasonal promotions and inventory drops
 
 I map these to the pages that actually convert. The homepage rarely needs heavy markup. Service pages, pricing tables and contact forms do. I pull the questions your team already answers every day and turn them into FAQ blocks with proper schema. I keep each answer tight, using the [copy length benchmarks I set for every page section](/blog/word-and-character-counts-that-matter). Clear question and answer pairs make it easier for search engines and voice assistants to match your page to what people actually ask.
@@ -47,7 +47,7 @@ I map these to the pages that actually convert. The homepage rarely needs heavy 
 You cannot improve what you do not measure. I set up conversion tracking in Google Tag Manager before I push any schema live. I track form submissions, phone calls and checkout completions as events. Then I tag those events with the source medium so I can isolate organic click through rate changes in Search Console. I also build a simple dashboard in Power BI that pulls GSC impressions, clicks and CTR by page. When I roll out structured data, I compare the thirty day baseline against the post deployment window. If CTR climbs and bounce rate drops, I know the markup is working. If impressions spike but clicks flatline, your schema might be misaligned with search intent and I adjust the fields.
 
 ## Tools I Use To Build And Monitor Schema
-I do not write JSON-LD by hand anymore. I use automated generators and then validate every output before deployment. The [schema generator tool](/tools/schema-generator) cuts the setup time in half and prevents syntax errors that break rich results. I cross check every block with Google Rich Results Test before pushing to staging. After launch, I monitor the Schema Markup report in Search Console for errors and warnings.
+I do not write JSON-LD by hand anymore. I use automated generators and then validate every output before deployment. The [schema generator tool](/tools/schema-generator) builds the LocalBusiness block from a short form, so there is no hand-typed JSON to break. I cross check every block with Google Rich Results Test before pushing to staging. After launch, I monitor the rich result reports in Search Console for errors and warnings.
 
 For clients who need deeper attribution, I connect the CRM to the booking system using Workato. When a user clicks a rich result and lands on a service page, the tracking pixel fires and pushes the session data into HubSpot. That flow lets me see exactly which schema types drive closed deals. I also run a quick ROI analysis using the [ROI calculator](/tools/roi-calculator) to show owners what a conversion rate lift is worth in added monthly and annual revenue. Most DFW businesses underestimate the compounding effect of better snippets over a twelve month period.
 

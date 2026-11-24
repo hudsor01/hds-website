@@ -2,8 +2,15 @@
 // Tests will fail until Plan 02 creates src/components/layout/ToolPageLayout.tsx
 // This file defines the acceptance criteria for TOOL-01, TOOL-02, and TOOL-03.
 
-import { afterEach, describe, expect, it } from 'bun:test'
-import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it, spyOn } from 'bun:test'
+import {
+	cleanup,
+	fireEvent,
+	render,
+	screen,
+	waitFor
+} from '@testing-library/react'
+import { toast } from 'sonner'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 
@@ -197,6 +204,125 @@ describe('ToolPageLayout — TOOL-03: Result Card', () => {
 		expect(
 			screen.getByRole('button', { name: /download/i })
 		).toBeInTheDocument()
+	})
+})
+
+// ---------------------------------------------------------------------------
+// Actions: only with a result, honest copy feedback
+// ---------------------------------------------------------------------------
+
+describe('ToolPageLayout: actions', () => {
+	it('hides actions until there is a result, so Copy never copies nothing', () => {
+		const { container } = render(
+			<ToolPageLayout
+				title="Test Tool"
+				description="Test description text"
+				columns="two"
+				formSlot={<div>form</div>}
+				hasResult={false}
+				resultPlaceholder="Nothing yet"
+				actions={[{ type: 'copy', label: 'Copy', copyText: '' }]}
+			/>
+		)
+		expect(
+			container.querySelector('[data-slot="action-bar"]')
+		).not.toBeInTheDocument()
+		expect(screen.queryByRole('button', { name: /copy/i })).toBeNull()
+	})
+
+	it('copies copyText, toasts success and then runs onClick', async () => {
+		const writeText = spyOn(navigator.clipboard, 'writeText').mockResolvedValue(
+			undefined
+		)
+		const success = spyOn(toast, 'success')
+		let clicked = 0
+		render(
+			<ToolPageLayout
+				title="Test Tool"
+				description="Test description text"
+				columns="two"
+				formSlot={<div>form</div>}
+				resultSlot={<div>result</div>}
+				hasResult={true}
+				actions={[
+					{
+						type: 'copy',
+						label: 'Copy',
+						copyText: 'a, b',
+						copiedMessage: 'List copied',
+						onClick: () => {
+							clicked++
+						}
+					}
+				]}
+			/>
+		)
+		fireEvent.click(screen.getByRole('button', { name: /copy/i }))
+		await waitFor(() => expect(success).toHaveBeenCalledWith('List copied'))
+		expect(writeText).toHaveBeenCalledWith('a, b')
+		expect(clicked).toBe(1)
+		writeText.mockRestore()
+		success.mockRestore()
+	})
+
+	it('toasts an error when the copy fails and skips onClick', async () => {
+		const writeText = spyOn(navigator.clipboard, 'writeText').mockRejectedValue(
+			new Error('denied')
+		)
+		const execCommand = spyOn(document, 'execCommand').mockReturnValue(false)
+		const failure = spyOn(toast, 'error')
+		let clicked = 0
+		render(
+			<ToolPageLayout
+				title="Test Tool"
+				description="Test description text"
+				columns="two"
+				formSlot={<div>form</div>}
+				resultSlot={<div>result</div>}
+				hasResult={true}
+				actions={[
+					{
+						type: 'copy',
+						label: 'Copy',
+						copyText: 'a, b',
+						onClick: () => {
+							clicked++
+						}
+					}
+				]}
+			/>
+		)
+		fireEvent.click(screen.getByRole('button', { name: /copy/i }))
+		await waitFor(() => expect(failure).toHaveBeenCalledTimes(1))
+		expect(clicked).toBe(0)
+		writeText.mockRestore()
+		execCommand.mockRestore()
+		failure.mockRestore()
+	})
+
+	it('keeps legacy onClick-only actions working', () => {
+		let clicked = 0
+		render(
+			<ToolPageLayout
+				title="Test Tool"
+				description="Test description text"
+				columns="two"
+				formSlot={<div>form</div>}
+				resultSlot={<div>result</div>}
+				hasResult={true}
+				actions={[
+					{
+						type: 'print',
+						label: 'Print',
+						onClick: () => {
+							clicked++
+						}
+					}
+				]}
+			/>
+		)
+		fireEvent.click(screen.getByRole('button', { name: /print/i }))
+		expect(clicked).toBe(1)
 	})
 })
 

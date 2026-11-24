@@ -9,11 +9,10 @@
 import { TOOL_ROUTES } from '@/lib/constants/routes'
 import { isLive, listPostFiles, parsePost } from './lib'
 
-// Public tools only. The testimonial-collector is admin-only (gated, not in
-// the TOOLS registry or the sitemap), so it is intentionally excluded.
-const PUBLIC_TOOLS = Object.values(TOOL_ROUTES).filter(
-	href =>
-		href.startsWith('/tools/') && href !== TOOL_ROUTES.TESTIMONIAL_COLLECTOR
+// Public tools only. (The old testimonial collector moved into
+// /admin/testimonials and is no longer a tool route.)
+const PUBLIC_TOOLS = Object.values(TOOL_ROUTES).filter(href =>
+	href.startsWith('/tools/')
 )
 
 function main(): void {

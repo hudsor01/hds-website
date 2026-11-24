@@ -161,6 +161,8 @@ test.describe('Invoice Generator', () => {
 		// react-pdf lays out pages with yoga-layout (WebAssembly), so this
 		// also guards the production CSP's 'wasm-unsafe-eval' when run
 		// against `next start`.
+		// The business name is no longer prefilled, so the invoice needs one
+		await page.getByPlaceholder('Your business name').fill('Test Plumbing')
 		await page.getByLabel('Client Name').fill('Acme Co')
 		await page
 			.getByPlaceholder('Service or product description')

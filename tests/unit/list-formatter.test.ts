@@ -1,14 +1,10 @@
 /**
- * Comma Separator transform — contract + edge cases.
+ * Comma Separator transform: contract + edge cases.
  * Locks the behavior of src/lib/list-formatter.ts.
  */
 
 import { describe, expect, test } from 'bun:test'
-import {
-	commaSeparate,
-	countItems,
-	tokenizeList
-} from '@/lib/list-formatter'
+import { commaSeparate, countItems, tokenizeList } from '@/lib/list-formatter'
 
 describe('commaSeparate', () => {
 	test('the headline case: space separated numbers to comma list', () => {
@@ -38,17 +34,35 @@ describe('commaSeparate', () => {
 	// The headline use case: a spreadsheet column (one value per line,
 	// often with a trailing newline and CRLF line endings from Windows).
 	test('converts a spreadsheet column (CRLF + trailing newline) to a series', () => {
-		expect(commaSeparate('Alice\r\nBob\r\nCarol\r\n')).toBe(
-			'Alice, Bob, Carol'
-		)
+		expect(commaSeparate('Alice\r\nBob\r\nCarol\r\n')).toBe('Alice, Bob, Carol')
 	})
 
 	test('column of numbers to comma-separated series', () => {
 		expect(commaSeparate('10\n20\n30\n40')).toBe('10, 20, 30, 40')
 	})
 
-	test('handles mixed whitespace including blank lines', () => {
-		expect(commaSeparate('1\n\n2 \t 3\n')).toBe('1, 2, 3')
+	test('drops blank lines and trims each line', () => {
+		expect(commaSeparate('1\n\n  2 \t\n\t3\n')).toBe('1, 2, 3')
+	})
+
+	// One value per line keeps spaces inside a value: a pasted column of
+	// city names must not split "New York" into two items.
+	test('a multi-line paste splits on line breaks only', () => {
+		expect(commaSeparate('New York\nLos Angeles')).toBe('New York, Los Angeles')
+		expect(countItems('New York\nLos Angeles')).toBe(2)
+		expect(commaSeparate('Dallas Fort Worth\r\nSan Antonio\r\n')).toBe(
+			'Dallas Fort Worth, San Antonio'
+		)
+	})
+
+	test('a single line still splits on whitespace', () => {
+		expect(commaSeparate('New York')).toBe('New, York')
+	})
+
+	test('re-running on comma output stays put in column mode too', () => {
+		expect(commaSeparate('apple,\nbanana,\ncherry')).toBe(
+			'apple, banana, cherry'
+		)
 	})
 
 	test('handles Unicode whitespace (non-breaking space)', () => {
@@ -102,15 +116,11 @@ describe('commaSeparate', () => {
 
 	describe('quote option', () => {
 		test('single quotes wrap each item', () => {
-			expect(commaSeparate('1 2 3', { quote: 'single' })).toBe(
-				"'1', '2', '3'"
-			)
+			expect(commaSeparate('1 2 3', { quote: 'single' })).toBe("'1', '2', '3'")
 		})
 
 		test('double quotes wrap each item', () => {
-			expect(commaSeparate('a b c', { quote: 'double' })).toBe(
-				'"a", "b", "c"'
-			)
+			expect(commaSeparate('a b c', { quote: 'double' })).toBe('"a", "b", "c"')
 		})
 
 		test('quote none is the default and adds no quotes', () => {
@@ -130,10 +140,18 @@ describe('commaSeparate', () => {
 			)
 		})
 
-		test('double-quote mode doubles an embedded double quote (ANSI)', () => {
-			expect(commaSeparate('say "hi"', { quote: 'double' })).toBe(
-				'"say", """hi"""'
-			)
+		// Doubling ("O""Neil") is invalid in JSON, JavaScript and Python;
+		// a backslash escape is valid in all three.
+		test('double-quote mode escapes an embedded double quote with a backslash', () => {
+			const out = commaSeparate('O"Neil Smith', { quote: 'double' })
+			expect(out).toBe('"O\\"Neil", "Smith"')
+			expect(JSON.parse(`[${out}]`)).toEqual(['O"Neil', 'Smith'])
+		})
+
+		test('double-quote mode escapes backslashes so the output stays valid JSON', () => {
+			const out = commaSeparate('C:\\temp', { quote: 'double' })
+			expect(out).toBe('"C:\\\\temp"')
+			expect(JSON.parse(`[${out}]`)).toEqual(['C:\\temp'])
 		})
 
 		test('escaping composes with dedupe', () => {
@@ -143,6 +161,63 @@ describe('commaSeparate', () => {
 					dedupe: true
 				})
 			).toBe("'O''Brien', 'Smith'")
+		})
+	})
+
+	describe('quoted CSV cells', () => {
+		test('a quoted cell with a comma is one item on a single line', () => {
+			expect(commaSeparate('"Smith, John" "Doe, Jane"')).toBe(
+				'Smith, John, Doe, Jane'
+			)
+			expect(countItems('"Smith, John" "Doe, Jane"')).toBe(2)
+		})
+
+		test('quoted cells in a column, with padding around the quotes', () => {
+			expect(tokenizeList('  "Smith, John"  \n"Doe, Jane"\n')).toEqual([
+				'Smith, John',
+				'Doe, Jane'
+			])
+		})
+
+		test('a doubled quote inside a quoted cell is a literal quote', () => {
+			expect(tokenizeList('"he said ""hi"""')).toEqual(['he said "hi"'])
+		})
+
+		test('a quoted cell may span lines', () => {
+			expect(tokenizeList('"line one\nline two"\nnext')).toEqual([
+				'line one\nline two',
+				'next'
+			])
+		})
+
+		test('an unterminated quote is kept as a literal character', () => {
+			expect(tokenizeList('say "hi there')).toEqual(['say', '"hi', 'there'])
+		})
+
+		test('quoted cells round-trip through double-quote mode', () => {
+			const out = commaSeparate('"Smith, John"\n"Doe, Jane"', {
+				quote: 'double'
+			})
+			expect(JSON.parse(`[${out}]`)).toEqual(['Smith, John', 'Doe, Jane'])
+		})
+	})
+
+	describe('delimiter option', () => {
+		const input = 'a\nb\nc'
+		test('comma is the default', () => {
+			expect(commaSeparate(input)).toBe('a, b, c')
+		})
+		test('semicolon', () => {
+			expect(commaSeparate(input, { delimiter: 'semicolon' })).toBe('a; b; c')
+		})
+		test('pipe', () => {
+			expect(commaSeparate(input, { delimiter: 'pipe' })).toBe('a | b | c')
+		})
+		test('tab', () => {
+			expect(commaSeparate(input, { delimiter: 'tab' })).toBe('a\tb\tc')
+		})
+		test('newline', () => {
+			expect(commaSeparate('a b c', { delimiter: 'newline' })).toBe('a\nb\nc')
 		})
 	})
 
@@ -177,7 +252,7 @@ describe('commaSeparate', () => {
 		})
 
 		test('does not interpret items as HTML/code (no escaping, raw passthrough)', () => {
-			expect(commaSeparate('<b> & "x"')).toBe('<b>, &, "x"')
+			expect(commaSeparate('<b> & x"y')).toBe('<b>, &, x"y')
 		})
 
 		test('preserves emoji and multibyte tokens', () => {

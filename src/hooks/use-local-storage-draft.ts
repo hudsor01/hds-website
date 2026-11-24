@@ -1,79 +1,156 @@
 'use client'
 
 /**
- * Reusable localStorage-backed draft hook used by the document-generator
- * tool pages (invoice, proposal, contract). All three follow the same
- * pattern: a typed draft is JSON-encoded into a single localStorage key,
- * the client component reads it via `useSyncExternalStore` to stay
- * SSR/hydration safe, parse failures are logged at the `debug`/`warn`
- * level without crashing the page, and a clear button removes the key.
+ * localStorage-backed drafts for the document generators (invoice,
+ * proposal, contract).
  *
- * The `label` param is the human-readable name that ends up in the
- * `Failed to parse {label} draft from localStorage` log line — it does
- * NOT affect storage layout, so changing the label later is safe.
+ * Each tool creates one store at module level with its storage key and a
+ * Zod schema. The component reads it with `useLocalStorageDraft(store)`,
+ * which wraps `useSyncExternalStore` for SSR/hydration safety.
+ *
+ * useSyncExternalStore requires getSnapshot to return the SAME value while
+ * the store is unchanged; a fresh `JSON.parse` object on every call makes
+ * React re-render forever ("Maximum update depth exceeded"). The store
+ * therefore caches the parsed draft against the raw string and only parses
+ * again when the string changes. The server snapshot is a constant null.
+ *
+ * Parsed drafts go through `schema.safeParse`: an invalid or outdated
+ * draft reads as null (no draft) instead of being cast to the type.
  */
 import { useSyncExternalStore } from 'react'
+import type { z } from 'zod'
 import { logger } from '@/lib/logger'
 
-const noopUnsubscribe = () => {}
-
-function subscribeToStorage(callback: () => void): () => void {
-	if (typeof window === 'undefined') {
-		return noopUnsubscribe
-	}
-	window.addEventListener('storage', callback)
-	return () => window.removeEventListener('storage', callback)
+export interface LocalStorageDraftStore<T> {
+	readonly key: string
+	subscribe: (onChange: () => void) => () => void
+	getSnapshot: () => T | null
+	getServerSnapshot: () => T | null
+	/** Persist a draft. Returns false when the browser refuses the write. */
+	write: (value: T) => boolean
+	/** Remove the draft. */
+	clear: () => void
 }
 
-function readJsonAt<T>(key: string, label: string): T | null {
-	if (typeof window === 'undefined') {
+const getNullSnapshot = (): null => null
+
+function readRaw(key: string, label: string): string | null {
+	try {
+		return window.localStorage.getItem(key)
+	} catch (error) {
+		logger.warn(`Could not read the ${label} draft from localStorage`, error)
 		return null
 	}
+}
+
+function parseDraft<T>(
+	raw: string | null,
+	schema: z.ZodType<T>,
+	label: string
+): T | null {
+	if (!raw) {
+		return null
+	}
+	let json: unknown
 	try {
-		const raw = window.localStorage.getItem(key)
-		if (raw) {
-			return JSON.parse(raw) as T
-		}
+		json = JSON.parse(raw)
 	} catch (error) {
-		logger.debug(`Failed to parse ${label} draft from localStorage`, {
-			error: error instanceof Error ? error.message : String(error)
+		logger.debug(`Failed to parse ${label} draft from localStorage`, error)
+		return null
+	}
+	const result = schema.safeParse(json)
+	if (!result.success) {
+		logger.debug(`Discarded an invalid ${label} draft from localStorage`, {
+			issues: result.error.issues.length
 		})
+		return null
 	}
-	return null
+	return result.data
 }
 
 /**
- * Subscribe to a localStorage-backed draft and re-render on cross-tab
- * `storage` events. Always returns `null` on the server snapshot so
- * useSyncExternalStore stays hydration-safe.
+ * Create the draft store for one tool. Call once at module level so the
+ * snapshot cache lives as long as the page.
  */
-export function useLocalStorageDraft<T>(key: string, label: string): T | null {
+export function createLocalStorageDraft<T>(
+	key: string,
+	schema: z.ZodType<T>,
+	label: string
+): LocalStorageDraftStore<T> {
+	const listeners = new Set<() => void>()
+	let cache: { raw: string | null; value: T | null } | null = null
+
+	const notify = () => {
+		for (const listener of listeners) {
+			listener()
+		}
+	}
+
+	const onStorage = (event: StorageEvent) => {
+		// key is null when another tab calls localStorage.clear().
+		if (event.key === key || event.key === null) {
+			notify()
+		}
+	}
+
+	return {
+		key,
+		subscribe(onChange) {
+			listeners.add(onChange)
+			if (listeners.size === 1) {
+				window.addEventListener('storage', onStorage)
+			}
+			return () => {
+				listeners.delete(onChange)
+				if (listeners.size === 0) {
+					window.removeEventListener('storage', onStorage)
+				}
+			}
+		},
+		getSnapshot() {
+			const raw = readRaw(key, label)
+			if (cache && cache.raw === raw) {
+				return cache.value
+			}
+			const value = parseDraft(raw, schema, label)
+			cache = { raw, value }
+			return value
+		},
+		getServerSnapshot: getNullSnapshot,
+		write(value) {
+			try {
+				window.localStorage.setItem(key, JSON.stringify(value))
+			} catch (error) {
+				logger.warn(`Could not save the ${label} draft to localStorage`, error)
+				return false
+			}
+			notify()
+			return true
+		},
+		clear() {
+			try {
+				window.localStorage.removeItem(key)
+			} catch (error) {
+				logger.warn(
+					`Could not clear the ${label} draft from localStorage`,
+					error
+				)
+			}
+			notify()
+		}
+	}
+}
+
+/**
+ * Subscribe to a draft store. Returns null on the server, while no draft
+ * exists or when the stored draft fails validation.
+ */
+export function useLocalStorageDraft<T>(
+	store: LocalStorageDraftStore<T>
+): T | null {
 	return useSyncExternalStore(
-		subscribeToStorage,
-		() => readJsonAt<T>(key, label),
-		() => null
+		store.subscribe,
+		store.getSnapshot,
+		store.getServerSnapshot
 	)
-}
-
-/**
- * Write a draft to localStorage. The caller is responsible for choosing
- * when to persist (usually a manual "Save draft" button); this helper
- * only owns the JSON-encode + null-window guard.
- */
-export function writeLocalStorageDraft<T>(key: string, value: T): void {
-	if (typeof window === 'undefined') {
-		return
-	}
-	window.localStorage.setItem(key, JSON.stringify(value))
-}
-
-/**
- * Remove a draft from localStorage. Returns silently when the key
- * does not exist; the underlying API is a no-op in that case.
- */
-export function clearLocalStorageDraft(key: string): void {
-	if (typeof window === 'undefined') {
-		return
-	}
-	window.localStorage.removeItem(key)
 }

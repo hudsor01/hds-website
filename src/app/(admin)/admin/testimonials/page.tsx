@@ -16,6 +16,7 @@
  * of any partial prerender step in `next build` (the dashboard page uses
  * the same pattern).
  */
+import { Link2, Star } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { connection } from 'next/server'
@@ -36,7 +37,10 @@ import {
 	TableRow
 } from '@/components/ui/table'
 import { listTestimonialsForAdmin } from '@/lib/admin/testimonials-queries'
-import { toggleTestimonialPublishedAction } from './actions'
+import {
+	toggleTestimonialFeaturedAction,
+	toggleTestimonialPublishedAction
+} from './actions'
 
 export const metadata: Metadata = {
 	title: 'Admin: Testimonials',
@@ -67,100 +71,141 @@ async function TestimonialsList({ searchParams }: AdminTestimonialsPageProps) {
 	const { rows, prevCursor, nextCursor } = result.data
 	const preservedForPagination: Record<string, string> =
 		q.length > 0 ? { q } : {}
+	const isEmpty = rows.length === 0 && q.length === 0
 
 	return (
-		<ResourceListPage
-			title="Testimonials"
-			newHref="/admin/testimonials/new"
-			newLabel="New testimonial"
-			isEmpty={rows.length === 0 && q.length === 0}
-			emptyMessage="No testimonials yet. Create your first one."
-		>
-			<div className="space-y-4">
-				<SearchInput placeholder="Search testimonials" />
-				{rows.length === 0 ? (
-					<AdminSearchEmptyState
-						query={q}
-						label="testimonials"
-						clearHref="/admin/testimonials"
-					/>
-				) : (
-					<>
-						<Table>
-							<TableCaption className="sr-only">Testimonials</TableCaption>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Name</TableHead>
-									<TableHead>Role</TableHead>
-									<TableHead>Company</TableHead>
-									<TableHead>Rating</TableHead>
-									<TableHead>Featured</TableHead>
-									<TableHead>Published</TableHead>
-									<TableHead>Created</TableHead>
-									<TableHead className="text-right">Actions</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{rows.map(r => (
-									<TableRow key={r.id}>
-										<TableCell className="text-foreground">
-											<Link
-												href={`/admin/testimonials/${r.id}/edit`}
-												className="hover:underline"
-											>
-												{r.name}
-											</Link>
-										</TableCell>
-										<TableCell className="text-muted-foreground">
-											{r.role ?? 'Unspecified'}
-										</TableCell>
-										<TableCell className="text-muted-foreground">
-											{r.company ?? 'Unspecified'}
-										</TableCell>
-										<TableCell className="text-muted-foreground">
-											{r.rating == null ? 'Unrated' : `${r.rating}/5`}
-										</TableCell>
-										<TableCell className="text-muted-foreground">
-											{r.featured ? 'Yes' : 'No'}
-										</TableCell>
-										<TableCell className="text-muted-foreground">
-											{r.published ? 'Yes' : 'No'}
-										</TableCell>
-										<TableCell className="text-muted-foreground">
-											{r.createdAt
-												? dateFormatter.format(r.createdAt)
-												: 'Unknown'}
-										</TableCell>
-										<TableCell className="text-right">
-											<div className="inline-flex items-center gap-2">
-												<PublishToggle
-													action={toggleTestimonialPublishedAction}
-													id={r.id}
-													published={r.published ?? false}
-													resourceLabel="testimonial"
-												/>
+		<div className="space-y-6">
+			<ResourceListPage
+				title="Testimonials"
+				newHref="/admin/testimonials/new"
+				newLabel="New testimonial"
+				isEmpty={isEmpty}
+				emptyMessage="No testimonials yet. Create your first one."
+			>
+				<div className="space-y-4">
+					<RequestLinksCallout />
+					<SearchInput placeholder="Search testimonials" />
+					{rows.length === 0 ? (
+						<AdminSearchEmptyState
+							query={q}
+							label="testimonials"
+							clearHref="/admin/testimonials"
+						/>
+					) : (
+						<>
+							<Table>
+								<TableCaption className="sr-only">Testimonials</TableCaption>
+								<TableHeader>
+									<TableRow>
+										<TableHead>Name</TableHead>
+										<TableHead>Role</TableHead>
+										<TableHead>Company</TableHead>
+										<TableHead>Rating</TableHead>
+										<TableHead>Featured</TableHead>
+										<TableHead>Published</TableHead>
+										<TableHead>Created</TableHead>
+										<TableHead className="text-right">Actions</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									{rows.map(r => (
+										<TableRow key={r.id}>
+											<TableCell className="text-foreground">
 												<Link
 													href={`/admin/testimonials/${r.id}/edit`}
-													className="text-sm font-medium text-accent-text hover:underline"
+													className="hover:underline"
 												>
-													Edit
+													{r.name}
 												</Link>
-											</div>
-										</TableCell>
-									</TableRow>
-								))}
-							</TableBody>
-						</Table>
-						<AdminListPagination
-							basePath="/admin/testimonials"
-							prevCursor={prevCursor}
-							nextCursor={nextCursor}
-							preservedParams={preservedForPagination}
-						/>
-					</>
-				)}
-			</div>
-		</ResourceListPage>
+											</TableCell>
+											<TableCell className="text-muted-foreground">
+												{r.role ?? 'Unspecified'}
+											</TableCell>
+											<TableCell className="text-muted-foreground">
+												{r.company ?? 'Unspecified'}
+											</TableCell>
+											<TableCell className="text-muted-foreground">
+												{r.rating == null ? 'Unrated' : `${r.rating}/5`}
+											</TableCell>
+											<TableCell className="text-muted-foreground">
+												{r.featured ? 'Yes' : 'No'}
+											</TableCell>
+											<TableCell className="text-muted-foreground">
+												{r.published ? 'Yes' : 'No'}
+											</TableCell>
+											<TableCell className="text-muted-foreground">
+												{r.createdAt
+													? dateFormatter.format(r.createdAt)
+													: 'Unknown'}
+											</TableCell>
+											<TableCell className="text-right">
+												<div className="inline-flex items-center gap-2">
+													<form action={toggleTestimonialFeaturedAction}>
+														<input type="hidden" name="id" value={r.id} />
+														<button
+															type="submit"
+															aria-label={`${r.featured ? 'Unfeature' : 'Feature'} testimonial from ${r.name}`}
+															aria-pressed={r.featured ?? false}
+															className="inline-flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:bg-surface-base hover:text-foreground transition-smooth"
+														>
+															<Star
+																size={16}
+																aria-hidden="true"
+																className={
+																	r.featured ? 'fill-current' : undefined
+																}
+															/>
+														</button>
+													</form>
+													<PublishToggle
+														action={toggleTestimonialPublishedAction}
+														id={r.id}
+														published={r.published ?? false}
+														resourceLabel="testimonial"
+													/>
+													<Link
+														href={`/admin/testimonials/${r.id}/edit`}
+														className="text-sm font-medium text-accent-text hover:underline"
+													>
+														Edit
+													</Link>
+												</div>
+											</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+							<AdminListPagination
+								basePath="/admin/testimonials"
+								prevCursor={prevCursor}
+								nextCursor={nextCursor}
+								preservedParams={preservedForPagination}
+							/>
+						</>
+					)}
+				</div>
+			</ResourceListPage>
+			{/* The list's children (and their callout) are hidden while empty. */}
+			{isEmpty && <RequestLinksCallout />}
+		</div>
+	)
+}
+
+function RequestLinksCallout() {
+	return (
+		<div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-surface-raised px-4 py-3 text-sm">
+			<p className="text-muted-foreground">
+				Clients submit reviews through private, single-use links. New reviews
+				stay unpublished until you publish them here.
+			</p>
+			<Link
+				href="/admin/testimonials/requests"
+				className="inline-flex items-center gap-1.5 font-medium text-accent-text hover:underline"
+			>
+				<Link2 size={14} aria-hidden="true" />
+				Review request links
+			</Link>
+		</div>
 	)
 }
 

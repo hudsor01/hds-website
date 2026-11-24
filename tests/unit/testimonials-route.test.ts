@@ -1,65 +1,83 @@
 /**
- * BUG-03 regression: testimonials/[id] HTTP contract.
+ * Testimonials API HTTP contract.
  *
- * The defect: updateTestimonialStatus/deleteTestimonial/deleteTestimonialRequest
- * returned true unconditionally (no rows-affected check), and the routes never
- * validated the id shape. Result: a non-existent id returned 200 "success", and
- * a malformed (non-UUID) id hit Postgres 22P02 -> caught -> misleading 500.
+ * BUG-03 regression: routes validate the id shape (400 before any DB call),
+ * map a missing row to 404 and an existing row to 200.
  *
- * The fix: query layer returns rows-affected (result.length > 0); routes
- * validate id with z.string().uuid() (400 before any DB call) and map a false
- * result to 404. This suite asserts:
- *   - malformed 'not-a-uuid' -> 400 AND the query mock is NOT called
- *   - valid UUID, query returns false -> 404
- *   - valid UUID, query returns true -> 200
- * across PATCH/DELETE [id] and DELETE requests/[id].
+ * Response shape: successResponse wraps payloads as
+ * `{ success: true, data: {...} }`. The old public collector read
+ * `data.testimonials` / `data.token` at the top level, so its lists were
+ * always empty and its links were /testimonials/submit/undefined. These
+ * cases pin the wrapped shape for every route automation relies on.
  *
- * On the pre-fix routes a malformed id reaches the query (no 400 guard) and a
- * missing row returns 200 -> these assertions fail.
+ * Submit: the token is claimed atomically with the insert, so two submits
+ * on one link produce exactly one success and one 400. Rating is
+ * required (no silent 5-star default) and video links must be http(s).
+ *
+ * Authorization uses the REAL validateAdminAuth (a valid Bearer token)
+ * rather than mocking @/lib/auth/admin: admin-auth.test.ts requires that no
+ * other file mock.module()s it (the mock would leak process-globally).
  */
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { NextRequest } from 'next/server'
 import { cleanupMocks, setupApiMocks } from '../test-utils'
 
 const VALID_UUID = '11111111-1111-4111-8111-111111111111'
-// Sourced from the shared TEST_ENV (tests/setup.ts) so there is no duplicated
-// secret literal. setupApiMocks() feeds this same value into its @/env mock,
-// so it matches what the real validateAdminAuth compares against. We authorize
-// via the REAL validateAdminAuth (a valid Bearer token) rather than mocking
-// @/lib/auth/admin — admin-auth.test.ts requires that NO other file
-// mock.module()s @/lib/auth/admin (the mock would leak process-globally and
-// strip the real impl for every later suite). See setup.ts preload note.
-// Canonical TEST_ENV secret literal (matches tests/setup.ts). We RE-SET it on
-// the shared env in beforeEach so this suite is immune to a prior suite
-// (admin-auth flips ADMIN_SECRET to undefined for its 503 case) leaving it
-// mutated under CI ordering, which made the real validateAdminAuth return 503.
-// Mirrors the documented health-route.test.ts guard. Using the literal (not a
-// read of __TEST_ENV at module load) avoids capturing an already-mutated value.
+// Re-set on the shared env in beforeEach so this suite is immune to a prior
+// suite (admin-auth flips ADMIN_SECRET to undefined for its 503 case).
 const testEnv = (
 	globalThis as unknown as { __TEST_ENV: Record<string, unknown> }
 ).__TEST_ENV
 const VALID_ADMIN_SECRET = 'test-admin-secret-that-is-32-chars!!'
 
+const SAMPLE_TESTIMONIAL = {
+	id: VALID_UUID,
+	client_name: 'Test Client',
+	rating: null,
+	content: 'A sample review used only by this test suite.',
+	approved: false,
+	featured: false,
+	created_at: '2026-11-01T12:00:00.000Z'
+}
+
+const SAMPLE_REQUEST = {
+	id: VALID_UUID,
+	token: 'tok_123',
+	client_name: 'Test Client',
+	client_email: '',
+	status: 'pending',
+	submitted: false,
+	expires_at: '2026-12-01T12:00:00.000Z',
+	created_at: '2026-11-01T12:00:00.000Z'
+}
+
 let updateTestimonialStatusMock: ReturnType<typeof mock>
 let deleteTestimonialMock: ReturnType<typeof mock>
 let deleteTestimonialRequestMock: ReturnType<typeof mock>
+let getAllTestimonialsMock: ReturnType<typeof mock>
+let getApprovedTestimonialsMock: ReturnType<typeof mock>
+let getTestimonialRequestsMock: ReturnType<typeof mock>
+let createTestimonialRequestMock: ReturnType<typeof mock>
+let claimMock: ReturnType<typeof mock>
+let purgeMock: ReturnType<typeof mock>
 
 function mockTestimonialsLib() {
-	// COMPLETE module mock: re-export every name the routes import so the
+	// COMPLETE module mock: re-export every name any importer uses so the
 	// process-global mock.module registry never strips a sibling export.
 	mock.module('@/lib/testimonials', () => ({
+		TESTIMONIALS_APPROVED_TAG: 'testimonials-approved',
+		testimonialTokenTag: (token: string) => `testimonial-token:${token}`,
+		purgeTestimonialCaches: purgeMock,
+		isRequestExpired: () => false,
 		updateTestimonialStatus: updateTestimonialStatusMock,
 		deleteTestimonial: deleteTestimonialMock,
 		deleteTestimonialRequest: deleteTestimonialRequestMock,
-		// Not under test here, but other suites (sitemap, /testimonials)
-		// import them in the same process.
-		getTestimonialRequestByToken: mock(async () => null),
-		createTestimonialRequest: mock(async () => null),
-		getTestimonialRequests: mock(async () => []),
-		markRequestSubmitted: mock(async () => false),
-		submitTestimonial: mock(async () => null),
-		getAllTestimonials: mock(async () => []),
-		getApprovedTestimonials: mock(async () => [])
+		getTestimonialRequestByToken: mock(async () => ({ status: 'not-found' })),
+		createTestimonialRequest: createTestimonialRequestMock,
+		getTestimonialRequests: getTestimonialRequestsMock,
+		claimTokenAndSubmitTestimonial: claimMock,
+		getAllTestimonials: getAllTestimonialsMock,
+		getApprovedTestimonials: getApprovedTestimonialsMock
 	}))
 }
 
@@ -90,18 +108,39 @@ function makeDelete(
 	return [req, { params: Promise.resolve({ id }) }]
 }
 
-describe('BUG-03 testimonials/[id] HTTP contract', () => {
+function makeSubmit(body: Record<string, unknown>): NextRequest {
+	return new NextRequest('http://localhost/api/testimonials/submit', {
+		method: 'POST',
+		body: JSON.stringify(body),
+		headers: { 'Content-Type': 'application/json' }
+	})
+}
+
+const VALID_SUBMIT = {
+	token: 'tok_123',
+	client_name: 'Test Client',
+	rating: 4,
+	content: 'Clear communication and the site launched when promised.'
+}
+
+describe('testimonials API', () => {
 	beforeEach(() => {
-		// Re-establish ADMIN_SECRET on the shared env BEFORE setupApiMocks(): a
-		// prior suite (admin-auth) may have left it unset under CI ordering, and
-		// setupApiMocks bakes __TEST_ENV.ADMIN_SECRET's current value into its
-		// @/env mock — so setting it afterwards is too late and the REAL
-		// validateAdminAuth returns 503. Mirrors health-route.test.ts.
+		// Re-establish ADMIN_SECRET BEFORE setupApiMocks(), which bakes the
+		// current value into its @/env mock.
 		testEnv.ADMIN_SECRET = VALID_ADMIN_SECRET
 		setupApiMocks()
 		updateTestimonialStatusMock = mock().mockResolvedValue(true)
 		deleteTestimonialMock = mock().mockResolvedValue(true)
-		deleteTestimonialRequestMock = mock().mockResolvedValue(true)
+		deleteTestimonialRequestMock = mock().mockResolvedValue('tok_123')
+		getAllTestimonialsMock = mock().mockResolvedValue([SAMPLE_TESTIMONIAL])
+		getApprovedTestimonialsMock = mock().mockResolvedValue([])
+		getTestimonialRequestsMock = mock().mockResolvedValue([SAMPLE_REQUEST])
+		createTestimonialRequestMock = mock().mockResolvedValue(SAMPLE_REQUEST)
+		claimMock = mock().mockResolvedValue({
+			ok: true,
+			testimonialId: VALID_UUID
+		})
+		purgeMock = mock()
 		mockTestimonialsLib()
 	})
 
@@ -109,55 +148,135 @@ describe('BUG-03 testimonials/[id] HTTP contract', () => {
 		cleanupMocks()
 	})
 
+	describe('response shapes', () => {
+		it('GET /api/testimonials?all=true wraps the list in data.testimonials', async () => {
+			const { GET } = await import('@/app/api/testimonials/route')
+			const res = await GET(
+				new NextRequest('http://localhost/api/testimonials?all=true', {
+					headers: authHeaders()
+				})
+			)
+			expect(res.status).toBe(200)
+			const body = await res.json()
+			expect(body.success).toBe(true)
+			expect(body.testimonials).toBeUndefined()
+			expect(body.data.testimonials).toEqual([SAMPLE_TESTIMONIAL])
+		})
+
+		it('GET /api/testimonials?all=true requires the Bearer token', async () => {
+			const { GET } = await import('@/app/api/testimonials/route')
+			const res = await GET(
+				new NextRequest('http://localhost/api/testimonials?all=true')
+			)
+			expect(res.status).toBe(401)
+			expect(getAllTestimonialsMock).not.toHaveBeenCalled()
+		})
+
+		it('GET /api/testimonials/requests wraps the list in data.requests', async () => {
+			const { GET } = await import('@/app/api/testimonials/requests/route')
+			const res = await GET(
+				new NextRequest('http://localhost/api/testimonials/requests', {
+					headers: authHeaders()
+				})
+			)
+			expect(res.status).toBe(200)
+			const body = await res.json()
+			expect(body.success).toBe(true)
+			expect(body.requests).toBeUndefined()
+			expect(body.data.requests).toEqual([SAMPLE_REQUEST])
+		})
+
+		it('POST /api/testimonials/requests returns data.token and data.id', async () => {
+			const { POST } = await import('@/app/api/testimonials/requests/route')
+			const res = await POST(
+				new NextRequest('http://localhost/api/testimonials/requests', {
+					method: 'POST',
+					body: JSON.stringify({ clientName: 'Test Client' }),
+					headers: { 'Content-Type': 'application/json', ...authHeaders() }
+				})
+			)
+			expect(res.status).toBe(200)
+			const body = await res.json()
+			expect(body).toMatchObject({
+				success: true,
+				data: { token: 'tok_123', id: VALID_UUID }
+			})
+			expect(body.token).toBeUndefined()
+			expect(createTestimonialRequestMock).toHaveBeenCalledWith({
+				clientName: 'Test Client',
+				clientEmail: undefined,
+				projectName: undefined
+			})
+		})
+
+		it('PATCH /api/testimonials/[id] returns data.id and purges the cache', async () => {
+			const { PATCH } = await import('@/app/api/testimonials/[id]/route')
+			const res = await PATCH(...makePatch(VALID_UUID, { approved: false }))
+			expect(res.status).toBe(200)
+			expect(await res.json()).toMatchObject({
+				success: true,
+				data: { id: VALID_UUID }
+			})
+			expect(purgeMock).toHaveBeenCalledTimes(1)
+		})
+
+		it('DELETE /api/testimonials/[id] returns data.id and purges the cache', async () => {
+			const { DELETE } = await import('@/app/api/testimonials/[id]/route')
+			const res = await DELETE(...makeDelete('/api/testimonials', VALID_UUID))
+			expect(res.status).toBe(200)
+			expect(await res.json()).toMatchObject({
+				success: true,
+				data: { id: VALID_UUID }
+			})
+			expect(purgeMock).toHaveBeenCalledTimes(1)
+		})
+
+		it('DELETE /api/testimonials/requests/[id] purges the revoked token', async () => {
+			const { DELETE } = await import(
+				'@/app/api/testimonials/requests/[id]/route'
+			)
+			const res = await DELETE(
+				...makeDelete('/api/testimonials/requests', VALID_UUID)
+			)
+			expect(res.status).toBe(200)
+			expect(await res.json()).toMatchObject({
+				success: true,
+				data: { id: VALID_UUID }
+			})
+			expect(purgeMock).toHaveBeenCalledWith('tok_123')
+		})
+	})
+
 	describe('PATCH /api/testimonials/[id]', () => {
 		it('returns 400 for a malformed non-UUID id and does NOT touch the query layer', async () => {
 			const { PATCH } = await import('@/app/api/testimonials/[id]/route')
-			const [req, ctx] = makePatch('not-a-uuid', { approved: true })
-			const res = await PATCH(req, ctx)
+			const res = await PATCH(...makePatch('not-a-uuid', { approved: true }))
 			expect(res.status).toBe(400)
 			expect(updateTestimonialStatusMock).not.toHaveBeenCalled()
 		})
 
-		it('returns 404 when the row does not exist (query returns false)', async () => {
+		it('returns 404 when the row does not exist and skips the purge', async () => {
 			updateTestimonialStatusMock.mockResolvedValue(false)
 			const { PATCH } = await import('@/app/api/testimonials/[id]/route')
-			const [req, ctx] = makePatch(VALID_UUID, { approved: true })
-			const res = await PATCH(req, ctx)
+			const res = await PATCH(...makePatch(VALID_UUID, { approved: true }))
 			expect(res.status).toBe(404)
-		})
-
-		it('returns 200 when the row exists (query returns true)', async () => {
-			const { PATCH } = await import('@/app/api/testimonials/[id]/route')
-			const [req, ctx] = makePatch(VALID_UUID, { approved: true })
-			const res = await PATCH(req, ctx)
-			expect(res.status).toBe(200)
-			expect(updateTestimonialStatusMock).toHaveBeenCalledTimes(1)
+			expect(purgeMock).not.toHaveBeenCalled()
 		})
 	})
 
 	describe('DELETE /api/testimonials/[id]', () => {
 		it('returns 400 for a malformed non-UUID id and does NOT touch the query layer', async () => {
 			const { DELETE } = await import('@/app/api/testimonials/[id]/route')
-			const [req, ctx] = makeDelete('/api/testimonials', 'not-a-uuid')
-			const res = await DELETE(req, ctx)
+			const res = await DELETE(...makeDelete('/api/testimonials', 'not-a-uuid'))
 			expect(res.status).toBe(400)
 			expect(deleteTestimonialMock).not.toHaveBeenCalled()
 		})
 
-		it('returns 404 when the row does not exist (query returns false)', async () => {
+		it('returns 404 when the row does not exist', async () => {
 			deleteTestimonialMock.mockResolvedValue(false)
 			const { DELETE } = await import('@/app/api/testimonials/[id]/route')
-			const [req, ctx] = makeDelete('/api/testimonials', VALID_UUID)
-			const res = await DELETE(req, ctx)
+			const res = await DELETE(...makeDelete('/api/testimonials', VALID_UUID))
 			expect(res.status).toBe(404)
-		})
-
-		it('returns 200 when the row exists (query returns true)', async () => {
-			const { DELETE } = await import('@/app/api/testimonials/[id]/route')
-			const [req, ctx] = makeDelete('/api/testimonials', VALID_UUID)
-			const res = await DELETE(req, ctx)
-			expect(res.status).toBe(200)
-			expect(deleteTestimonialMock).toHaveBeenCalledTimes(1)
 		})
 	})
 
@@ -166,30 +285,109 @@ describe('BUG-03 testimonials/[id] HTTP contract', () => {
 			const { DELETE } = await import(
 				'@/app/api/testimonials/requests/[id]/route'
 			)
-			const [req, ctx] = makeDelete('/api/testimonials/requests', 'not-a-uuid')
-			const res = await DELETE(req, ctx)
+			const res = await DELETE(
+				...makeDelete('/api/testimonials/requests', 'not-a-uuid')
+			)
 			expect(res.status).toBe(400)
 			expect(deleteTestimonialRequestMock).not.toHaveBeenCalled()
 		})
 
-		it('returns 404 when the request does not exist (query returns false)', async () => {
-			deleteTestimonialRequestMock.mockResolvedValue(false)
+		it('returns 404 when the request does not exist', async () => {
+			deleteTestimonialRequestMock.mockResolvedValue(null)
 			const { DELETE } = await import(
 				'@/app/api/testimonials/requests/[id]/route'
 			)
-			const [req, ctx] = makeDelete('/api/testimonials/requests', VALID_UUID)
-			const res = await DELETE(req, ctx)
+			const res = await DELETE(
+				...makeDelete('/api/testimonials/requests', VALID_UUID)
+			)
 			expect(res.status).toBe(404)
 		})
+	})
 
-		it('returns 200 when the request exists (query returns true)', async () => {
-			const { DELETE } = await import(
-				'@/app/api/testimonials/requests/[id]/route'
+	describe('POST /api/testimonials/submit', () => {
+		it('accepts one submit per link: a second submit on the same token gets 400', async () => {
+			// Simulates the atomic claim: the first UPDATE ... WHERE
+			// status = 'pending' wins, the second matches no row.
+			let claimed = false
+			claimMock.mockImplementation(async () => {
+				if (claimed) {
+					return { ok: false, reason: 'used' }
+				}
+				claimed = true
+				return { ok: true, testimonialId: VALID_UUID }
+			})
+			const { POST } = await import('@/app/api/testimonials/submit/route')
+			const [first, second] = await Promise.all([
+				POST(makeSubmit(VALID_SUBMIT)),
+				POST(makeSubmit(VALID_SUBMIT))
+			])
+			const statuses = [first.status, second.status].sort()
+			expect(statuses).toEqual([200, 400])
+			const loser = first.status === 400 ? first : second
+			expect((await loser.json()).error).toBe('This link has already been used')
+			expect(claimMock).toHaveBeenCalledTimes(2)
+			// Only the winning submit purges the token page cache.
+			expect(purgeMock).toHaveBeenCalledTimes(1)
+			expect(purgeMock).toHaveBeenCalledWith('tok_123')
+		})
+
+		it('maps an unknown token to 400 "Invalid testimonial link"', async () => {
+			claimMock.mockResolvedValue({ ok: false, reason: 'invalid' })
+			const { POST } = await import('@/app/api/testimonials/submit/route')
+			const res = await POST(makeSubmit(VALID_SUBMIT))
+			expect(res.status).toBe(400)
+			expect((await res.json()).error).toBe('Invalid testimonial link')
+		})
+
+		it('maps an expired token to 400 "This link has expired"', async () => {
+			claimMock.mockResolvedValue({ ok: false, reason: 'expired' })
+			const { POST } = await import('@/app/api/testimonials/submit/route')
+			const res = await POST(makeSubmit(VALID_SUBMIT))
+			expect(res.status).toBe(400)
+			expect((await res.json()).error).toBe('This link has expired')
+		})
+
+		it('rejects a submit with no rating instead of defaulting to 5 stars', async () => {
+			const { rating, ...withoutRating } = VALID_SUBMIT
+			void rating
+			const { POST } = await import('@/app/api/testimonials/submit/route')
+			const missing = await POST(makeSubmit(withoutRating))
+			expect(missing.status).toBe(400)
+			const nulled = await POST(makeSubmit({ ...VALID_SUBMIT, rating: null }))
+			expect(nulled.status).toBe(400)
+			expect(claimMock).not.toHaveBeenCalled()
+		})
+
+		it('rejects javascript: and data: video URLs', async () => {
+			const { POST } = await import('@/app/api/testimonials/submit/route')
+			for (const video_url of [
+				'javascript:alert(1)',
+				'data:text/html,<script>alert(1)</script>'
+			]) {
+				const res = await POST(makeSubmit({ ...VALID_SUBMIT, video_url }))
+				expect(res.status).toBe(400)
+			}
+			expect(claimMock).not.toHaveBeenCalled()
+		})
+
+		it('stores an https video URL and the trimmed text', async () => {
+			const { POST } = await import('@/app/api/testimonials/submit/route')
+			const res = await POST(
+				makeSubmit({
+					...VALID_SUBMIT,
+					content: `   ${VALID_SUBMIT.content}   `,
+					video_url: 'https://www.loom.com/share/abc'
+				})
 			)
-			const [req, ctx] = makeDelete('/api/testimonials/requests', VALID_UUID)
-			const res = await DELETE(req, ctx)
 			expect(res.status).toBe(200)
-			expect(deleteTestimonialRequestMock).toHaveBeenCalledTimes(1)
+			expect(claimMock).toHaveBeenCalledWith('tok_123', {
+				client_name: 'Test Client',
+				company: undefined,
+				role: undefined,
+				rating: 4,
+				content: VALID_SUBMIT.content,
+				video_url: 'https://www.loom.com/share/abc'
+			})
 		})
 	})
 })

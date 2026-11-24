@@ -1,10 +1,15 @@
 /**
  * Invoice PDF Template
- * Uses @react-pdf/renderer for PDF generation
+ * Uses @react-pdf/renderer for PDF generation. Every number comes from
+ * computeInvoiceTotals, the same function the on-screen form uses.
  */
 
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { BRAND } from '@/lib/_generated/brand'
+import { formatDocumentDate } from '@/lib/documents/dates'
+import { cityStateZip, joinNonBlank } from '@/lib/documents/format'
+import { computeInvoiceTotals } from '@/lib/documents/invoice'
+import { formatCents } from '@/lib/documents/money'
 import type { InvoiceData, InvoiceLineItem } from '@/types/pdf-templates'
 
 // Re-export types for convenience
@@ -13,7 +18,10 @@ export type { InvoiceData, InvoiceLineItem }
 // Styles for the PDF document
 const styles = StyleSheet.create({
 	page: {
-		padding: 40,
+		paddingTop: 40,
+		paddingHorizontal: 40,
+		// Room for the fixed footer so it never overlaps body text.
+		paddingBottom: 80,
 		fontFamily: 'Helvetica',
 		fontSize: 10,
 		color: '#333333'
@@ -92,7 +100,7 @@ const styles = StyleSheet.create({
 		fontSize: 10,
 		fontWeight: 'bold',
 		color: '#333333',
-		width: 100
+		width: 110
 	},
 	table: {
 		marginBottom: 30
@@ -195,22 +203,20 @@ const styles = StyleSheet.create({
 	},
 	footer: {
 		position: 'absolute',
-		bottom: 30,
+		// A4 is 841.89pt tall. An absolute `bottom` on a fixed element is measured
+		// against the whole unbroken document, so place the footer from the top.
+		top: 792,
 		left: 40,
 		right: 40,
-		textAlign: 'center',
-		paddingTop: 15,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		paddingTop: 10,
 		borderTopWidth: 1,
 		borderTopColor: '#e5e5e5'
 	},
 	footerText: {
 		fontSize: 8,
 		color: '#999999'
-	},
-	footerLink: {
-		fontSize: 8,
-		color: BRAND.primary,
-		marginTop: 2
 	}
 })
 
@@ -218,30 +224,58 @@ interface InvoiceDocumentProps {
 	data: InvoiceData
 }
 
-const formatCurrency = (amount: number): string => {
-	return `$${amount.toLocaleString('en-US', {
-		minimumFractionDigits: 2,
-		maximumFractionDigits: 2
-	})}`
-}
+/** Format a quantity without float noise: 1.5 stays 1.5, 2 stays 2. */
+const formatQuantity = (quantity: number): string =>
+	Number(quantity.toFixed(4)).toString()
 
 export function InvoiceDocument({ data }: InvoiceDocumentProps) {
+	const totals = computeInvoiceTotals(data)
+	const companyDetails = joinNonBlank(
+		[
+			data.companyAddress,
+			cityStateZip(data.companyCity, data.companyState, data.companyZip),
+			data.companyEmail,
+			data.companyPhone
+		],
+		'\n'
+	)
+	const billTo = joinNonBlank(
+		[
+			data.clientName,
+			data.clientCompany,
+			data.clientAddress,
+			cityStateZip(data.clientCity, data.clientState, data.clientZip),
+			data.clientEmail
+		],
+		'\n'
+	)
+
 	return (
-		<Document>
+		<Document title={`Invoice ${data.invoiceNumber}`} author={data.companyName}>
 			<Page size="A4" style={styles.page}>
+				{/* Fixed footer first so it repeats on every page */}
+				<View style={styles.footer} fixed>
+					<Text style={styles.footerText}>
+						{joinNonBlank(
+							[data.companyName, `Invoice #${data.invoiceNumber}`],
+							' | '
+						)}
+					</Text>
+					<Text
+						style={styles.footerText}
+						render={({ pageNumber, totalPages }) =>
+							`Page ${pageNumber} of ${totalPages}`
+						}
+					/>
+				</View>
+
 				{/* Header */}
 				<View style={styles.header}>
 					<View style={styles.companyInfo}>
 						<Text style={styles.companyName}>{data.companyName}</Text>
-						<Text style={styles.companyDetails}>
-							{data.companyAddress}
-							{'\n'}
-							{data.companyCity}, {data.companyState} {data.companyZip}
-							{'\n'}
-							{data.companyEmail}
-							{'\n'}
-							{data.companyPhone}
-						</Text>
+						{companyDetails ? (
+							<Text style={styles.companyDetails}>{companyDetails}</Text>
+						) : null}
 					</View>
 					<View style={styles.invoiceTitle}>
 						<Text style={styles.invoiceTitleText}>INVOICE</Text>
@@ -253,24 +287,20 @@ export function InvoiceDocument({ data }: InvoiceDocumentProps) {
 				<View style={styles.addressSection}>
 					<View style={styles.addressBlock}>
 						<Text style={styles.addressLabel}>BILL TO</Text>
-						<Text style={styles.addressText}>
-							{data.clientName}
-							{data.clientCompany && `\n${data.clientCompany}`}
-							{'\n'}
-							{data.clientAddress}
-							{'\n'}
-							{data.clientCity}, {data.clientState} {data.clientZip}
-							{data.clientEmail && `\n${data.clientEmail}`}
-						</Text>
+						<Text style={styles.addressText}>{billTo}</Text>
 					</View>
 					<View style={styles.invoiceDetails}>
 						<View style={styles.detailRow}>
 							<Text style={styles.detailLabel}>Invoice Date:</Text>
-							<Text style={styles.detailValue}>{data.invoiceDate}</Text>
+							<Text style={styles.detailValue}>
+								{formatDocumentDate(data.invoiceDate)}
+							</Text>
 						</View>
 						<View style={styles.detailRow}>
 							<Text style={styles.detailLabel}>Due Date:</Text>
-							<Text style={styles.detailValue}>{data.dueDate}</Text>
+							<Text style={styles.detailValue}>
+								{formatDocumentDate(data.dueDate)}
+							</Text>
 						</View>
 						<View style={styles.detailRow}>
 							<Text style={styles.detailLabel}>Payment Terms:</Text>
@@ -291,63 +321,56 @@ export function InvoiceDocument({ data }: InvoiceDocumentProps) {
 							Amount
 						</Text>
 					</View>
-					{data.lineItems.map((item, index) => (
+					{totals.lines.map((line, index) => (
 						<View
-							key={item.id}
+							key={line.id}
+							wrap={false}
 							style={[
 								styles.tableRow,
 								index % 2 === 1 ? styles.tableRowAlt : {}
 							]}
 						>
-							<Text style={styles.colDescription}>{item.description}</Text>
-							<Text style={styles.colQty}>{item.quantity}</Text>
-							<Text style={styles.colRate}>{formatCurrency(item.rate)}</Text>
+							<Text style={styles.colDescription}>{line.description}</Text>
+							<Text style={styles.colQty}>{formatQuantity(line.quantity)}</Text>
+							<Text style={styles.colRate}>{formatCents(line.rateCents)}</Text>
 							<Text style={styles.colAmount}>
-								{formatCurrency(item.amount)}
+								{formatCents(line.amountCents)}
 							</Text>
 						</View>
 					))}
 				</View>
 
 				{/* Totals */}
-				<View style={styles.totalsSection}>
+				<View style={styles.totalsSection} wrap={false}>
 					<View style={styles.totalRow}>
 						<Text style={styles.totalLabel}>Subtotal</Text>
 						<Text style={styles.totalValue}>
-							{formatCurrency(data.subtotal)}
+							{formatCents(totals.subtotalCents)}
 						</Text>
 					</View>
 					{data.taxRate > 0 && (
 						<View style={styles.totalRow}>
 							<Text style={styles.totalLabel}>Tax ({data.taxRate}%)</Text>
 							<Text style={styles.totalValue}>
-								{formatCurrency(data.taxAmount)}
+								{formatCents(totals.taxCents)}
 							</Text>
 						</View>
 					)}
 					<View style={styles.grandTotalRow}>
 						<Text style={styles.grandTotalLabel}>Total Due</Text>
 						<Text style={styles.grandTotalValue}>
-							{formatCurrency(data.total)}
+							{formatCents(totals.totalCents)}
 						</Text>
 					</View>
 				</View>
 
 				{/* Notes */}
-				{data.notes && (
-					<View style={styles.notesSection}>
+				{data.notes.trim() ? (
+					<View style={styles.notesSection} wrap={false}>
 						<Text style={styles.notesLabel}>NOTES</Text>
-						<Text style={styles.notesText}>{data.notes}</Text>
+						<Text style={styles.notesText}>{data.notes.trim()}</Text>
 					</View>
-				)}
-
-				{/* Footer */}
-				<View style={styles.footer}>
-					<Text style={styles.footerText}>Thank you for your business!</Text>
-					<Text style={styles.footerLink}>
-						Generated by Hudson Digital Solutions
-					</Text>
-				</View>
+				) : null}
 			</Page>
 		</Document>
 	)

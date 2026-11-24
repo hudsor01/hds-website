@@ -1,10 +1,14 @@
 /**
  * API Route: Testimonial Requests
- * GET  /api/testimonials/requests  — list (admin)
- * POST /api/testimonials/requests  — create (admin)
+ * GET  /api/testimonials/requests - list (automation)
+ *   -> { success: true, data: { requests: TestimonialRequest[] } }
+ * POST /api/testimonials/requests - create (automation)
+ *   -> { success: true, data: { id, token } }
  *
- * Admin auth via Bearer token. CSRF is not applied — n8n/server-to-server
+ * Admin auth via Bearer token. CSRF is not applied: n8n/server-to-server
  * callers can't fetch a CSRF token. The admin secret IS the trust signal.
+ * The browser admin UI uses session-gated Server Actions in
+ * /admin/testimonials instead and never handles the secret.
  */
 
 import type { NextRequest } from 'next/server'
@@ -45,21 +49,13 @@ async function handleTestimonialRequestsPost(request: NextRequest) {
 	}
 
 	try {
-		const rawBody = await request.json()
+		const rawBody: unknown = await request.json()
 		const parseResult = createTestimonialRequestSchema.safeParse(rawBody)
 		if (!parseResult.success) {
 			return validationErrorResponse(parseResult.error)
 		}
 
-		const { clientName, clientEmail, projectName } = parseResult.data
-		const newRequest = await createTestimonialRequest(
-			clientName,
-			clientEmail,
-			projectName
-		)
-		if (!newRequest) {
-			throw new Error('Failed to create request')
-		}
+		const newRequest = await createTestimonialRequest(parseResult.data)
 
 		logger.info('Testimonial request created', {
 			component: 'TestimonialRequestsAPI',

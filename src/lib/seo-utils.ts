@@ -223,9 +223,12 @@ export function generateFaqSchema(faqs: readonly ServiceFaq[]) {
 
 /**
  * Review nodes for published client testimonials plus the business node
- * carrying their AggregateRating. Only ever fed rows a client submitted and
- * the owner approved; never call it with placeholder copy. Returns no nodes
- * for an empty list, so there is no rating claim without reviews.
+ * they review. Only ever fed rows a client submitted and the owner
+ * approved; never call it with placeholder copy. Returns no nodes for an
+ * empty list. Unrated reviews get a Review node without a reviewRating and
+ * are left out of the AggregateRating, which is omitted entirely when no
+ * approved review carries a rating, so there is never a rating claim the
+ * reviews do not back up.
  */
 export function generateReviewSchema(
 	testimonials: readonly Testimonial[]
@@ -233,30 +236,37 @@ export function generateReviewSchema(
 	if (testimonials.length === 0) {
 		return []
 	}
-	const total = testimonials.reduce((sum, t) => sum + t.rating, 0)
-	const ratingValue = Math.round((total / testimonials.length) * 10) / 10
+	const ratings = testimonials.flatMap(t =>
+		t.rating === null ? [] : [t.rating]
+	)
+	const business: Record<string, unknown> = generateLocalBusinessSchema()
+	if (ratings.length > 0) {
+		const total = ratings.reduce((sum, rating) => sum + rating, 0)
+		business.aggregateRating = {
+			'@type': 'AggregateRating',
+			ratingValue: Math.round((total / ratings.length) * 10) / 10,
+			reviewCount: ratings.length,
+			bestRating: 5,
+			worstRating: 1
+		}
+	}
 
 	return [
-		{
-			...generateLocalBusinessSchema(),
-			aggregateRating: {
-				'@type': 'AggregateRating',
-				ratingValue,
-				reviewCount: testimonials.length,
-				bestRating: 5,
-				worstRating: 1
-			}
-		},
+		business,
 		...testimonials.map(t => ({
 			'@type': 'Review',
 			itemReviewed: { '@id': BUSINESS_ID },
 			author: { '@type': 'Person', name: t.client_name },
-			reviewRating: {
-				'@type': 'Rating',
-				ratingValue: t.rating,
-				bestRating: 5,
-				worstRating: 1
-			},
+			...(t.rating === null
+				? {}
+				: {
+						reviewRating: {
+							'@type': 'Rating',
+							ratingValue: t.rating,
+							bestRating: 5,
+							worstRating: 1
+						}
+					}),
 			reviewBody: t.content,
 			datePublished: t.created_at?.slice(0, 10)
 		}))

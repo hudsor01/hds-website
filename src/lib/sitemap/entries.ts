@@ -288,8 +288,7 @@ export function buildSitemapEntries(sources: SitemapSources): SitemapEntry[] {
 		entry('/locations', 'locations', pageDate('/locations'), 'monthly', 0.8),
 		entry('/privacy', 'core', pageDate('/privacy'), 'yearly', 0.3),
 		entry('/terms', 'core', pageDate('/terms'), 'yearly', 0.3),
-		// Derived from the TOOLS registry, which omits the admin-only
-		// testimonial-collector, so that tool is never listed.
+		// Derived from the TOOLS registry (public tools only).
 		...sources.toolHrefs.map(href =>
 			entry(href, 'core', pageDate(href), 'monthly', 0.7)
 		),

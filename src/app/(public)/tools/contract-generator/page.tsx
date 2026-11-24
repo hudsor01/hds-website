@@ -10,7 +10,7 @@ import ContractGeneratorClient from './ContractGeneratorClient'
 export const metadata: Metadata = buildMetadata({
 	title: 'Contract Generator | Hudson Digital Solutions',
 	description:
-		'Create professional contracts with PDF download. Free contract generator with customizable clauses, terms, and legal templates.',
+		'Create a service agreement, freelance contract or mutual NDA as a PDF. Plain-English templates you read in full before you sign. Not legal advice.',
 	path: '/tools/contract-generator',
 	socialTitle: 'Contract Generator',
 	socialDescription: 'Create professional contracts with PDF download.'

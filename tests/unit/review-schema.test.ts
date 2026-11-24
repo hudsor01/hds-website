@@ -7,7 +7,7 @@ import { describe, expect, test } from 'bun:test'
 import { BUSINESS_ID, generateReviewSchema } from '@/lib/seo-utils'
 import type { Testimonial } from '@/types/testimonials'
 
-function review(rating: number, name: string): Testimonial {
+function review(rating: number | null, name: string): Testimonial {
 	return {
 		id: name,
 		client_name: name,
@@ -49,5 +49,32 @@ describe('generateReviewSchema', () => {
 		// JSON-LD is emitted with JSON.stringify, which drops undefined keys.
 		const [, node] = generateReviewSchema([undated])
 		expect(JSON.stringify(node)).not.toContain('datePublished')
+	})
+
+	test('unrated reviews get no reviewRating and stay out of the aggregate', () => {
+		const [business, rated, unrated] = generateReviewSchema([
+			review(4, 'Ana'),
+			review(null, 'Ben')
+		])
+		expect(business).toMatchObject({
+			aggregateRating: { ratingValue: 4, reviewCount: 1 }
+		})
+		expect(rated).toMatchObject({ reviewRating: { ratingValue: 4 } })
+		expect(unrated).toMatchObject({
+			'@type': 'Review',
+			author: { name: 'Ben' }
+		})
+		expect(unrated).not.toHaveProperty('reviewRating')
+	})
+
+	test('omits AggregateRating entirely when no review is rated', () => {
+		const [business, ...reviews] = generateReviewSchema([
+			review(null, 'Ana'),
+			review(null, 'Ben')
+		])
+		expect(business).toMatchObject({ '@id': BUSINESS_ID })
+		expect(business).not.toHaveProperty('aggregateRating')
+		expect(reviews).toHaveLength(2)
+		expect(JSON.stringify(reviews)).not.toContain('ratingValue')
 	})
 })

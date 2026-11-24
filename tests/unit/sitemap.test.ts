@@ -48,7 +48,7 @@ describe('sitemap', () => {
 		}
 	})
 
-	it('excludes the admin-only testimonial-collector tool', async () => {
+	it('never lists the retired testimonial-collector route', async () => {
 		const urls = (await entries()).map(e => e.url)
 		expect(urls.some(u => u.includes('/tools/testimonial-collector'))).toBe(
 			false

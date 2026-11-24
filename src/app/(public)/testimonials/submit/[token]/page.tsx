@@ -1,15 +1,21 @@
 /**
  * Private Testimonial Submission Page
- * Accessed via unique token link sent to clients
+ * Accessed via the unique, single-use link the owner creates in
+ * /admin/testimonials and sends to a client.
  */
 
 import { AlertCircle, CheckCircle2 } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import type { ReactNode } from 'react'
 import { Suspense } from 'react'
 import { TestimonialForm } from '@/components/testimonials/TestimonialForm'
-import { getTestimonialRequestByToken } from '@/lib/testimonials'
+import { BUSINESS_INFO } from '@/lib/constants/business'
+import {
+	getTestimonialRequestByToken,
+	isRequestExpired
+} from '@/lib/testimonials'
 
 interface PageProps {
 	params: Promise<{ token: string }>
@@ -26,14 +32,14 @@ export async function generateMetadata({
 	params
 }: PageProps): Promise<Metadata> {
 	const { token } = await params
-	const request = await getTestimonialRequestByToken(token)
+	const result = await getTestimonialRequestByToken(token)
 
 	// Token-gated, single-use flow. Always noindex so shared or leaked
 	// token URLs never enter the index, and keep the description generic so
 	// it cannot expose the client name from the request record.
 	const robots = { index: false, follow: false } as const
 
-	if (!request) {
+	if (result.status === 'not-found') {
 		return {
 			title: 'Invalid Link | Hudson Digital Solutions',
 			robots
@@ -53,9 +59,15 @@ function LoadingFallback() {
 		<div className="min-h-screen bg-background">
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent" />
-					<p className="text-sm text-muted-foreground mt-4 leading-relaxed">
-						Loading…
+					<div
+						className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent"
+						aria-hidden="true"
+					/>
+					<p
+						className="text-sm text-muted-foreground mt-4 leading-relaxed"
+						role="status"
+					>
+						Loading...
 					</p>
 				</div>
 			</section>
@@ -63,70 +75,99 @@ function LoadingFallback() {
 	)
 }
 
-async function TokenContent({ token }: { token: string }) {
-	const request = await getTestimonialRequestByToken(token)
+interface StatusPanelProps {
+	tone: 'success' | 'warning'
+	title: string
+	children: ReactNode
+}
 
-	// Invalid token
-	if (!request) {
+function StatusPanel({ tone, title, children }: StatusPanelProps) {
+	const Icon = tone === 'success' ? CheckCircle2 : AlertCircle
+	return (
+		<div className="min-h-screen bg-background">
+			<section className="relative overflow-hidden bg-background">
+				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<div
+						className={`w-16 h-16 mx-auto mb-content-block rounded-full flex items-center justify-center ${
+							tone === 'success' ? 'bg-success-muted' : 'bg-warning-muted'
+						}`}
+					>
+						<Icon
+							className={`w-8 h-8 ${
+								tone === 'success' ? 'text-success-text' : 'text-warning-text'
+							}`}
+							aria-hidden="true"
+						/>
+					</div>
+					<h1 className="text-page-title text-foreground leading-tight text-balance">
+						{title}
+					</h1>
+					<div className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
+						{children}
+					</div>
+				</div>
+			</section>
+		</div>
+	)
+}
+
+function ContactLink({ children }: { children: ReactNode }) {
+	return (
+		<Link
+			href="/contact"
+			className="text-accent-text underline-offset-4 hover:underline"
+		>
+			{children}
+		</Link>
+	)
+}
+
+async function TokenContent({ token }: { token: string }) {
+	const result = await getTestimonialRequestByToken(token)
+
+	if (result.status === 'not-found') {
 		notFound()
 	}
 
-	// Already submitted
-	if (request.submitted) {
+	// A failed read is not a dead link: say so instead of a 404.
+	if (result.status === 'error') {
 		return (
-			<div className="min-h-screen bg-background">
-				<section className="relative overflow-hidden bg-background">
-					<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-						<div className="w-16 h-16 mx-auto mb-content-block rounded-full bg-success-muted flex items-center justify-center">
-							<CheckCircle2 className="w-8 h-8 text-success-text" />
-						</div>
-						<h1 className="text-page-title text-foreground leading-tight text-balance">
-							Already Submitted
-						</h1>
-						<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-							Thank you! You&apos;ve already submitted your testimonial using
-							this link. I appreciate your feedback!
-						</p>
-					</div>
-				</section>
-			</div>
+			<StatusPanel tone="warning" title="Something Went Wrong">
+				<p>
+					I could not load this review link just now. Please refresh the page in
+					a minute. If it keeps happening,{' '}
+					<ContactLink>let me know</ContactLink>.
+				</p>
+			</StatusPanel>
 		)
 	}
 
-	// Expired
-	const isExpired = new Date(request.expires_at) < new Date()
-	if (isExpired) {
+	const request = result.data
+
+	if (request.submitted) {
 		return (
-			<div className="min-h-screen bg-background">
-				<section className="relative overflow-hidden bg-background">
-					<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-						<div className="w-16 h-16 mx-auto mb-content-block rounded-full bg-warning-muted flex items-center justify-center">
-							<AlertCircle className="w-8 h-8 text-warning-text" />
-						</div>
-						<h1 className="text-page-title text-foreground leading-tight text-balance">
-							Link Expired
-						</h1>
-						<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-							This testimonial link has expired. If you&apos;d still like to
-							share your feedback, please contact me for a new link.
-						</p>
-						<div className="mt-8">
-							<Link
-								href="/testimonials/submit"
-								className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-accent text-accent-foreground font-semibold hover:bg-accent/90 transition-colors"
-							>
-								Submit Public Testimonial
-							</Link>
-						</div>
-					</div>
-				</section>
-			</div>
+			<StatusPanel tone="success" title="Already Submitted">
+				<p>
+					Thank you! You already submitted your testimonial with this link. I
+					appreciate your feedback.
+				</p>
+			</StatusPanel>
+		)
+	}
+
+	if (isRequestExpired(request)) {
+		return (
+			<StatusPanel tone="warning" title="Link Expired">
+				<p>
+					This review link has expired. If you would still like to share your
+					feedback, <ContactLink>ask me for a new link</ContactLink>.
+				</p>
+			</StatusPanel>
 		)
 	}
 
 	return (
 		<div className="min-h-screen bg-background">
-			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
@@ -136,29 +177,48 @@ async function TokenContent({ token }: { token: string }) {
 						Thank You, {request.client_name}!
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						I&apos;d love to hear about your experience
-						{request.project_name && ` working on ${request.project_name}`}.
-						Your feedback means a lot to me!
+						I would love to hear about your experience
+						{request.project_name && ` working on ${request.project_name}`}. I
+						read every review before it goes live.
 					</p>
 				</div>
 			</section>
 
-			{/* Form Section */}
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
 					<div className="max-w-2xl mx-auto">
 						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
 							<TestimonialForm
-								requestId={request.id}
 								token={token}
 								defaultName={request.client_name}
 							/>
 						</div>
 
-						<p className="text-sm text-muted-foreground text-center mt-content-block">
-							By submitting, you agree that your testimonial may be used on my
-							website and marketing materials.
-						</p>
+						<div className="text-sm text-muted-foreground mt-content-block space-y-2">
+							<p>
+								By submitting, you agree that your name, role, company and
+								testimonial may be published on hudsondigitalsolutions.com. Your
+								review stays unpublished until I approve it. See the{' '}
+								<Link
+									href="/privacy"
+									className="text-accent-text underline-offset-4 hover:underline"
+								>
+									privacy policy
+								</Link>{' '}
+								for how I handle your information.
+							</p>
+							<p>
+								Changed your mind later? Email{' '}
+								<a
+									href={`mailto:${BUSINESS_INFO.email}`}
+									className="text-accent-text underline-offset-4 hover:underline"
+								>
+									{BUSINESS_INFO.email}
+								</a>{' '}
+								or use the <ContactLink>contact page</ContactLink> and I will
+								take it down.
+							</p>
+						</div>
 					</div>
 				</div>
 			</section>

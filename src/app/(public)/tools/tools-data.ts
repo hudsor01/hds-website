@@ -113,13 +113,13 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Meta Tag Generator',
 		description:
-			'Get the title, description, Open Graph and Twitter Card tags Google and social feeds actually read. Paste them in and your pages stop looking broken when shared.',
+			'Generate the title, description, canonical, Open Graph and X card tags for a page, with a preview. Paste them into your page head so shares show the right title and image.',
 		href: TOOL_ROUTES.META_TAG_GENERATOR,
 		Icon: Tags,
 		benefits: [
-			'Open Graph markup',
-			'Twitter Card support',
-			'SEO meta tag preview'
+			'Title, description and canonical tags',
+			'Open Graph and X card tags',
+			'Search and share preview'
 		],
 		cta: 'Generate Tags',
 		category: 'website'
@@ -127,13 +127,13 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'LocalBusiness Schema Generator',
 		description:
-			'Build the schema.org JSON-LD that tells Google what your business is and where it is. This is the markup I use to land DFW clients in the local pack.',
+			"Build LocalBusiness JSON-LD that follows Google's structured data guidelines and helps search engines understand your business name, address, hours and links.",
 		href: TOOL_ROUTES.SCHEMA_GENERATOR,
 		Icon: MapPin,
 		benefits: [
-			'Valid schema.org JSON-LD',
-			'Address, hours, geo, social links',
-			'Helps you rank in the local pack'
+			'schema.org JSON-LD you can test',
+			'Address, hours, geo and service area',
+			"Follows Google's LocalBusiness guidelines"
 		],
 		cta: 'Generate Schema',
 		category: 'website'
@@ -239,13 +239,13 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Contract Generator',
 		description:
-			'Put together a clean contract you can send for signature today. Set your own terms and download the PDF. No legal-template subscription to cancel later.',
+			'Fill in a Service Agreement, Freelance Contract or NDA template with standard clauses and download the PDF. Not legal advice, so have a lawyer review anything important.',
 		href: TOOL_ROUTES.CONTRACT_GENERATOR,
 		Icon: FileSignature,
 		benefits: [
-			'Professional contract templates',
-			'Downloadable PDF output',
-			'Customizable terms'
+			'Service Agreement, Freelance Contract and NDA',
+			'Optional late-payment clause',
+			'Downloadable PDF output'
 		],
 		cta: 'Generate Contract',
 		category: 'business'
@@ -257,8 +257,8 @@ export const TOOLS: readonly ToolEntry[] = [
 		href: TOOL_ROUTES.INVOICE_GENERATOR,
 		Icon: FileText,
 		benefits: [
-			'Professional invoice layout',
-			'Line item support',
+			'Fixed invoice layout you fill in',
+			'Line items, tax and totals',
 			'PDF download ready'
 		],
 		cta: 'Create Invoice',
@@ -267,12 +267,12 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Proposal Generator',
 		description:
-			'Send a proposal that closes. Lay out scope, timeline and pricing in a clean PDF clients can read and approve fast.',
+			'Lay out scope, timeline and pricing in a fixed proposal layout, then download a clean PDF your client can read and approve.',
 		href: TOOL_ROUTES.PROPOSAL_GENERATOR,
 		Icon: Briefcase,
 		benefits: [
-			'Client-ready proposals',
-			'Project scope templates',
+			'Fixed layout you fill in',
+			'Scope, timeline and pricing sections',
 			'PDF export included'
 		],
 		cta: 'Create Proposal',
@@ -281,13 +281,13 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'JSON Formatter',
 		description:
-			'Format, validate and minify JSON right in the browser. It points to the exact line that broke so you stop guessing where the syntax error is.',
+			'Format, validate and minify JSON in the browser without changing a single value. Errors show the line and column, so you stop guessing where the syntax broke.',
 		href: TOOL_ROUTES.JSON_FORMATTER,
 		Icon: Code2,
 		benefits: [
 			'Format and validate JSON',
-			'Minify for production',
-			'Syntax error detection'
+			'Errors with line and column',
+			'Warns on duplicate keys and rounded numbers'
 		],
 		cta: 'Format JSON',
 		category: 'developers'
@@ -295,13 +295,13 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Comma Separator',
 		description:
-			'Paste a spreadsheet column or any list and get a clean comma-separated string back. Add quotes, drop duplicates, copy it where you need it.',
+			'Paste a spreadsheet column or any list and get a clean comma-separated string back. Pick the delimiter, add quotes or drop duplicates, then copy it.',
 		href: TOOL_ROUTES.COMMA_SEPARATOR,
 		Icon: List,
 		benefits: [
 			'Spreadsheet column to comma-separated series',
-			'Optional single or double quotes',
-			'Remove duplicate items'
+			'Comma, semicolon, pipe, tab or new line',
+			'Optional quotes and duplicate removal'
 		],
 		cta: 'Separate List',
 		category: 'developers'
@@ -320,8 +320,7 @@ export const TOOLS: readonly ToolEntry[] = [
 		cta: 'Count Words',
 		category: 'developers'
 	}
-	// The Testimonial Collector tool is admin-only (gated behind an
-	// ADMIN_SECRET bearer). It was de-listed in audit #242 and the
-	// route is intentionally left in place so an operator can hit it
-	// directly with the token.
+	// The old Testimonial Collector is not a public tool: review request
+	// links are managed in /admin/testimonials behind the admin session,
+	// and /tools/testimonial-collector redirects there.
 ] as const

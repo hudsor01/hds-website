@@ -334,32 +334,29 @@ export function MortgageCalculatorClient() {
 		? `${MONTH_NAMES[results.payoffMonth - 1]} ${results.payoffYear}`
 		: ''
 
-	const handleCopy = () => {
-		if (!results) {
-			return
-		}
-		const text = [
-			'Mortgage Calculator Summary',
-			`Loan type: ${PROGRAM_LABELS[program]}`,
-			`Total monthly payment: ${formatCurrency(results.totalMonthlyPayment)}`,
-			`Principal and interest: ${formatCurrency(results.monthlyPrincipalInterest)}`,
-			`Property tax: ${formatCurrency(results.monthlyPropertyTax)}`,
-			`Home insurance: ${formatCurrency(results.monthlyInsurance)}`,
-			...(results.monthlyMortgageInsurance > 0
-				? [
-						`${results.mortgageInsuranceLabel}: ${formatCurrency(results.monthlyMortgageInsurance)}`
-					]
-				: []),
-			...(results.monthlyHoa > 0
-				? [`HOA dues: ${formatCurrency(results.monthlyHoa)}`]
-				: []),
-			`Loan amount: ${formatCurrency(results.loanAmount)}`,
-			`Cash to close: ${formatCurrency(results.cashToClose)}`,
-			`Total interest: ${formatCurrency(results.totalInterest)}`,
-			`Paid off: ${payoffLabel}`
-		].join('\n')
-		navigator.clipboard.writeText(text).catch(() => undefined)
-	}
+	// The layout's copy action writes this and shows a success or failure toast
+	const summaryText = results
+		? [
+				'Mortgage Calculator Summary',
+				`Loan type: ${PROGRAM_LABELS[program]}`,
+				`Total monthly payment: ${formatCurrency(results.totalMonthlyPayment)}`,
+				`Principal and interest: ${formatCurrency(results.monthlyPrincipalInterest)}`,
+				`Property tax: ${formatCurrency(results.monthlyPropertyTax)}`,
+				`Home insurance: ${formatCurrency(results.monthlyInsurance)}`,
+				...(results.monthlyMortgageInsurance > 0
+					? [
+							`${results.mortgageInsuranceLabel}: ${formatCurrency(results.monthlyMortgageInsurance)}`
+						]
+					: []),
+				...(results.monthlyHoa > 0
+					? [`HOA dues: ${formatCurrency(results.monthlyHoa)}`]
+					: []),
+				`Loan amount: ${formatCurrency(results.loanAmount)}`,
+				`Cash to close: ${formatCurrency(results.cashToClose)}`,
+				`Total interest: ${formatCurrency(results.totalInterest)}`,
+				`Paid off: ${payoffLabel}`
+			].join('\n')
+		: ''
 
 	const insuranceEndLabel = (r: MortgageResults): string => {
 		if (r.mortgageInsuranceEndsAfterPayment === null) {
@@ -464,7 +461,12 @@ export function MortgageCalculatorClient() {
 		: []
 
 	const actions: ToolAction[] = [
-		{ type: 'copy', label: 'Copy Summary', onClick: handleCopy }
+		{
+			type: 'copy',
+			label: 'Copy Summary',
+			copyText: summaryText,
+			copiedMessage: 'Summary copied'
+		}
 	]
 
 	const formSlot = (
