@@ -1,10 +1,15 @@
 /**
  * Proposal PDF Template
- * Uses @react-pdf/renderer for PDF generation
+ * Uses @react-pdf/renderer for PDF generation. Pricing rows and the total
+ * come from computeProposalPricing, the same function the form uses.
  */
 
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { BRAND } from '@/lib/_generated/brand'
+import { formatDocumentDate } from '@/lib/documents/dates'
+import { cityStateZip, joinNonBlank } from '@/lib/documents/format'
+import { formatCents } from '@/lib/documents/money'
+import { computeProposalPricing } from '@/lib/documents/proposal'
 import type {
 	ProposalData,
 	ProposalMilestone,
@@ -16,7 +21,10 @@ export type { ProposalData, ProposalMilestone, ProposalPricingItem }
 
 const styles = StyleSheet.create({
 	page: {
-		padding: 50,
+		paddingTop: 50,
+		paddingHorizontal: 50,
+		// Room for the fixed footer so it never overlaps body text.
+		paddingBottom: 80,
 		fontFamily: 'Helvetica',
 		fontSize: 10,
 		color: '#333333',
@@ -234,10 +242,13 @@ const styles = StyleSheet.create({
 	},
 	footer: {
 		position: 'absolute',
-		bottom: 30,
+		// A4 is 841.89pt tall. An absolute `bottom` on a fixed element is measured
+		// against the whole unbroken document, so place the footer from the top.
+		top: 792,
 		left: 50,
 		right: 50,
-		textAlign: 'center',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
 		paddingTop: 10,
 		borderTopWidth: 1,
 		borderTopColor: '#e5e5e5'
@@ -246,12 +257,10 @@ const styles = StyleSheet.create({
 		fontSize: 8,
 		color: '#999999'
 	},
-	pageNumber: {
-		position: 'absolute',
-		bottom: 30,
-		right: 50,
+	smallNote: {
+		marginTop: 10,
 		fontSize: 9,
-		color: '#999999'
+		color: '#666666'
 	},
 	validUntil: {
 		backgroundColor: '#fff7ed',
@@ -271,103 +280,135 @@ interface ProposalDocumentProps {
 	data: ProposalData
 }
 
-const formatCurrency = (amount: number): string => {
-	return `$${amount.toLocaleString('en-US', {
-		minimumFractionDigits: 2,
-		maximumFractionDigits: 2
-	})}`
+interface PageChromeProps {
+	companyName: string
+	projectName: string
 }
 
-const formatCalendarDate = (dateString: string): string => {
-	if (!dateString) {
-		return ''
-	}
-	const date = new Date(dateString)
-	return date.toLocaleDateString('en-US', {
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric'
-	})
+/** Header repeated on every content page. */
+function PageHeader({ companyName, projectName }: PageChromeProps) {
+	return (
+		<View style={styles.header} fixed>
+			<Text style={styles.headerCompany}>{companyName}</Text>
+			<Text style={styles.headerProject}>{projectName}</Text>
+		</View>
+	)
+}
+
+/** Fixed footer with page numbers, inside the page's bottom padding. */
+function PageFooter({ companyName, projectName }: PageChromeProps) {
+	return (
+		<View style={styles.footer} fixed>
+			<Text style={styles.footerText}>
+				{joinNonBlank([companyName, projectName], ' | ')}
+			</Text>
+			<Text
+				style={styles.footerText}
+				render={({ pageNumber, totalPages }) =>
+					`Page ${pageNumber} of ${totalPages}`
+				}
+			/>
+		</View>
+	)
 }
 
 export function ProposalDocument({ data }: ProposalDocumentProps) {
+	const pricing = computeProposalPricing(data.pricingItems)
+	const scopeItems = data.scopeItems.map(item => item.trim()).filter(Boolean)
+	const milestones = data.milestones.filter(
+		m => m.description.trim() || m.duration.trim()
+	)
+	const clientLabel = data.clientCompany.trim() || data.clientName.trim()
+	const contactLine = joinNonBlank(
+		[data.companyEmail, data.companyPhone],
+		' | '
+	)
+	const addressBlock = joinNonBlank(
+		[
+			data.companyAddress,
+			cityStateZip(data.companyCity, data.companyState, data.companyZip),
+			contactLine
+		],
+		'\n'
+	)
+	const companyDescription = data.companyDescription.trim()
+	const validUntil = formatDocumentDate(data.validUntil)
+	const chrome = {
+		companyName: data.companyName,
+		projectName: data.projectName
+	}
+
 	return (
-		<Document>
+		<Document title={`Proposal: ${data.projectName}`} author={data.companyName}>
 			{/* Cover Page */}
 			<Page size="A4" style={styles.page}>
 				<View style={styles.coverPage}>
 					<Text style={styles.coverTitle}>PROJECT PROPOSAL</Text>
-					<Text style={styles.coverSubtitle}>
-						{data.projectName || 'Project Name'}
-					</Text>
-					<Text style={styles.coverClient}>
-						Prepared for: {data.clientCompany || data.clientName || 'Client'}
-					</Text>
+					<Text style={styles.coverSubtitle}>{data.projectName}</Text>
+					<Text style={styles.coverClient}>Prepared for: {clientLabel}</Text>
 					<Text style={styles.coverDate}>
-						{formatCalendarDate(data.projectDate)}
+						{formatDocumentDate(data.projectDate)}
 					</Text>
 				</View>
 				<View style={styles.coverCompany}>
 					<Text style={styles.coverCompanyName}>{data.companyName}</Text>
-					<Text style={styles.coverCompanyDetails}>
-						{data.companyEmail} | {data.companyPhone}
-					</Text>
+					{contactLine ? (
+						<Text style={styles.coverCompanyDetails}>{contactLine}</Text>
+					) : null}
 				</View>
 			</Page>
 
 			{/* Content Pages */}
 			<Page size="A4" style={styles.page}>
-				{/* Header */}
-				<View style={styles.header}>
-					<Text style={styles.headerCompany}>{data.companyName}</Text>
-					<Text style={styles.headerProject}>{data.projectName}</Text>
-				</View>
+				{/* Fixed footer first so it repeats on every page */}
+				<PageFooter {...chrome} />
+				<PageHeader {...chrome} />
 
 				{/* Overview */}
-				<View style={styles.section}>
-					<Text style={styles.sectionTitle}>Project Overview</Text>
-					<Text style={styles.paragraph}>
-						{data.overview || 'Project overview to be defined.'}
-					</Text>
-				</View>
+				{data.overview.trim() ? (
+					<View style={styles.section}>
+						<Text style={styles.sectionTitle}>Project Overview</Text>
+						<Text style={styles.paragraph}>{data.overview.trim()}</Text>
+					</View>
+				) : null}
 
 				{/* Scope of Work */}
-				{data.scopeItems.filter(item => item.trim()).length > 0 && (
+				{scopeItems.length > 0 ? (
 					<View style={styles.section}>
 						<Text style={styles.sectionTitle}>Scope of Work</Text>
-						{data.scopeItems
-							.filter(item => item.trim())
-							.map((item, index) => (
-								<View key={index} style={styles.scopeItem}>
-									<Text style={styles.scopeBullet}>&#8226;</Text>
-									<Text style={styles.scopeText}>{item}</Text>
-								</View>
-							))}
+						{scopeItems.map((item, index) => (
+							<View
+								key={`${index}-${item}`}
+								style={styles.scopeItem}
+								wrap={false}
+							>
+								<Text style={styles.scopeBullet}>&#8226;</Text>
+								<Text style={styles.scopeText}>{item}</Text>
+							</View>
+						))}
 					</View>
-				)}
+				) : null}
 
 				{/* Timeline */}
-				{data.milestones.filter(m => m.description.trim()).length > 0 && (
+				{milestones.length > 0 ? (
 					<View style={styles.section}>
 						<Text style={styles.sectionTitle}>Project Timeline</Text>
-						{data.milestones
-							.filter(m => m.description.trim())
-							.map(milestone => (
-								<View key={milestone.id} style={styles.milestoneRow}>
-									<Text style={styles.milestonePhase}>{milestone.phase}</Text>
-									<Text style={styles.milestoneDesc}>
-										{milestone.description}
-									</Text>
-									<Text style={styles.milestoneDuration}>
-										{milestone.duration}
-									</Text>
-								</View>
-							))}
+						{milestones.map(milestone => (
+							<View key={milestone.id} style={styles.milestoneRow} wrap={false}>
+								<Text style={styles.milestonePhase}>{milestone.phase}</Text>
+								<Text style={styles.milestoneDesc}>
+									{milestone.description}
+								</Text>
+								<Text style={styles.milestoneDuration}>
+									{milestone.duration}
+								</Text>
+							</View>
+						))}
 					</View>
-				)}
+				) : null}
 
-				{/* Pricing */}
-				{data.pricingItems.filter(p => p.description.trim()).length > 0 && (
+				{/* Pricing: the same rows the total is summed from */}
+				{pricing.rows.length > 0 ? (
 					<View style={styles.section}>
 						<Text style={styles.sectionTitle}>Investment</Text>
 						<View style={styles.pricingTable}>
@@ -379,136 +420,98 @@ export function ProposalDocument({ data }: ProposalDocumentProps) {
 									Amount
 								</Text>
 							</View>
-							{data.pricingItems
-								.filter(p => p.description.trim())
-								.map((item, index) => (
-									<View
-										key={item.id}
-										style={[
-											styles.pricingRow,
-											index % 2 === 1 ? styles.pricingRowAlt : {}
-										]}
-									>
-										<Text style={styles.pricingItem}>{item.description}</Text>
-										<Text style={styles.pricingPrice}>
-											{formatCurrency(item.price)}
-										</Text>
-									</View>
-								))}
-							<View style={styles.totalRow}>
+							{pricing.rows.map((row, index) => (
+								<View
+									key={row.id}
+									wrap={false}
+									style={[
+										styles.pricingRow,
+										index % 2 === 1 ? styles.pricingRowAlt : {}
+									]}
+								>
+									<Text style={styles.pricingItem}>{row.description}</Text>
+									<Text style={styles.pricingPrice}>
+										{formatCents(row.cents)}
+									</Text>
+								</View>
+							))}
+							<View style={styles.totalRow} wrap={false}>
 								<Text style={styles.totalLabel}>Total Investment</Text>
 								<Text style={styles.totalValue}>
-									{formatCurrency(data.total)}
+									{formatCents(pricing.totalCents)}
 								</Text>
 							</View>
 						</View>
-
-						{data.paymentTerms && (
-							<Text
-								style={[
-									styles.paragraph,
-									{ marginTop: 15, fontSize: 9, color: '#666666' }
-								]}
-							>
-								Payment Terms: {data.paymentTerms}
-							</Text>
-						)}
-
-						{data.validUntil && (
-							<View style={styles.validUntil}>
-								<Text style={styles.validUntilText}>
-									This proposal is valid until{' '}
-									{formatCalendarDate(data.validUntil)}
-								</Text>
-							</View>
-						)}
 					</View>
-				)}
+				) : null}
 
-				<Text
-					style={styles.pageNumber}
-					render={({ pageNumber, totalPages }) =>
-						`${pageNumber} / ${totalPages}`
-					}
-					fixed
-				/>
+				{/* Payment terms and validity print even without pricing rows */}
+				{data.paymentTerms.trim() ? (
+					<Text style={[styles.paragraph, styles.smallNote]}>
+						Payment Terms: {data.paymentTerms.trim()}
+					</Text>
+				) : null}
+
+				{validUntil ? (
+					<View style={styles.validUntil} wrap={false}>
+						<Text style={styles.validUntilText}>
+							This proposal is valid until {validUntil}
+						</Text>
+					</View>
+				) : null}
 			</Page>
 
 			{/* Terms & About Page */}
 			<Page size="A4" style={styles.page}>
-				{/* Header */}
-				<View style={styles.header}>
-					<Text style={styles.headerCompany}>{data.companyName}</Text>
-					<Text style={styles.headerProject}>{data.projectName}</Text>
-				</View>
+				{/* Fixed footer first so it repeats on every page */}
+				<PageFooter {...chrome} />
+				<PageHeader {...chrome} />
 
-				{/* Terms */}
-				{data.terms && (
+				{data.terms.trim() ? (
 					<View style={styles.section}>
 						<Text style={styles.sectionTitle}>Terms &amp; Conditions</Text>
-						<Text style={styles.paragraph}>{data.terms}</Text>
+						<Text style={styles.paragraph}>{data.terms.trim()}</Text>
 					</View>
-				)}
+				) : null}
 
-				{/* About Us */}
-				<View style={styles.aboutSection}>
-					<Text style={styles.sectionTitle}>About {data.companyName}</Text>
-					<Text style={styles.paragraph}>
-						{data.companyDescription || 'Company description to be added.'}
-					</Text>
-					<Text
-						style={[
-							styles.paragraph,
-							{ marginTop: 10, fontSize: 9, color: '#666666' }
-						]}
-					>
-						{data.companyAddress}
-						{'\n'}
-						{data.companyCity}, {data.companyState} {data.companyZip}
-						{'\n'}
-						{data.companyEmail} | {data.companyPhone}
-					</Text>
-				</View>
+				{companyDescription || addressBlock ? (
+					<View style={styles.aboutSection} wrap={false}>
+						<Text style={styles.sectionTitle}>About {data.companyName}</Text>
+						{companyDescription ? (
+							<Text style={styles.paragraph}>{companyDescription}</Text>
+						) : null}
+						{addressBlock ? (
+							<Text style={[styles.paragraph, styles.smallNote]}>
+								{addressBlock}
+							</Text>
+						) : null}
+					</View>
+				) : null}
 
-				{/* Signature Section */}
-				<View style={styles.signatureSection}>
+				{/* Signature Section: never split across pages */}
+				<View style={styles.signatureSection} wrap={false}>
 					<Text style={{ marginBottom: 10, fontWeight: 'bold' }}>
-						To proceed with this proposal, please sign below:
+						To accept this proposal, please sign below:
 					</Text>
 					<View style={styles.signatureBlock}>
 						<View style={styles.signatureColumn}>
 							<View style={styles.signatureLine} />
 							<Text style={styles.signatureLabel}>Client Signature</Text>
-							<Text style={{ fontSize: 10 }}>
-								{data.clientName || data.clientCompany}
-							</Text>
+							<Text style={{ fontSize: 10 }}>{clientLabel}</Text>
 							<Text style={styles.signatureLabel}>
 								Date: __________________
 							</Text>
 						</View>
 						<View style={styles.signatureColumn}>
 							<View style={styles.signatureLine} />
-							<Text style={styles.signatureLabel}>{data.companyName}</Text>
+							<Text style={styles.signatureLabel}>Signature</Text>
+							<Text style={{ fontSize: 10 }}>{data.companyName}</Text>
 							<Text style={styles.signatureLabel}>
 								Date: __________________
 							</Text>
 						</View>
 					</View>
 				</View>
-
-				<View style={styles.footer}>
-					<Text style={styles.footerText}>
-						Thank you for considering {data.companyName} for your project!
-					</Text>
-				</View>
-
-				<Text
-					style={styles.pageNumber}
-					render={({ pageNumber, totalPages }) =>
-						`${pageNumber} / ${totalPages}`
-					}
-					fixed
-				/>
 			</Page>
 		</Document>
 	)

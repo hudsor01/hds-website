@@ -10,7 +10,7 @@ import ProposalGeneratorClient from './ProposalGeneratorClient'
 export const metadata: Metadata = buildMetadata({
 	title: 'Proposal Generator | Hudson Digital Solutions',
 	description:
-		'Create professional project proposals with PDF download. Free proposal generator with customizable templates for freelancers and agencies.',
+		'Create a project proposal and download it as a PDF. Add scope, milestones, pricing and terms. A free proposal generator for freelancers and agencies.',
 	path: '/tools/proposal-generator',
 	socialTitle: 'Proposal Generator',
 	socialDescription: 'Create professional project proposals with PDF download.'
