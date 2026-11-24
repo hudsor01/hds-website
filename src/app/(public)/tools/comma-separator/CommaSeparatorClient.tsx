@@ -1,6 +1,6 @@
 /**
  * Comma Separator
- * Turn a space, tab, or newline separated list into a comma-separated one.
+ * Turn a pasted column or list into a comma-separated (or other) series.
  */
 
 'use client'
@@ -12,9 +12,17 @@ import { trackEvent } from '@/lib/analytics'
 import {
 	commaSeparate,
 	countItems,
+	type Delimiter,
 	type QuoteStyle
 } from '@/lib/list-formatter'
-import { logger } from '@/lib/logger'
+
+const DELIMITER_OPTIONS: ReadonlyArray<{ value: Delimiter; label: string }> = [
+	{ value: 'comma', label: 'Comma' },
+	{ value: 'semicolon', label: 'Semicolon' },
+	{ value: 'pipe', label: 'Pipe' },
+	{ value: 'tab', label: 'Tab' },
+	{ value: 'newline', label: 'New line' }
+]
 
 const QUOTE_OPTIONS: ReadonlyArray<{ value: QuoteStyle; label: string }> = [
 	{ value: 'none', label: 'None' },
@@ -29,13 +37,15 @@ const PLACEHOLDER = '1\n2\n3\n4\n5'
 export default function CommaSeparatorClient() {
 	const [input, setInput] = useState('')
 	const [quote, setQuote] = useState<QuoteStyle>('none')
+	const [delimiter, setDelimiter] = useState<Delimiter>('comma')
 	const [dedupe, setDedupe] = useState(false)
 	const quoteFieldId = useId()
+	const delimiterFieldId = useId()
 	const dedupeFieldId = useId()
 
 	const output = useMemo(
-		() => commaSeparate(input, { quote, dedupe }),
-		[input, quote, dedupe]
+		() => commaSeparate(input, { quote, dedupe, delimiter }),
+		[input, quote, dedupe, delimiter]
 	)
 	const itemCount = useMemo(
 		() => countItems(input, { dedupe }),
@@ -43,37 +53,24 @@ export default function CommaSeparatorClient() {
 	)
 	const hasResult = output.length > 0
 
-	const copyToClipboard = async () => {
-		if (!output) {
-			return
-		}
-		try {
-			await navigator.clipboard.writeText(output)
-			trackEvent('calculator_used', {
-				calculator_type: 'comma-separator',
-				action: 'copy',
-				item_count: itemCount
-			})
-		} catch (error) {
-			// Fallback for browsers without the async clipboard API.
-			logger.debug('Clipboard API unavailable, using fallback', {
-				error: error instanceof Error ? error.message : String(error)
-			})
-			const textArea = document.createElement('textarea')
-			textArea.value = output
-			document.body.appendChild(textArea)
-			textArea.select()
-			document.execCommand('copy')
-			document.body.removeChild(textArea)
-		}
-	}
-
 	const clearAll = () => {
 		setInput('')
 	}
 
 	const actions: ToolAction[] = [
-		{ type: 'copy', label: 'Copy', onClick: copyToClipboard }
+		{
+			type: 'copy',
+			label: 'Copy',
+			copyText: output,
+			copiedMessage: 'List copied',
+			onClick: () => {
+				trackEvent('calculator_used', {
+					calculator_type: 'comma-separator',
+					action: 'copy',
+					item_count: itemCount
+				})
+			}
+		}
 	]
 
 	const formSlot = (
@@ -104,13 +101,35 @@ export default function CommaSeparatorClient() {
 					spellCheck={false}
 				/>
 				<p className="mt-2 text-xs text-muted-foreground">
-					Paste a column of values (one per line) from a spreadsheet, or any
-					space or tab separated list. Items are joined with a comma and a
-					space.
+					One value per line keeps the spaces inside a value, so New York stays
+					one item. A single line splits on spaces or tabs. Wrap a value in
+					double quotes ("Smith, John") to keep it together. The result updates
+					as you type.
 				</p>
 			</div>
 
 			<div className="flex flex-wrap items-center gap-content">
+				<div className="flex items-center gap-tight">
+					<label
+						htmlFor={delimiterFieldId}
+						className="text-sm text-muted-foreground"
+					>
+						Separate with:
+					</label>
+					<select
+						id={delimiterFieldId}
+						value={delimiter}
+						onChange={event => setDelimiter(event.target.value as Delimiter)}
+						className="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
+					>
+						{DELIMITER_OPTIONS.map(option => (
+							<option key={option.value} value={option.value}>
+								{option.label}
+							</option>
+						))}
+					</select>
+				</div>
+
 				<div className="flex items-center gap-tight">
 					<label
 						htmlFor={quoteFieldId}
@@ -167,12 +186,12 @@ export default function CommaSeparatorClient() {
 	return (
 		<ToolPageLayout
 			title="Comma Separator"
-			description="Convert a column of values into a comma-separated series. Paste a spreadsheet column or any space-separated list."
+			description="Convert a column of values into a comma-separated series. Paste a spreadsheet column or any space-separated list and pick the delimiter."
 			columns="two"
 			formSlot={formSlot}
 			resultSlot={resultSlot}
 			hasResult={hasResult}
-			resultPlaceholder="Paste a column on the left to see it as a comma-separated series"
+			resultPlaceholder="Paste a column on the left to see it as a delimited series"
 			actions={actions}
 		/>
 	)
