@@ -47,19 +47,19 @@ A price you only said out loud is a negotiation that never ends. Once the number
 
 The [proposal generator](/tools/proposal-generator) is the closest thing on my site to an estimate generator for your own jobs. You fill in your company details, the client, a project name, a proposal date and a valid-until date, which defaults to 30 days out. Then the body: a project overview, scope items, milestones with a phase, description and duration for each, pricing lines that keep a running total, payment terms and your terms and conditions. Download it as a PDF and send it to the customer yourself.
 
-One thing to fix before you use it. The company fields come prefilled with my business details as sample values. Replace them with yours, then hit Save Draft so your details are still there the next time you open it in that browser.
+One thing to do before you use it. The business fields start empty, so fill in your own name and details, then hit Save Draft so they're still there the next time you open it in that browser.
 
 Scope items do the heavy lifting. Every line you write there is a line you won't argue about later. "Replace water heater" invites a fight over who hauls the old tank away. "Remove and dispose of the existing 50-gallon tank" doesn't.
 
-For bigger jobs, a proposal isn't enough. The [contract generator](/tools/contract-generator) has three templates: a Service Agreement, a Non-Disclosure Agreement and a Freelance Contract. You fill in both parties, an effective date and an optional end date. The service and freelance templates add the scope of work, payment amount, payment terms and timeline. The NDA asks for the purpose of the disclosure instead. Any template takes optional additional terms. Save a draft or download the PDF when you're done.
+For bigger jobs, a proposal isn't enough. The [contract generator](/tools/contract-generator) has three templates: a Service Agreement, a mutual Non-Disclosure Agreement and a Freelance Contract. You fill in both parties, an effective date and an optional end date. The service and freelance templates add the scope of work, payment amount, payment terms, timeline and an optional late payment interest rate. The NDA asks for the purpose of the disclosure instead. Any template takes optional additional terms. Every clause shows on the page before you download, so you read exactly what you're signing. Save a draft or download the PDF when you're done.
 
-The page says it plainly and so will I. These templates are for informational purposes and they are not legal advice. Have an attorney review any significant contract before you sign it.
+The page says it plainly and so will I. These templates are not legal advice. Have an attorney in your state review any contract before you sign it.
 
 If you're not sure which agreements you should have on file, start with [the service contracts every small business needs](/blog/service-contracts-every-small-business-needs).
 
 ## Bill It and Chase It
 
-The [invoice generator](/tools/invoice-generator) gives each invoice a number in the INV-YYMM-### format, sets today as the invoice date and puts the due date 30 days out. Payment terms default to Net 30, with Due on Receipt, Net 15, Net 45 and Net 60 in the list. Each line item multiplies quantity by rate. Add a tax rate percentage if you collect sales tax, put any notes or terms at the bottom and download the PDF. Like the proposal generator, the company fields start with sample values, so swap in your own and save the draft.
+The [invoice generator](/tools/invoice-generator) gives each invoice a number in the INV-YYMM-### format, sets today as the invoice date and sets the due date from the payment terms. Terms default to Net 30, with Due on Receipt, Net 15, Net 45 and Net 60 in the list. Change the terms and the due date follows. Each line item multiplies quantity by rate and rounds to the cent, so the lines always add up to the total. Add a tax rate percentage if you collect sales tax, put any notes or terms at the bottom and download the PDF. Like the proposal generator, the business fields start empty, so fill in yours and save the draft.
 
 What gets an invoice paid is mostly what's on it: a clear number, a due date and line items the customer recognizes. I covered the details in [writing an invoice that gets paid](/blog/how-to-write-an-invoice-that-gets-paid).
 

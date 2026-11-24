@@ -54,7 +54,7 @@ If you don't have a clean template yet, build one with the free [invoice generat
 
 Net 30 is a habit, not a law. For residential service work I'd push for due on receipt. The customer is standing in their kitchen looking at the new disposal. That's the moment they're happiest to pay. For commercial clients, net 15 is worth asking for, especially when the invoice arrives the same day the work wraps.
 
-Whatever terms you pick, put them in your service agreement before the job starts. Surprises on the invoice turn into disputes. If you need a starting point, the free [contract generator](/tools/contract-generator) covers payment terms and late fees in plain language.
+Whatever terms you pick, put them in your service agreement before the job starts. Surprises on the invoice turn into disputes. If you need a starting point, the free [contract generator](/tools/contract-generator) puts your payment terms and an optional late payment interest rate in plain language.
 
 ## Put a Pay Button on Every Invoice
 
