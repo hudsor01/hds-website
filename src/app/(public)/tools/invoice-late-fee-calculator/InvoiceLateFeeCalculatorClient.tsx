@@ -25,6 +25,16 @@ const PERIODS: ReadonlyArray<{ value: FeePeriod; label: string }> = [
 	{ value: 'month', label: 'per month' }
 ]
 
+/**
+ * Days are whole, non-negative numbers. Rejecting anything else (a minus,
+ * a decimal point, an exponent) keeps the previous value in the field.
+ */
+function acceptWholeDays(raw: string, set: (value: string) => void) {
+	if (raw === '' || /^\d+$/.test(raw)) {
+		set(raw)
+	}
+}
+
 export default function InvoiceLateFeeCalculatorClient() {
 	const [amount, setAmount] = useState('')
 	const [mode, setMode] = useState<LateFeeMode>('percent')
@@ -38,7 +48,7 @@ export default function InvoiceLateFeeCalculatorClient() {
 	const periodFieldId = useId()
 
 	const amountNum = Number.parseFloat(amount)
-	const daysNum = Number.parseFloat(daysOverdue)
+	const daysNum = Number.parseInt(daysOverdue, 10)
 	const hasInputs = Number.isFinite(amountNum) && Number.isFinite(daysNum)
 
 	const result = useMemo(
@@ -50,7 +60,7 @@ export default function InvoiceLateFeeCalculatorClient() {
 				percentRate: Number.parseFloat(percentRate),
 				period,
 				daysOverdue: daysNum,
-				gracePeriodDays: Number.parseFloat(grace)
+				gracePeriodDays: Number.parseInt(grace, 10)
 			}),
 		[amountNum, mode, flatFee, percentRate, period, daysNum, grace]
 	)
@@ -63,7 +73,7 @@ export default function InvoiceLateFeeCalculatorClient() {
 		mode === 'percent'
 			? !Number.isFinite(Number.parseFloat(percentRate))
 			: !Number.isFinite(Number.parseFloat(flatFee))
-	const graceNum = Number.parseFloat(grace)
+	const graceNum = Number.parseInt(grace, 10)
 	const hasGrace = Number.isFinite(graceNum) && graceNum > 0
 
 	const formSlot = (
@@ -148,8 +158,12 @@ export default function InvoiceLateFeeCalculatorClient() {
 					label="Days overdue"
 					type="number"
 					inputMode="numeric"
+					min="0"
+					step="1"
 					value={daysOverdue}
-					onChange={event => setDaysOverdue(event.target.value)}
+					onChange={event =>
+						acceptWholeDays(event.target.value, setDaysOverdue)
+					}
 					placeholder="30"
 				/>
 				<CalculatorInput
@@ -157,42 +171,66 @@ export default function InvoiceLateFeeCalculatorClient() {
 					label="Grace period (days)"
 					type="number"
 					inputMode="numeric"
+					min="0"
+					step="1"
 					value={grace}
-					onChange={event => setGrace(event.target.value)}
+					onChange={event => acceptWholeDays(event.target.value, setGrace)}
 					placeholder="0"
 				/>
 			</div>
 		</div>
 	)
 
+	// Without an amount or the fee input for the active mode there is no
+	// fee to show, so show only the prompt (not a misleading $0.00 total).
+	const prompt =
+		amountNum <= 0
+			? 'Enter an invoice amount above $0 to calculate a fee.'
+			: feeInputMissing
+				? mode === 'percent'
+					? 'Enter a rate to calculate the fee.'
+					: 'Enter a flat fee to calculate the fee.'
+				: null
+
 	const resultSlot = hasResult ? (
 		<div className="rounded-xl border border-border bg-surface-raised p-6 space-y-3">
-			<div>
-				<div className="text-xs text-muted-foreground">Late fee</div>
-				<div className="text-3xl font-bold text-accent tabular-nums">
-					{USD.format(result.lateFee)}
-				</div>
-			</div>
-			<div className="border-t border-border pt-3">
-				<div className="text-xs text-muted-foreground">Total now owed</div>
-				<div className="text-xl font-semibold text-foreground tabular-nums">
-					{USD.format(result.total)}
-				</div>
-			</div>
-			<p className="text-xs text-muted-foreground">
-				{amountNum <= 0
-					? 'Enter an invoice amount above $0 to calculate a fee.'
-					: feeInputMissing
-						? mode === 'percent'
-							? 'Enter a rate to calculate the fee.'
-							: 'Enter a flat fee to calculate the fee.'
-						: result.effectiveDays === 0
+			{prompt ? (
+				<p className="text-sm text-muted-foreground">{prompt}</p>
+			) : (
+				<>
+					<div>
+						<div className="text-xs text-muted-foreground">Late fee</div>
+						<div className="text-3xl font-bold text-accent tabular-nums">
+							{USD.format(result.lateFee)}
+						</div>
+					</div>
+					<div className="border-t border-border pt-3">
+						<div className="text-xs text-muted-foreground">Total now owed</div>
+						<div className="text-xl font-semibold text-foreground tabular-nums">
+							{USD.format(result.total)}
+						</div>
+					</div>
+					<p className="text-xs text-muted-foreground">
+						{result.effectiveDays === 0
 							? hasGrace && daysNum > 0
 								? 'Still within the grace period, so no fee applies.'
 								: 'The invoice is not overdue, so no fee applies.'
 							: `Based on ${result.effectiveDays} chargeable day${
 									result.effectiveDays === 1 ? '' : 's'
 								} overdue.`}
+					</p>
+					<p className="text-xs text-muted-foreground">
+						{mode === 'percent'
+							? 'Simple interest, with a month counted as 30 days, so 1.5% a month over 365 days comes to 18.25%. The fee is charged only on days after the grace period.'
+							: 'A one-time fee, charged once the invoice is past the grace period.'}
+					</p>
+				</>
+			)}
+			<p className="border-t border-border pt-3 text-xs text-muted-foreground">
+				Late fee and interest limits vary by state and by contract. In Texas, if
+				no rate was agreed, the default is 6% a year starting on the 30th day
+				after the due date (Tex. Fin. Code 302.002). The general cap is 10% a
+				year unless another law allows more (302.001).
 			</p>
 		</div>
 	) : undefined
@@ -200,7 +238,7 @@ export default function InvoiceLateFeeCalculatorClient() {
 	return (
 		<ToolPageLayout
 			title="Invoice Late Fee Calculator"
-			description="Work out the late fee and total owed on an overdue invoice, using a flat fee or a percentage rate per day, week, or month."
+			description="Work out the late fee and total owed on an overdue invoice, using a flat fee or a percentage rate per day, week or month."
 			columns="two"
 			formSlot={formSlot}
 			resultSlot={resultSlot}

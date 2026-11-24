@@ -54,7 +54,7 @@ I also build in strict data hygiene rules. Duplicate submissions get suppressed.
 ### Pricing the System vs Paying for Mistakes
 Owners often hesitate when they hear automation costs money upfront. They compare the setup fee to a monthly retainer and assume manual outreach is free. Manual work costs you in lost deals, higher ad waste and founder burnout. A single missed roofing job in Frisco can run $8,500 or more. Three missed jobs in a quarter cost more than a proper follow-up system and still leave you chasing ghost leads.
 
-I use my [ROI calculator](/tools/roi-calculator) to model the math before I write a single line of code. I map your average ticket size, current close rate and monthly lead volume to project the pipeline lift. The numbers usually speak for themselves. You pay once for the architecture and you save continuously through higher conversion rates and lower cost per qualified lead.
+I use my [ROI calculator](/tools/roi-calculator) to model the math before I write a single line of code. I enter your monthly traffic, current conversion rate and average ticket size, apply the lift you expect and add the budget you have in mind to see first-year ROI and payback months. The numbers usually speak for themselves. You pay once for the architecture and you save continuously through higher conversion rates and lower cost per qualified lead.
 
 I also build in scalable pricing tiers that match your growth stage. You do not need enterprise features on day one. You get the exact routing rules, tracking pixels and sequence logic that match your current volume. I upgrade the stack as your lead flow increases. You never overpay for unused capacity and you always have room to scale without rebuilding the foundation.
 

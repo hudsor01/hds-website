@@ -112,7 +112,7 @@ Some sites need a weekend of fixes. Compressing images, rewriting the headline, 
 
 Other sites are built on a foundation that fights you. If every edit requires a developer, if the platform won't let you add tracking or schema or if the site was assembled from a template that loads a pile of code you'll never use, patching it costs more over time than replacing it. The [signs you need a website redesign](/blog/signs-you-need-a-website-redesign) post covers how to tell which side of that line you're on.
 
-Either way, decide with numbers. My [ROI calculator](/tools/roi-calculator) lets you plug in your average job value and close rate to see what a few extra leads a month are worth. For a lot of service businesses, a few extra jobs a month go a long way toward covering the cost of doing it right.
+Either way, decide with numbers. My [ROI calculator](/tools/roi-calculator) lets you plug in your traffic, conversion rate and average job value to see what a conversion lift is worth each month. Add what you would spend and it shows the payback in months. For a lot of service businesses, a few extra jobs a month go a long way toward covering the cost of doing it right.
 
 ## Where to Start
 

@@ -1,147 +1,180 @@
 /**
- * Performance Savings Calculator
- * Analyzes website performance and calculates revenue lost due to slow load times
+ * Site Speed Revenue Calculator
+ * Shows the real PageSpeed score and lab metrics for a URL, then a revenue
+ * scenario built on a conversion lift the visitor chooses
  */
 
 'use client'
 
-import { useCallback, useState } from 'react'
+import { ArrowLeft, Check, Info, Loader2 } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
 import { logger } from '@/lib/logger'
+import {
+	DEFAULT_LIFT_PERCENT,
+	indefiniteArticle,
+	isGoodLabValue,
+	LAB_METRICS,
+	revenueScenario,
+	SCORE_BAND_RANGE,
+	scoreBand
+} from '@/lib/performance-calculator'
+import {
+	apiErrorSchema,
+	type PagespeedMetrics,
+	pagespeedSuccessSchema
+} from '@/lib/schemas/pagespeed'
 import { formatCurrency } from '@/lib/utils'
 
-interface PerformanceMetrics {
-	performanceScore: number
-	fcp: string
-	lcp: string
-	tbt: string
-	cls: string
-	speedIndex: string
+interface AnalyzedSite {
+	url: string
+	metrics: PagespeedMetrics
 }
 
-interface CalculatorInputs {
+interface RawInputs {
 	websiteUrl: string
-	monthlyVisitors: number
-	averageOrderValue: number
-	currentConversionRate: number
+	monthlyVisitors: string
+	averageOrderValue: string
+	currentConversionRate: string
+	liftPercent: string
+}
+
+const DELOITTE_URL = 'https://web.dev/case-studies/milliseconds-make-millions'
+const PORTENT_URL =
+	'https://www.portent.com/blog/analytics/research-site-speed-hurting-everyones-revenue.htm'
+const GENERIC_ERROR =
+	'Something went wrong while analyzing that URL. Try again in a few minutes.'
+
+const OPTIMIZATION_TIPS = [
+	{
+		title: 'Image Optimization',
+		desc: 'WebP format, lazy loading, responsive images'
+	},
+	{
+		title: 'Code Splitting',
+		desc: "Load only what's needed, when it's needed"
+	},
+	{
+		title: 'CDN Deployment',
+		desc: 'Global edge network for faster delivery'
+	},
+	{
+		title: 'Caching Strategy',
+		desc: 'Smart caching to minimize server requests'
+	},
+	{
+		title: 'Critical CSS',
+		desc: 'Inline critical styles for faster rendering'
+	},
+	{
+		title: 'Minification',
+		desc: 'Compressed code for smaller file sizes'
+	}
+] as const
+
+/** Empty or invalid input reads as null so the field can be cleared. */
+function parseNumber(raw: string, max?: number): number | null {
+	if (raw.trim() === '') {
+		return null
+	}
+	const value = Number(raw)
+	if (!Number.isFinite(value) || value < 0) {
+		return null
+	}
+	if (max !== undefined && value > max) {
+		return null
+	}
+	return value
+}
+
+function formatPercent(value: number): string {
+	return `${Number(value.toFixed(2))}%`
+}
+
+async function readErrorMessage(response: Response): Promise<string> {
+	try {
+		const parsed = apiErrorSchema.safeParse(await response.json())
+		return parsed.success ? parsed.data.error : GENERIC_ERROR
+	} catch {
+		return GENERIC_ERROR
+	}
 }
 
 export default function PerformanceCalculatorClient() {
-	const [inputs, setInputs] = useState<CalculatorInputs>({
+	const [inputs, setInputs] = useState<RawInputs>({
 		websiteUrl: '',
-		monthlyVisitors: 0,
-		averageOrderValue: 0,
-		currentConversionRate: 0
+		monthlyVisitors: '',
+		averageOrderValue: '',
+		currentConversionRate: '',
+		liftPercent: String(DEFAULT_LIFT_PERCENT)
 	})
-
-	const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null)
+	const [analyzed, setAnalyzed] = useState<AnalyzedSite | null>(null)
 	const [isAnalyzing, setIsAnalyzing] = useState(false)
-	const [showResults, setShowResults] = useState(false)
 	const [error, setError] = useState('')
-	const [results, setResults] = useState<Record<string, string>>({})
+
+	const setField = (field: keyof RawInputs, value: string) =>
+		setInputs(prev => ({ ...prev, [field]: value }))
+
+	const monthlyVisitors = parseNumber(inputs.monthlyVisitors)
+	const averageOrderValue = parseNumber(inputs.averageOrderValue)
+	const conversionRate = parseNumber(inputs.currentConversionRate, 100)
+	const liftPercent = parseNumber(inputs.liftPercent, 100)
+
+	// Derived during render so the numbers always match the current inputs.
+	const scenario =
+		monthlyVisitors !== null &&
+		averageOrderValue !== null &&
+		conversionRate !== null &&
+		liftPercent !== null
+			? revenueScenario({
+					monthlyVisitors,
+					conversionRatePercent: conversionRate,
+					averageOrderValue,
+					liftPercent
+				})
+			: null
 
 	const analyzeWebsite = async () => {
+		const url = inputs.websiteUrl.trim()
 		setIsAnalyzing(true)
 		setError('')
+		setAnalyzed(null)
 
 		try {
 			const response = await fetch(
-				`/api/pagespeed?url=${encodeURIComponent(inputs.websiteUrl)}`
+				`/api/pagespeed?url=${encodeURIComponent(url)}`
 			)
 
 			if (!response.ok) {
-				throw new Error('Failed to analyze website')
+				setError(await readErrorMessage(response))
+				return
 			}
 
-			const data = await response.json()
-			setMetrics(data.metrics)
+			const parsed = pagespeedSuccessSchema.safeParse(await response.json())
+			if (!parsed.success) {
+				logger.error('Unexpected /api/pagespeed response', parsed.error)
+				setError(GENERIC_ERROR)
+				return
+			}
 
-			// Calculate impact
-			calculateImpact(data.metrics)
+			const { metrics } = parsed.data.data
+			setAnalyzed({ url, metrics })
+			trackEvent('calculator_used', {
+				calculator_type: 'performance-calculator',
+				website_url: url,
+				performance_score: metrics.performanceScore
+			})
 		} catch (err) {
-			setError('Failed to analyze website. Please check the URL and try again.')
-			logger.error('Performance analysis error:', err as Error)
+			setError(GENERIC_ERROR)
+			logger.error('Performance analysis error', err)
 		} finally {
 			setIsAnalyzing(false)
 		}
-	}
-
-	const calculateImpact = (performanceMetrics: PerformanceMetrics) => {
-		const score = performanceMetrics.performanceScore
-
-		// Industry data: conversion rate drops significantly with poor performance
-		// For every 100ms delay, conversions drop by ~1%
-		// A score of 0-49 is "slow", 50-89 is "average", 90-100 is "fast"
-
-		let conversionImpact = 0
-		if (score < 50) {
-			conversionImpact = 0.25 // 25% conversion loss
-		} else if (score < 70) {
-			conversionImpact = 0.15 // 15% conversion loss
-		} else if (score < 90) {
-			conversionImpact = 0.05 // 5% conversion loss
-		}
-
-		// Calculate current revenue
-		const currentConversionRate = inputs.currentConversionRate / 100
-		const monthlyConversions = inputs.monthlyVisitors * currentConversionRate
-		const monthlyRevenue = monthlyConversions * inputs.averageOrderValue
-		const annualRevenue = monthlyRevenue * 12
-
-		// Calculate lost revenue
-		const potentialConversionRate =
-			currentConversionRate / (1 - conversionImpact)
-		const potentialMonthlyConversions =
-			inputs.monthlyVisitors * potentialConversionRate
-		const potentialMonthlyRevenue =
-			potentialMonthlyConversions * inputs.averageOrderValue
-		const potentialAnnualRevenue = potentialMonthlyRevenue * 12
-
-		const monthlyLoss = potentialMonthlyRevenue - monthlyRevenue
-		const annualLoss = potentialAnnualRevenue - annualRevenue
-
-		// Speed improvement metrics
-		const improvementNeeded = score < 90 ? 90 - score : 0
-		const estimatedLoadTimeReduction = improvementNeeded * 50 // Rough estimate in ms
-
-		const calculatedResults = {
-			performanceScore: `${score}/100`,
-			currentRevenue: `${formatCurrency(monthlyRevenue)}/mo`,
-			potentialRevenue: `${formatCurrency(potentialMonthlyRevenue)}/mo`,
-			monthlyLoss: formatCurrency(monthlyLoss),
-			annualLoss: formatCurrency(annualLoss),
-			conversionImpact: `${(conversionImpact * 100).toFixed(1)}%`,
-			loadTimeReduction: `${estimatedLoadTimeReduction}ms`,
-			recommendation: getRecommendation(score)
-		}
-
-		setResults(calculatedResults)
-		setShowResults(true)
-
-		// Track calculator usage
-		trackEvent('calculator_used', {
-			calculator_type: 'performance-calculator',
-			website_url: inputs.websiteUrl,
-			performance_score: score,
-			annual_loss: annualLoss
-		})
-	}
-
-	const getRecommendation = (score: number): string => {
-		if (score >= 90) {
-			return 'Excellent - Minor optimizations only'
-		}
-		if (score >= 70) {
-			return 'Good - Moderate optimizations needed'
-		}
-		if (score >= 50) {
-			return 'Fair - Significant improvements required'
-		}
-		return 'Poor - Critical performance issues'
 	}
 
 	const handleSubmit = (e: React.FormEvent) => {
@@ -149,61 +182,67 @@ export default function PerformanceCalculatorClient() {
 		analyzeWebsite()
 	}
 
-	const handleCopy = useCallback(() => {
-		if (!showResults) {
+	const score = analyzed?.metrics.performanceScore ?? null
+	const band = score === null ? null : scoreBand(score)
+	const scenarioLift = liftPercent ?? 0
+	const scenarioLabel = `Scenario: revenue at ${indefiniteArticle(scenarioLift)} ${formatPercent(scenarioLift)} higher conversion rate`
+
+	const resultItems =
+		analyzed && band && score !== null
+			? [
+					{
+						label: 'PageSpeed performance score',
+						value: `${score}/100`,
+						description: `${band} (${SCORE_BAND_RANGE[band]} on Lighthouse's scale). Mobile lab score from one run; it can move a few points between runs.`,
+						highlight: band !== 'Good'
+					},
+					...(scenario
+						? [
+								{
+									label: 'Current monthly revenue from these inputs',
+									value: formatCurrency(scenario.monthlyRevenue),
+									description:
+										'Monthly visitors x conversion rate x average order value.'
+								},
+								{
+									label: scenarioLabel,
+									value: `+${formatCurrency(scenario.monthlyGain)}/mo`,
+									description: `${formatCurrency(scenario.annualGain)} a year. Your conversion rate goes from ${formatPercent(conversionRate ?? 0)} to ${formatPercent(scenario.scenarioConversionRatePercent)}${scenario.capped ? ' (capped at 100%)' : ''}. A what-if built on the lift you entered, not a prediction.`,
+									highlight: true
+								}
+							]
+						: [])
+				]
+			: []
+
+	const handleCopy = async () => {
+		if (!analyzed || score === null || !band) {
 			return
 		}
 		const lines = [
-			`Performance Score: ${results.performanceScore ?? ''}`,
-			`Monthly Revenue Loss: ${results.monthlyLoss ?? ''}`,
-			`Annual Revenue Loss: ${results.annualLoss ?? ''}`,
-			`Conversion Impact: ${results.conversionImpact ?? ''}`,
-			`Potential Monthly Revenue: ${results.potentialRevenue ?? ''}`,
-			`Load Time Reduction Needed: ${results.loadTimeReduction ?? ''}`,
-			`Recommendation: ${results.recommendation ?? ''}`
-		].filter(line => !line.endsWith(': '))
-		navigator.clipboard.writeText(lines.join('\n')).catch((err: unknown) => {
-			logger.error('Copy report failed:', err as Error)
-		})
-	}, [showResults, results])
-
-	const resultItems = metrics
-		? [
-				{
-					label: 'Performance Score',
-					value: results.performanceScore || '0/100',
-					description: results.recommendation || '',
-					highlight: (metrics.performanceScore || 0) < 70
-				},
-				{
-					label: 'Monthly Revenue Loss',
-					value: results.monthlyLoss || '$0',
-					description: 'Estimated lost revenue per month',
-					highlight: true
-				},
-				{
-					label: 'Annual Revenue Loss',
-					value: results.annualLoss || '$0',
-					description: 'Total estimated lost revenue per year',
-					highlight: true
-				},
-				{
-					label: 'Conversion Impact',
-					value: results.conversionImpact || '0%',
-					description: 'Performance impact on conversion rate'
-				},
-				{
-					label: 'Potential Monthly Revenue',
-					value: results.potentialRevenue || '$0',
-					description: 'With optimized performance'
-				},
-				{
-					label: 'Load Time Reduction Needed',
-					value: results.loadTimeReduction || '0ms',
-					description: 'Estimated improvement to reach 90+ score'
-				}
-			]
-		: []
+			`Site: ${analyzed.url}`,
+			`PageSpeed performance score (mobile, one run): ${score}/100 (${band})`,
+			...LAB_METRICS.map(
+				guide =>
+					`${guide.abbr}: ${analyzed.metrics[guide.key].displayValue} (good: ${guide.goodLabel})`
+			),
+			...(scenario
+				? [
+						`Current monthly revenue from these inputs: ${formatCurrency(scenario.monthlyRevenue)}`,
+						`${scenarioLabel}: +${formatCurrency(scenario.monthlyGain)}/mo, ${formatCurrency(scenario.annualGain)}/yr (a scenario, not a prediction)`
+					]
+				: [])
+		]
+		try {
+			await navigator.clipboard.writeText(lines.join('\n'))
+			toast.success('Report copied')
+		} catch (err) {
+			logger.error('Copy report failed', err)
+			toast.error(
+				'Could not copy the report. Select the text and copy it instead.'
+			)
+		}
+	}
 
 	const formSlot = (
 		<div className="space-y-comfortable">
@@ -214,10 +253,8 @@ export default function PerformanceCalculatorClient() {
 					type="url"
 					placeholder="https://example.com"
 					value={inputs.websiteUrl}
-					onChange={e =>
-						setInputs(prev => ({ ...prev, websiteUrl: e.target.value }))
-					}
-					helpText="Enter your website URL to analyze performance"
+					onChange={e => setField('websiteUrl', e.target.value)}
+					helpText="Enter your website URL to run a mobile PageSpeed test"
 					required
 				/>
 
@@ -226,15 +263,11 @@ export default function PerformanceCalculatorClient() {
 						label="Monthly Visitors"
 						id="monthlyVisitors"
 						type="number"
+						inputMode="numeric"
 						min="0"
 						step="1"
-						value={inputs.monthlyVisitors || ''}
-						onChange={e =>
-							setInputs(prev => ({
-								...prev,
-								monthlyVisitors: parseInt(e.target.value, 10) || 0
-							}))
-						}
+						value={inputs.monthlyVisitors}
+						onChange={e => setField('monthlyVisitors', e.target.value)}
 						helpText="Average monthly website visitors"
 						required
 					/>
@@ -243,16 +276,12 @@ export default function PerformanceCalculatorClient() {
 						label="Average Order Value"
 						id="averageOrderValue"
 						type="number"
+						inputMode="decimal"
 						min="0"
 						step="0.01"
 						prefix="$"
-						value={inputs.averageOrderValue || ''}
-						onChange={e =>
-							setInputs(prev => ({
-								...prev,
-								averageOrderValue: parseFloat(e.target.value) || 0
-							}))
-						}
+						value={inputs.averageOrderValue}
+						onChange={e => setField('averageOrderValue', e.target.value)}
 						helpText="Average value per conversion"
 						required
 					/>
@@ -261,24 +290,35 @@ export default function PerformanceCalculatorClient() {
 						label="Current Conversion Rate"
 						id="currentConversionRate"
 						type="number"
+						inputMode="decimal"
 						min="0"
 						max="100"
 						step="0.1"
 						suffix="%"
-						value={inputs.currentConversionRate || ''}
-						onChange={e =>
-							setInputs(prev => ({
-								...prev,
-								currentConversionRate: parseFloat(e.target.value) || 0
-							}))
-						}
+						value={inputs.currentConversionRate}
+						onChange={e => setField('currentConversionRate', e.target.value)}
 						helpText="Percentage of visitors who convert"
+						required
+					/>
+
+					<CalculatorInput
+						label="Expected conversion lift if the site gets fast"
+						id="liftPercent"
+						type="number"
+						inputMode="decimal"
+						min="0"
+						max="100"
+						step="0.1"
+						suffix="%"
+						value={inputs.liftPercent}
+						onChange={e => setField('liftPercent', e.target.value)}
+						helpText="Relative lift, your assumption. The default is explained below."
 						required
 					/>
 				</div>
 
 				{error && (
-					<Card size="sm" className="bg-destructive-light">
+					<Card size="sm" className="bg-destructive-light" role="alert">
 						<p className="text-sm text-destructive-text">{error}</p>
 					</Card>
 				)}
@@ -290,26 +330,10 @@ export default function PerformanceCalculatorClient() {
 				>
 					{isAnalyzing ? (
 						<span className="flex items-center justify-center">
-							<svg
-								className="animate-spin -ml-1 mr-3 h-5 w-5 text-foreground"
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-							>
-								<circle
-									className="opacity-25"
-									cx="12"
-									cy="12"
-									r="10"
-									stroke="currentColor"
-									strokeWidth="4"
-								></circle>
-								<path
-									className="opacity-75"
-									fill="currentColor"
-									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-								></path>
-							</svg>
+							<Loader2
+								className="-ml-1 mr-3 h-5 w-5 animate-spin"
+								aria-hidden="true"
+							/>
 							Analyzing Website...
 						</span>
 					) : (
@@ -317,26 +341,47 @@ export default function PerformanceCalculatorClient() {
 					)}
 				</button>
 
+				<p aria-live="polite" className="text-sm text-muted-foreground">
+					{isAnalyzing
+						? 'Google is running a full mobile Lighthouse test. This takes 15 to 60 seconds.'
+						: ''}
+				</p>
+
 				<Card size="sm" className="bg-info-light">
 					<div className="flex">
 						<div className="shrink-0">
-							<svg
-								className="h-5 w-5 text-info-text"
-								viewBox="0 0 20 20"
-								fill="currentColor"
-							>
-								<path
-									fillRule="evenodd"
-									d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-									clipRule="evenodd"
-								/>
-							</svg>
+							<Info className="h-5 w-5 text-info-text" aria-hidden="true" />
 						</div>
-						<div className="ml-3">
-							<p className="text-sm text-info-text">
-								<strong>Industry Data:</strong> A 1-second delay in page load
-								time can reduce conversions by 7%. Pages loading in under 2
-								seconds have the highest conversion rates.
+						<div className="ml-3 space-y-2 text-sm text-info-text">
+							<p>
+								<strong>Where the default lift comes from:</strong> in
+								Deloitte&apos;s{' '}
+								<a
+									href={DELOITTE_URL}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="underline"
+								>
+									Milliseconds Make Millions
+								</a>{' '}
+								study of 37 brand sites, commissioned by Google, a 0.1 second
+								improvement in mobile site speed was associated with an 8.4%
+								increase in retail conversions and 10.1% in travel. That is a
+								correlation from one study, so treat {DEFAULT_LIFT_PERCENT}% as
+								a starting point and change it.
+							</p>
+							<p>
+								Portent&apos;s{' '}
+								<a
+									href={PORTENT_URL}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="underline"
+								>
+									2022 site speed study
+								</a>{' '}
+								found the highest e-commerce conversion rates between 1 and 2
+								seconds of load time.
 							</p>
 						</div>
 					</div>
@@ -350,47 +395,15 @@ export default function PerformanceCalculatorClient() {
 				</h3>
 
 				<div className="space-y-3">
-					{[
-						{
-							title: 'Image Optimization',
-							desc: 'WebP format, lazy loading, responsive images'
-						},
-						{
-							title: 'Code Splitting',
-							desc: "Load only what's needed, when it's needed"
-						},
-						{
-							title: 'CDN Deployment',
-							desc: 'Global edge network for faster delivery'
-						},
-						{
-							title: 'Caching Strategy',
-							desc: 'Smart caching to minimize server requests'
-						},
-						{
-							title: 'Critical CSS',
-							desc: 'Inline critical styles for faster rendering'
-						},
-						{
-							title: 'Minification',
-							desc: 'Compressed code for smaller file sizes'
-						}
-					].map((tip, index) => (
+					{OPTIMIZATION_TIPS.map(tip => (
 						<div
-							key={index}
+							key={tip.title}
 							className="flex items-start gap-3 rounded-lg border border-border p-3"
 						>
-							<svg
+							<Check
 								className="h-5 w-5 shrink-0 text-accent"
-								fill="currentColor"
-								viewBox="0 0 20 20"
-							>
-								<path
-									fillRule="evenodd"
-									d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-									clipRule="evenodd"
-								/>
-							</svg>
+								aria-hidden="true"
+							/>
 							<div>
 								<div className="font-medium text-foreground">{tip.title}</div>
 								<div className="text-sm text-muted-foreground">{tip.desc}</div>
@@ -402,75 +415,81 @@ export default function PerformanceCalculatorClient() {
 		</div>
 	)
 
-	const resultSlot = (
+	const resultSlot = analyzed ? (
 		<div>
-			{/* Core Web Vitals Display */}
-			{metrics && (
-				<Card className="mb-content-block bg-muted">
-					<h3 className="mb-heading text-lg font-semibold text-foreground">
-						Core Web Vitals
-					</h3>
-					<div className="grid gap-content sm:grid-cols-3">
-						<div className="text-center">
-							<div className="text-sm text-muted-foreground">LCP</div>
-							<div className="text-xl font-bold text-foreground">
-								{metrics.lcp}
+			<Card className="mb-content-block bg-muted">
+				<h3 className="mb-heading text-lg font-semibold text-foreground">
+					Lab metrics (mobile, one run)
+				</h3>
+				<p className="mb-subheading text-xs text-muted-foreground">
+					Core Web Vitals are LCP, INP and CLS. INP needs real visitors, so a
+					lab run shows TBT in its place.
+				</p>
+				<dl className="grid gap-content sm:grid-cols-2">
+					{LAB_METRICS.map(guide => {
+						const metric = analyzed.metrics[guide.key]
+						const good = isGoodLabValue(guide, metric.numericValue)
+						return (
+							<div key={guide.key} className="text-center">
+								<dt className="text-sm text-muted-foreground">
+									{guide.abbr} <span className="text-xs">({guide.name})</span>
+								</dt>
+								<dd className="text-xl font-bold text-foreground">
+									{metric.displayValue}
+								</dd>
+								<dd className="text-xs text-muted-foreground">
+									Good: {guide.goodLabel}
+									{good === null ? '' : good ? ' (met)' : ' (not met)'}
+								</dd>
+								{guide.note && (
+									<dd className="text-xs text-muted-foreground">
+										{guide.note}
+									</dd>
+								)}
 							</div>
-							<div className="text-xs text-muted-foreground">
-								Largest Contentful Paint
-							</div>
-						</div>
-						<div className="text-center">
-							<div className="text-sm text-muted-foreground">FCP</div>
-							<div className="text-xl font-bold text-foreground">
-								{metrics.fcp}
-							</div>
-							<div className="text-xs text-muted-foreground">
-								First Contentful Paint
-							</div>
-						</div>
-						<div className="text-center">
-							<div className="text-sm text-muted-foreground">CLS</div>
-							<div className="text-xl font-bold text-foreground">
-								{metrics.cls}
-							</div>
-							<div className="text-xs text-muted-foreground">
-								Cumulative Layout Shift
-							</div>
-						</div>
-					</div>
-				</Card>
-			)}
+						)
+					})}
+				</dl>
+			</Card>
 
 			<CalculatorResults
 				results={resultItems}
 				calculatorType="performance-calculator"
-				inputs={{ ...inputs, performanceScore: metrics?.performanceScore }}
+				inputs={{
+					websiteUrl: analyzed.url,
+					monthlyVisitors,
+					averageOrderValue,
+					currentConversionRate: conversionRate,
+					expectedLiftPercent: liftPercent,
+					performanceScore: analyzed.metrics.performanceScore
+				}}
 			/>
 
 			<button
+				type="button"
 				onClick={() => {
-					setShowResults(false)
-					setMetrics(null)
+					setAnalyzed(null)
+					setError('')
 				}}
-				className="mt-content-block w-full rounded-md border border-border bg-surface-raised px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted"
+				className="mt-content-block flex w-full items-center justify-center gap-2 rounded-md border border-border bg-surface-raised px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted"
 			>
-				← Analyze Another Site
+				<ArrowLeft className="h-4 w-4" aria-hidden="true" />
+				Analyze Another Site
 			</button>
 		</div>
-	)
+	) : undefined
 
 	return (
 		<ToolPageLayout
-			title="Performance Savings Calculator"
-			description="Discover how much revenue you're losing due to slow website performance"
+			title="Site Speed Revenue Calculator"
+			description="Run a real mobile PageSpeed test on your site, then see what a conversion lift you choose would be worth in revenue. A scenario, not a prediction."
 			columns="two"
 			formSlot={formSlot}
 			resultSlot={resultSlot}
-			hasResult={showResults}
+			hasResult={analyzed !== null}
 			resultPlaceholder="Enter your website URL and click Analyze to see results"
 			actions={
-				showResults
+				analyzed
 					? [{ type: 'copy', label: 'Copy Report', onClick: handleCopy }]
 					: undefined
 			}

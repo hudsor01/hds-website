@@ -90,7 +90,7 @@ Stop comparing website quotes to each other. Compare them to what a customer is 
 
 Here's the math I'd run. Say an average job is worth $1,500 to you and your site produces four extra booked jobs a month because the forms work, the tracking works and follow-up happens automatically. That's $6,000 a month in new revenue. A $7,000 build pays for itself in under two months. Now flip it. If the cheapest option loses even one job a month to a broken form or a slow page, it's costing you more than the price difference.
 
-Your numbers will be different. Plug your own average job value and close rate into my [ROI calculator](/tools/roi-calculator) and see where the break-even sits. That's the same discipline I used forecasting pipeline in revenue operations, where I drove $3.7M through forecasting work: tie the spend to the revenue it produces or don't spend it.
+Your numbers will be different. Plug your own traffic, conversion rate, average job value and site cost into my [ROI calculator](/tools/roi-calculator) and see how many months it takes to pay back. That's the same discipline I used forecasting pipeline in revenue operations, where I drove $3.7M through forecasting work: tie the spend to the revenue it produces or don't spend it.
 
 ## Questions to Ask Before You Sign
 

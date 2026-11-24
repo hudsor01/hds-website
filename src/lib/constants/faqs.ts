@@ -23,7 +23,7 @@ export const FAQ_CATEGORIES: readonly FaqCategory[] = [
 			{
 				question: 'How much does it cost to build a website?',
 				answer:
-					'Every project is priced to what it actually takes: page count, features and timeline. I give you a real price on a free website plan call, once I know what your project needs. For a rough market ballpark before we talk, try the free Cost Estimator. No surprise line items later.'
+					'Every project is priced to what it actually takes: page count, features and timeline. I give you a real price on a free website plan call, once I know what your project needs. For a rough planning range before we talk, try the free Cost Estimator. No surprise line items later.'
 			},
 			{
 				question: 'Do you offer monthly retainer packages?',

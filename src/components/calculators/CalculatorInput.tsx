@@ -48,6 +48,10 @@ export function CalculatorInput({
 						error && 'border-destructive focus-visible:ring-destructive',
 						className
 					)}
+					aria-invalid={error ? true : undefined}
+					aria-describedby={
+						error ? `${id}-error` : helpText ? `${id}-help` : undefined
+					}
 					{...props}
 				/>
 
@@ -59,10 +63,16 @@ export function CalculatorInput({
 			</div>
 
 			{helpText && !error && (
-				<p className="text-xs text-muted-foreground">{helpText}</p>
+				<p id={`${id}-help`} className="text-xs text-muted-foreground">
+					{helpText}
+				</p>
 			)}
 
-			{error && <p className="text-xs text-destructive">{error}</p>}
+			{error && (
+				<p id={`${id}-error`} role="alert" className="text-xs text-destructive">
+					{error}
+				</p>
+			)}
 		</div>
 	)
 }

@@ -150,8 +150,10 @@ export function ToolPageLayout({
 		{ name: title, url: `${SITE_URL}${pathname}` }
 	])
 
+	// A <div>, not <main>: the (public) layout already renders the page's
+	// single <main id="main-content"> landmark.
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			<div
 				className={cn(
 					'container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 max-w-5xl mx-auto',
@@ -230,6 +232,6 @@ export function ToolPageLayout({
 					</div>
 				)}
 			</div>
-		</main>
+		</div>
 	)
 }

@@ -71,7 +71,7 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'ROI Calculator',
 		description:
-			'Your website is a revenue system. See the dollars a higher conversion rate puts in your pocket, with the math laid out so you can trust the number.',
+			'Your website is a revenue system. Enter your traffic, conversion rate, order value and the relative lift you expect, plus an optional investment to see ROI and payback.',
 		href: TOOL_ROUTES.ROI_CALCULATOR,
 		Icon: TrendingUp,
 		benefits: [
@@ -85,27 +85,27 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Website Cost Estimator',
 		description:
-			'Pick the features your business needs and see what a site like that typically costs on the market. A planning ballpark, not a quote: I price every project after a free call.',
+			'Pick the type, pages and features and get an illustrative planning range, shown beside published market ranges. A planning model, not a quote: I price every project after a free call.',
 		href: TOOL_ROUTES.COST_ESTIMATOR,
 		Icon: Calculator,
 		benefits: [
-			'Typical market cost range',
-			'Timeline estimates',
-			'Cost by feature'
+			'Illustrative planning range',
+			'Planning timeline',
+			'Published market ranges for context'
 		],
 		cta: 'Estimate Cost',
 		category: 'website'
 	},
 	{
-		title: 'Performance Savings Calculator',
+		title: 'Site Speed Revenue Calculator',
 		description:
-			'A slow site quietly bleeds sales. Run real PageSpeed numbers against your traffic and see the revenue a faster site wins back every month.',
+			'Run a real mobile PageSpeed test, see your score and lab metrics, then model the revenue at stake with a conversion lift you choose.',
 		href: TOOL_ROUTES.PERFORMANCE_CALCULATOR,
 		Icon: Zap,
 		benefits: [
-			'Real performance analysis',
-			'Revenue impact calculation',
-			'Core Web Vitals insights'
+			'Real PageSpeed score',
+			'Lab metrics with good thresholds',
+			'Revenue scenario you control'
 		],
 		cta: 'Analyze Performance',
 		category: 'website'
@@ -211,12 +211,12 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Invoice Late Fee Calculator',
 		description:
-			'Client paying late? Work out the late fee and total owed on an overdue invoice with a flat fee or a percentage rate per day, week, or month.',
+			'Client paying late? Work out the late fee and total owed on an overdue invoice with a flat fee or a percentage rate per day, week or month.',
 		href: TOOL_ROUTES.INVOICE_LATE_FEE_CALCULATOR,
 		Icon: CalendarClock,
 		benefits: [
 			'Flat or percentage fees',
-			'Daily, weekly, or monthly rates',
+			'Daily, weekly or monthly rates',
 			'Grace-period support'
 		],
 		cta: 'Calculate Late Fee',
@@ -225,11 +225,11 @@ export const TOOLS: readonly ToolEntry[] = [
 	{
 		title: 'Time Card Calculator',
 		description:
-			'Punch in clock-in and clock-out times with breaks to total the hours, split overtime at 1.5x and get gross pay. Built for running a small crew.',
+			'Enter one workweek of clock-in and clock-out times with unpaid meal breaks to total the hours, split overtime at 1.5x under the federal weekly rule and get gross pay.',
 		href: TOOL_ROUTES.TIME_CARD_CALCULATOR,
 		Icon: Clock,
 		benefits: [
-			'Total daily and weekly hours',
+			'Daily hours and the weekly total',
 			'Overtime split at 1.5x',
 			'Optional gross pay'
 		],

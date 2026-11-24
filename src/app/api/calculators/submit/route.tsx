@@ -23,9 +23,12 @@ import { scheduleEmail } from '@/lib/scheduled-emails'
 import { calculatorLeads } from '@/lib/schemas/leads'
 
 // Richard prices every project after scoping it, so a cost range emailed
-// from the estimator must say it is a market ballpark, not his quote.
+// from the estimator must say it is an illustrative model, not his quote.
 const COST_ESTIMATE_NOTE =
-	'This is a typical market range for planning, not a quote. I price every project after a free website plan call, once I know what it will take.'
+	"This is an illustrative planning model built on the tool's own assumptions. It is not market data and not a quote. I price every project after a free 30-minute website plan call, once I know what it will take."
+
+const PERFORMANCE_NOTE =
+	'The revenue figure is a scenario built on the conversion lift you entered, not a prediction. The PageSpeed score is a mobile lab result from one run.'
 
 // Caps on the free-form JSON columns (inputs/results). These are persisted
 // verbatim, so an unbounded payload is a storage-bloat / payload-DoS vector.
@@ -47,12 +50,16 @@ function isWithinJsonCaps(value: Record<string, unknown>): boolean {
 // Schema for calculator submission
 const calculatorSubmitSchema = z
 	.object({
-		calculator_type: z.enum([
-			'roi-calculator',
-			'cost-estimator',
-			'performance-calculator',
-			'texas-ttl-calculator'
-		]),
+		calculator_type: z.enum(
+			[
+				'roi-calculator',
+				'cost-estimator',
+				'performance-calculator',
+				'mortgage-calculator',
+				'texas-ttl-calculator'
+			],
+			{ message: 'This calculator cannot email results yet.' }
+		),
 		email: z.string().email('Invalid email address').toLowerCase().trim(),
 		inputs: z.record(z.string(), z.unknown()),
 		results: z.record(z.string(), z.unknown()).optional().default({})
@@ -76,7 +83,11 @@ const calculatorSubmitSchema = z
 
 const logger = createServerLogger('calculator-api')
 
-// Lead scoring based on calculator inputs
+// Estimator website types that signal a larger build
+const LARGE_BUILD_TYPES = new Set(['e-commerce', 'web-app', 'enterprise'])
+
+// Lead scoring based on calculator inputs. Keys must match what each
+// calculator client sends as `inputs`.
 function calculateLeadScore(
 	calculatorType: string,
 	inputs: Record<string, unknown>
@@ -107,7 +118,9 @@ function calculateLeadScore(
 		case 'cost-estimator': {
 			// Larger projects = higher score
 			const pages = Number(inputs.numberOfPages) || 0
-			const features = (inputs.features as string[])?.length || 0
+			const features = Array.isArray(inputs.features)
+				? inputs.features.length
+				: 0
 
 			if (pages > 10) {
 				score += 15
@@ -119,7 +132,10 @@ function calculateLeadScore(
 			if (inputs.timeline === 'urgent') {
 				score += 10
 			}
-			if (inputs.budget === 'high') {
+			if (
+				typeof inputs.websiteType === 'string' &&
+				LARGE_BUILD_TYPES.has(inputs.websiteType)
+			) {
 				score += 10
 			}
 
@@ -128,7 +144,7 @@ function calculateLeadScore(
 
 		case 'performance-calculator': {
 			// Poor performance + high traffic = high priority
-			const pageSpeed = Number(inputs.pageSpeedScore) || 100
+			const pageSpeed = Number(inputs.performanceScore ?? 100)
 			const monthlyVisitors = Number(inputs.monthlyVisitors) || 0
 
 			if (pageSpeed < 50) {
@@ -176,6 +192,16 @@ async function handleCalculatorSubmit(request: NextRequest) {
 
 		const { calculator_type, email, inputs, results } = parseResult.data
 
+		// The visitor asked for an email. Without Resend nothing would be
+		// sent, so say so instead of acknowledging a send that never happens.
+		if (!isResendConfigured()) {
+			logger.error('Calculator results requested but Resend is not configured')
+			return errorResponse(
+				"Email isn't set up on this site right now, so I can't send your results. Copy them from this page instead.",
+				503
+			)
+		}
+
 		// Calculate lead score
 		const leadScore = calculateLeadScore(calculator_type, inputs)
 		const leadQuality = getLeadQuality(leadScore)
@@ -205,7 +231,10 @@ async function handleCalculatorSubmit(request: NextRequest) {
 
 		if (!calculatorLead) {
 			logger.error('Failed to store calculator lead - no row returned')
-			return errorResponse('Failed to store submission', 500)
+			return errorResponse(
+				'Could not save your results. Please try again.',
+				500
+			)
 		}
 
 		// Defer all side effects (results email + admin email + Slack/Discord
@@ -225,49 +254,43 @@ async function handleCalculatorSubmit(request: NextRequest) {
 			leadQuality === 'hot' ? 'calculator-hot-lead' : 'calculator-follow-up'
 
 		after(async () => {
-			if (isResendConfigured()) {
-				try {
-					await getResendClient().emails.send({
-						from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
-						to: email,
-						subject: `Your ${getCalculatorName(calculator_type)} Results`,
-						react: (
-							<CalculatorResults
-								calculatorName={getCalculatorName(calculator_type)}
-								results={results || {}}
-								note={
-									calculator_type === 'cost-estimator'
-										? COST_ESTIMATE_NOTE
-										: undefined
-								}
-							/>
-						)
-					})
-					logger.info('Results email sent', { email, calculator_type })
-				} catch (emailError) {
-					logger.error('Failed to send results email', emailError)
-				}
+			try {
+				await getResendClient().emails.send({
+					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
+					to: email,
+					subject: `Your ${getCalculatorName(calculator_type)} Results`,
+					react: (
+						<CalculatorResults
+							calculatorName={getCalculatorName(calculator_type)}
+							results={results || {}}
+							note={getResultsNote(calculator_type)}
+						/>
+					)
+				})
+				logger.info('Results email sent', { email, calculator_type })
+			} catch (emailError) {
+				logger.error('Failed to send results email', emailError)
+			}
 
-				try {
-					await getResendClient().emails.send({
-						from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
-						to: BUSINESS_INFO.email,
-						subject: `[Notification] New ${getCalculatorName(calculator_type)} Submission (${leadQuality.toUpperCase()})`,
-						react: (
-							<CalculatorAdminNotification
-								calculatorName={getCalculatorName(calculator_type)}
-								email={email}
-								name={inputName || undefined}
-								company={inputCompany || undefined}
-								leadScore={leadScore}
-								leadQuality={leadQuality}
-							/>
-						)
-					})
-					logger.info('Admin notification sent', { email, calculator_type })
-				} catch (adminEmailError) {
-					logger.error('Failed to send admin notification', adminEmailError)
-				}
+			try {
+				await getResendClient().emails.send({
+					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
+					to: BUSINESS_INFO.email,
+					subject: `[Notification] New ${getCalculatorName(calculator_type)} Submission (${leadQuality.toUpperCase()})`,
+					react: (
+						<CalculatorAdminNotification
+							calculatorName={getCalculatorName(calculator_type)}
+							email={email}
+							name={inputName || undefined}
+							company={inputCompany || undefined}
+							leadScore={leadScore}
+							leadQuality={leadQuality}
+						/>
+					)
+				})
+				logger.info('Admin notification sent', { email, calculator_type })
+			} catch (adminEmailError) {
+				logger.error('Failed to send admin notification', adminEmailError)
 			}
 
 			try {
@@ -315,11 +338,8 @@ async function handleCalculatorSubmit(request: NextRequest) {
 			lead_quality: leadQuality
 		})
 	} catch (error) {
-		logger.error(
-			'Calculator API error',
-			error instanceof Error ? error : new Error(String(error))
-		)
-		return errorResponse('Failed to process submission', 500)
+		logger.error('Calculator API error', error)
+		return errorResponse('Could not send your results. Please try again.', 500)
 	}
 }
 
@@ -332,8 +352,19 @@ function getCalculatorName(type: string): string {
 	const names: Record<string, string> = {
 		'roi-calculator': 'ROI Calculator',
 		'cost-estimator': 'Website Cost Estimator',
-		'performance-calculator': 'Performance Savings Calculator',
+		'performance-calculator': 'Site Speed Revenue Calculator',
+		'mortgage-calculator': 'Mortgage Calculator',
 		'texas-ttl-calculator': 'Texas TTL Calculator'
 	}
 	return names[type] || 'Calculator'
+}
+
+function getResultsNote(type: string): string | undefined {
+	if (type === 'cost-estimator') {
+		return COST_ESTIMATE_NOTE
+	}
+	if (type === 'performance-calculator') {
+		return PERFORMANCE_NOTE
+	}
+	return undefined
 }

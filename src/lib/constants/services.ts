@@ -91,7 +91,7 @@ export const SERVICES: readonly Service[] = [
 			{
 				question: 'How much does a website cost?',
 				answer:
-					'It depends on page count, features and timeline, so I do not quote a flat price. I give you a real price on a free 30-minute website plan call. For a market ballpark before we talk, try the free Website Cost Estimator.'
+					'It depends on page count, features and timeline, so I do not quote a flat price. I give you a real price on a free 30-minute website plan call. For a rough planning range before we talk, try the free Website Cost Estimator.'
 			},
 			{
 				question: 'Can I update the site myself?',

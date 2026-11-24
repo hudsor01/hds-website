@@ -15,6 +15,7 @@ const USD = new Intl.NumberFormat('en-US', {
 	currency: 'USD'
 })
 
+// calculateMargin already rounds to two decimals, so toFixed only pads.
 function pct(value: number | null): string {
 	return value === null ? 'n/a' : `${value.toFixed(2)}%`
 }
@@ -51,8 +52,9 @@ export default function ProfitMarginCalculatorClient() {
 	const priceNum = Number.parseFloat(price)
 	// Negative cost/price are nonsensical (they produce impossible >100%
 	// margins). Gate on non-negative so a stray minus doesn't render a
-	// styled, valid-looking-but-wrong result. `min="0"` on the inputs
-	// blocks the common case; this guards typed/pasted negatives too.
+	// styled, valid-looking-but-wrong result. `min="0"` on the inputs only
+	// flags the field as invalid and dims the spinner below 0; it does not
+	// stop a typed or pasted minus, so this check is the real guard.
 	const hasInputs =
 		Number.isFinite(costNum) &&
 		Number.isFinite(priceNum) &&
@@ -65,12 +67,11 @@ export default function ProfitMarginCalculatorClient() {
 	)
 
 	const targetMarginNum = Number.parseFloat(targetMargin)
-	const suggestedPrice = useMemo(() => {
-		if (!Number.isFinite(costNum) || !Number.isFinite(targetMarginNum)) {
-			return null
-		}
-		return priceForMargin(costNum, targetMarginNum)
-	}, [costNum, targetMarginNum])
+	// priceForMargin returns null unless cost > 0 and 0 <= target < 100.
+	const suggestedPrice = useMemo(
+		() => priceForMargin(costNum, targetMarginNum),
+		[costNum, targetMarginNum]
+	)
 
 	const hasResult = hasInputs
 
@@ -82,6 +83,8 @@ export default function ProfitMarginCalculatorClient() {
 					label="Cost"
 					type="number"
 					inputMode="decimal"
+					min="0"
+					step="0.01"
 					prefix="$"
 					value={cost}
 					onChange={event => setCost(event.target.value)}
@@ -92,6 +95,8 @@ export default function ProfitMarginCalculatorClient() {
 					label="Selling price"
 					type="number"
 					inputMode="decimal"
+					min="0"
+					step="0.01"
 					prefix="$"
 					value={price}
 					onChange={event => setPrice(event.target.value)}
@@ -108,6 +113,9 @@ export default function ProfitMarginCalculatorClient() {
 					label="Target margin"
 					type="number"
 					inputMode="decimal"
+					min="0"
+					max="99.99"
+					step="0.01"
 					suffix="%"
 					value={targetMargin}
 					onChange={event => setTargetMargin(event.target.value)}
@@ -115,7 +123,7 @@ export default function ProfitMarginCalculatorClient() {
 					helpText={
 						suggestedPrice !== null
 							? `Sell at ${USD.format(suggestedPrice)} to hit that margin on your cost.`
-							: 'Enter a cost and a target margin under 100%.'
+							: 'Enter a cost above $0 and a target margin below 100%.'
 					}
 				/>
 			</fieldset>
@@ -127,7 +135,7 @@ export default function ProfitMarginCalculatorClient() {
 			<ResultRow label="Profit" value={USD.format(result.profit)} emphasis />
 			<ResultRow label="Gross margin" value={pct(result.marginPercent)} />
 			<ResultRow label="Markup" value={pct(result.markupPercent)} />
-			{Math.round(result.profit * 100) < 0 && (
+			{result.profit < 0 && (
 				<p className="mt-3 text-xs text-destructive-text">
 					This price is below cost, so you would take a loss.
 				</p>
@@ -138,7 +146,7 @@ export default function ProfitMarginCalculatorClient() {
 	return (
 		<ToolPageLayout
 			title="Profit Margin & Markup Calculator"
-			description="Enter your cost and selling price to see profit, gross margin, and markup. Margin is profit over price; markup is profit over cost."
+			description="Enter your cost and selling price to see profit, gross margin and markup. Margin is profit over price; markup is profit over cost."
 			columns="two"
 			formSlot={formSlot}
 			resultSlot={resultSlot}

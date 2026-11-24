@@ -1,6 +1,6 @@
 /**
  * ROI Calculator
- * Calculate potential revenue increase from website optimization
+ * Added revenue from a conversion-rate lift, with optional ROI and payback
  */
 
 import type { Metadata } from 'next'
@@ -10,11 +10,11 @@ import { ROICalculatorClient } from './ROICalculatorClient'
 export const metadata: Metadata = buildMetadata({
 	title: 'ROI Calculator | Hudson Digital Solutions',
 	description:
-		'Calculate how much additional revenue you could generate by improving your website conversion rate. Free ROI calculator for businesses.',
+		'Estimate the added revenue from a higher website conversion rate. Enter what you would spend to see first-year ROI and payback months. Free ROI calculator.',
 	path: '/tools/roi-calculator',
 	socialTitle: 'ROI Calculator',
 	socialDescription:
-		'Calculate potential revenue increase from website optimization.'
+		'Added revenue from a higher conversion rate, plus first-year ROI and payback months on your own spend.'
 })
 
 export default function ROICalculatorPage() {
