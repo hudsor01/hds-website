@@ -131,8 +131,8 @@ export const TOOLS: readonly ToolEntry[] = [
 		href: TOOL_ROUTES.SCHEMA_GENERATOR,
 		Icon: MapPin,
 		benefits: [
-			'Valid schema.org JSON-LD',
-			'Address, hours, geo and social links',
+			'schema.org JSON-LD you can test',
+			'Address, hours, geo and service area',
 			"Follows Google's LocalBusiness guidelines"
 		],
 		cta: 'Generate Schema',

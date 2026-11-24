@@ -2,8 +2,8 @@
 title: 'LocalBusiness Schema: Help Google Find You'
 slug: localbusiness-schema-help-google-find-you
 excerpt: >-
-  Localbusiness schema for DFW businesses. Feed Google structured data to win
-  map pack visibility and drive predictable revenue.
+  LocalBusiness schema for DFW businesses: give Google your name, address,
+  hours and service area in a format it can read without guessing.
 targetKeyword: localbusiness schema
 pillar: 3
 tags:
