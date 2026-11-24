@@ -59,7 +59,7 @@ If you want to see exactly how much speed is costing your business right now, ru
 
 Google rewards fast mobile experiences with better rankings in local packs. That advantage compounds when you pair speed with structured data. Most DFW businesses ignore schema markup or paste broken JSON-LD into their footer. I treat schema as a routing system for search engines. It tells Google exactly who you are, where you serve and how customers should book with you.
 
-I generate clean schema automatically using my internal [schema generator](/tools/schema-generator). The tool pulls your business hours, service areas and pricing tiers into valid markup that passes validation on every page. Fast load times keep users engaged, while accurate schema keeps you visible in map results and local queries. The combination drives qualified traffic that actually converts instead of wandering off after three seconds.
+I generate clean LocalBusiness schema with my free [schema generator](/tools/schema-generator). You enter your address, hours, service area and price range. It outputs JSON-LD you can check in Google's Rich Results Test. Fast load times keep users engaged, while accurate schema keeps your business details consistent in search. The combination drives qualified traffic that actually converts instead of wandering off after three seconds.
 
 Local SEO also depends on consistent NAP data across directories. I automate that sync through HubSpot and Workato so your address, phone number and website stay identical everywhere. When a customer searches for emergency plumbing in Richardson or roofing contractors in Coppell, Google sees uniform data and pushes you higher. Speed ensures they stay on your site long enough to click the call button or fill out a quote form.
 
