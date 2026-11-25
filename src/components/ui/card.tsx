@@ -40,6 +40,10 @@ const cardVariants = cva(
 	}
 )
 
+// Intrinsic size of the project screenshots in public/images/showcase.
+const SHOWCASE_IMAGE_WIDTH = 2880
+const SHOWCASE_IMAGE_HEIGHT = 1800
+
 // Base Card props
 interface BaseCardProps extends HTMLAttributes<HTMLDivElement> {
 	variant?: 'default' | 'glass' | 'glassLight' | 'glassSection' | 'outline'
@@ -335,11 +339,16 @@ function Card(props: CardProps) {
 							featured ? 'aspect-[4/3]' : 'aspect-video'
 						)}
 					>
+						{/* Explicit width/height (every showcase screenshot is
+						    2880x1800) instead of `fill`, so the img carries its
+						    intrinsic size; the aspect-ratio wrapper still sets the
+						    box and object-cover crops the same way. */}
 						<Image
 							src={imageUrl as string}
 							alt={resolvedAlt}
-							fill
-							className="object-cover object-top"
+							width={SHOWCASE_IMAGE_WIDTH}
+							height={SHOWCASE_IMAGE_HEIGHT}
+							className="absolute inset-0 h-full w-full object-cover object-top"
 							sizes={
 								featured
 									? '(min-width: 1024px) 60vw, 100vw'
