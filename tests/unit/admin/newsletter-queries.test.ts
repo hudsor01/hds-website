@@ -14,7 +14,8 @@
  *
  * Mock pattern mirrors `tests/unit/admin/leads-queries.test.ts`.
  */
-import { beforeEach, describe, expect, mock, test } from 'bun:test'
+import { afterAll, beforeEach, describe, expect, mock, test } from 'bun:test'
+import { restoreRealDb } from '../../test-utils'
 
 // --- Mock state shared across cases (re-initialized in beforeEach) ----------
 
@@ -120,6 +121,13 @@ beforeEach(() => {
 	// beforeEach. Re-register the db mock so the chainable stub stays bound
 	// to the module under test for every case.
 	setupDbMock()
+})
+
+// mock.module('@/lib/db') outlives this file (mock.restore() never undoes
+// it), so clear the fixture rows and hand later files the real no-op db.
+afterAll(() => {
+	resetState()
+	restoreRealDb()
 })
 
 describe('listSubscribersForAdmin: page-size + hasMore', () => {

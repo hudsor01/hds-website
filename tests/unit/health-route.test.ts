@@ -11,9 +11,17 @@
  * it ran after this file.
  */
 
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import {
+	afterAll,
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	mock
+} from 'bun:test'
 import { NextRequest } from 'next/server'
-import { cleanupMocks } from '../test-utils'
+import { cleanupMocks, restoreRealDb } from '../test-utils'
 
 const testEnv = (
 	globalThis as unknown as { __TEST_ENV: Record<string, unknown> }
@@ -27,6 +35,12 @@ function authedRequest() {
 	})
 }
 
+// mock.module('@/lib/db') outlives this file (mock.restore() never undoes
+// it), so hand later files the real no-op db.
+afterAll(() => {
+	restoreRealDb()
+})
+
 describe('GET /api/health', () => {
 	beforeEach(() => {
 		// Mutate the shared TEST_ENV (from tests/setup.ts) rather than
@@ -37,18 +51,6 @@ describe('GET /api/health', () => {
 		testEnv.NODE_ENV = 'test'
 		testEnv.npm_package_version = '2.5.0'
 		testEnv.ADMIN_SECRET = ADMIN_SECRET
-
-		mock.module('@/lib/logger', () => ({
-			logger: {
-				debug: mock(),
-				info: mock(),
-				warn: mock(),
-				error: mock(),
-				setContext: mock()
-			},
-			castError: (error: unknown) =>
-				error instanceof Error ? error : new Error(String(error))
-		}))
 	})
 
 	afterEach(() => {

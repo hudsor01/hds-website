@@ -3,7 +3,11 @@ import { formatCalendarDate, formatDate } from '@/lib/utils'
 
 // Run west of UTC, where the off-by-one bug shows: a calendar day parsed as
 // UTC midnight is still the previous evening in Dallas.
-const originalTZ = process.env.TZ
+// Capture the effective zone, not just the env var: when TZ is unset,
+// writing `undefined` back (or deleting it) does not reset ICU, so the zone
+// set here would leak into every later file in the run.
+const originalTZ =
+	process.env.TZ ?? Intl.DateTimeFormat().resolvedOptions().timeZone
 beforeAll(() => {
 	process.env.TZ = 'America/Chicago'
 })

@@ -7,9 +7,17 @@
  * follow-up scheduler) are stubbed via setupApiMocks + a contact-side
  * module mock so we exercise the synchronous path only.
  */
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import {
+	afterAll,
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	mock
+} from 'bun:test'
 import { NextRequest } from 'next/server'
-import { cleanupMocks, setupApiMocks } from '../test-utils'
+import { cleanupMocks, restoreRealDb, setupApiMocks } from '../test-utils'
 
 // Re-declare every export the route handler needs at module load.
 // bun:test's `mock.module()` cache survives across files, and the
@@ -69,6 +77,12 @@ const VALID_BODY = {
 	inputs: { monthlyTraffic: 25000, conversionRate: 0.8, name: 'Riley' },
 	results: { projectedRevenue: 18000 }
 }
+
+// mock.module('@/lib/db') outlives this file (mock.restore() never undoes
+// it), so hand later files the real no-op db.
+afterAll(() => {
+	restoreRealDb()
+})
 
 describe('POST /api/calculators/submit', () => {
 	beforeEach(() => {

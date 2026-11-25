@@ -27,7 +27,8 @@
  * plus a stubbed `db.update()` chain that resolves to `state.updateRowsToReturn`
  * so `retryScheduledEmail` can run its full lookup + update path.
  */
-import { beforeEach, describe, expect, mock, test } from 'bun:test'
+import { afterAll, beforeEach, describe, expect, mock, test } from 'bun:test'
+import { restoreRealDb } from '../../test-utils'
 
 // --- Mock state shared across cases (re-initialized in beforeEach) ----------
 
@@ -167,6 +168,13 @@ beforeEach(() => {
 	// beforeEach. Re-register the db mock so the chainable stub stays bound
 	// to the module under test for every case.
 	setupDbMock()
+})
+
+// mock.module('@/lib/db') outlives this file (mock.restore() never undoes
+// it), so clear the fixture rows and hand later files the real no-op db.
+afterAll(() => {
+	resetState()
+	restoreRealDb()
 })
 
 describe('getQueueCounts: error vs healthy zero', () => {

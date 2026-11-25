@@ -42,7 +42,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Check test mock leaks
-        run: bash scripts/check-test-mock-leaks.sh
+        run: bun scripts/check-test-mock-leaks.ts
 
       - name: Run Biome
         run: bun run lint

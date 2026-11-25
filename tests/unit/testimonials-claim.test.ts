@@ -13,10 +13,18 @@
  * may have cached @/lib/testimonials against a different mock).
  */
 
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import {
+	afterAll,
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	mock
+} from 'bun:test'
 import type { SQL } from 'drizzle-orm'
 import { PgDialect } from 'drizzle-orm/pg-core'
-import { cleanupMocks } from '../test-utils'
+import { cleanupMocks, restoreRealDb } from '../test-utils'
 
 const TESTIMONIALS_SPECIFIER = new URL(
 	'../../src/lib/testimonials.ts',
@@ -75,6 +83,12 @@ function normalizedSql(): string {
 	}
 	return dialect.sqlToQuery(query).sql.replace(/\s+/g, ' ')
 }
+
+// mock.module('@/lib/db') outlives this file (mock.restore() never undoes
+// it), so hand later files the real no-op db.
+afterAll(() => {
+	restoreRealDb()
+})
 
 describe('claimTokenAndSubmitTestimonial', () => {
 	beforeEach(() => {

@@ -2,6 +2,8 @@
 import { GlobalRegistrator } from '@happy-dom/global-registrator'
 import '@testing-library/jest-dom'
 import { afterAll, afterEach, beforeAll, beforeEach, mock } from 'bun:test'
+import { cleanup } from '@testing-library/react'
+import * as actualNavigation from 'next/navigation'
 
 // CRITICAL: Mock @/env BEFORE any other imports that depend on it
 // This prevents the real env module from validating environment variables
@@ -62,6 +64,26 @@ require('@/lib/auth/admin')
 ).__REAL_APPLY_SECURITY_HEADERS__ =
 	require('@/lib/security-headers').applySecurityHeaders
 
+// Fix next/navigation's export list at preload. This ESM import is its first
+// evaluation, so every name (notFound, redirect, permanentRedirect, ...) is
+// fixed before any test file can register a partial factory; a CommonJS
+// require() would not fix the ESM export list. The snapshot is what
+// mockNextNavigation() in tests/test-utils.ts spreads, and the complete
+// mock below keeps the module whole for files that never mock it.
+// The global beforeEach re-registers it, so a file's mockNextNavigation()
+// stubs (usePathname '/', a mock useRouter, a custom redirect) end with that
+// file's tests instead of lasting for the rest of the process.
+const REAL_NEXT_NAVIGATION = { ...actualNavigation }
+;(
+	globalThis as { __REAL_NEXT_NAVIGATION__?: unknown }
+).__REAL_NEXT_NAVIGATION__ = REAL_NEXT_NAVIGATION
+
+function setupNextNavigationMock() {
+	mock.module('next/navigation', () => ({ ...REAL_NEXT_NAVIGATION }))
+}
+
+setupNextNavigationMock()
+
 // ===================================================================
 // TESTING CONVENTION: shared-module mocks (read before adding a mock)
 // ===================================================================
@@ -75,8 +97,14 @@ require('@/lib/auth/admin')
 // RULE: NEVER partial-mock a shared pure module (@/lib/utils,
 // @/lib/constants/*) in a per-file test. Use the REAL module (these are
 // pure/deterministic), or place a COMPLETE shared mock HERE in tests/setup.ts
-// (the one sanctioned place). scripts/check-test-mock-leaks.sh enforces this
-// in CI and in the local `test:unit` script.
+// (the one sanctioned place). The same goes for @/lib/logger (mocked
+// completely here), sonner (spyOn the real `toast`) and next/navigation (use
+// mockNextNavigation() from tests/test-utils.ts). A file that mocks @/lib/db
+// must call restoreRealDb() in afterAll, a file that assigns globalThis.fetch
+// must restore originalFetch, and nothing may `delete process.env.TZ`.
+// scripts/check-test-mock-leaks.ts enforces all of this in CI and in the
+// local `test:unit` script; `test:unit:random` runs the suite in 5 random
+// orders to catch leaks the guard cannot see.
 // ===================================================================
 
 // `server-only` throws on any import — that's its whole purpose, to fail
@@ -187,6 +215,11 @@ function setupLoggerMock() {
 }
 
 setupLoggerMock()
+// Load @/lib/logger now, under the complete mock, so its export list is fixed
+// with every name. Bun fixes a module's export names on first evaluation; if a
+// partial factory were registered at that moment, the missing names (e.g.
+// createServerLogger) would be gone for the rest of the process.
+await import('@/lib/logger')
 
 // Mock react-simple-maps wrapper — the library triggers async SVG path
 // calculations that crash in JSDOM and cause act() warnings
@@ -254,11 +287,23 @@ const mockResponse: Response = {
 	formData: () => Promise.resolve(new FormData())
 } as unknown as Response
 
-;(
-	globalThis as {
-		fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
-	}
-).fetch = mock(() => Promise.resolve(mockResponse))
+// Named so the global beforeEach can reset and reinstall it. mock.restore()
+// does not clear a plain mock's calls or implementation, and
+// spyOn(globalThis, 'fetch') hands back this same mock, so without the reset
+// a fetch spy carries calls (and a stubbed implementation) into later tests.
+const fetchMock = mock(() => Promise.resolve(mockResponse))
+
+function installFetchMock() {
+	fetchMock.mockReset()
+	fetchMock.mockImplementation(() => Promise.resolve(mockResponse))
+	;(
+		globalThis as {
+			fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
+		}
+	).fetch = fetchMock
+}
+
+installFetchMock()
 
 beforeAll(() => {
 	// Increase max listeners to prevent EventEmitter memory leak warnings
@@ -273,11 +318,21 @@ beforeEach(() => {
 	setupLoggerMock()
 	setupNextCacheMock()
 	setupNextServerMock()
+	// The real next/navigation, undoing any earlier file's mockNextNavigation()
+	setupNextNavigationMock()
+	// Fresh fetch mock: no calls or stubbed implementation from the last test,
+	// and reinstalled in case a test assigned globalThis.fetch directly
+	installFetchMock()
 	// Ensure RTL doesn't detect fake timers (Bun doesn't have Jest's timer infrastructure)
 	disableJestFakeTimerDetection()
 })
 
 afterEach(() => {
+	// Unmount every RTL render. RTL's own auto-cleanup registers its afterEach
+	// only in the first file that imports it, so renders in later files would
+	// otherwise pile up in the shared document ("multiple elements with the
+	// role navigation").
+	cleanup()
 	// Clear all mocks after each test for isolation
 	// Note: env mock will be re-applied in beforeEach
 	mock.restore()

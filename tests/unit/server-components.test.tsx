@@ -61,6 +61,17 @@ describe('Services Page (Server Component)', () => {
 // ================================
 
 describe('Contact Page (Server Component)', () => {
+	// Same mocks as the Services describe: without them the real next/dynamic
+	// LoadableComponent renders and updates outside act(), and React's act
+	// warning then throws the ALS invariant once proxy.test.ts has run.
+	beforeEach(() => {
+		setupNextMocks()
+	})
+
+	afterEach(() => {
+		cleanupMocks()
+	})
+
 	it('should render with heading and content sections', async () => {
 		const ContactPage = (await import('@/app/(public)/contact/page')).default
 		const { container } = render(<ContactPage />)

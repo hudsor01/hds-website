@@ -330,6 +330,15 @@ function base64url(input: Buffer | string): string {
 
 let tokenCache: { token: string; expiresAt: number } | null = null
 
+/**
+ * Clears the cached OAuth token. Exists for test isolation only: the cache is
+ * module-level, so a test that mints a token would otherwise hand it to every
+ * later test in the process and skip the token request they assert on.
+ */
+export function resetTokenCache(): void {
+	tokenCache = null
+}
+
 async function mintAccessToken(sa: ServiceAccount): Promise<string> {
 	// Reuse a cached token with a 60s safety margin.
 	if (tokenCache && tokenCache.expiresAt > Date.now() + 60_000) {

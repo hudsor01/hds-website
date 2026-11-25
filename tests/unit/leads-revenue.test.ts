@@ -8,11 +8,17 @@
  * means a sibling suite may have cached the module against a different db mock).
  */
 
-import { afterEach, describe, expect, it, mock } from 'bun:test'
+import { afterAll, afterEach, describe, expect, it, mock } from 'bun:test'
 import { markLeadWonSchema } from '@/lib/schemas/admin-leads'
-import { cleanupMocks } from '../test-utils'
+import { cleanupMocks, restoreRealDb } from '../test-utils'
 
 const UUID = '11111111-1111-4111-8111-111111111111'
+
+// mock.module('@/lib/db') outlives this file (mock.restore() never undoes
+// it), so hand later files the real no-op db.
+afterAll(() => {
+	restoreRealDb()
+})
 
 describe('markLeadWonSchema', () => {
 	it('coerces a numeric-string deal value and accepts a positive amount', () => {
@@ -24,9 +30,9 @@ describe('markLeadWonSchema', () => {
 	})
 
 	it('rejects zero / negative / non-numeric deal values', () => {
-		expect(markLeadWonSchema.safeParse({ id: UUID, dealValue: '0' }).success).toBe(
-			false
-		)
+		expect(
+			markLeadWonSchema.safeParse({ id: UUID, dealValue: '0' }).success
+		).toBe(false)
 		expect(
 			markLeadWonSchema.safeParse({ id: UUID, dealValue: '-10' }).success
 		).toBe(false)
@@ -37,7 +43,8 @@ describe('markLeadWonSchema', () => {
 
 	it('rejects a malformed lead id', () => {
 		expect(
-			markLeadWonSchema.safeParse({ id: 'not-a-uuid', dealValue: '100' }).success
+			markLeadWonSchema.safeParse({ id: 'not-a-uuid', dealValue: '100' })
+				.success
 		).toBe(false)
 	})
 })
@@ -61,13 +68,17 @@ function mockDb(returnedRow: unknown): void {
 		db: {
 			select: mock().mockReturnValue({
 				from: mock().mockReturnValue({
-					where: mock().mockReturnValue({ limit: mock().mockResolvedValue([]) }),
+					where: mock().mockReturnValue({
+						limit: mock().mockResolvedValue([])
+					}),
 					orderBy: mock().mockResolvedValue([]),
 					limit: mock().mockResolvedValue([])
 				})
 			}),
 			insert: mock().mockReturnValue({
-				values: mock().mockReturnValue({ returning: mock().mockResolvedValue([]) })
+				values: mock().mockReturnValue({
+					returning: mock().mockResolvedValue([])
+				})
 			}),
 			update: mock().mockReturnValue({
 				set: mock((payload: Record<string, unknown>) => {

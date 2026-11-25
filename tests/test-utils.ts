@@ -10,16 +10,6 @@ import { cleanup } from '@testing-library/react'
  * Create isolated mock instances for common dependencies
  * These should be set up in beforeEach hooks, not at module level
  */
-function createMockLogger() {
-	return {
-		info: mock(),
-		warn: mock(),
-		error: mock(),
-		debug: mock(),
-		setContext: mock()
-	}
-}
-
 function createMockRateLimiter() {
 	return {
 		checkLimit: mock().mockResolvedValue(true),
@@ -161,7 +151,6 @@ function createMockGetClientIp() {
  * Call this in beforeEach hooks
  */
 export function setupApiMocks() {
-	const mockLogger = createMockLogger()
 	const mockRateLimiter = createMockRateLimiter()
 
 	process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test'
@@ -189,12 +178,10 @@ export function setupApiMocks() {
 		}
 	}))
 
-	mock.module('@/lib/logger', () => ({
-		logger: mockLogger,
-		createServerLogger: () => mockLogger,
-		castError: (error: unknown) =>
-			error instanceof Error ? error : new Error(String(error))
-	}))
+	// No @/lib/logger mock here: tests/setup.ts registers the complete one and
+	// re-applies it before every test. A partial logger mock registered before
+	// the module's first load drops exports (createServerLogger) for the rest
+	// of the run.
 
 	mock.module('@/lib/rate-limiter', () => ({
 		UnifiedRateLimiter: createMockUnifiedRateLimiterClass(),
@@ -217,32 +204,12 @@ export function setupApiMocks() {
 		) => handler
 	}))
 
-	mock.module('@/lib/db', () => ({
-		db: {
-			select: mock().mockReturnValue({
-				from: mock().mockReturnValue({
-					where: mock().mockReturnValue({
-						limit: mock().mockResolvedValue([])
-					}),
-					orderBy: mock().mockResolvedValue([]),
-					limit: mock().mockResolvedValue([])
-				})
-			}),
-			insert: mock().mockReturnValue({
-				values: mock().mockReturnValue({
-					returning: mock().mockResolvedValue([])
-				})
-			}),
-			update: mock().mockReturnValue({
-				set: mock().mockReturnValue({
-					where: mock().mockResolvedValue([])
-				})
-			}),
-			delete: mock().mockReturnValue({
-				where: mock().mockResolvedValue([])
-			})
-		}
-	}))
+	// The real `@/lib/db` is already a no-op proxy that resolves every query
+	// to [] (TEST_ENV has no POSTGRES_URL). Pin it instead of registering a
+	// stub: a stub registered here would outlive the file and reach every
+	// later suite. Tests that need specific rows mock `@/lib/db` after this
+	// call and restore it in afterAll.
+	restoreRealDb()
 
 	mock.module('@/lib/resend-client', () => ({
 		isResendConfigured: mock().mockReturnValue(true),
@@ -253,7 +220,51 @@ export function setupApiMocks() {
 		}))
 	}))
 
-	return { mockLogger, mockRateLimiter }
+	return { mockRateLimiter }
+}
+
+type NextNavigation = typeof import('next/navigation')
+
+/**
+ * The genuine next/navigation exports, captured by tests/setup.ts at preload
+ * before any test file can register a mock. Read from there rather than an
+ * import here: by the time this file loads, a sibling may already have
+ * swapped the module's exports in place.
+ */
+function realNextNavigation(): NextNavigation {
+	const real = (globalThis as { __REAL_NEXT_NAVIGATION__?: NextNavigation })
+		.__REAL_NEXT_NAVIGATION__
+	if (!real) {
+		throw new Error(
+			'tests/setup.ts must capture __REAL_NEXT_NAVIGATION__ before mockNextNavigation() runs'
+		)
+	}
+	return real
+}
+
+/**
+ * The ONLY sanctioned way to mock next/navigation in a test file.
+ * mock.module is process-global and bun fixes a module's export names on
+ * first load, so a partial factory (one without notFound / redirect) breaks
+ * every later importer with "Export named 'notFound' not found". This spreads
+ * the real module, stubs the client hooks, then applies `overrides`.
+ */
+export function mockNextNavigation(overrides: Partial<NextNavigation> = {}) {
+	const real = realNextNavigation()
+	mock.module('next/navigation', () => ({
+		...real,
+		useRouter: () => ({
+			push: mock(),
+			replace: mock(),
+			prefetch: mock(),
+			refresh: mock(),
+			back: mock(),
+			forward: mock()
+		}),
+		usePathname: () => '/',
+		useSearchParams: () => new URLSearchParams(),
+		...overrides
+	}))
 }
 
 /**
@@ -266,15 +277,7 @@ export function setupNextMocks() {
 	// Real next/link works perfectly in tests and uses native history API
 	// See: https://github.com/vercel/next.js/discussions/48110
 
-	mock.module('next/navigation', () => ({
-		useRouter: () => ({
-			push: mock(),
-			replace: mock(),
-			prefetch: mock()
-		}),
-		usePathname: () => '/',
-		useSearchParams: () => new URLSearchParams()
-	}))
+	mockNextNavigation()
 
 	mock.module('next/dynamic', () => ({
 		default: <P = Record<string, never>>(
@@ -287,6 +290,25 @@ export function setupNextMocks() {
 			return (() => null) as React.ComponentType<P>
 		}
 	}))
+}
+
+/**
+ * Re-register `@/lib/db` with the genuine export (the createMockDb no-op
+ * proxy, since TEST_ENV omits POSTGRES_URL) that tests/setup.ts captured at
+ * preload. mock.module() is process-global and mock.restore() never undoes
+ * it, so a file that stubs `@/lib/db` with fixture rows hands those rows to
+ * every later file. Every file that calls mock.module('@/lib/db', ...) must
+ * call this in afterAll (scripts/check-test-mock-leaks.ts enforces it), and a
+ * suite that depends on the real no-op db calls it in beforeEach.
+ */
+export function restoreRealDb(): void {
+	const realDb = (globalThis as { __REAL_DB__?: unknown }).__REAL_DB__
+	if (realDb === undefined) {
+		throw new Error(
+			'tests/setup.ts must capture __REAL_DB__ before restoreRealDb() runs'
+		)
+	}
+	mock.module('@/lib/db', () => ({ db: realDb }))
 }
 
 /**

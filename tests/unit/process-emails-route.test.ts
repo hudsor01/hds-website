@@ -44,18 +44,6 @@ describe('POST /api/process-emails', () => {
 		testEnv.NODE_ENV = 'test'
 		testEnv.CRON_SECRET = VALID_CRON_SECRET
 
-		mock.module('@/lib/logger', () => ({
-			logger: {
-				debug: mock(),
-				info: mock(),
-				warn: mock(),
-				error: mock(),
-				setContext: mock()
-			},
-			castError: (error: unknown) =>
-				error instanceof Error ? error : new Error(String(error))
-		}))
-
 		// Re-export every name other suites may rely on, not just the
 		// one this test exercises — bun:test's mock.module cache survives
 		// across files, so a partial mock here strips siblings from any

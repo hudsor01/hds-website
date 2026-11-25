@@ -24,11 +24,17 @@ function makeRequest(body: unknown): NextRequest {
 	})
 }
 
-describe('POST /api/error-report', () => {
-	let mocks: ReturnType<typeof setupApiMocks>
+// `@/lib/logger` is the complete mock from tests/setup.ts, re-applied in its
+// beforeEach (a fresh instance per test). Read the CURRENT instance at assert
+// time so this sees the same spy the route's live import binding resolves to.
+async function currentLoggerError(): Promise<ReturnType<typeof mock>> {
+	const { logger } = await import('@/lib/logger')
+	return logger.error as ReturnType<typeof mock>
+}
 
+describe('POST /api/error-report', () => {
 	beforeEach(() => {
-		mocks = setupApiMocks()
+		setupApiMocks()
 		reportErrorSpy.mockClear()
 		mock.module('@/lib/error-tracking', () => ({
 			reportError: reportErrorSpy
@@ -53,7 +59,7 @@ describe('POST /api/error-report', () => {
 			})
 		)
 		expect(res.status).toBe(204)
-		expect(mocks.mockLogger.error).toHaveBeenCalled()
+		expect(await currentLoggerError()).toHaveBeenCalled()
 		expect(reportErrorSpy).not.toHaveBeenCalled()
 	})
 
