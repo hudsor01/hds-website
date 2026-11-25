@@ -84,14 +84,6 @@ const PAGE_ENTRIES: readonly PaletteEntry[] = [
 		keywords: ['questions', 'help']
 	},
 	{
-		id: 'page:help',
-		label: 'Help',
-		description: 'Help articles and how-tos',
-		href: ROUTES.HELP,
-		group: 'Pages',
-		keywords: ['docs', 'support']
-	},
-	{
 		id: 'page:locations',
 		label: 'Locations',
 		description: 'Service areas I cover',

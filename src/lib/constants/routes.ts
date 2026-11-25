@@ -21,7 +21,6 @@ export const ROUTES = {
 	TERMS: '/terms',
 	BLOG: '/blog',
 	FAQ: '/faq',
-	HELP: '/help',
 	LOCATIONS: '/locations',
 	SWITCH_FROM_THRYV: '/switch-from-thryv',
 	TESTIMONIALS: '/testimonials'
