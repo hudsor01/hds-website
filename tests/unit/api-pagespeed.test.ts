@@ -284,10 +284,8 @@ describe('GET /api/pagespeed (SSRF guard gaps, QA-17)', () => {
 	]
 
 	it('rejects every gap with a 400 and never calls fetch', async () => {
-		// Stubbed so a regression could never reach Google; the spy can
-		// carry calls from earlier tests in this file
+		// Stubbed so a regression could never reach Google
 		const fetchSpy = stubFetch(lighthouseBody())
-		fetchSpy.mockClear()
 		const { GET } = await import('@/app/api/pagespeed/route')
 		for (const url of REJECTED) {
 			const res = await GET(makeRequest(url))
@@ -311,7 +309,6 @@ describe('GET /api/pagespeed (SSRF guard gaps, QA-17)', () => {
 
 	it('lets fc/fd domains and public IPv6 through to PSI', async () => {
 		const fetchSpy = stubFetch(lighthouseBody())
-		fetchSpy.mockClear()
 		const { GET } = await import('@/app/api/pagespeed/route')
 		const allowed = [
 			'https://fdic.gov/',

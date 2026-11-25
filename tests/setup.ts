@@ -254,11 +254,23 @@ const mockResponse: Response = {
 	formData: () => Promise.resolve(new FormData())
 } as unknown as Response
 
-;(
-	globalThis as {
-		fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
-	}
-).fetch = mock(() => Promise.resolve(mockResponse))
+// Named so the global beforeEach can reset and reinstall it. mock.restore()
+// does not clear a plain mock's calls or implementation, and
+// spyOn(globalThis, 'fetch') hands back this same mock, so without the reset
+// a fetch spy carries calls (and a stubbed implementation) into later tests.
+const fetchMock = mock(() => Promise.resolve(mockResponse))
+
+function installFetchMock() {
+	fetchMock.mockReset()
+	fetchMock.mockImplementation(() => Promise.resolve(mockResponse))
+	;(
+		globalThis as {
+			fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
+		}
+	).fetch = fetchMock
+}
+
+installFetchMock()
 
 beforeAll(() => {
 	// Increase max listeners to prevent EventEmitter memory leak warnings
@@ -273,6 +285,9 @@ beforeEach(() => {
 	setupLoggerMock()
 	setupNextCacheMock()
 	setupNextServerMock()
+	// Fresh fetch mock: no calls or stubbed implementation from the last test,
+	// and reinstalled in case a test assigned globalThis.fetch directly
+	installFetchMock()
 	// Ensure RTL doesn't detect fake timers (Bun doesn't have Jest's timer infrastructure)
 	disableJestFakeTimerDetection()
 })

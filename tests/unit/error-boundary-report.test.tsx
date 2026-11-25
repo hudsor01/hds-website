@@ -7,26 +7,26 @@
  * It must never claim a report was filed unless res.ok, and the alert() that
  * lied about it must be gone.
  *
- * We mock `sonner` (toast spies) and `@/lib/logger` BEFORE importing the
- * component, stub `global.fetch` per case, click "Report Error", and flush
- * the in-flight async fetch with waitFor before asserting.
+ * We spy on the REAL sonner `toast` per test (never mock.module('sonner'):
+ * that registration is process-global and swaps the exports in place, which
+ * broke toast.loading for every later file), stub `global.fetch` per case and
+ * restore it afterwards, click "Report Error", and flush the in-flight async
+ * fetch with waitFor before asserting.
  */
 
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import {
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	mock,
+	spyOn
+} from 'bun:test'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { toast } from 'sonner'
+import { DefaultErrorFallback } from '@/components/utilities/ErrorBoundary'
 import { cleanupMocks } from '../test-utils'
-
-const toastSuccess = mock()
-const toastError = mock()
-
-mock.module('sonner', () => ({
-	toast: { success: toastSuccess, error: toastError },
-	Toaster: () => null
-}))
-
-const { DefaultErrorFallback } = await import(
-	'@/components/utilities/ErrorBoundary'
-)
 
 // `@/lib/logger` is mock.module'd globally in tests/setup.ts and re-applied
 // in its beforeEach (a fresh mock instance per test). We must read the
@@ -47,12 +47,18 @@ function renderFallback() {
 }
 
 describe('ErrorBoundary reportError', () => {
+	const originalFetch = globalThis.fetch
+	let toastSuccess: ReturnType<typeof spyOn>
+	let toastError: ReturnType<typeof spyOn>
+
 	beforeEach(() => {
-		toastSuccess.mockClear()
-		toastError.mockClear()
+		// The global afterEach mock.restore() undoes these spies
+		toastSuccess = spyOn(toast, 'success').mockImplementation(() => 'id')
+		toastError = spyOn(toast, 'error').mockImplementation(() => 'id')
 	})
 
 	afterEach(() => {
+		globalThis.fetch = originalFetch
 		cleanupMocks()
 	})
 
