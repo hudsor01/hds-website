@@ -61,7 +61,7 @@ describe('NavbarLight Component', () => {
 		expect(nav).toBeInTheDocument()
 	})
 
-	it('should apply focus-ring on keyboard navigation', async () => {
+	it('should move focus to a link on keyboard navigation', async () => {
 		const { default: NavbarLight } = await import('@/components/layout/Navbar')
 		const user = userEvent.setup()
 		render(<NavbarLight />)

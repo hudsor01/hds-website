@@ -39,7 +39,7 @@ export default function CommandPaletteTrigger() {
 				'hidden lg:inline-flex items-center gap-2 px-3 py-1.5 rounded-md',
 				'text-xs text-muted-foreground',
 				'border border-border hover:text-foreground hover:bg-muted',
-				'transition-smooth focus-ring'
+				'transition-smooth'
 			)}
 		>
 			<Search className="h-3.5 w-3.5" aria-hidden="true" />

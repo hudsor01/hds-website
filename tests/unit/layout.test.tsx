@@ -351,13 +351,6 @@ describe('Transition and Animation Utilities', () => {
 		// Computed styles aren't available in happy-dom, just verify class is applied
 	})
 
-	it('should apply focus-ring on focus', () => {
-		const { container } = render(<button className="focus-ring">Button</button>)
-
-		const button = container.firstChild
-		expect(button).toHaveClass('focus-ring')
-	})
-
 	it('should apply hover-lift effect', () => {
 		const { container } = render(<div className="hover-lift">Content</div>)
 

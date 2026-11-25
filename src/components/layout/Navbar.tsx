@@ -76,7 +76,7 @@ const Navbar = memo(function Navbar() {
 					<div className="flex-1 flex items-center">
 						<Link
 							href={ROUTES.HOME}
-							className="flex items-center gap-2.5 focus-ring rounded-lg"
+							className="flex items-center gap-2.5 rounded-lg"
 							aria-label="Hudson Digital Solutions - Home"
 						>
 							<Rocket className="w-5 h-5 text-accent shrink-0" />
@@ -129,7 +129,7 @@ const Navbar = memo(function Navbar() {
 						{/* Mobile menu button */}
 						<button
 							type="button"
-							className="md:hidden p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-smooth focus-ring"
+							className="md:hidden p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-smooth"
 							onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
 							aria-expanded={mobileMenuOpen}
 							aria-controls="mobile-menu"
