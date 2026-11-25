@@ -78,7 +78,7 @@ export default function Footer() {
 			<div className="absolute top-0 left-0 right-0 h-px bg-muted/50" />
 
 			<div className="relative">
-				<div className="container-wide sm:px-6 lg:px-8 pt-12 pb-6">
+				<div className="container-wide pt-12 pb-6">
 					<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-sections mb-8">
 						{/* Brand Section */}
 						<div className="md:col-span-1">

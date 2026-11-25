@@ -92,7 +92,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 		<>
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20">
+				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20">
 					<div className="mb-4">
 						<span className="px-3 py-1 bg-accent/10 border border-accent/20 rounded-full text-accent-text text-sm font-semibold">
 							{item.industry ?? item.category}{' '}
@@ -129,7 +129,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 
 			{/* Metrics Showcase */}
 			{metrics.length > 0 && (
-				<section className="py-section-sm px-4 sm:px-6">
+				<section className="py-section-sm">
 					<div className="container-wide">
 						<div className="grid gap-px md:grid-cols-4 bg-border/30 rounded-2xl overflow-hidden">
 							{metrics.map((metric, i) => (
@@ -152,8 +152,8 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 			)}
 
 			{/* Main Content - Type-aware rendering */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-5xl">
+			<section className="py-section-sm">
+				<div className="container-wide">
 					<div className="grid gap-12">
 						{isDetailed ? (
 							/* Detailed Case Study View */
@@ -421,7 +421,7 @@ export default async function ShowcaseDetailPage({
 			<JsonLd data={toJsonLdGraph([creativeWork, breadcrumb])} />
 			<div className="min-h-screen bg-background">
 				{/* Breadcrumb */}
-				<div className="py-8 px-4 sm:px-6">
+				<div className="py-8">
 					<div className="container-wide">
 						<Breadcrumb>
 							<BreadcrumbList>

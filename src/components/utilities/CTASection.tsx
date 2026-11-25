@@ -28,7 +28,7 @@ export function CTASection({
 	ctaHref = '/contact'
 }: CTASectionProps) {
 	return (
-		<section className="py-section px-4 sm:px-6">
+		<section className="py-section">
 			<div className="container-wide">
 				<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
 					<div

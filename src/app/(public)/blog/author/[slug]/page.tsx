@@ -60,7 +60,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
 
 			{/* Header */}
 			<section className="relative bg-background py-section-sm overflow-hidden">
-				<div className="relative container-wide px-4 sm:px-6">
+				<div className="relative container-wide">
 					<div className="flex flex-col md:flex-row items-center gap-sections">
 						{author.profile_image && (
 							<Image
@@ -87,7 +87,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
 			</section>
 
 			{/* Posts */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<h2 className="text-h3 text-foreground mb-comfortable">
 						Articles by {author.name}

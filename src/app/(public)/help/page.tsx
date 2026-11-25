@@ -64,7 +64,7 @@ export default async function HelpCenterPage() {
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Help Center
 					</p>
@@ -79,8 +79,8 @@ export default async function HelpCenterPage() {
 			</section>
 
 			{/* Categories Grid */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-5xl mx-auto">
+			<section className="py-section-sm">
+				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Browse Topics
@@ -129,8 +129,8 @@ export default async function HelpCenterPage() {
 			</section>
 
 			{/* Contact Section */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-5xl mx-auto">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<div className="rounded-xl border border-border bg-surface-raised p-10 text-center hover:border-border-strong transition-colors">
 						<h2 className="text-h3 text-foreground mb-3 text-balance">
 							Can&apos;t find what you&apos;re looking for?

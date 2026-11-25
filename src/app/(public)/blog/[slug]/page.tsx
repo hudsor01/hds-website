@@ -183,7 +183,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 			<JsonLd data={blogPostingSchema} />
 			<JsonLd data={breadcrumbSchema} />
 
-			<div className="container-wide px-4 sm:px-6 py-8">
+			<div className="container-wide py-8">
 				<Breadcrumb className="mx-auto max-w-5xl">
 					<BreadcrumbList>
 						<BreadcrumbItem>
@@ -356,7 +356,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 			{relatedPosts.length > 0 && <RelatedPosts posts={relatedPosts} />}
 
 			{/* CTA Section */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section">
 				<div className="container-wide">
 					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
 						<div

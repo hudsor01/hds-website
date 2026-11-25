@@ -315,22 +315,6 @@ describe('Layout Utility Classes', () => {
 		expect(element).toHaveClass('flex-between')
 		// Computed styles aren't available in happy-dom, just verify class is applied
 	})
-
-	it('should apply container-wide correctly', () => {
-		const { container } = render(<div className="container-wide">Content</div>)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('container-wide')
-	})
-
-	it('should apply container-narrow correctly', () => {
-		const { container } = render(
-			<div className="container-narrow">Content</div>
-		)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('container-narrow')
-	})
 })
 
 describe('Transition and Animation Utilities', () => {

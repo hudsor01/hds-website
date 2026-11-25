@@ -217,7 +217,8 @@ export function ToolPageLayout({
 		<div className="min-h-screen bg-background">
 			<div
 				className={cn(
-					'container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 max-w-5xl mx-auto',
+					columns === 'two' ? 'container-wide' : 'container-content',
+					'pt-28 pb-16 sm:pt-32 sm:pb-20',
 					className
 				)}
 			>

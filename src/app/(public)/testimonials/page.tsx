@@ -65,7 +65,7 @@ export default async function TestimonialsPage() {
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Client Reviews
 					</p>
@@ -80,7 +80,7 @@ export default async function TestimonialsPage() {
 			</section>
 
 			{/* Reviews */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					{testimonials.length > 0 ? (
 						<ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -151,7 +151,7 @@ export default async function TestimonialsPage() {
 			</section>
 
 			{/* CTA Section */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section">
 				<div className="container-wide">
 					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
 						<div

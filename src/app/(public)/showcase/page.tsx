@@ -40,7 +40,7 @@ async function ShowcaseProjects() {
 	return (
 		<>
 			{/* Stats Section */}
-			<section className="pt-12 px-4 sm:px-6">
+			<section className="pt-12">
 				<div className="container-wide">
 					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
 						{[
@@ -73,7 +73,7 @@ async function ShowcaseProjects() {
 			</section>
 
 			{/* Showcase Projects */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					{/* Section header */}
 					<div className="text-center mb-12">
@@ -143,7 +143,7 @@ async function ShowcaseProjects() {
 			</section>
 
 			{/* Inline CTA Section */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-14 text-center">
 						<div
@@ -189,7 +189,7 @@ export default function ShowcasePage() {
 					aria-hidden="true"
 				/>
 
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Showcase
 					</p>
@@ -234,7 +234,7 @@ export default function ShowcasePage() {
 			{/* Dynamic content with Suspense */}
 			<Suspense
 				fallback={
-					<div className="container-wide py-section-sm px-4 text-center">
+					<div className="container-wide py-section-sm text-center">
 						<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent" />
 						<p className="text-sm text-muted-foreground mt-4 leading-relaxed">
 							Loading projects...
@@ -246,7 +246,7 @@ export default function ShowcasePage() {
 			</Suspense>
 
 			{/* CTA Section */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section">
 				<div className="container-wide">
 					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
 						<div

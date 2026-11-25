@@ -58,7 +58,7 @@ function LoadingFallback() {
 	return (
 		<div className="min-h-screen bg-background">
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<div
 						className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent"
 						aria-hidden="true"
@@ -86,7 +86,7 @@ function StatusPanel({ tone, title, children }: StatusPanelProps) {
 	return (
 		<div className="min-h-screen bg-background">
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<div
 						className={`w-16 h-16 mx-auto mb-content-block rounded-full flex items-center justify-center ${
 							tone === 'success' ? 'bg-success-muted' : 'bg-warning-muted'
@@ -169,7 +169,7 @@ async function TokenContent({ token }: { token: string }) {
 	return (
 		<div className="min-h-screen bg-background">
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Client Feedback
 					</p>
@@ -184,7 +184,7 @@ async function TokenContent({ token }: { token: string }) {
 				</div>
 			</section>
 
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="max-w-2xl mx-auto">
 						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">

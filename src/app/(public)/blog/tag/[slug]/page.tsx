@@ -70,7 +70,7 @@ export default async function TagPage({ params }: TagPageProps) {
 
 			{/* Header */}
 			<section className="relative bg-background py-section-sm overflow-hidden">
-				<div className="relative container-wide px-4 sm:px-6 text-center">
+				<div className="relative container-wide text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Tag
 					</p>
@@ -91,7 +91,7 @@ export default async function TagPage({ params }: TagPageProps) {
 			</section>
 
 			{/* Posts */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					{posts.length > 0 ? (
 						<>

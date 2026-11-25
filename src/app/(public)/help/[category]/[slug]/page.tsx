@@ -116,7 +116,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 
 			{/* Header / Breadcrumb */}
 			<div className="border-b border-border bg-background">
-				<div className="container-wide px-4 sm:px-6 py-6">
+				<div className="container-wide py-6">
 					{/* Breadcrumb */}
 					<Breadcrumb className="mb-4">
 						<BreadcrumbList>
@@ -159,8 +159,8 @@ export default async function HelpArticlePage({ params }: PageProps) {
 			</div>
 
 			{/* Article Content */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<div className="rounded-xl border border-border bg-surface-raised p-8 md:p-10">
 						{/* Article Header */}
 						<header className="mb-comfortable">

@@ -6,7 +6,7 @@
 export default function BlogLoading() {
 	return (
 		<div className="min-h-screen bg-background">
-			<div className="container-wide px-4 sm:px-6 py-section-sm">
+			<div className="container-wide py-section-sm">
 				{/* Header Skeleton */}
 				<div className="text-center mb-12 animate-pulse">
 					<div className="h-12 bg-muted rounded-lg w-48 mx-auto mb-heading" />

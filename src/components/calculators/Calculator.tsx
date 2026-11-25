@@ -206,7 +206,7 @@ export function Calculator() {
 
 	return (
 		<main className="min-h-screen bg-background">
-			<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 max-w-6xl mx-auto">
+			<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20">
 				{/* Header */}
 				<div className="mb-10">
 					<h1 className="mb-3 text-page-title text-foreground text-balance">

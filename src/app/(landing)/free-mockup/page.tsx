@@ -68,7 +68,7 @@ export default function FreeMockupPage() {
 			{/* Slim brand header: logo + click-to-call, no nav so the only path
 			    forward is the form. */}
 			<header className="border-b border-border">
-				<div className="container-wide px-4 sm:px-6 flex items-center justify-between h-16">
+				<div className="container-wide flex items-center justify-between h-16">
 					<Link href={ROUTES.HOME} aria-label="Hudson Digital Solutions home">
 						<Image
 							src="/HDS-Logo.webp"
@@ -94,7 +94,7 @@ export default function FreeMockupPage() {
 					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-16 pb-20">
+				<div className="relative z-10 container-wide pt-16 pb-20">
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 						{/* LEFT: the offer */}
 						<div>
@@ -161,7 +161,7 @@ export default function FreeMockupPage() {
 
 			{/* Minimal legal footer, no marketing nav. */}
 			<footer className="border-t border-border">
-				<div className="container-wide px-4 sm:px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-muted-foreground">
+				<div className="container-wide py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-muted-foreground">
 					<span>
 						{`© ${CURRENT_YEAR} Hudson Digital Solutions. All rights reserved.`}
 					</span>

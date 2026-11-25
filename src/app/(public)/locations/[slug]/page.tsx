@@ -97,7 +97,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center max-w-4xl mx-auto">
+				<div className="relative z-10 container-content pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<div className="flex items-center justify-center gap-2 mb-4 text-accent-text">
 						<MapPin className="h-4 w-4" aria-hidden="true" />
 						<span className="text-xs font-semibold uppercase tracking-widest">
@@ -114,8 +114,8 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			</section>
 
 			{/* Services */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							What I Offer
@@ -143,8 +143,8 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			</section>
 
 			{/* Areas Served */}
-			<section className="py-section-sm px-4 sm:px-6 bg-surface-sunken">
-				<div className="container-wide max-w-4xl mx-auto">
+			<section className="py-section-sm bg-surface-sunken">
+				<div className="container-content">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Coverage
@@ -171,8 +171,8 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			</section>
 
 			{/* CTA */}
-			<section className="py-section px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
+			<section className="py-section">
+				<div className="container-content">
 					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"

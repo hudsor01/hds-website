@@ -98,7 +98,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 		<div className="min-h-screen bg-background">
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20">
+				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20">
 					{/* Breadcrumb */}
 					<Breadcrumb className="mb-8">
 						<BreadcrumbList>
@@ -144,8 +144,8 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 			</section>
 
 			{/* Articles List */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<Link
 						href="/help"
 						className="inline-flex items-center gap-tight text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"

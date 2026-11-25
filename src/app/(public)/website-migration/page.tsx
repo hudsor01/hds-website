@@ -165,7 +165,7 @@ export default function WebsiteMigrationPage() {
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Website Migration
 					</p>
@@ -203,7 +203,7 @@ export default function WebsiteMigrationPage() {
 			</section>
 
 			{/* What's at Risk */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
@@ -239,8 +239,8 @@ export default function WebsiteMigrationPage() {
 			</section>
 
 			{/* Comparison Table */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-3xl">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Side by Side
@@ -288,8 +288,8 @@ export default function WebsiteMigrationPage() {
 			</section>
 
 			{/* Migration Process */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-3xl">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							How It Works
@@ -327,8 +327,8 @@ export default function WebsiteMigrationPage() {
 			</section>
 
 			{/* What You Get */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-3xl">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							After Migration
@@ -361,7 +361,7 @@ export default function WebsiteMigrationPage() {
 			</section>
 
 			{/* Stats */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="grid sm:grid-cols-3 gap-px bg-border/30 rounded-2xl overflow-hidden">
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
@@ -405,7 +405,7 @@ export default function WebsiteMigrationPage() {
 			</section>
 
 			{/* CTA */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section">
 				<div className="container-wide">
 					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
 						<div

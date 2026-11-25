@@ -8,7 +8,7 @@ export default function TestimonialsLoading() {
 		<div className="min-h-screen bg-background">
 			{/* Hero Skeleton */}
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center animate-pulse">
+				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center animate-pulse">
 					<div className="h-4 bg-muted rounded w-32 mx-auto mb-3" />
 					<div className="h-12 bg-muted rounded-lg w-64 mx-auto mb-6" />
 					<div className="h-6 bg-muted rounded-lg w-96 mx-auto" />
@@ -16,7 +16,7 @@ export default function TestimonialsLoading() {
 			</section>
 
 			{/* Testimonials Grid Skeleton */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 						{[...Array(6)].map((_, i) => (

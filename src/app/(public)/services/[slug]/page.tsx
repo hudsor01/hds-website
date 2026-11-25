@@ -103,7 +103,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 max-w-4xl mx-auto">
+				<div className="relative z-10 container-content pt-28 pb-16 sm:pt-32 sm:pb-20">
 					<Breadcrumb className="mb-8">
 						<BreadcrumbList>
 							<BreadcrumbItem>
@@ -167,8 +167,8 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			</section>
 
 			{/* Overview */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-3xl mx-auto">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 						{service.overviewHeading}
 					</h2>
@@ -185,9 +185,9 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			{/* Included */}
 			<section
 				id="included"
-				className="py-section-sm px-4 sm:px-6 bg-surface-sunken scroll-mt-24"
+				className="py-section-sm bg-surface-sunken scroll-mt-24"
 			>
-				<div className="container-wide max-w-5xl mx-auto">
+				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							What You Get
@@ -221,8 +221,8 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			</section>
 
 			{/* FAQ */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-3xl mx-auto">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Questions
@@ -253,8 +253,8 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
 			{/* Related posts */}
 			{relatedPosts.length > 0 && (
-				<section className="py-section-sm px-4 sm:px-6 bg-surface-sunken">
-					<div className="container-wide max-w-5xl mx-auto">
+				<section className="py-section-sm bg-surface-sunken">
+					<div className="container-wide">
 						<div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-comfortable">
 							<h2 className="text-h1 text-foreground text-balance">
 								From the Blog
@@ -277,8 +277,8 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			)}
 
 			{/* Other services */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<h2 className="text-h1 text-foreground mb-comfortable text-center text-balance">
 						Other Services
 					</h2>
@@ -302,8 +302,8 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			</section>
 
 			{/* CTA */}
-			<section className="py-section px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
+			<section className="py-section">
+				<div className="container-content">
 					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"

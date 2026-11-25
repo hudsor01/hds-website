@@ -17,7 +17,7 @@ export const metadata = {
 
 export default function NotFound() {
 	return (
-		<div className="min-h-screen bg-background flex items-center justify-center px-4 sm:px-6 relative overflow-hidden">
+		<div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
 			<div
 				className="absolute inset-0 grid-pattern pointer-events-none"
 				aria-hidden="true"
@@ -27,7 +27,7 @@ export default function NotFound() {
 				aria-hidden="true"
 			/>
 
-			<div className="relative z-10 container-narrow text-center">
+			<div className="relative z-10 container-content text-center">
 				{/* 404 Visual */}
 				<div className="mb-10">
 					<h1 className="text-8xl lg:text-9xl font-black text-accent-text mb-4">

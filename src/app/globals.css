@@ -201,6 +201,17 @@
 	 * dark: utilities: the site renders the same under an OS dark
 	 * preference, and native controls and scrollbars stay light. */
 	color-scheme: light;
+
+	/* The one page gutter: 16px on phones, 24px from sm, 32px from lg.
+	 * Only the container utilities read it, so the navbar, heroes,
+	 * sections and footer share one content edge. */
+	--page-gutter: --spacing(4);
+	@variant sm {
+		--page-gutter: --spacing(6);
+	}
+	@variant lg {
+		--page-gutter: --spacing(8);
+	}
 }
 
 /* Base styles */
@@ -363,17 +374,6 @@ button,
 		);
 	}
 
-	.container-narrow {
-		max-width: 42rem;
-		margin-inline: auto;
-		padding-inline: 1rem;
-	}
-	.container-wide {
-		max-width: 80rem;
-		margin-inline: auto;
-		padding-inline: 1rem;
-	}
-
 	.flex-center {
 		display: flex;
 		align-items: center;
@@ -402,20 +402,6 @@ button,
 
 	.transition-smooth {
 		transition: all 0.3s ease-in-out;
-	}
-
-	.page-padding-x {
-		padding-inline: 1rem;
-	}
-	@media (min-width: 640px) {
-		.page-padding-x {
-			padding-inline: 1.5rem;
-		}
-	}
-	@media (min-width: 1024px) {
-		.page-padding-x {
-			padding-inline: 2rem;
-		}
 	}
 
 	/* Small uppercase label: a kicker above a title or a form-group
@@ -481,6 +467,23 @@ button,
 	.field[aria-invalid='true']:focus-visible {
 		outline-color: var(--color-destructive);
 	}
+}
+
+/* Page containers. Two widths, one gutter (--page-gutter): wide (80rem)
+ * for multi-column layouts and the site chrome, content (56rem) for a
+ * reading measure. Sections carry no horizontal padding of their own;
+ * the container inside them does. */
+@utility container-wide {
+	width: 100%;
+	max-width: var(--container-7xl);
+	margin-inline: auto;
+	padding-inline: var(--page-gutter);
+}
+@utility container-content {
+	width: 100%;
+	max-width: var(--container-4xl);
+	margin-inline: auto;
+	padding-inline: var(--page-gutter);
 }
 
 /* Hero grid background: --color-border lines at 15%, 3rem cells. Set
@@ -794,34 +797,5 @@ button,
 	/* Don't let the last element add trailing space before the author card. */
 	.typography > *:last-child {
 		margin-bottom: 0;
-	}
-}
-
-/* Grid layouts */
-@layer components {
-	.grid-3 {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 2rem;
-	}
-	@media (min-width: 768px) {
-		.grid-3 {
-			grid-template-columns: repeat(3, 1fr);
-		}
-	}
-	.grid-4 {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 2rem;
-	}
-	@media (min-width: 640px) {
-		.grid-4 {
-			grid-template-columns: repeat(2, 1fr);
-		}
-	}
-	@media (min-width: 1024px) {
-		.grid-4 {
-			grid-template-columns: repeat(4, 1fr);
-		}
 	}
 }

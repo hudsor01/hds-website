@@ -42,7 +42,7 @@ export default function FaqClient() {
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						FAQ
 					</p>
@@ -73,8 +73,8 @@ export default function FaqClient() {
 			</section>
 
 			{/* FAQ Categories */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
+			<section className="py-section-sm">
+				<div className="container-content">
 					{filteredFaqs.length === 0 ? (
 						<div className="text-center py-12" aria-live="polite" role="status">
 							<p className="text-sm text-muted-foreground leading-relaxed">
@@ -117,7 +117,7 @@ export default function FaqClient() {
 			</section>
 
 			{/* CTA */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section">
 				<div className="container-wide">
 					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
 						<div

@@ -101,7 +101,7 @@ export default function HomePage() {
 					aria-hidden="true"
 				/>
 
-				<div className="relative z-10 container-wide px-4 sm:px-6 lg:px-8 pt-28 pb-16 sm:pt-32 sm:pb-20">
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20">
 					<div className="grid lg:grid-cols-5 gap-12 xl:gap-16 items-center">
 						{/* Left — headline + CTAs */}
 						<div className="lg:col-span-3 flex flex-col gap-8">
@@ -206,7 +206,7 @@ export default function HomePage() {
 			</section>
 
 			{/* ── SOLUTIONS ─────────────────────────────────────── */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
@@ -265,7 +265,7 @@ export default function HomePage() {
 			</section>
 
 			{/* ── FREE TOOLS ──────────────────────────────────────── */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
@@ -358,13 +358,13 @@ export default function HomePage() {
 			</section>
 
 			{/* ── CLOSING CTA ────────────────────────────────────── */}
-			<section className="relative py-section px-4 sm:px-6 bg-surface-raised overflow-hidden">
+			<section className="relative py-section bg-surface-raised overflow-hidden">
 				{/* Soft radial accent for depth — pure CSS, no extra DOM weight */}
 				<div
 					aria-hidden="true"
 					className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklch,var(--color-accent)_12%,transparent),transparent_70%)]"
 				/>
-				<div className="relative max-w-3xl mx-auto">
+				<div className="relative container-content">
 					<div className="text-center">
 						<div className="inline-flex items-center gap-3 mb-4">
 							<span aria-hidden="true" className="h-px w-8 bg-accent/40" />

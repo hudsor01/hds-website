@@ -70,7 +70,7 @@ const Navbar = memo(function Navbar() {
 			className="fixed top-0 left-0 right-0 z-modal bg-background/95 backdrop-blur-xl border-b border-border/40"
 			aria-label="Main navigation"
 		>
-			<div className="container-wide sm:px-6 lg:px-8">
+			<div className="container-wide">
 				<div className="flex items-center h-14">
 					{/* Left — Logo */}
 					<div className="flex-1 flex items-center">

@@ -84,7 +84,7 @@ export default function ContactPage() {
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20">
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20">
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 						{/* LEFT: Form */}
 						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
@@ -233,7 +233,7 @@ export default function ContactPage() {
 			</section>
 
 			{/* Service Area Section */}
-			<section className="py-section-sm px-4 sm:px-6 bg-surface-raised">
+			<section className="py-section-sm bg-surface-raised">
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">

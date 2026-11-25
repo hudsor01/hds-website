@@ -40,7 +40,7 @@ export default function NotFound() {
 			<NavbarLight />
 			<main
 				id="main-content"
-				className="min-h-screen pt-14 bg-background flex items-center justify-center px-4 sm:px-6 relative overflow-hidden"
+				className="min-h-screen pt-14 bg-background flex items-center justify-center relative overflow-hidden"
 			>
 				<div
 					className="absolute inset-0 grid-pattern pointer-events-none"
@@ -51,7 +51,7 @@ export default function NotFound() {
 					aria-hidden="true"
 				/>
 
-				<div className="relative z-10 container-narrow text-center">
+				<div className="relative z-10 container-content text-center">
 					<div className="mb-10">
 						<h1 className="text-8xl lg:text-9xl font-black text-accent-text mb-4">
 							404

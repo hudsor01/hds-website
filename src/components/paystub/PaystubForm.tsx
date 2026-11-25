@@ -75,7 +75,7 @@ export function PaystubForm({
 	isGenerating
 }: PaystubFormProps) {
 	return (
-		<div className="card-padding-lg font-sans container-narrow">
+		<div className="card-padding-lg font-sans mx-auto max-w-2xl">
 			<h2 className="text-h4 mb-comfortable text-center text-foreground">
 				Professional Pay Stub Generator
 			</h2>
