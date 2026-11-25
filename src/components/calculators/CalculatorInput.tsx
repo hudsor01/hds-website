@@ -45,7 +45,7 @@ export function CalculatorInput({
 					className={cn(
 						prefix && 'pl-7',
 						suffix && 'pr-12',
-						error && 'border-destructive focus-visible:ring-destructive',
+						error && 'border-destructive',
 						className
 					)}
 					aria-invalid={error ? true : undefined}

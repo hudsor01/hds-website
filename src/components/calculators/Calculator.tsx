@@ -329,7 +329,7 @@ export function Calculator() {
 									placeholder="your@email.com"
 									value={emailInput}
 									onChange={e => setEmailInput(e.target.value)}
-									className="flex-1 px-3 py-2 bg-background rounded-lg text-sm text-foreground border border-border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+									className="flex-1 px-3 py-2 bg-background rounded-lg text-sm text-foreground border border-border"
 								/>
 								<button
 									onClick={handleEmailResults}

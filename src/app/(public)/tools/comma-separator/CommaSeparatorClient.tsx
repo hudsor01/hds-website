@@ -95,7 +95,7 @@ export default function CommaSeparatorClient() {
 					id="comma-separator-input"
 					value={input}
 					onChange={event => setInput(event.target.value)}
-					className="w-full rounded-md border border-border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-accent"
+					className="w-full rounded-md border border-border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground"
 					rows={8}
 					placeholder={PLACEHOLDER}
 					spellCheck={false}
@@ -160,7 +160,7 @@ export default function CommaSeparatorClient() {
 						type="checkbox"
 						checked={dedupe}
 						onChange={event => setDedupe(event.target.checked)}
-						className="rounded border-border text-accent focus:ring-accent"
+						className="rounded border-border text-accent"
 					/>
 					Remove duplicates
 				</label>

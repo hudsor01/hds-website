@@ -166,7 +166,7 @@ export default function MetaTagGeneratorClient() {
 							name="pageDescription"
 							value={inputs.description}
 							onChange={e => handleInputChange('description', e.target.value)}
-							className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-hidden focus:ring-1 focus:ring-accent"
+							className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground"
 							rows={3}
 							required
 							aria-invalid={errors.description ? true : undefined}
@@ -280,7 +280,7 @@ export default function MetaTagGeneratorClient() {
 							type="checkbox"
 							checked={includeDocumentBasics}
 							onChange={e => setIncludeDocumentBasics(e.target.checked)}
-							className="rounded border-border text-accent focus:ring-accent"
+							className="rounded border-border text-accent"
 						/>
 						Include charset and viewport lines (once per page, only if your
 						template lacks them)
@@ -289,7 +289,7 @@ export default function MetaTagGeneratorClient() {
 
 				<button
 					type="submit"
-					className="w-full rounded-md bg-accent px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-accent/80 focus:outline-hidden focus:ring-2 focus:ring-accent"
+					className="w-full rounded-md bg-accent px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-accent/80"
 				>
 					Generate meta tags
 				</button>

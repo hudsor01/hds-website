@@ -68,7 +68,7 @@ function SubmitButton() {
 		<button
 			type="submit"
 			disabled={pending}
-			className="w-full px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:bg-accent/90 disabled:opacity-50 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+			className="w-full px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:bg-accent/90 disabled:opacity-50 transition-colors"
 		>
 			{pending ? 'Processing...' : 'Unsubscribe'}
 		</button>
@@ -115,7 +115,7 @@ export function UnsubscribeForm({ email, token }: UnsubscribeFormProps) {
 					aria-readonly="true"
 					aria-describedby={state.error ? 'unsubscribe-error' : undefined}
 					aria-invalid={state.error ? 'true' : undefined}
-					className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+					className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground"
 				/>
 				<input type="hidden" name="token" value={token} />
 			</div>

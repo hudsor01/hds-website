@@ -430,10 +430,12 @@ describe('Input Polish — COMP-02', () => {
 		expect(input?.className ?? '').toContain('aria-invalid:border-destructive')
 	})
 
-	it('input has aria-invalid:ring-destructive/20 class', () => {
+	it('input has aria-invalid:focus-visible:outline-destructive class', () => {
 		const { container } = render(<Input />)
 		const input = container.querySelector('input')
-		expect(input?.className ?? '').toContain('aria-invalid:ring-destructive/20')
+		expect(input?.className ?? '').toContain(
+			'aria-invalid:focus-visible:outline-destructive'
+		)
 	})
 
 	it('input uses bg-surface-sunken (not bg-background) for depth', () => {

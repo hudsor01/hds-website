@@ -166,17 +166,19 @@ test.describe('Form Component Styling', () => {
 			await input.focus()
 			await page.waitForTimeout(200)
 
-			// Should have visible focus indicator
+			// Fields use the same focus treatment as every other control: the
+			// global 2px solid outline. Read the longhands, since the
+			// `outline` shorthand is a non-empty string even when it is none.
 			const focusedStyles = await input.evaluate(el => {
 				const computed = window.getComputedStyle(el)
 				return {
-					borderColor: computed.borderColor,
-					outline: computed.outline
+					outlineStyle: computed.outlineStyle,
+					outlineWidth: computed.outlineWidth
 				}
 			})
 
-			// Should have some kind of focus indicator
-			expect(focusedStyles.borderColor || focusedStyles.outline).toBeTruthy()
+			expect(focusedStyles.outlineStyle).toBe('solid')
+			expect(focusedStyles.outlineWidth).toBe('2px')
 		}
 	})
 })

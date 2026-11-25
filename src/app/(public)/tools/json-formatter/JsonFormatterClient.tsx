@@ -174,7 +174,7 @@ export default function JsonFormatterClient() {
 					onChange={e => changeInput(e.target.value)}
 					aria-describedby={status ? statusId : undefined}
 					aria-invalid={status?.kind === 'error' ? true : undefined}
-					className={`w-full rounded-md border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-accent ${borderClass}`}
+					className={`w-full rounded-md border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground ${borderClass}`}
 					rows={10}
 					placeholder='{"key": "value"}'
 					spellCheck={false}
@@ -229,7 +229,7 @@ export default function JsonFormatterClient() {
 					type="button"
 					onClick={() => run('format')}
 					disabled={!inputJson.trim()}
-					className="rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80 focus:outline-hidden focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
+					className="rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					Format
 				</button>
