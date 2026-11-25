@@ -7,53 +7,58 @@ import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { NextRequest } from 'next/server'
 import { cleanupMocks, setupApiMocks } from '../test-utils'
 
+/**
+ * Creates a Drizzle ORM-compatible db mock.
+ * The chain matches the actual route usage:
+ *   select: db.select().from(table).where(condition) -> rows[]
+ *   insert: db.insert(table).values(data).onConflictDoUpdate(config) -> void
+ */
+function createDbMock(options?: {
+	selectResult?: Record<string, unknown>[]
+	insertError?: Error
+}) {
+	const selectResult = options?.selectResult ?? []
+	const insertError = options?.insertError
+
+	return {
+		select: mock(() => ({
+			from: mock(() => ({
+				where: mock().mockResolvedValue(selectResult)
+			}))
+		})),
+		insert: mock(() => ({
+			values: mock(() => ({
+				onConflictDoUpdate: insertError
+					? mock().mockRejectedValue(insertError)
+					: mock().mockResolvedValue(undefined)
+			}))
+		}))
+	}
+}
+
+// File scope, not inside the Newsletter describe: every describe below
+// imports the subscribe route, and whichever test imports it first evaluates
+// withMutationGuards(...) once for the whole file. Without the mocks in place
+// for that first import, the real origin guard is captured and every later
+// POST returns 403.
+beforeEach(() => {
+	setupApiMocks()
+
+	// Default Drizzle db mock: no existing subscriber, insert succeeds
+	mock.module('@/lib/db', () => ({
+		db: createDbMock()
+	}))
+})
+
+afterEach(() => {
+	cleanupMocks()
+})
+
 // ================================
 // Newsletter Subscribe API Tests
 // ================================
 
 describe('Newsletter Subscribe API', () => {
-	/**
-	 * Creates a Drizzle ORM-compatible db mock.
-	 * The chain matches the actual route usage:
-	 *   select: db.select().from(table).where(condition) -> rows[]
-	 *   insert: db.insert(table).values(data).onConflictDoUpdate(config) -> void
-	 */
-	function createDbMock(options?: {
-		selectResult?: Record<string, unknown>[]
-		insertError?: Error
-	}) {
-		const selectResult = options?.selectResult ?? []
-		const insertError = options?.insertError
-
-		return {
-			select: mock(() => ({
-				from: mock(() => ({
-					where: mock().mockResolvedValue(selectResult)
-				}))
-			})),
-			insert: mock(() => ({
-				values: mock(() => ({
-					onConflictDoUpdate: insertError
-						? mock().mockRejectedValue(insertError)
-						: mock().mockResolvedValue(undefined)
-				}))
-			}))
-		}
-	}
-
-	beforeEach(() => {
-		setupApiMocks()
-
-		// Default Drizzle db mock: no existing subscriber, insert succeeds
-		mock.module('@/lib/db', () => ({
-			db: createDbMock()
-		}))
-	})
-
-	afterEach(() => {
-		cleanupMocks()
-	})
-
 	it('should return 400 for invalid email', async () => {
 		const { POST } = await import('@/app/api/newsletter/subscribe/route')
 
