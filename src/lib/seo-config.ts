@@ -66,6 +66,20 @@ export interface PageMetadata {
 	noindex?: boolean
 }
 
+export const BRAND_SUFFIX = ' | Hudson Digital'
+export const MAX_TITLE_LENGTH = 60
+
+/**
+ * Title for a page whose name comes from data (a DB row or content list),
+ * which no literal-title test can see: "{name} | {qualifier} | Hudson
+ * Digital", dropping the qualifier when that would pass 60 characters. A
+ * name that is too long on its own is kept whole; only its row can fix it.
+ */
+export function qualifiedTitle(name: string, qualifier: string): string {
+	const full = `${name} | ${qualifier}${BRAND_SUFFIX}`
+	return full.length <= MAX_TITLE_LENGTH ? full : `${name}${BRAND_SUFFIX}`
+}
+
 export function absoluteUrl(path: string): string {
 	if (!path.startsWith('/')) {
 		throw new Error(`Metadata path must start with "/": ${path}`)

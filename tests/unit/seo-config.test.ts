@@ -6,7 +6,13 @@
  */
 
 import { describe, expect, test } from 'bun:test'
-import { absoluteUrl, buildMetadata } from '@/lib/seo-config'
+import {
+	absoluteUrl,
+	BRAND_SUFFIX,
+	buildMetadata,
+	MAX_TITLE_LENGTH,
+	qualifiedTitle
+} from '@/lib/seo-config'
 
 describe('buildMetadata', () => {
 	const meta = buildMetadata({
@@ -79,5 +85,29 @@ describe('buildMetadata', () => {
 	test('the homepage canonical has no trailing slash; bad paths throw', () => {
 		expect(absoluteUrl('/')).toBe('https://hudsondigitalsolutions.com')
 		expect(() => absoluteUrl('tools')).toThrow()
+	})
+})
+
+describe('qualifiedTitle', () => {
+	test('keeps the qualifier while the title fits in 60 characters', () => {
+		expect(qualifiedTitle('TenantFlow', 'Case Study')).toBe(
+			'TenantFlow | Case Study | Hudson Digital'
+		)
+	})
+
+	test('drops the qualifier when it would pass 60 characters', () => {
+		const name = 'Connecting Your Domain to the New Site'
+		expect(`${name} | Help Center${BRAND_SUFFIX}`.length).toBeGreaterThan(
+			MAX_TITLE_LENGTH
+		)
+		const title = qualifiedTitle(name, 'Help Center')
+		expect(title).toBe(`${name} | Hudson Digital`)
+		expect(title.length).toBeLessThanOrEqual(MAX_TITLE_LENGTH)
+	})
+
+	test('keeps a 60-character title with its qualifier', () => {
+		const name = 'x'.repeat(MAX_TITLE_LENGTH - ' | Q | Hudson Digital'.length)
+		expect(qualifiedTitle(name, 'Q').length).toBe(MAX_TITLE_LENGTH)
+		expect(qualifiedTitle(name, 'Q')).toContain(' | Q | ')
 	})
 })

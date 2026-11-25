@@ -11,7 +11,7 @@ import {
 } from '@/lib/seo-utils'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Get a Free Website Plan | Hudson Digital Solutions',
+	title: 'Get a Free Website Plan | Hudson Digital',
 	description:
 		"Tell me about your business and I'll map the website it needs: pages, timeline and a real price. Free 30-minute call. No pitch. I reply in 2 hours.",
 	path: '/contact',

@@ -24,7 +24,7 @@ import {
 	getCategoryBySlug,
 	helpArticleDate
 } from '@/lib/help-articles'
-import { buildMetadata } from '@/lib/seo-config'
+import { buildMetadata, qualifiedTitle } from '@/lib/seo-config'
 import {
 	BUSINESS_ID,
 	generateBreadcrumbSchema,
@@ -57,7 +57,7 @@ export async function generateMetadata({
 	}
 
 	return buildMetadata({
-		title: `${article.title} | Help Center | Hudson Digital`,
+		title: qualifiedTitle(article.title, 'Help Center'),
 		description:
 			article.excerpt || `Read about ${article.title} in the help center.`,
 		path: `/help/${category}/${slug}`,
