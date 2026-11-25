@@ -145,6 +145,29 @@ test.describe('Blog Journey', () => {
 		})
 	}
 
+	for (const path of [
+		'/blog',
+		'/blog/tag/seo',
+		'/blog/tag/business',
+		'/blog/author/richard-hudson'
+	]) {
+		test(`heading levels never skip on ${path}`, async ({ page }) => {
+			await page.goto(path)
+			await expect(page.locator('main h1')).toHaveCount(1)
+			await expect(page.locator('main article').first()).toBeVisible()
+			const levels = await page
+				.locator('main :is(h1, h2, h3, h4, h5, h6)')
+				.evaluateAll((els: Element[]) =>
+					els.map(el => Number(el.tagName.slice(1)))
+				)
+			expect(levels[0]).toBe(1)
+			for (let i = 1; i < levels.length; i++) {
+				const previous = levels[i - 1] ?? 1
+				expect(levels[i] ?? 1).toBeLessThanOrEqual(previous + 1)
+			}
+		})
+	}
+
 	test('should return 404 for an unknown slug', async ({ page }) => {
 		const response = await page.goto('/blog/wp-login.php')
 		expect(response?.status()).toBe(404)

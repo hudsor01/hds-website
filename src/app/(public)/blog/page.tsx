@@ -159,9 +159,9 @@ export default function BlogPage() {
 						{/* Sidebar */}
 						<aside className="w-full lg:w-80 space-y-6">
 							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
-								<h3 className="text-h3 text-foreground mb-3 text-balance">
+								<h2 className="text-h3 text-foreground mb-3 text-balance">
 									Curious what a site would cost?
-								</h3>
+								</h2>
 								<p className="text-sm text-muted-foreground mb-6 leading-relaxed">
 									Get a free website plan for your business: pages, timeline and
 									a clear price.
@@ -179,9 +179,9 @@ export default function BlogPage() {
 							</Suspense>
 
 							<div className="rounded-xl border border-border bg-surface-raised p-8 text-center hover:border-border-strong transition-colors">
-								<h3 className="text-h3 text-foreground mb-3 text-balance">
+								<h2 className="text-h3 text-foreground mb-3 text-balance">
 									Ready for a better website?
-								</h3>
+								</h2>
 								<p className="text-sm text-muted-foreground mb-6 leading-relaxed">
 									Let&apos;s build the one your business deserves.
 								</p>

@@ -95,11 +95,16 @@ export default async function TagPage({ params }: TagPageProps) {
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
 					{posts.length > 0 ? (
-						<div className="grid gap-sections md:grid-cols-2 lg:grid-cols-3">
-							{posts.map(post => (
-								<BlogPostCard key={post.id} post={post} />
-							))}
-						</div>
+						<>
+							<h2 className="text-h3 text-foreground mb-comfortable">
+								Articles tagged {tag.name}
+							</h2>
+							<div className="grid gap-sections md:grid-cols-2 lg:grid-cols-3">
+								{posts.map(post => (
+									<BlogPostCard key={post.id} post={post} />
+								))}
+							</div>
+						</>
 					) : (
 						<div className="text-center py-section-sm">
 							<p className="text-muted-foreground text-lg">
