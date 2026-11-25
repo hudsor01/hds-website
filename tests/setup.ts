@@ -70,11 +70,19 @@ require('@/lib/auth/admin')
 // require() would not fix the ESM export list. The snapshot is what
 // mockNextNavigation() in tests/test-utils.ts spreads, and the complete
 // mock below keeps the module whole for files that never mock it.
+// The global beforeEach re-registers it, so a file's mockNextNavigation()
+// stubs (usePathname '/', a mock useRouter, a custom redirect) end with that
+// file's tests instead of lasting for the rest of the process.
 const REAL_NEXT_NAVIGATION = { ...actualNavigation }
 ;(
 	globalThis as { __REAL_NEXT_NAVIGATION__?: unknown }
 ).__REAL_NEXT_NAVIGATION__ = REAL_NEXT_NAVIGATION
-mock.module('next/navigation', () => ({ ...REAL_NEXT_NAVIGATION }))
+
+function setupNextNavigationMock() {
+	mock.module('next/navigation', () => ({ ...REAL_NEXT_NAVIGATION }))
+}
+
+setupNextNavigationMock()
 
 // ===================================================================
 // TESTING CONVENTION: shared-module mocks (read before adding a mock)
@@ -310,6 +318,8 @@ beforeEach(() => {
 	setupLoggerMock()
 	setupNextCacheMock()
 	setupNextServerMock()
+	// The real next/navigation, undoing any earlier file's mockNextNavigation()
+	setupNextNavigationMock()
 	// Fresh fetch mock: no calls or stubbed implementation from the last test,
 	// and reinstalled in case a test assigned globalThis.fetch directly
 	installFetchMock()
