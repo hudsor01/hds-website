@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { ReactElement } from 'react'
+import { mockNextNavigation } from '../test-utils'
 
 const renderWithQueryClient = (ui: ReactElement) => {
 	const queryClient = new QueryClient({
@@ -27,20 +28,9 @@ process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test'
 
 describe('ContactForm Component', () => {
 	beforeEach(() => {
-		// Mock next/navigation. Include the full surface (usePathname,
-		// useSearchParams) even though this suite only uses useRouter: bun's
-		// mock.module is global and, on the CI bun version, is not cleared by
-		// mock.restore() between files, so an incomplete mock here leaks and
-		// breaks any later test that renders a usePathname consumer (Navbar,
-		// ToolPageLayout) with "usePathname not found in next/navigation".
-		mock.module('next/navigation', () => ({
-			useRouter: () => ({
-				push: mock(),
-				refresh: mock()
-			}),
-			usePathname: () => '/',
-			useSearchParams: () => new URLSearchParams()
-		}))
+		// Stub the client hooks on top of the real module (never a partial
+		// mock: it would drop notFound / redirect for every later file)
+		mockNextNavigation()
 
 		// Mock database client
 		mock.module('@/lib/db', () => ({

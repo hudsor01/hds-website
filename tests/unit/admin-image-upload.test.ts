@@ -18,14 +18,13 @@
  *     user-friendly error.
  *
  * mock.module() registrations leak across test files per
- * oven-sh/bun#7823, so other tests in this suite that mock
- * `next/navigation` without a `redirect` export poison the resolver
- * for our `requireAdminSession` import chain. We re-register
- * `next/navigation` with the full surface here AND mock
- * `@/lib/admin/auth` directly so the route never needs to follow
- * the real import graph.
+ * oven-sh/bun#7823, so `next/navigation` is mocked only through
+ * mockNextNavigation(), which spreads the real module (with a throwing
+ * `redirect` override here), AND `@/lib/admin/auth` is mocked directly
+ * so the route never needs to follow the real import graph.
  */
 import { beforeEach, describe, expect, it, mock } from 'bun:test'
+import { mockNextNavigation } from '../test-utils'
 
 const testEnv = (
 	globalThis as unknown as { __TEST_ENV: Record<string, unknown> }
@@ -35,14 +34,11 @@ const testEnv = (
 // next/navigation is shared by many modules; a no-op redirect keeps
 // requireAdminSession's import chain resolvable in case anything
 // reaches for the real module despite our @/lib/admin/auth mock.
-mock.module('next/navigation', () => ({
+mockNextNavigation({
 	redirect: () => {
 		throw new Error('REDIRECT — not expected in upload route tests')
-	},
-	useRouter: () => ({ push: mock(), replace: mock(), prefetch: mock() }),
-	usePathname: () => '/',
-	useSearchParams: () => new URLSearchParams()
-}))
+	}
+})
 
 mock.module('@/lib/admin/auth', () => ({
 	requireAdminSession: async () => ({
@@ -71,14 +67,11 @@ describe('POST /api/admin/images/upload', () => {
 		// Re-apply navigation + auth mocks; tests/setup.ts runs
 		// mock.restore() in beforeEach which clears mock.module
 		// for some Bun versions.
-		mock.module('next/navigation', () => ({
+		mockNextNavigation({
 			redirect: () => {
 				throw new Error('REDIRECT')
-			},
-			useRouter: () => ({ push: mock(), replace: mock(), prefetch: mock() }),
-			usePathname: () => '/',
-			useSearchParams: () => new URLSearchParams()
-		}))
+			}
+		})
 		mock.module('@/lib/admin/auth', () => ({
 			requireAdminSession: async () => ({
 				user: { id: 'u1', role: 'admin' as const }

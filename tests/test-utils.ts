@@ -243,6 +243,50 @@ export function setupApiMocks() {
 	return { mockRateLimiter }
 }
 
+type NextNavigation = typeof import('next/navigation')
+
+/**
+ * The genuine next/navigation exports, captured by tests/setup.ts at preload
+ * before any test file can register a mock. Read from there rather than an
+ * import here: by the time this file loads, a sibling may already have
+ * swapped the module's exports in place.
+ */
+function realNextNavigation(): NextNavigation {
+	const real = (globalThis as { __REAL_NEXT_NAVIGATION__?: NextNavigation })
+		.__REAL_NEXT_NAVIGATION__
+	if (!real) {
+		throw new Error(
+			'tests/setup.ts must capture __REAL_NEXT_NAVIGATION__ before mockNextNavigation() runs'
+		)
+	}
+	return real
+}
+
+/**
+ * The ONLY sanctioned way to mock next/navigation in a test file.
+ * mock.module is process-global and bun fixes a module's export names on
+ * first load, so a partial factory (one without notFound / redirect) breaks
+ * every later importer with "Export named 'notFound' not found". This spreads
+ * the real module, stubs the client hooks, then applies `overrides`.
+ */
+export function mockNextNavigation(overrides: Partial<NextNavigation> = {}) {
+	const real = realNextNavigation()
+	mock.module('next/navigation', () => ({
+		...real,
+		useRouter: () => ({
+			push: mock(),
+			replace: mock(),
+			prefetch: mock(),
+			refresh: mock(),
+			back: mock(),
+			forward: mock()
+		}),
+		usePathname: () => '/',
+		useSearchParams: () => new URLSearchParams(),
+		...overrides
+	}))
+}
+
 /**
  * Setup common mocks for component tests with Next.js
  * Call this in beforeEach hooks
@@ -253,15 +297,7 @@ export function setupNextMocks() {
 	// Real next/link works perfectly in tests and uses native history API
 	// See: https://github.com/vercel/next.js/discussions/48110
 
-	mock.module('next/navigation', () => ({
-		useRouter: () => ({
-			push: mock(),
-			replace: mock(),
-			prefetch: mock()
-		}),
-		usePathname: () => '/',
-		useSearchParams: () => new URLSearchParams()
-	}))
+	mockNextNavigation()
 
 	mock.module('next/dynamic', () => ({
 		default: <P = Record<string, never>>(

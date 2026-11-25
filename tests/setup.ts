@@ -2,6 +2,7 @@
 import { GlobalRegistrator } from '@happy-dom/global-registrator'
 import '@testing-library/jest-dom'
 import { afterAll, afterEach, beforeAll, beforeEach, mock } from 'bun:test'
+import * as actualNavigation from 'next/navigation'
 
 // CRITICAL: Mock @/env BEFORE any other imports that depend on it
 // This prevents the real env module from validating environment variables
@@ -61,6 +62,18 @@ require('@/lib/auth/admin')
 	globalThis as { __REAL_APPLY_SECURITY_HEADERS__?: unknown }
 ).__REAL_APPLY_SECURITY_HEADERS__ =
 	require('@/lib/security-headers').applySecurityHeaders
+
+// Fix next/navigation's export list at preload. This ESM import is its first
+// evaluation, so every name (notFound, redirect, permanentRedirect, ...) is
+// fixed before any test file can register a partial factory; a CommonJS
+// require() would not fix the ESM export list. The snapshot is what
+// mockNextNavigation() in tests/test-utils.ts spreads, and the complete
+// mock below keeps the module whole for files that never mock it.
+const REAL_NEXT_NAVIGATION = { ...actualNavigation }
+;(
+	globalThis as { __REAL_NEXT_NAVIGATION__?: unknown }
+).__REAL_NEXT_NAVIGATION__ = REAL_NEXT_NAVIGATION
+mock.module('next/navigation', () => ({ ...REAL_NEXT_NAVIGATION }))
 
 // ===================================================================
 // TESTING CONVENTION: shared-module mocks (read before adding a mock)
