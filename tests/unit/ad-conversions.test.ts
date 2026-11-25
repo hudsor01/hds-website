@@ -6,18 +6,20 @@
  * the two no-op gates (unconfigured, and no Google click ID) that keep the
  * upload from firing for non-Google leads.
  */
-import { generateKeyPairSync } from 'node:crypto'
+
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
-import type { Attribution } from '@/lib/attribution'
+import { generateKeyPairSync } from 'node:crypto'
 import {
 	buildIngestPayload,
 	hashEmail,
 	hashPhone,
 	normalizeEmail,
 	normalizePhone,
+	resetTokenCache,
 	sendAdConversion,
 	sendSaleConversion
 } from '@/lib/ad-conversions'
+import type { Attribution } from '@/lib/attribution'
 
 // Pinned SHA-256 hex vectors (computed independently) to lock the algorithm.
 const SHA_TEST_EMAIL =
@@ -41,7 +43,9 @@ describe('normalizeEmail', () => {
 
 	it('strips dots from the local part for gmail / googlemail', () => {
 		expect(normalizeEmail('foo.bar@gmail.com')).toBe('foobar@gmail.com')
-		expect(normalizeEmail('foo.bar@googlemail.com')).toBe('foobar@googlemail.com')
+		expect(normalizeEmail('foo.bar@googlemail.com')).toBe(
+			'foobar@googlemail.com'
+		)
 	})
 
 	it('preserves dots for non-gmail domains', () => {
@@ -157,10 +161,7 @@ describe('buildIngestPayload', () => {
 		expect(noValue?.events[0]?.conversionValue).toBeUndefined()
 		expect(noValue?.events[0]?.currency).toBeUndefined()
 
-		const withValue = buildIngestPayload(
-			{ ...base, value: 1500 },
-			TEST_CONFIG
-		)
+		const withValue = buildIngestPayload({ ...base, value: 1500 }, TEST_CONFIG)
 		expect(withValue?.events[0]?.conversionValue).toBe(1500)
 		expect(withValue?.events[0]?.currency).toBe('USD')
 	})
@@ -217,11 +218,15 @@ describe('buildIngestPayload', () => {
 })
 
 describe('sendAdConversion (no-op gates)', () => {
-	const env = (globalThis as { __TEST_ENV?: Record<string, unknown> }).__TEST_ENV
+	const env = (globalThis as { __TEST_ENV?: Record<string, unknown> })
+		.__TEST_ENV
 	let originalFetch: typeof globalThis.fetch
 	let fetchSpy: ReturnType<typeof mock>
 
 	beforeEach(() => {
+		// The OAuth token cache is module-level; clear it so each test mints
+		// its own token regardless of test order.
+		resetTokenCache()
 		originalFetch = globalThis.fetch
 		fetchSpy = mock(() =>
 			Promise.resolve(
@@ -298,7 +303,8 @@ describe('sendAdConversion (no-op gates)', () => {
 })
 
 describe('sendAdConversion (live upload path)', () => {
-	const env = (globalThis as { __TEST_ENV?: Record<string, unknown> }).__TEST_ENV
+	const env = (globalThis as { __TEST_ENV?: Record<string, unknown> })
+		.__TEST_ENV
 	// A real RSA keypair so createSign('RSA-SHA256') can sign the JWT. The
 	// OAuth response is mocked, so the token is never actually verified.
 	const { privateKey } = generateKeyPairSync('rsa', {
@@ -309,6 +315,9 @@ describe('sendAdConversion (live upload path)', () => {
 	let originalFetch: typeof globalThis.fetch
 
 	beforeEach(() => {
+		// The OAuth token cache is module-level; clear it so each test mints
+		// its own token regardless of test order.
+		resetTokenCache()
 		originalFetch = globalThis.fetch
 		if (env) {
 			env.GOOGLE_ADS_CUSTOMER_ID = '1234567890'
@@ -331,26 +340,24 @@ describe('sendAdConversion (live upload path)', () => {
 
 	it('mints a token and POSTs the conversion with a Bearer header', async () => {
 		const calls: { url: string; auth: string | null }[] = []
-		globalThis.fetch = mock(
-			(input: RequestInfo | URL, init?: RequestInit) => {
-				const url = String(input)
-				calls.push({
-					url,
-					auth: new Headers(init?.headers).get('authorization')
-				})
-				if (url.includes('oauth2.googleapis.com')) {
-					return Promise.resolve(
-						new Response(
-							JSON.stringify({ access_token: 'tok_abc', expires_in: 3600 }),
-							{ status: 200 }
-						)
-					)
-				}
+		globalThis.fetch = mock((input: RequestInfo | URL, init?: RequestInit) => {
+			const url = String(input)
+			calls.push({
+				url,
+				auth: new Headers(init?.headers).get('authorization')
+			})
+			if (url.includes('oauth2.googleapis.com')) {
 				return Promise.resolve(
-					new Response(JSON.stringify({ requestId: 'req_1' }), { status: 200 })
+					new Response(
+						JSON.stringify({ access_token: 'tok_abc', expires_in: 3600 }),
+						{ status: 200 }
+					)
 				)
 			}
-		) as unknown as typeof globalThis.fetch
+			return Promise.resolve(
+				new Response(JSON.stringify({ requestId: 'req_1' }), { status: 200 })
+			)
+		}) as unknown as typeof globalThis.fetch
 
 		await sendAdConversion({
 			leadId: 'lead-1',
@@ -417,11 +424,15 @@ describe('sendAdConversion (live upload path)', () => {
 })
 
 describe('sendSaleConversion (separate Sale conversion action)', () => {
-	const env = (globalThis as { __TEST_ENV?: Record<string, unknown> }).__TEST_ENV
+	const env = (globalThis as { __TEST_ENV?: Record<string, unknown> })
+		.__TEST_ENV
 	let originalFetch: typeof globalThis.fetch
 	let fetchSpy: ReturnType<typeof mock>
 
 	beforeEach(() => {
+		// The OAuth token cache is module-level; clear it so each test mints
+		// its own token regardless of test order.
+		resetTokenCache()
 		originalFetch = globalThis.fetch
 		fetchSpy = mock(() =>
 			Promise.resolve(
