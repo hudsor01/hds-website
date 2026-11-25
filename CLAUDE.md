@@ -86,6 +86,7 @@
 - Available: `.glass-card`, `.glass-card-light`, `.hover-lift`, `.transition-smooth`, `.section-spacing`, `.card-padding` (`-sm` / `-lg` variants)
 - Focus styling is native via `:focus-visible` in globals.css — there is no `.focus-ring` class
 - Use CSS custom properties, not hard-coded values
+- **Light only.** No dark palette, no `.dark` class, no `dark:` utilities; `:root` sets `color-scheme: light` and `body` paints `--color-background` / `--color-foreground`. `tests/unit/css-class-hygiene.test.ts` fails on any `dark:` utility in `src/` and `e2e/dark-mode-comprehensive.spec.ts` asserts pages render the same under an OS dark preference
 
 **Component Layout:**
 - Imports first (types, React, third-party, local)
