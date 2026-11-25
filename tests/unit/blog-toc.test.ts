@@ -5,8 +5,8 @@
  */
 import { describe, expect, test } from 'bun:test'
 import { marked } from 'marked'
+import { BLOG_POSTS } from '@/lib/_generated/blog-posts'
 import { prepareBlogContent } from '@/lib/blog-toc'
-import { compilePosts } from '../../scripts/blog/build'
 
 const ENTITY = /&(#\d+|#x[0-9a-f]+|[a-z]+);/i
 
@@ -76,10 +76,10 @@ describe('prepareBlogContent', () => {
 	})
 
 	test('every published post has TOC links that resolve and plain labels', () => {
-		const posts = compilePosts()
-		expect(posts.length).toBeGreaterThan(0)
+		// The module test:unit compiles first: exactly what the site renders.
+		expect(BLOG_POSTS.length).toBeGreaterThan(0)
 		const problems: string[] = []
-		for (const post of posts) {
+		for (const post of BLOG_POSTS) {
 			const { html, toc } = prepareBlogContent(post.content)
 			for (const item of toc) {
 				const count =
@@ -97,7 +97,7 @@ describe('prepareBlogContent', () => {
 	})
 
 	test('the posts from the QA report now resolve', () => {
-		const bySlug = new Map(compilePosts().map(post => [post.slug, post]))
+		const bySlug = new Map(BLOG_POSTS.map(post => [post.slug, post]))
 		const spf = bySlug.get('spf-dkim-dmarc-for-small-business-email')
 		const justWorks = bySlug.get(
 			'beyond-just-works-why-businesses-need-websites-that-dominate'
