@@ -92,6 +92,20 @@
 	--color-border-subtle: oklch(0.93 0.01 255);
 	--color-border-strong: oklch(0.75 0.02 255);
 
+	/* Spacing roles. Theme tokens, not one-off @utility blocks, so every
+	 * spacing utility and axis exists (gap-x-content, pt-comfortable,
+	 * mt-content-block, space-y-tight ...). */
+	--spacing-tight: 0.5rem;
+	--spacing-subheading: 0.5rem;
+	--spacing-content: 1rem;
+	--spacing-heading: 1rem;
+	--spacing-card-content: 1.25rem;
+	--spacing-comfortable: 1.5rem;
+	--spacing-content-block: 2rem;
+	--spacing-sections: 3rem;
+	--spacing-section-sm: 3rem;
+	--spacing-section: 5rem;
+
 	/* Radius */
 	--radius: 0.625rem;
 
@@ -541,29 +555,10 @@ button,
 	background-size: var(--grid-size, 3rem) var(--grid-size, 3rem);
 }
 
-/* Spacing utilities */
+/* Spacing utilities. The role scale (gap-*, m*-*, p*-*, space-y-*) comes
+ * from the --spacing-* theme tokens; only multi-value shorthands live here. */
 @utility section-spacing {
 	padding-block: 6rem;
-}
-@utility gap-tight {
-	gap: 0.5rem;
-}
-@utility gap-content {
-	gap: 1rem;
-}
-@utility gap-comfortable {
-	gap: 1.5rem;
-}
-@utility gap-sections {
-	gap: 3rem;
-}
-
-/* Section padding */
-@utility py-section {
-	padding-block: 5rem;
-}
-@utility py-section-sm {
-	padding-block: 3rem;
 }
 
 /* Card padding sizes */
@@ -577,56 +572,9 @@ button,
 	padding: 2rem;
 }
 
-/* Margin bottom scale */
-@utility mb-subheading {
-	margin-bottom: 0.5rem;
-}
-@utility mb-heading {
-	margin-bottom: 1rem;
-}
-@utility mb-comfortable {
-	margin-bottom: 1.5rem;
-}
-@utility mb-content-block {
-	margin-bottom: 2rem;
-}
-@utility mb-card-content {
-	margin-bottom: 1.25rem;
-}
-
-/* Margin top scale */
-@utility mt-heading {
-	margin-top: 1rem;
-}
-@utility mt-card-content {
-	margin-top: 1.25rem;
-}
-
 /* Padding */
 @utility p-button {
 	padding: 0.625rem 1rem;
-}
-
-/* Vertical spacing stacks */
-@utility space-y-tight {
-	& > :not(:first-child) {
-		margin-top: 0.5rem;
-	}
-}
-@utility space-y-content {
-	& > :not(:first-child) {
-		margin-top: 1rem;
-	}
-}
-@utility space-y-comfortable {
-	& > :not(:first-child) {
-		margin-top: 1.5rem;
-	}
-}
-@utility space-y-sections {
-	& > :not(:first-child) {
-		margin-top: 3rem;
-	}
 }
 
 /* Z-index scale */

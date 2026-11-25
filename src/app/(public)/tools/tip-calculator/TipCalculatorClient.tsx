@@ -321,7 +321,7 @@ export default function TipCalculatorClient() {
 			</div>
 
 			{/* Educational Content */}
-			<div className="mt-8 space-y-4 border-t border-border pt-8">
+			<div className="space-y-4 border-t border-border pt-8">
 				<h2 className="text-lg font-semibold text-foreground">Tipping Guide</h2>
 
 				<div className="grid gap-4 sm:grid-cols-2">

@@ -654,7 +654,7 @@ export default function ContractGeneratorClient() {
 			/>
 
 			{/* Educational Content */}
-			<div className="mt-heading space-y-content border-t border-border pt-8">
+			<div className="space-y-content border-t border-border pt-8">
 				<h2 className="text-lg font-semibold text-foreground">Contract Tips</h2>
 
 				<div className="grid gap-content sm:grid-cols-2">
