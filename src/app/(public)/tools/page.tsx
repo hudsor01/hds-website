@@ -114,7 +114,7 @@ export default function ToolsPage() {
 									asChild
 									variant="outline"
 									size="xl"
-									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+									className="border-2 border-foreground/25 hover:border-accent"
 								>
 									<Link href="/services">View Services</Link>
 								</Button>

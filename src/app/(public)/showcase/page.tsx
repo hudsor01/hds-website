@@ -220,7 +220,7 @@ export default function ShowcasePage() {
 							asChild
 							variant="outline"
 							size="xl"
-							className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+							className="border-2 border-foreground/25 hover:border-accent"
 						>
 							<Link href="/services">
 								View Services
@@ -280,7 +280,7 @@ export default function ShowcasePage() {
 									asChild
 									variant="outline"
 									size="xl"
-									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+									className="border-2 border-foreground/25 hover:border-accent"
 								>
 									<Link href="/services">
 										View Services

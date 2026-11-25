@@ -83,7 +83,7 @@ export default function ServicesPage() {
 							asChild
 							variant="outline"
 							size="xl"
-							className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+							className="border-2 border-foreground/25 hover:border-accent"
 						>
 							<Link href="#process">See My Process</Link>
 						</Button>
@@ -197,7 +197,7 @@ export default function ServicesPage() {
 									asChild
 									variant="outline"
 									size="xl"
-									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+									className="border-2 border-foreground/25 hover:border-accent"
 								>
 									<Link href="#services-list">View Services</Link>
 								</Button>

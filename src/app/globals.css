@@ -81,14 +81,14 @@
 	/* Overlays */
 	--color-bg-overlay: oklch(0.15 0.02 260 / 0.85);
 
-	/* Surface elevation (light) — dark variants live in the .dark block */
+	/* Surface elevation */
 	--color-surface-base: oklch(0.985 0.002 90);
 	--color-surface-raised: oklch(0.995 0.001 90);
 	--color-surface-elevated: oklch(1 0 0);
 	--color-surface-overlay: oklch(0.97 0.005 255);
 	--color-surface-sunken: oklch(0.955 0.008 90);
 
-	/* Semantic border tokens (light) — dark variants live in the .dark block */
+	/* Semantic border tokens */
 	--color-border-subtle: oklch(0.93 0.01 255);
 	--color-border-strong: oklch(0.75 0.02 255);
 
@@ -189,85 +189,10 @@
 }
 
 :root {
+	/* Light only. There is no dark palette, no .dark class and no
+	 * dark: utilities: the site renders the same under an OS dark
+	 * preference, and native controls and scrollbars stay light. */
 	color-scheme: light;
-}
-
-.dark {
-	color-scheme: dark;
-
-	/* Base surfaces */
-	--color-background: oklch(0.12 0.015 260);
-	--color-foreground: oklch(0.94 0.008 90);
-	--color-card: oklch(0.16 0.018 260);
-	--color-card-foreground: oklch(0.94 0.008 90);
-	--color-popover: oklch(0.16 0.018 260);
-	--color-popover-foreground: oklch(0.94 0.008 90);
-
-	/* Primary - Slate Blue (dark) */
-	--color-primary: oklch(0.72 0.13 255);
-	--color-primary-foreground: oklch(0.12 0.015 260);
-
-	/* Secondary (dark) */
-	--color-secondary: oklch(0.22 0.02 260);
-	--color-secondary-foreground: oklch(0.92 0.008 90);
-
-	/* Muted (dark) */
-	--color-muted: oklch(0.2 0.015 260);
-	--color-muted-foreground: oklch(0.85 0.015 90);
-
-	/* Accent - Warm Amber (dark) */
-	--color-accent: oklch(0.78 0.13 65);
-	--color-accent-foreground: oklch(0.15 0.02 65);
-	/* Light tint of accent works for small text on dark backgrounds; the
-	 * usage rule is the same as light mode (small/medium non-bold copy
-	 * uses --color-accent-text instead of --color-accent). */
-	--color-accent-text: oklch(0.85 0.13 65);
-
-	/* Semantic colors (dark) */
-	--color-destructive: oklch(0.65 0.18 25);
-	--color-destructive-foreground: oklch(0.98 0.005 25);
-
-	/* Borders & inputs (dark) */
-	--color-border: oklch(0.28 0.02 260);
-	--color-input: oklch(0.18 0.015 260);
-	--color-ring: oklch(0.72 0.13 255);
-
-	/* Overlays (dark) */
-	--color-bg-overlay: oklch(0.08 0.01 260 / 0.85);
-
-	/* Text hierarchy (dark) */
-	--color-text-inverted: oklch(0.15 0.015 260);
-	--color-text-primary: oklch(0.94 0.008 90);
-	--color-text-secondary: oklch(0.78 0.012 90);
-	--color-text-muted: oklch(0.65 0.01 90);
-
-	/* Surface elevation (dark) */
-	--color-surface-base: oklch(0.12 0.015 260);
-	--color-surface-raised: oklch(0.16 0.018 260);
-	--color-surface-elevated: oklch(0.2 0.022 260);
-	--color-surface-overlay: oklch(0.14 0.016 260);
-	--color-surface-sunken: oklch(0.1 0.012 260);
-
-	/* Semantic border tokens (dark) */
-	--color-border-subtle: oklch(0.22 0.015 260);
-	--color-border-strong: oklch(0.38 0.025 260);
-
-	/* Status color overrides (dark) — light/muted become dark tints, text becomes bright */
-	--color-destructive-light: oklch(0.22 0.06 25);
-	--color-destructive-muted: oklch(0.2 0.05 25);
-	--color-destructive-text: oklch(0.72 0.16 25);
-
-	--color-success-light: oklch(0.22 0.07 150);
-	--color-success-muted: oklch(0.2 0.06 150);
-	--color-success-text: oklch(0.68 0.14 150);
-
-	--color-warning-light: oklch(0.26 0.07 80);
-	--color-warning-muted: oklch(0.23 0.06 80);
-	--color-warning-text: oklch(0.76 0.13 80);
-
-	--color-info-light: oklch(0.22 0.06 245);
-	--color-info-muted: oklch(0.2 0.05 245);
-	--color-info-text: oklch(0.68 0.13 245);
 }
 
 /* Base styles */

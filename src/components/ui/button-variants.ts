@@ -30,13 +30,13 @@ export const buttonVariants = cva(
 				default:
 					'bg-primary text-primary-foreground shadow-sm hover:bg-primary/80 active:bg-primary/70',
 				destructive:
-					'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/80 active:bg-destructive/75 dark:bg-destructive/60',
+					'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/80 active:bg-destructive/75',
 				success:
 					'bg-success text-success-foreground shadow-sm hover:bg-success/90 active:bg-success/80',
 				accent:
 					'bg-accent text-accent-foreground shadow-sm hover:bg-accent/85 active:bg-accent/75',
 				outline:
-					'border border-border bg-background text-foreground shadow-xs hover:bg-accent hover:text-accent-foreground active:bg-accent/15 dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
+					'border border-border bg-background text-foreground shadow-xs hover:bg-accent hover:text-accent-foreground active:bg-accent/15',
 				secondary:
 					'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 active:bg-secondary/70',
 				muted:

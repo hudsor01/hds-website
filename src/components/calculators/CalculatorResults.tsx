@@ -194,10 +194,10 @@ export function CalculatorResults({
 						className="h-5 w-5 text-success-text"
 						aria-hidden="true"
 					/>
-					<AlertTitle className="text-success-text dark:text-success-text">
+					<AlertTitle className="text-success-text">
 						Thanks, your results are on the way
 					</AlertTitle>
-					<AlertDescription className="text-success-text dark:text-success-text">
+					<AlertDescription className="text-success-text">
 						They should reach your inbox in a few minutes.
 					</AlertDescription>
 				</Alert>

@@ -183,7 +183,7 @@ export default function RootLayout({
 							<SpeedInsights />
 							<WebVitalsReporting />
 						</ErrorBoundary>
-						<Toaster position="top-right" richColors theme="dark" />
+						<Toaster position="top-right" richColors theme="light" />
 					</ClientProviders>
 				</NuqsAdapter>
 			</body>

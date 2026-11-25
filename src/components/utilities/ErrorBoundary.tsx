@@ -251,13 +251,11 @@ export function ComponentErrorBoundary({
 	return (
 		<ErrorBoundary
 			fallback={({ resetErrorBoundary }) => (
-				<div className="bg-warning/10 dark:bg-warning/20 border border-warning/30 dark:border-warning/40 rounded-lg">
-					<p className="text-sm text-warning dark:text-warning">
-						Failed to load {name}
-					</p>
+				<div className="bg-warning/10 border border-warning/30 rounded-lg">
+					<p className="text-sm text-warning-text">Failed to load {name}</p>
 					<button
 						onClick={resetErrorBoundary}
-						className="mt-2 text-xs text-warning hover:text-warning dark:text-warning dark:hover:text-warning"
+						className="mt-2 text-xs text-warning-text hover:underline underline-offset-4"
 					>
 						Retry
 					</button>

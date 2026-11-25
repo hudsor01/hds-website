@@ -190,7 +190,7 @@ export default function WebsiteMigrationPage() {
 								asChild
 								variant="outline"
 								size="xl"
-								className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+								className="border-2 border-foreground/25 hover:border-accent"
 							>
 								<a href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}>
 									<Phone className="w-4 h-4" />
@@ -434,7 +434,7 @@ export default function WebsiteMigrationPage() {
 										asChild
 										variant="outline"
 										size="xl"
-										className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+										className="border-2 border-foreground/25 hover:border-accent"
 									>
 										<a href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}>
 											<Phone className="w-5 h-5" />

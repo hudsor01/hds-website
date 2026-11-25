@@ -128,7 +128,7 @@ export default function HomePage() {
 									asChild
 									variant="outline"
 									size="xl"
-									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+									className="border-2 border-foreground/25 hover:border-accent"
 								>
 									<Link href={ROUTES.SHOWCASE}>See Recent Work</Link>
 								</Button>
@@ -396,7 +396,7 @@ export default function HomePage() {
 								asChild
 								variant="outline"
 								size="xl"
-								className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+								className="border-2 border-foreground/25 hover:border-accent"
 							>
 								<Link href={ROUTES.SHOWCASE}>View Showcase</Link>
 							</Button>

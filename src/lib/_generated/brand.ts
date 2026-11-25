@@ -1,9 +1,9 @@
 // AUTO-GENERATED FROM src/app/globals.css — DO NOT EDIT MANUALLY.
 // Regenerate with: bun run brand:generate
 //
-// Source: src/app/globals.css @theme {} (light) and .dark {} (dark)
+// Source: src/app/globals.css @theme {}
 // Conversion: OKLCH -> sRGB hex (Bjorn Ottosson formulas, hand-rolled, no deps)
-// Last generated: 2026-05-28T23:22:53.977Z
+// Last generated: 2026-11-25T23:01:28.968Z
 
 export const BRAND = {
 	background: '#fafaf9', // --color-background

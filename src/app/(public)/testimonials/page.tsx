@@ -178,7 +178,7 @@ export default async function TestimonialsPage() {
 									asChild
 									variant="outline"
 									size="xl"
-									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+									className="border-2 border-foreground/25 hover:border-accent"
 								>
 									<Link href="/showcase">View Showcase</Link>
 								</Button>

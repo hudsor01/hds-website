@@ -450,7 +450,7 @@ export default function AboutPage() {
 									asChild
 									variant="outline"
 									size="xl"
-									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+									className="border-2 border-foreground/25 hover:border-accent"
 								>
 									<Link href="/services">View Services</Link>
 								</Button>
@@ -460,7 +460,7 @@ export default function AboutPage() {
 										asChild
 										variant="outline"
 										size="xl"
-										className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+										className="border-2 border-foreground/25 hover:border-accent"
 									>
 										<a href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}>
 											<Phone className="w-5 h-5" />
