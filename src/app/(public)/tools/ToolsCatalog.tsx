@@ -130,7 +130,7 @@ export default function ToolsCatalog() {
 
 									<Link
 										href={tool.href}
-										className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
+										className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text hover:underline underline-offset-4 transition-colors"
 									>
 										{tool.cta}
 										<ArrowRight className="h-4 w-4" />

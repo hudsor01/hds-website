@@ -183,7 +183,7 @@ function NewsletterSignupContent({
 	if (variant === 'section') {
 		return (
 			<div className="text-center">
-				<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+				<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 					Stay in the loop
 				</p>
 				<h2 className="text-section-title text-foreground mb-3 text-balance">

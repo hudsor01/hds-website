@@ -186,7 +186,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 											return (
 												<Link
 													href={href}
-													className="text-accent hover:underline"
+													className="text-accent-text hover:underline"
 												>
 													{children}
 												</Link>
@@ -197,7 +197,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 												href={href ?? '#'}
 												target="_blank"
 												rel="noopener noreferrer"
-												className="text-accent hover:underline"
+												className="text-accent-text hover:underline"
 											>
 												{children}
 											</a>
@@ -281,7 +281,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 											<ChevronLeft className="size-4" />
 											Previous
 										</div>
-										<p className="font-medium text-foreground group-hover:text-accent transition-colors">
+										<p className="font-medium text-foreground group-hover:text-accent-text transition-colors">
 											{prev.title}
 										</p>
 									</div>
@@ -296,7 +296,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 											Next
 											<ChevronRight className="size-4" />
 										</div>
-										<p className="font-medium text-foreground group-hover:text-accent transition-colors">
+										<p className="font-medium text-foreground group-hover:text-accent-text transition-colors">
 											{next.title}
 										</p>
 									</div>

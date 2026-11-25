@@ -81,7 +81,7 @@ export default function FreeMockupPage() {
 					</Link>
 					<a
 						href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}
-						className="flex items-center gap-2 text-sm text-muted-foreground hover:text-accent transition-colors"
+						className="flex items-center gap-2 text-sm text-muted-foreground hover:text-accent-text transition-colors"
 					>
 						<Phone className="h-4 w-4" aria-hidden="true" />
 						<span>{BUSINESS_INFO.phone}</span>
@@ -98,7 +98,7 @@ export default function FreeMockupPage() {
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 						{/* LEFT: the offer */}
 						<div>
-							<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 								Free Website Mockup
 							</p>
 							<h1 className="text-page-title text-foreground leading-tight text-balance">
@@ -128,7 +128,7 @@ export default function FreeMockupPage() {
 								{STEPS.map((step, index) => (
 									<div key={step.title} className="flex items-start gap-4">
 										<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-											<span className="text-accent font-bold text-sm">
+											<span className="text-accent-text font-bold text-sm">
 												{index + 1}
 											</span>
 										</div>

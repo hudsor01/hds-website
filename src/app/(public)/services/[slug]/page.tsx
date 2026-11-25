@@ -137,7 +137,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 					</Breadcrumb>
 
 					<div className="text-center">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							{service.title}
 						</p>
 						<h1 className="text-page-title text-foreground leading-tight text-balance mb-6">
@@ -192,7 +192,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			>
 				<div className="container-wide max-w-5xl mx-auto">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							What You Get
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
@@ -227,7 +227,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide max-w-3xl mx-auto">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Questions
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
@@ -246,7 +246,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 					</div>
 					<p className="text-sm text-muted-foreground text-center mt-8">
 						More answers on the{' '}
-						<Link href="/faq" className="text-accent hover:underline">
+						<Link href="/faq" className="text-accent-text hover:underline">
 							FAQ page
 						</Link>
 						.
@@ -264,7 +264,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 							</h2>
 							<Link
 								href={`/blog/tag/${service.blogTag}`}
-								className="text-accent hover:underline inline-flex items-center gap-1"
+								className="text-accent-text hover:underline inline-flex items-center gap-1"
 							>
 								More posts on this topic
 								<ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -292,7 +292,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 								href={`/services/${other.slug}`}
 								className="group rounded-xl border border-border bg-surface-raised p-8 hover:border-accent transition-colors"
 							>
-								<h3 className="text-h4 text-foreground mb-2 group-hover:text-accent transition-colors">
+								<h3 className="text-h4 text-foreground mb-2 group-hover:text-accent-text transition-colors">
 									{other.title}
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed">

@@ -16,7 +16,7 @@ export async function BlogArchive({ page }: BlogArchiveProps) {
 	return (
 		<>
 			<div className="mb-10">
-				<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+				<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 					All Articles
 				</p>
 				<h2 className="text-section-title text-foreground mb-comfortable text-balance">

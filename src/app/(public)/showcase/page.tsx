@@ -60,7 +60,7 @@ async function ShowcaseProjects() {
 								className="bg-background px-8 py-10 text-center relative overflow-hidden"
 							>
 								<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
-								<div className="text-4xl lg:text-5xl font-black text-accent mb-2 font-sans tabular-nums">
+								<div className="text-4xl lg:text-5xl font-black text-accent-text mb-2 font-sans tabular-nums">
 									{stat.value}
 								</div>
 								<div className="text-sm text-muted-foreground">
@@ -82,7 +82,7 @@ async function ShowcaseProjects() {
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 							Real projects.{' '}
-							<span className="text-accent">One thing in common.</span>
+							<span className="text-accent-text">One thing in common.</span>
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 							I built each site around how the business actually makes money,
@@ -260,7 +260,7 @@ export default function ShowcasePage() {
 								    projects in server HTML, so an h3 here read as h1 > h3. */}
 							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready to be the{' '}
-								<span className="text-accent">next one on this page?</span>
+								<span className="text-accent-text">next one on this page?</span>
 							</h2>
 
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">

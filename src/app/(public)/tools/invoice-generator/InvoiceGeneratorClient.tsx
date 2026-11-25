@@ -285,7 +285,7 @@ export default function InvoiceGeneratorClient() {
 					</div>
 					<div className="flex justify-between gap-content">
 						<dt className="text-muted-foreground">Total</dt>
-						<dd className="font-bold text-accent">
+						<dd className="font-bold text-accent-text">
 							{formatCents(totals.totalCents)}
 						</dd>
 					</div>
@@ -497,7 +497,7 @@ export default function InvoiceGeneratorClient() {
 						<button
 							type="button"
 							onClick={addLineItem}
-							className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
+							className="flex items-center gap-1 text-sm text-accent-text hover:underline underline-offset-4"
 						>
 							<Plus className="w-4 h-4" aria-hidden="true" />
 							Add Item
@@ -668,7 +668,7 @@ export default function InvoiceGeneratorClient() {
 								<span className="text-lg font-semibold text-foreground">
 									Total
 								</span>
-								<span className="text-xl font-bold text-accent">
+								<span className="text-xl font-bold text-accent-text">
 									{formatCents(totals.totalCents)}
 								</span>
 							</div>
@@ -747,7 +747,7 @@ export default function InvoiceGeneratorClient() {
 								href={IRS_RECORDS_URL}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="text-accent underline underline-offset-2 hover:text-accent/80"
+								className="text-accent-text underline underline-offset-2 hover:decoration-2"
 							>
 								See how long the IRS says to keep records
 							</a>

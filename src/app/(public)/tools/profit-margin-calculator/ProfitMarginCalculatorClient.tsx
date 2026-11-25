@@ -33,7 +33,7 @@ function ResultRow({ label, value, emphasis }: ResultRowProps) {
 			<span
 				className={
 					emphasis
-						? 'text-lg font-bold text-accent tabular-nums'
+						? 'text-lg font-bold text-accent-text tabular-nums'
 						: 'text-sm font-semibold text-foreground tabular-nums'
 				}
 			>

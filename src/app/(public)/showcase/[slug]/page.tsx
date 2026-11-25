@@ -94,7 +94,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20">
 					<div className="mb-4">
-						<span className="px-3 py-1 bg-accent/10 border border-accent/20 rounded-full text-accent text-sm font-semibold">
+						<span className="px-3 py-1 bg-accent/10 border border-accent/20 rounded-full text-accent-text text-sm font-semibold">
 							{item.industry ?? item.category}{' '}
 							{item.projectType && `\u2022 ${item.projectType}`}
 						</span>
@@ -138,7 +138,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 									className="bg-background px-8 py-10 text-center relative overflow-hidden"
 								>
 									<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
-									<div className="text-4xl font-black text-accent mb-2 tabular-nums">
+									<div className="text-4xl font-black text-accent-text mb-2 tabular-nums">
 										{metric.value}
 									</div>
 									<div className="text-sm text-muted-foreground">
@@ -218,7 +218,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 														href={item.externalLink}
 														target="_blank"
 														rel="noopener"
-														className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors"
+														className="inline-flex items-center gap-tight text-accent-text hover:underline underline-offset-4 transition-colors"
 													>
 														View Live Project
 														<ExternalLink className="w-4 h-4" />
@@ -276,7 +276,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 													href={item.externalLink}
 													target="_blank"
 													rel="noopener"
-													className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors"
+													className="inline-flex items-center gap-tight text-accent-text hover:underline underline-offset-4 transition-colors"
 												>
 													View Live Project
 													<ExternalLink className="w-4 h-4" />
@@ -286,7 +286,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 														href={item.githubLink}
 														target="_blank"
 														rel="noopener noreferrer"
-														className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors"
+														className="inline-flex items-center gap-tight text-accent-text hover:underline underline-offset-4 transition-colors"
 													>
 														View Source Code
 														<ExternalLink className="w-4 h-4" />
@@ -330,7 +330,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 									{item.testimonialAuthor && (
 										<div className="flex items-center gap-content">
 											<div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center">
-												<span className="text-accent font-bold text-2xl">
+												<span className="text-accent-text font-bold text-2xl">
 													{item.testimonialAuthor.charAt(0)}
 												</span>
 											</div>

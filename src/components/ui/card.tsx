@@ -157,7 +157,7 @@ function Card(props: CardProps) {
 							{href ? (
 								<Link
 									href={href}
-									className="hover:text-accent transition-colors"
+									className="hover:text-accent-text transition-colors"
 								>
 									{title}
 								</Link>
@@ -175,6 +175,7 @@ function Card(props: CardProps) {
 						{features.map((feature, index) => (
 							<li key={index} className="flex items-start space-x-3">
 								<svg
+									aria-hidden="true"
 									className="w-5 h-5 text-accent mt-0.5 shrink-0"
 									fill="currentColor"
 									viewBox="0 0 20 20"
@@ -229,10 +230,10 @@ function Card(props: CardProps) {
 				>
 					{/* Header Section */}
 					<div className="text-center mb-comfortable">
-						<h3 className="text-h4 text-foreground mb-subheading text-balance group-hover:text-accent transition-colors">
+						<h3 className="text-h4 text-foreground mb-subheading text-balance group-hover:text-accent-text transition-colors">
 							{name}
 						</h3>
-						<div className="text-section-title font-black text-accent mb-subheading">
+						<div className="text-section-title font-black text-accent-text mb-subheading">
 							{price}
 						</div>
 						<div className="typography">
@@ -382,7 +383,7 @@ function Card(props: CardProps) {
 					{/* Category row: badges + featured tag (suppressed when image overlay carries them) */}
 					{!hasImage && (
 						<div className="flex items-center gap-2 flex-wrap">
-							<span className="text-xs font-semibold uppercase tracking-widest text-accent">
+							<span className="text-xs font-semibold uppercase tracking-widest text-accent-text">
 								{category}
 							</span>
 							{showcaseType && (
@@ -390,7 +391,7 @@ function Card(props: CardProps) {
 									className={cn(
 										'px-2 py-0.5 rounded-full text-xs font-semibold border',
 										showcaseType === 'detailed'
-											? 'bg-accent/10 text-accent border-accent/20'
+											? 'bg-accent/10 text-accent-text border-accent/20'
 											: 'bg-muted text-muted-foreground border-border'
 									)}
 								>
@@ -406,7 +407,7 @@ function Card(props: CardProps) {
 					)}
 
 					{/* Title */}
-					<h3 className="text-xl lg:text-2xl font-black text-foreground leading-tight group-hover:text-accent transition-colors">
+					<h3 className="text-xl lg:text-2xl font-black text-foreground leading-tight group-hover:text-accent-text transition-colors">
 						{title}
 					</h3>
 
@@ -446,7 +447,7 @@ function Card(props: CardProps) {
 					)}
 
 					{/* View link hint — visible on hover */}
-					<div className="flex items-center gap-1.5 text-sm font-semibold text-accent opacity-0 group-hover:opacity-100 transition-opacity">
+					<div className="flex items-center gap-1.5 text-sm font-semibold text-accent-text opacity-0 group-hover:opacity-100 transition-opacity">
 						View Project
 						<ArrowRight className="w-4 h-4" aria-hidden="true" />
 					</div>
@@ -534,7 +535,7 @@ function Card(props: CardProps) {
 						className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex-center shrink-0"
 						aria-hidden="true"
 					>
-						<span className="text-accent font-bold text-sm">
+						<span className="text-accent-text font-bold text-sm">
 							{name
 								.split(' ')
 								.filter(Boolean)
@@ -550,7 +551,7 @@ function Card(props: CardProps) {
 							{role} at {company}
 						</div>
 						{service && (
-							<div className="text-xs text-accent mt-2">{service}</div>
+							<div className="text-xs text-accent-text mt-2">{service}</div>
 						)}
 					</div>
 				</div>

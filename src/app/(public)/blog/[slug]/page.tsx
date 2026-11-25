@@ -230,7 +230,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 											<Link
 												key={tag.id}
 												href={`/blog/tag/${tag.slug}`}
-												className="flex flex-center gap-1 text-sm text-accent bg-accent/10 hover:bg-accent/20 px-3 py-1 rounded-full transition-colors"
+												className="flex flex-center gap-1 text-sm text-accent-text bg-accent/10 hover:bg-accent/20 px-3 py-1 rounded-full transition-colors"
 											>
 												<Tag className="w-4 h-4" />
 												{tag.name}
@@ -320,7 +320,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 				<div className="container-wide py-8">
 					<div className="mx-auto max-w-5xl">
 						<aside className="max-w-3xl rounded-xl border border-border bg-surface-raised p-8">
-							<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">
+							<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-2">
 								Related Service
 							</p>
 							<h2 className="text-h4 text-foreground mb-2">
@@ -331,7 +331,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 							</p>
 							<Link
 								href={`/services/${relatedService.slug}`}
-								className="inline-flex items-center gap-1 text-accent hover:underline"
+								className="inline-flex items-center gap-1 text-accent-text hover:underline"
 							>
 								See how it works
 								<ArrowRight className="h-4 w-4" aria-hidden="true" />

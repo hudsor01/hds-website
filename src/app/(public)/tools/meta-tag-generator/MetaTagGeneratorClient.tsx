@@ -366,7 +366,7 @@ export default function MetaTagGeneratorClient() {
 							onKeyDown={handleTabKeyDown}
 							className={`flex items-center gap-tight px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
 								selected
-									? 'border-accent text-accent'
+									? 'border-accent text-accent-text'
 									: 'border-transparent text-muted-foreground hover:text-foreground'
 							}`}
 						>
@@ -498,7 +498,7 @@ function TipCard({ title, href, source, children }: TipCardProps) {
 				href={href}
 				target="_blank"
 				rel="noopener noreferrer"
-				className="mt-2 inline-flex items-center gap-1 text-sm text-accent hover:underline"
+				className="mt-2 inline-flex items-center gap-1 text-sm text-accent-text hover:underline"
 			>
 				Source: {source}
 				<span className="sr-only"> (opens in a new tab)</span>

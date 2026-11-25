@@ -98,7 +98,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 					aria-hidden="true"
 				/>
 				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center max-w-4xl mx-auto">
-					<div className="flex items-center justify-center gap-2 mb-4 text-accent">
+					<div className="flex items-center justify-center gap-2 mb-4 text-accent-text">
 						<MapPin className="h-4 w-4" aria-hidden="true" />
 						<span className="text-xs font-semibold uppercase tracking-widest">
 							{location.city}, {location.stateCode}
@@ -117,7 +117,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide max-w-4xl mx-auto">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							What I Offer
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
@@ -146,7 +146,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			<section className="py-section-sm px-4 sm:px-6 bg-surface-sunken">
 				<div className="container-wide max-w-4xl mx-auto">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Coverage
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">

@@ -16,7 +16,7 @@ export function BackLink({ href, label }: BackLinkProps) {
 		<div className="container-wide px-4 sm:px-6 py-8">
 			<Link
 				href={href}
-				className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors"
+				className="inline-flex items-center gap-tight text-accent-text hover:underline underline-offset-4 transition-colors"
 			>
 				<ArrowLeft className="w-5 h-5" />
 				{label}

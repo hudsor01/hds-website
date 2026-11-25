@@ -54,10 +54,10 @@ export function ProcessSteps() {
 							<step.icon className="w-5 h-5 text-accent" />
 						</div>
 					</div>
-					<div className="text-accent font-bold text-sm mb-2 uppercase tracking-widest">
+					<div className="text-accent-text font-bold text-sm mb-2 uppercase tracking-widest">
 						{step.step}
 					</div>
-					<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent transition-colors">
+					<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent-text transition-colors">
 						{step.title}
 					</h3>
 					<p className="text-sm text-muted-foreground leading-relaxed">

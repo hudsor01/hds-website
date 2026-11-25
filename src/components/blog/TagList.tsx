@@ -29,7 +29,7 @@ export function TagList({ tags, activeSlug }: TagListProps) {
 							'flex items-center gap-1 text-sm px-3 py-1 border rounded-md transition-colors',
 							isActive
 								? 'text-accent-foreground bg-accent border-accent'
-								: 'text-accent border-accent/30 hover:text-accent-foreground hover:bg-accent'
+								: 'text-accent-text border-accent/30 hover:text-accent-foreground hover:bg-accent'
 						)}
 					>
 						<Tag className="w-4 h-4" />

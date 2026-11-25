@@ -200,7 +200,7 @@ export default function InvoiceLateFeeCalculatorClient() {
 				<>
 					<div>
 						<div className="text-xs text-muted-foreground">Late fee</div>
-						<div className="text-3xl font-bold text-accent tabular-nums">
+						<div className="text-3xl font-bold text-accent-text tabular-nums">
 							{USD.format(result.lateFee)}
 						</div>
 					</div>

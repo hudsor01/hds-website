@@ -221,7 +221,7 @@ export default function TipCalculatorClient() {
 						{/* Per Person (if splitting) */}
 						{result.splitCount > 1 && (
 							<Card className="bg-accent/10 border-accent/20">
-								<h2 className="text-sm font-medium text-accent mb-4">
+								<h2 className="text-sm font-medium text-accent-text mb-4">
 									Per Person ({result.splitCount} people)
 								</h2>
 								<div className="grid grid-cols-3 gap-4">
@@ -245,7 +245,7 @@ export default function TipCalculatorClient() {
 										<div className="text-sm text-muted-foreground mb-1">
 											Total
 										</div>
-										<div className="text-xl font-bold text-accent">
+										<div className="text-xl font-bold text-accent-text">
 											{formatCurrency(fromCents(result.perPersonTotalCents))}
 										</div>
 									</div>
@@ -288,7 +288,7 @@ export default function TipCalculatorClient() {
 									<span className="font-semibold text-foreground">
 										Bill plus tip
 									</span>
-									<span className="text-2xl font-bold text-accent">
+									<span className="text-2xl font-bold text-accent-text">
 										{formatCurrency(fromCents(result.totalCents))}
 									</span>
 								</div>

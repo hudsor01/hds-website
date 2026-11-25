@@ -43,11 +43,11 @@ export default function FaqClient() {
 					aria-hidden="true"
 				/>
 				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						FAQ
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
-						Frequently Asked <span className="text-accent">Questions</span>
+						Frequently Asked <span className="text-accent-text">Questions</span>
 					</h1>
 
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-8">

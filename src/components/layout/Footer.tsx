@@ -87,7 +87,7 @@ export default function Footer() {
 									<Rocket className="w-7 h-7 text-accent" />
 									<p className="text-h4 font-display text-foreground">HDS</p>
 								</div>
-								<p className="text-accent text-xs font-semibold mb-subheading">
+								<p className="text-accent-text text-xs font-semibold mb-subheading">
 									Websites built like revenue systems for DFW small businesses.
 								</p>
 								<p className="text-xs text-muted-foreground">
@@ -252,7 +252,7 @@ export default function Footer() {
 											'p-2.5 rounded-lg',
 											'glass-card-light',
 											'border border-white/10',
-											'text-muted-foreground hover:text-accent',
+											'text-muted-foreground hover:text-accent-text',
 											'hover:bg-card/10 hover:border-accent/50',
 											'transition-smooth group'
 										)}

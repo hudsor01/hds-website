@@ -209,7 +209,7 @@ export default function HomePage() {
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							What You Get
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
@@ -247,7 +247,7 @@ export default function HomePage() {
 
 								<Link
 									href={solution.ctaHref}
-									className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
+									className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text hover:underline underline-offset-4 transition-colors"
 								>
 									{solution.ctaLabel}
 									<ArrowRight className="w-4 h-4" />
@@ -268,7 +268,7 @@ export default function HomePage() {
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Try For Free
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
@@ -287,14 +287,14 @@ export default function HomePage() {
 								<div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
 									<TrendingUp className="w-7 h-7 text-accent" />
 								</div>
-								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent transition-colors">
+								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent-text transition-colors">
 									ROI Calculator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
 									See how much business you&apos;re leaving on the table with a
 									website that doesn&apos;t turn visitors into customers.
 								</p>
-								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
+								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent-text">
 									Try Calculator
 									<ArrowRight className="w-4 h-4" />
 								</div>
@@ -307,14 +307,14 @@ export default function HomePage() {
 								<div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
 									<Calculator className="w-7 h-7 text-accent" />
 								</div>
-								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent transition-colors">
+								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent-text transition-colors">
 									Website Cost Estimator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
 									See what a site with the pages and features you need typically
 									costs. A ballpark to plan with, not a quote.
 								</p>
-								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
+								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent-text">
 									See the Range
 									<ArrowRight className="w-4 h-4" />
 								</div>
@@ -330,14 +330,14 @@ export default function HomePage() {
 								<div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
 									<Zap className="w-7 h-7 text-accent" />
 								</div>
-								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent transition-colors">
+								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent-text transition-colors">
 									Site Speed Revenue Calculator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
 									Run a real mobile PageSpeed test, then see what a faster site
 									could be worth at a conversion lift you choose.
 								</p>
-								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
+								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent-text">
 									Analyze Site
 									<ArrowRight className="w-4 h-4" />
 								</div>
@@ -348,7 +348,7 @@ export default function HomePage() {
 					<div className="text-center mt-10">
 						<Link
 							href="/tools"
-							className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
+							className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text hover:underline underline-offset-4 transition-colors"
 						>
 							View all tools
 							<ArrowRight className="w-4 h-4" />
@@ -368,7 +368,7 @@ export default function HomePage() {
 					<div className="text-center">
 						<div className="inline-flex items-center gap-3 mb-4">
 							<span aria-hidden="true" className="h-px w-8 bg-accent/40" />
-							<p className="text-xs font-semibold uppercase tracking-widest text-accent">
+							<p className="text-xs font-semibold uppercase tracking-widest text-accent-text">
 								Let&apos;s talk
 							</p>
 							<span aria-hidden="true" className="h-px w-8 bg-accent/40" />

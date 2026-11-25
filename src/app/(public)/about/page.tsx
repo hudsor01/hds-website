@@ -65,7 +65,7 @@ export default function AboutPage() {
 					aria-hidden="true"
 				/>
 				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						About Me
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
@@ -83,7 +83,7 @@ export default function AboutPage() {
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							My Story
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
@@ -110,9 +110,9 @@ export default function AboutPage() {
 								</p>
 								<p>
 									Working that close to the{' '}
-									<strong className="text-accent">numbers</strong> taught me
-									something most agencies miss:{' '}
-									<strong className="text-info">
+									<strong className="text-accent-text">numbers</strong> taught
+									me something most agencies miss:{' '}
+									<strong className="text-info-text">
 										websites do not fail on bad code. They fail because nobody
 										built them to bring in customers. They were built to look
 										nice
@@ -121,8 +121,10 @@ export default function AboutPage() {
 								</p>
 								<p>
 									So my clients see{' '}
-									<strong className="text-accent">measurable results</strong> in
-									months, not years. I do not launch a{' '}
+									<strong className="text-accent-text">
+										measurable results
+									</strong>{' '}
+									in months, not years. I do not launch a{' '}
 									<Link href="/services" className="link-primary font-semibold">
 										professional website
 									</Link>{' '}
@@ -186,7 +188,7 @@ export default function AboutPage() {
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							My Toolkit
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
@@ -260,7 +262,7 @@ export default function AboutPage() {
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							The Founder
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
@@ -293,16 +295,18 @@ export default function AboutPage() {
 						<div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
 							<p className="text-base">
 								Before I built for clients, I spent nearly a decade in{' '}
-								<strong className="text-accent">revenue operations</strong> at
-								established companies. Salesforce, Power BI, Workato, HubSpot.
-								Close enough to the numbers to see exactly which sites{' '}
-								<strong className="text-accent">brought in customers</strong>{' '}
+								<strong className="text-accent-text">revenue operations</strong>{' '}
+								at established companies. Salesforce, Power BI, Workato,
+								HubSpot. Close enough to the numbers to see exactly which sites{' '}
+								<strong className="text-accent-text">
+									brought in customers
+								</strong>{' '}
 								and which just looked nice.
 							</p>
 
 							<p className="text-base">
 								Same job, same lesson every time:{' '}
-								<strong className="text-info">
+								<strong className="text-info-text">
 									most websites fail not on the technology but because nobody
 									built them to bring in customers
 								</strong>
@@ -315,7 +319,7 @@ export default function AboutPage() {
 								I kept seeing great DFW businesses with glowing reviews and no
 								website, or one so dated it was costing them customers. That is
 								the gap I fill. Hudson Digital Solutions exists to fix it:{' '}
-								<strong className="text-accent">
+								<strong className="text-accent-text">
 									a professional website, built around how your business
 									actually works
 								</strong>
@@ -329,7 +333,7 @@ export default function AboutPage() {
 
 							<div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-border">
 								<div className="text-center">
-									<div className="text-3xl font-black text-accent mb-1">
+									<div className="text-3xl font-black text-accent-text mb-1">
 										2,200%
 									</div>
 									<div className="text-sm text-muted-foreground">
@@ -337,7 +341,7 @@ export default function AboutPage() {
 									</div>
 								</div>
 								<div className="text-center">
-									<div className="text-3xl font-black text-accent mb-1">
+									<div className="text-3xl font-black text-accent-text mb-1">
 										95%
 									</div>
 									<div className="text-sm text-muted-foreground">
@@ -345,7 +349,7 @@ export default function AboutPage() {
 									</div>
 								</div>
 								<div className="text-center">
-									<div className="text-3xl font-black text-accent mb-1">
+									<div className="text-3xl font-black text-accent-text mb-1">
 										$3.7M
 									</div>
 									<div className="text-sm text-muted-foreground">
@@ -362,7 +366,7 @@ export default function AboutPage() {
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							My Principles
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
@@ -427,7 +431,7 @@ export default function AboutPage() {
 						<div className="relative z-10">
 							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready to build{' '}
-								<span className="text-accent">
+								<span className="text-accent-text">
 									the website you&apos;ve earned?
 								</span>
 							</h2>

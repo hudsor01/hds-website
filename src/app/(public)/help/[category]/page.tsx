@@ -122,11 +122,14 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 					</Breadcrumb>
 
 					<div className="flex items-center gap-6">
-						<div className="size-16 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0">
+						<div
+							aria-hidden="true"
+							className="size-16 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0"
+						>
 							{ICON_MAP[categoryInfo.icon] || <HelpCircle className="size-8" />}
 						</div>
 						<div>
-							<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">
+							<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-2">
 								Help Center
 							</p>
 							<h1 className="text-page-title text-foreground leading-tight text-balance">
@@ -172,11 +175,14 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 								>
 									<div className="rounded-xl border border-border bg-surface-raised p-6 hover:border-border-strong transition-colors">
 										<div className="flex items-start gap-4">
-											<div className="size-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0">
+											<div
+												aria-hidden="true"
+												className="size-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0"
+											>
 												<FileText className="size-5" />
 											</div>
 											<div className="flex-1 min-w-0">
-												<h2 className="font-semibold text-foreground group-hover:text-accent transition-colors flex items-center gap-tight">
+												<h2 className="font-semibold text-foreground group-hover:text-accent-text transition-colors flex items-center gap-tight">
 													{article.title}
 													<ArrowRight className="size-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0" />
 												</h2>

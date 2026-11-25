@@ -36,7 +36,7 @@ export default function ToolsPage() {
 					aria-hidden="true"
 				/>
 				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Free To Use
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
@@ -62,7 +62,7 @@ export default function ToolsPage() {
 					<div className="grid gap-px sm:grid-cols-3 bg-border/30 rounded-2xl overflow-hidden">
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
 							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
-							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
+							<div className="text-4xl font-black text-accent-text mb-2 tabular-nums">
 								Growing
 							</div>
 							<div className="text-sm text-muted-foreground">
@@ -72,7 +72,7 @@ export default function ToolsPage() {
 
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
 							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
-							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
+							<div className="text-4xl font-black text-accent-text mb-2 tabular-nums">
 								98%
 							</div>
 							<div className="text-sm text-muted-foreground">Accuracy Rate</div>
@@ -80,7 +80,7 @@ export default function ToolsPage() {
 
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
 							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
-							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
+							<div className="text-4xl font-black text-accent-text mb-2 tabular-nums">
 								100%
 							</div>
 							<div className="text-sm text-muted-foreground">Free Forever</div>

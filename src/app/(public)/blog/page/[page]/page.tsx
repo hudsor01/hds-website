@@ -66,7 +66,7 @@ export default async function BlogListingPage({
 		<div className="min-h-screen bg-background">
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Practical Insights
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">

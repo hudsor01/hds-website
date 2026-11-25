@@ -65,7 +65,7 @@ export default async function HelpCenterPage() {
 					aria-hidden="true"
 				/>
 				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Help Center
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
@@ -82,7 +82,7 @@ export default async function HelpCenterPage() {
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide max-w-5xl mx-auto">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Browse Topics
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
@@ -99,13 +99,16 @@ export default async function HelpCenterPage() {
 							>
 								<div className="h-full rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
 									<div className="flex items-start gap-4">
-										<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0">
+										<div
+											aria-hidden="true"
+											className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0"
+										>
 											{ICON_MAP[category.icon] || (
 												<HelpCircle className="size-6" />
 											)}
 										</div>
 										<div className="flex-1">
-											<h3 className="font-semibold text-foreground group-hover:text-accent transition-colors flex items-center gap-2">
+											<h3 className="font-semibold text-foreground group-hover:text-accent-text transition-colors flex items-center gap-2">
 												{category.name}
 												<ArrowRight className="size-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
 											</h3>

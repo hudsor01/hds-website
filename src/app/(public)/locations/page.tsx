@@ -34,7 +34,7 @@ export default function LocationsPage() {
 					aria-hidden="true"
 				/>
 				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Service Locations
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
@@ -57,7 +57,7 @@ export default function LocationsPage() {
 									href={`/locations/${location.slug}`}
 									className="group flex h-full flex-col rounded-xl border border-border bg-surface-raised p-6 transition-colors hover:border-accent"
 								>
-									<span className="flex items-center gap-2 text-h4 text-foreground group-hover:text-accent transition-colors">
+									<span className="flex items-center gap-2 text-h4 text-foreground group-hover:text-accent-text transition-colors">
 										<MapPin
 											className="h-5 w-5 shrink-0 text-accent"
 											aria-hidden="true"

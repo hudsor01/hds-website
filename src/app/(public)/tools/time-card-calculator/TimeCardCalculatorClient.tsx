@@ -259,7 +259,7 @@ export default function TimeCardCalculatorClient() {
 					type="button"
 					onClick={addRow}
 					disabled={atMaxDays}
-					className="flex items-center gap-tight text-sm text-accent hover:text-accent/80 disabled:cursor-not-allowed disabled:text-muted-foreground"
+					className="flex items-center gap-tight text-sm text-accent-text hover:underline underline-offset-4 disabled:cursor-not-allowed disabled:text-muted-foreground"
 				>
 					<Plus className="h-4 w-4" aria-hidden="true" />
 					Add a day
@@ -315,7 +315,7 @@ export default function TimeCardCalculatorClient() {
 			<div className="rounded-xl border border-border bg-surface-raised p-6 space-y-3">
 				<div>
 					<div className="text-xs text-muted-foreground">Total hours</div>
-					<div className="text-3xl font-bold text-accent tabular-nums">
+					<div className="text-3xl font-bold text-accent-text tabular-nums">
 						{fmtHours(result.totalMinutes)}
 					</div>
 				</div>

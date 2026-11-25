@@ -23,7 +23,7 @@ export default function PrivacyPage() {
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Legal
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
@@ -231,7 +231,7 @@ export default function PrivacyPage() {
 									To exercise these rights, contact us at{' '}
 									<a
 										href="mailto:hello@hudsondigitalsolutions.com"
-										className="text-accent hover:text-accent/80 transition-colors"
+										className="text-accent-text hover:underline underline-offset-4 transition-colors"
 									>
 										hello@hudsondigitalsolutions.com
 									</a>
@@ -295,7 +295,7 @@ export default function PrivacyPage() {
 										<strong className="text-foreground">Email:</strong>{' '}
 										<a
 											href="mailto:hello@hudsondigitalsolutions.com"
-											className="text-accent hover:text-accent/80 transition-colors"
+											className="text-accent-text hover:underline underline-offset-4 transition-colors"
 										>
 											hello@hudsondigitalsolutions.com
 										</a>
@@ -304,7 +304,7 @@ export default function PrivacyPage() {
 										<strong className="text-foreground">Website:</strong>{' '}
 										<a
 											href="https://hudsondigitalsolutions.com"
-											className="text-accent hover:text-accent/80 transition-colors"
+											className="text-accent-text hover:underline underline-offset-4 transition-colors"
 										>
 											hudsondigitalsolutions.com
 										</a>

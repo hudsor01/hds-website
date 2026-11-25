@@ -148,7 +148,7 @@ export default function PaystubCalculatorClient() {
 								</div>
 								<div className="border-t border-border pt-3 flex justify-between">
 									<span className="font-semibold text-foreground">Net Pay</span>
-									<span className="text-2xl font-bold text-accent">
+									<span className="text-2xl font-bold text-accent-text">
 										{formatCurrency(period.netPay)}
 									</span>
 								</div>
@@ -184,7 +184,7 @@ export default function PaystubCalculatorClient() {
 						</div>
 						<div>
 							<div className="text-sm text-muted-foreground">Net Pay</div>
-							<div className="text-xl font-bold text-accent">
+							<div className="text-xl font-bold text-accent-text">
 								{formatCurrency(totals.netPay)}
 							</div>
 						</div>

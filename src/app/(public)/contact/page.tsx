@@ -89,7 +89,7 @@ export default function ContactPage() {
 						{/* LEFT: Form */}
 						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
 							<div className="mb-8">
-								<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+								<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 									Free Website Plan
 								</p>
 								<h1 className="text-page-title text-foreground leading-tight text-balance">
@@ -113,7 +113,9 @@ export default function ContactPage() {
 
 								<div className="flex items-start gap-4">
 									<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-										<span className="text-accent font-bold text-sm">1</span>
+										<span className="text-accent-text font-bold text-sm">
+											1
+										</span>
 									</div>
 									<div>
 										<p className="font-semibold text-foreground text-sm">
@@ -127,7 +129,9 @@ export default function ContactPage() {
 
 								<div className="flex items-start gap-4">
 									<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-										<span className="text-accent font-bold text-sm">2</span>
+										<span className="text-accent-text font-bold text-sm">
+											2
+										</span>
 									</div>
 									<div>
 										<p className="font-semibold text-foreground text-sm">
@@ -142,7 +146,9 @@ export default function ContactPage() {
 
 								<div className="flex items-start gap-4">
 									<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-										<span className="text-accent font-bold text-sm">3</span>
+										<span className="text-accent-text font-bold text-sm">
+											3
+										</span>
 									</div>
 									<div>
 										<p className="font-semibold text-foreground text-sm">
@@ -173,7 +179,7 @@ export default function ContactPage() {
 											</p>
 											<a
 												href={`mailto:${BUSINESS_INFO.email}`}
-												className="text-xs text-muted-foreground hover:text-accent transition-colors"
+												className="text-xs text-muted-foreground hover:text-accent-text transition-colors"
 											>
 												{BUSINESS_INFO.email}
 											</a>
@@ -193,7 +199,7 @@ export default function ContactPage() {
 												</p>
 												<a
 													href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}
-													className="text-xs text-muted-foreground hover:text-accent transition-colors"
+													className="text-xs text-muted-foreground hover:text-accent-text transition-colors"
 												>
 													{BUSINESS_INFO.phone}
 												</a>
@@ -230,7 +236,7 @@ export default function ContactPage() {
 			<section className="py-section-sm px-4 sm:px-6 bg-surface-raised">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Service Area
 						</p>
 						{/* Brand positioning resolved in favor of the canonical

@@ -70,7 +70,7 @@ export function BlogTableOfContents({ items }: BlogTableOfContentsProps) {
 								aria-current={active ? 'location' : undefined}
 								className={`-ml-px block border-l-2 pl-3 transition-colors ${
 									active
-										? 'border-accent text-accent font-medium'
+										? 'border-accent text-accent-text font-medium'
 										: 'border-transparent text-muted-foreground hover:text-foreground hover:border-border-strong'
 								}`}
 							>

@@ -186,7 +186,7 @@ export function TestimonialForm({ token, defaultName }: TestimonialFormProps) {
 								aria-hidden="true"
 								className={`w-8 h-8 ${
 									star <= shownRating
-										? 'fill-yellow-400 text-warning-text'
+										? 'fill-accent text-accent-text'
 										: 'text-muted-foreground'
 								}`}
 							/>

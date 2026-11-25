@@ -30,7 +30,7 @@ export default function NotFound() {
 			<div className="relative z-10 container-narrow text-center">
 				{/* 404 Visual */}
 				<div className="mb-10">
-					<h1 className="text-8xl lg:text-9xl font-black text-accent mb-4">
+					<h1 className="text-8xl lg:text-9xl font-black text-accent-text mb-4">
 						404
 					</h1>
 					<div className="w-32 h-1 bg-border mx-auto rounded-full"></div>

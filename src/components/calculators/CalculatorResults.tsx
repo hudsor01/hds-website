@@ -126,7 +126,7 @@ export function CalculatorResults({
 								<span
 									className={`
                     text-2xl font-bold
-                    ${result.highlight ? 'text-accent' : 'text-foreground'}
+                    ${result.highlight ? 'text-accent-text' : 'text-foreground'}
                   `}
 								>
 									{result.value}

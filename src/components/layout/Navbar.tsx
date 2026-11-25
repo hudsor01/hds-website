@@ -61,7 +61,7 @@ const Navbar = memo(function Navbar() {
 		cn(
 			'px-3 py-1.5 text-sm font-medium rounded-md transition-smooth',
 			pathname === href
-				? 'text-accent bg-accent/10'
+				? 'text-accent-text bg-accent/10'
 				: 'text-muted-foreground hover:text-foreground hover:bg-muted'
 		)
 
@@ -160,7 +160,7 @@ const Navbar = memo(function Navbar() {
 								className={cn(
 									'block px-3 py-2 rounded-md text-sm font-medium transition-smooth',
 									pathname === item.href
-										? 'bg-accent/10 text-accent'
+										? 'bg-accent/10 text-accent-text'
 										: 'text-muted-foreground hover:bg-muted hover:text-foreground'
 								)}
 								aria-current={pathname === item.href ? 'page' : undefined}

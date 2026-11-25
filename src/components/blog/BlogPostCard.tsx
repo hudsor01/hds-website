@@ -55,12 +55,12 @@ export function BlogPostCard({
 					)}
 					<div className="card-padding">
 						{post.tags?.[0] && (
-							<span className="inline-block text-sm text-accent font-medium mb-subheading">
+							<span className="inline-block text-sm text-accent-text font-medium mb-subheading">
 								{post.tags[0].name}
 							</span>
 						)}
 						<h3
-							className={`font-bold text-foreground mb-subheading group-hover:text-accent transition-colors ${featured ? 'text-2xl' : 'text-xl'}`}
+							className={`font-bold text-foreground mb-subheading group-hover:text-accent-text transition-colors ${featured ? 'text-2xl' : 'text-xl'}`}
 						>
 							{post.title}
 						</h3>

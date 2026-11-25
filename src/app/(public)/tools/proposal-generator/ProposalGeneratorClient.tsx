@@ -290,7 +290,7 @@ export default function ProposalGeneratorClient() {
 					</div>
 					<div className="flex justify-between gap-content">
 						<dt className="text-muted-foreground">Total</dt>
-						<dd className="font-bold text-accent">
+						<dd className="font-bold text-accent-text">
 							{formatCents(pricing.totalCents)}
 						</dd>
 					</div>
@@ -461,7 +461,7 @@ export default function ProposalGeneratorClient() {
 					<button
 						type="button"
 						onClick={addScopeItem}
-						className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
+						className="flex items-center gap-1 text-sm text-accent-text hover:underline underline-offset-4"
 					>
 						<Plus className="w-4 h-4" aria-hidden="true" />
 						Add Item
@@ -507,7 +507,7 @@ export default function ProposalGeneratorClient() {
 					<button
 						type="button"
 						onClick={addMilestone}
-						className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
+						className="flex items-center gap-1 text-sm text-accent-text hover:underline underline-offset-4"
 					>
 						<Plus className="w-4 h-4" aria-hidden="true" />
 						Add Phase
@@ -607,7 +607,7 @@ export default function ProposalGeneratorClient() {
 					<button
 						type="button"
 						onClick={addPricingItem}
-						className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
+						className="flex items-center gap-1 text-sm text-accent-text hover:underline underline-offset-4"
 					>
 						<Plus className="w-4 h-4" aria-hidden="true" />
 						Add Item
@@ -666,7 +666,7 @@ export default function ProposalGeneratorClient() {
 				<div className="flex justify-end pt-4 border-t border-border">
 					<p className="text-right">
 						<span className="text-sm text-muted-foreground mr-4">Total:</span>
-						<span className="text-xl font-bold text-accent">
+						<span className="text-xl font-bold text-accent-text">
 							{formatCents(pricing.totalCents)}
 						</span>
 					</p>

@@ -155,7 +155,7 @@ export default function JsonFormatterClient() {
 						<button
 							type="button"
 							onClick={loadSample}
-							className="text-xs text-accent hover:text-accent/80"
+							className="text-xs text-accent-text hover:underline underline-offset-4"
 						>
 							Load Sample
 						</button>

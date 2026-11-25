@@ -21,7 +21,7 @@ const useFloatingLabelStyles = (
 			return 'text-muted-foreground'
 		}
 		if (isActive) {
-			return 'text-accent'
+			return 'text-accent-text'
 		}
 		return 'text-muted-foreground'
 	}

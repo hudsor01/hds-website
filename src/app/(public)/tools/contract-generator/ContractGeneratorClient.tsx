@@ -588,13 +588,13 @@ export default function ContractGeneratorClient() {
 						<span className="flex items-center justify-between gap-content">
 							<span>What this contract says ({clauses.length} sections)</span>
 							<span
-								className="text-sm font-normal text-accent group-open:hidden"
+								className="text-sm font-normal text-accent-text group-open:hidden"
 								aria-hidden="true"
 							>
 								Show
 							</span>
 							<span
-								className="hidden text-sm font-normal text-accent group-open:inline"
+								className="hidden text-sm font-normal text-accent-text group-open:inline"
 								aria-hidden="true"
 							>
 								Hide

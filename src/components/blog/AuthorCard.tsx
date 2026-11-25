@@ -23,7 +23,7 @@ export function AuthorCard({ author }: AuthorCardProps) {
 				<div className="flex-1">
 					<Link
 						href={`/blog/author/${author.slug}`}
-						className="hover:text-accent transition-colors"
+						className="hover:text-accent-text transition-colors"
 					>
 						<h3 className="text-xl font-bold text-foreground">{author.name}</h3>
 					</Link>
