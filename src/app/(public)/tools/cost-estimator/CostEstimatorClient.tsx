@@ -369,9 +369,9 @@ function CostEstimatorView({
 				will take. You get the timeline and a real price on that call.
 			</p>
 			<Card size="sm" className="bg-muted">
-				<h4 className="mb-subheading text-base font-semibold text-foreground">
+				<h3 className="mb-subheading text-base font-semibold text-foreground">
 					What published guides say
-				</h4>
+				</h3>
 				<ul className="list-disc space-y-tight pl-5 text-sm text-muted-foreground">
 					{CLUTCH_FIGURES.map(figure => (
 						<li key={figure}>{figure}</li>

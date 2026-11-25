@@ -10,7 +10,7 @@
  * full interaction tests (form submission) are out of scope.
  */
 
-import { expect, test } from '@playwright/test'
+import { expect, type Page, test } from '@playwright/test'
 
 test.describe('Tools Index', () => {
 	test.beforeEach(async ({ page }) => {
@@ -215,4 +215,44 @@ test.describe('Contract Generator', () => {
 		)
 		expect(await interactive.count()).toBeGreaterThan(0)
 	})
+})
+
+// Heading levels in the page content (the footer is owned elsewhere) must
+// never skip a level going down, for example an h2 followed by an h4.
+async function headingSkips(page: Page): Promise<string[]> {
+	return page.evaluate(() => {
+		const headings = Array.from(
+			document.querySelectorAll('h1, h2, h3, h4, h5, h6')
+		).filter(el => !el.closest('footer'))
+		const skips: string[] = []
+		let previous = 0
+		for (const el of headings) {
+			const level = Number(el.tagName.slice(1))
+			if (previous > 0 && level > previous + 1) {
+				skips.push(`h${previous} -> h${level} "${el.textContent?.trim()}"`)
+			}
+			previous = level
+		}
+		return skips
+	})
+}
+
+test.describe('Tool heading order @accessibility', () => {
+	// ROI and cost estimator links show results on load; TTL shows results
+	// for its defaults
+	for (const path of [
+		'/tools/roi-calculator?traffic=10000&conv=2&aov=100',
+		'/tools/ttl-calculator',
+		'/tools/performance-calculator',
+		'/tools/cost-estimator?type=business-website',
+		'/tools/mortgage-calculator',
+		'/tools/paystub-calculator'
+	]) {
+		test(`${path} has no skipped heading levels`, async ({ page }) => {
+			await page.goto(path)
+			await page.waitForLoadState('networkidle')
+			await expect(page.locator('h1')).toHaveCount(1)
+			expect(await headingSkips(page)).toEqual([])
+		})
+	}
 })
