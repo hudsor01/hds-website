@@ -298,7 +298,7 @@ export function setupNextMocks() {
  * preload. mock.module() is process-global and mock.restore() never undoes
  * it, so a file that stubs `@/lib/db` with fixture rows hands those rows to
  * every later file. Every file that calls mock.module('@/lib/db', ...) must
- * call this in afterAll (scripts/check-test-mock-leaks.sh enforces it), and a
+ * call this in afterAll (scripts/check-test-mock-leaks.ts enforces it), and a
  * suite that depends on the real no-op db calls it in beforeEach.
  */
 export function restoreRealDb(): void {

@@ -94,7 +94,7 @@ mock.module('next/navigation', () => ({ ...REAL_NEXT_NAVIGATION }))
 // mockNextNavigation() from tests/test-utils.ts). A file that mocks @/lib/db
 // must call restoreRealDb() in afterAll, a file that assigns globalThis.fetch
 // must restore originalFetch, and nothing may `delete process.env.TZ`.
-// scripts/check-test-mock-leaks.sh enforces all of this in CI and in the
+// scripts/check-test-mock-leaks.ts enforces all of this in CI and in the
 // local `test:unit` script; `test:unit:random` runs the suite in 5 random
 // orders to catch leaks the guard cannot see.
 // ===================================================================
