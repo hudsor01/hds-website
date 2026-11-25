@@ -19,7 +19,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { getAllPosts, getPostBySlug, getPostsByTag } from '@/lib/blog'
-import { withHeadingIds } from '@/lib/blog-toc'
+import { prepareBlogContent } from '@/lib/blog-toc'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { getServiceForTags } from '@/lib/constants/services'
 import { buildMetadata } from '@/lib/seo-config'
@@ -171,9 +171,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 	// readers (and link equity) to the pages that sell.
 	const relatedService = getServiceForTags(tags.map(tag => tag.slug))
 
-	// Headings drive the table of contents; ids here match those injected by
-	// BlogPostContent (same deterministic slugify over the same headings).
-	const { toc } = withHeadingIds(post.content ?? '')
+	// One pass sanitizes the body and injects heading ids; the table of
+	// contents comes from that same pass, so every TOC link resolves.
+	const { html: contentHtml, toc } = prepareBlogContent(post.content ?? '')
 
 	return (
 		<div className="min-h-screen bg-background">
@@ -302,7 +302,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 				<div className="container-wide py-8">
 					<div className="mx-auto max-w-5xl lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12">
 						<div className="min-w-0 max-w-3xl">
-							<BlogPostContent post={post} />
+							<BlogPostContent html={contentHtml} />
 						</div>
 						{toc.length >= 2 && (
 							<aside className="hidden lg:block">

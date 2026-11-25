@@ -111,6 +111,40 @@ test.describe('Blog Journey', () => {
 		).toBeVisible()
 	})
 
+	for (const slug of [
+		'spf-dkim-dmarc-for-small-business-email',
+		'beyond-just-works-why-businesses-need-websites-that-dominate'
+	]) {
+		test(`table of contents links resolve on ${slug}`, async ({ page }) => {
+			await page.setViewportSize({ width: 1280, height: 900 })
+			await page.goto(`/blog/${slug}`)
+			const links = page.locator('nav[aria-label="Table of contents"] a')
+			await expect(links.first()).toBeVisible()
+
+			const items = await links.evaluateAll((els: Element[]) =>
+				els.map(el => ({
+					href: el.getAttribute('href') ?? '',
+					text: el.textContent ?? ''
+				}))
+			)
+			expect(items.length).toBeGreaterThanOrEqual(2)
+			for (const { href, text } of items) {
+				expect(text).not.toContain('&')
+				const id = decodeURIComponent(href.replace(/^#/, ''))
+				await expect(page.locator(`[id="${id}"]`)).toHaveCount(1)
+			}
+
+			const last = items.at(-1)
+			if (!last) {
+				throw new Error('table of contents is empty')
+			}
+			await links.last().click()
+			await expect(
+				page.locator(`[id="${decodeURIComponent(last.href.slice(1))}"]`)
+			).toBeInViewport()
+		})
+	}
+
 	test('should return 404 for an unknown slug', async ({ page }) => {
 		const response = await page.goto('/blog/wp-login.php')
 		expect(response?.status()).toBe(404)
