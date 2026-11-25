@@ -534,7 +534,11 @@ describe('publishedAt dates (UTC calendar days)', () => {
 				validatePost(target).filter(v => v.message.includes('publishedAt'))
 					.length
 			])
-		const original = process.env.TZ
+		// Capture the effective zone and restore it by assignment. Deleting
+		// process.env.TZ removes Bun's TZ accessor, which freezes ICU at the
+		// last zone set below (Asia/Tokyo) for the rest of the run.
+		const original =
+			process.env.TZ ?? Intl.DateTimeFormat().resolvedOptions().timeZone
 		try {
 			process.env.TZ = 'UTC'
 			const utc = snapshot()
@@ -553,11 +557,7 @@ describe('publishedAt dates (UTC calendar days)', () => {
 				expect(snapshot()).toEqual(utc)
 			}
 		} finally {
-			if (original === undefined) {
-				delete process.env.TZ
-			} else {
-				process.env.TZ = original
-			}
+			process.env.TZ = original
 		}
 	})
 })
