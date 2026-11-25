@@ -380,7 +380,10 @@ export default function PerformanceCalculatorClient() {
 					)}
 				</button>
 
-				<p aria-live="polite" className="text-sm text-muted-foreground">
+				<p
+					aria-live="polite"
+					className="text-sm text-muted-foreground empty:mb-0"
+				>
 					{isAnalyzing
 						? 'Google is running a full mobile Lighthouse test. This takes 15 to 60 seconds.'
 						: ''}

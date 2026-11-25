@@ -198,7 +198,7 @@ function CostEstimatorView({
 			noValidate
 		>
 			{/* Website Type */}
-			<div className="space-y-tight">
+			<div className="flex flex-col gap-tight">
 				<Label id="websiteType-label" htmlFor="websiteType">
 					Website Type *
 				</Label>
@@ -269,7 +269,7 @@ function CostEstimatorView({
 			</fieldset>
 
 			{/* Design Complexity */}
-			<div className="space-y-tight">
+			<div className="flex flex-col gap-tight">
 				<Label id="designComplexity-label" htmlFor="designComplexity">
 					Design Complexity
 				</Label>
@@ -300,7 +300,7 @@ function CostEstimatorView({
 			</div>
 
 			{/* Timeline */}
-			<div className="space-y-tight">
+			<div className="flex flex-col gap-tight">
 				<Label id="timeline-label" htmlFor="timeline">
 					Project Timeline
 				</Label>

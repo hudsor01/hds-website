@@ -550,7 +550,7 @@ function MortgageCalculatorView({
 				</div>
 
 				<div className="grid gap-content md:grid-cols-2">
-					<div className="space-y-tight">
+					<div className="flex flex-col gap-tight">
 						<Label id="program-label" htmlFor="program">
 							Loan Type
 						</Label>
@@ -582,7 +582,7 @@ function MortgageCalculatorView({
 						</Select>
 					</div>
 
-					<div className="space-y-tight">
+					<div className="flex flex-col gap-tight">
 						<Label id="loanTerm-label" htmlFor="loanTerm">
 							Loan Term
 						</Label>
@@ -620,7 +620,7 @@ function MortgageCalculatorView({
 
 				{program === 'va' && (
 					<div className="space-y-tight rounded-lg border border-border p-4">
-						<div className="space-y-tight">
+						<div className="flex flex-col gap-tight">
 							<Label id="vaUse-label" htmlFor="vaUse">
 								VA Loan Use
 							</Label>
