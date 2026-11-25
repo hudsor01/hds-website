@@ -86,6 +86,8 @@
 - Available: `.glass-card`, `.glass-card-light`, `.hover-lift`, `.transition-smooth`, `.section-spacing`, `.card-padding` (`-sm` / `-lg` variants)
 - Focus styling is native via `:focus-visible` in globals.css — there is no `.focus-ring` class
 - Use CSS custom properties, not hard-coded values
+- **Accent and status colours as text:** `text-accent` (2.49:1) is for fills, borders and decorative icons only; accent-coloured text uses `text-accent-text`. Base `warning` is never text (use `text-warning-text`); prefer the `*-text` shade for status text. Hover on accent text is `hover:text-accent-text` or `hover:underline`, never an opacity fade. `tests/unit/css-contrast.test.ts` pins the token ratios and fails on accent/warning text
+- **Form fields:** every text input, select and textarea (ui primitives and native controls) uses the `.field` class in globals.css (border `--color-input` at >= 3:1, muted fill, 16px text, 44px min height, `aria-invalid` turns it destructive). Add only layout utilities (`w-auto`, `flex-1`, `font-mono`, `text-right`). Native checkboxes are `size-4 accent-primary`
 - **Light only.** No dark palette, no `.dark` class, no `dark:` utilities; `:root` sets `color-scheme: light` and `body` paints `--color-background` / `--color-foreground`. `tests/unit/css-class-hygiene.test.ts` fails on any `dark:` utility in `src/` and `e2e/dark-mode-comprehensive.spec.ts` asserts pages render the same under an OS dark preference
 
 **Component Layout:**
