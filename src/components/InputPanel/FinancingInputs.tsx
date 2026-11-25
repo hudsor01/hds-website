@@ -32,7 +32,9 @@ export function FinancingInputs({
 	const rateError = fieldErrors.interestRate
 	return (
 		<Card size="sm" className="rounded-none">
-			<h3 className="text-lg font-medium mb-3">Financing Information</h3>
+			<h3 className="mb-3 text-lg font-semibold text-foreground">
+				Financing Information
+			</h3>
 
 			<div className="grid grid-cols-2 gap-content">
 				<div className="space-y-tight">

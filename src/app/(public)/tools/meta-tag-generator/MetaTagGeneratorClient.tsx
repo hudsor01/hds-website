@@ -139,9 +139,7 @@ export default function MetaTagGeneratorClient() {
 			<form onSubmit={handleSubmit} className="space-y-comfortable" noValidate>
 				{/* Required Fields */}
 				<div className="space-y-content">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Required
-					</h2>
+					<h2 className="text-eyebrow text-muted-foreground">Required</h2>
 
 					<CalculatorInput
 						label="Page title"
@@ -202,9 +200,7 @@ export default function MetaTagGeneratorClient() {
 
 				{/* Optional Fields */}
 				<div className="space-y-content border-t border-border pt-6">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Optional
-					</h2>
+					<h2 className="text-eyebrow text-muted-foreground">Optional</h2>
 
 					<div className="grid gap-content md:grid-cols-2">
 						<CalculatorInput
@@ -300,10 +296,7 @@ export default function MetaTagGeneratorClient() {
 				aria-labelledby={`${baseId}-tips`}
 				className="space-y-content border-t border-border pt-8"
 			>
-				<h2
-					id={`${baseId}-tips`}
-					className="text-lg font-semibold text-foreground"
-				>
+				<h2 id={`${baseId}-tips`} className="text-h4 text-foreground">
 					What the sources say
 				</h2>
 
@@ -398,7 +391,7 @@ export default function MetaTagGeneratorClient() {
 				>
 					{/* Google Preview */}
 					<div>
-						<h3 className="text-sm font-semibold text-muted-foreground mb-3">
+						<h3 className="text-eyebrow text-muted-foreground mb-3">
 							Search result preview (approximate)
 						</h3>
 						<Card size="sm">
@@ -416,7 +409,7 @@ export default function MetaTagGeneratorClient() {
 
 					{/* Social Preview */}
 					<div>
-						<h3 className="text-sm font-semibold text-muted-foreground mb-3">
+						<h3 className="text-eyebrow text-muted-foreground mb-3">
 							Social share preview (approximate)
 						</h3>
 						<div className="rounded-lg border border-border overflow-hidden max-w-md">
@@ -492,7 +485,9 @@ interface TipCardProps {
 function TipCard({ title, href, source, children }: TipCardProps) {
 	return (
 		<Card size="sm">
-			<h3 className="mb-subheading font-semibold text-foreground">{title}</h3>
+			<h3 className="mb-subheading text-lg font-semibold text-foreground">
+				{title}
+			</h3>
 			<p className="text-sm text-muted-foreground">{children}</p>
 			<a
 				href={href}

@@ -76,15 +76,13 @@ export function PaystubForm({
 }: PaystubFormProps) {
 	return (
 		<div className="card-padding-lg font-sans container-narrow">
-			<h2 className="text-h2 mb-comfortable text-center text-foreground">
+			<h2 className="text-h4 mb-comfortable text-center text-foreground">
 				Professional Pay Stub Generator
 			</h2>
 
 			{/* Employee Information */}
 			<Card className="mb-comfortable">
-				<h2 className="text-xl font-bold mb-5 text-foreground">
-					Employee Information
-				</h2>
+				<h2 className="text-h4 mb-5 text-foreground">Employee Information</h2>
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 					<FormField
 						label="Employee Name"
@@ -122,9 +120,7 @@ export function PaystubForm({
 
 			{/* Pay Information */}
 			<Card className="mb-comfortable">
-				<h2 className="text-xl font-bold mb-5 text-foreground">
-					Pay Information
-				</h2>
+				<h2 className="text-h4 mb-5 text-foreground">Pay Information</h2>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 					<CurrencyInput
 						label="Hourly Rate"
@@ -159,9 +155,7 @@ export function PaystubForm({
 
 			{/* Tax Information */}
 			<Card className="mb-comfortable">
-				<h2 className="text-xl font-bold mb-5 text-foreground">
-					Tax Information
-				</h2>
+				<h2 className="text-h4 mb-5 text-foreground">Tax Information</h2>
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 					<div className="space-y-tight">
 						<Label id="filingStatus-label" htmlFor="filingStatus">
@@ -267,9 +261,7 @@ export function PaystubForm({
 
 			{/* Pay Frequency */}
 			<Card className="mb-comfortable">
-				<h2 className="text-xl font-bold mb-5 text-foreground">
-					Pay Frequency
-				</h2>
+				<h2 className="text-h4 mb-5 text-foreground">Pay Frequency</h2>
 				<div className="grid grid-cols-1 md:grid-cols-1 gap-5">
 					<div className="space-y-tight">
 						<Label id="payFrequency-label" htmlFor="payFrequency">
@@ -300,7 +292,7 @@ export function PaystubForm({
 
 			{/* Overtime Information */}
 			<Card className="mb-comfortable">
-				<h2 className="text-xl font-bold mb-5 text-foreground">Overtime</h2>
+				<h2 className="text-h4 mb-5 text-foreground">Overtime</h2>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 					<FormField
 						label="Overtime Hours"
@@ -324,9 +316,7 @@ export function PaystubForm({
 
 			{/* Additional Deductions */}
 			<Card className="mb-comfortable">
-				<h2 className="text-xl font-bold mb-5 text-foreground">
-					After-Tax Deductions
-				</h2>
+				<h2 className="text-h4 mb-5 text-foreground">After-Tax Deductions</h2>
 				<div className="space-y-3">
 					{additionalDeductions.map((deduction, index) => (
 						<div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -460,9 +450,7 @@ function WithholdingSection({
 	return (
 		<>
 			<Card className="mb-comfortable">
-				<h2 className="text-xl font-bold mb-heading text-foreground">
-					Form W-4
-				</h2>
+				<h2 className="text-h4 mb-heading text-foreground">Form W-4</h2>
 				<p className="text-sm text-muted-foreground mb-5">
 					Enter what is on your 2026 Form W-4. Leave a field at zero if that
 					step is blank.
@@ -531,7 +519,7 @@ function WithholdingSection({
 			</Card>
 
 			<Card className="mb-comfortable">
-				<h2 className="text-xl font-bold mb-heading text-foreground">
+				<h2 className="text-h4 mb-heading text-foreground">
 					Pre-Tax Deductions
 				</h2>
 				<p className="text-sm text-muted-foreground mb-5">
@@ -562,7 +550,7 @@ function WithholdingSection({
 
 			{stateFields.length > 0 && (
 				<Card className="mb-comfortable">
-					<h2 className="text-xl font-bold mb-heading text-foreground">
+					<h2 className="text-h4 mb-heading text-foreground">
 						State Withholding Form
 					</h2>
 					<p className="text-sm text-muted-foreground mb-5">

@@ -298,9 +298,7 @@ export default function InvoiceGeneratorClient() {
 			<div className="space-y-sections">
 				{/* Your Business Info */}
 				<section className="space-y-content">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Your Business
-					</h2>
+					<h2 className="text-eyebrow text-muted-foreground">Your Business</h2>
 					<div className="grid gap-content sm:grid-cols-2">
 						<CalculatorInput
 							label="Business Name"
@@ -369,7 +367,7 @@ export default function InvoiceGeneratorClient() {
 
 				{/* Client Info */}
 				<section className="space-y-content border-t border-border pt-6">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					<h2 className="text-eyebrow text-muted-foreground">
 						Bill To (Client)
 					</h2>
 					<div className="grid gap-content sm:grid-cols-2">
@@ -432,7 +430,7 @@ export default function InvoiceGeneratorClient() {
 
 				{/* Invoice Details */}
 				<section className="space-y-content border-t border-border pt-6">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					<h2 className="text-eyebrow text-muted-foreground">
 						Invoice Details
 					</h2>
 					<div className="grid gap-content sm:grid-cols-2 lg:grid-cols-4">
@@ -490,9 +488,7 @@ export default function InvoiceGeneratorClient() {
 				{/* Line Items */}
 				<section className="space-y-content border-t border-border pt-6">
 					<div className="flex items-center justify-between">
-						<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-							Line Items
-						</h2>
+						<h2 className="text-eyebrow text-muted-foreground">Line Items</h2>
 						<button
 							type="button"
 							onClick={addLineItem}
@@ -700,13 +696,11 @@ export default function InvoiceGeneratorClient() {
 
 			{/* Educational Content */}
 			<div className="mt-heading space-y-content border-t border-border pt-8">
-				<h2 className="text-lg font-semibold text-foreground">
-					Invoice Best Practices
-				</h2>
+				<h2 className="text-h4 text-foreground">Invoice Best Practices</h2>
 
 				<div className="grid gap-content sm:grid-cols-2">
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Clear Payment Terms
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -716,7 +710,7 @@ export default function InvoiceGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Detailed Descriptions
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -726,7 +720,7 @@ export default function InvoiceGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Consistent Numbering
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -736,7 +730,7 @@ export default function InvoiceGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Keep Records
 						</h3>
 						<p className="text-sm text-muted-foreground">

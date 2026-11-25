@@ -182,9 +182,7 @@ interface SectionProps {
 function Section({ title, children }: SectionProps) {
 	return (
 		<fieldset className="space-y-content border-t border-border pt-6 first:border-t-0 first:pt-0">
-			<legend className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-				{title}
-			</legend>
+			<legend className="text-eyebrow text-muted-foreground">{title}</legend>
 			{children}
 		</fieldset>
 	)

@@ -221,7 +221,7 @@ export default function TipCalculatorClient() {
 						{/* Per Person (if splitting) */}
 						{result.splitCount > 1 && (
 							<Card className="bg-accent/10 border-accent/20">
-								<h2 className="text-sm font-medium text-accent-text mb-4">
+								<h2 className="text-eyebrow text-accent-text mb-4">
 									Per Person ({result.splitCount} people)
 								</h2>
 								<div className="grid grid-cols-3 gap-4">
@@ -263,7 +263,7 @@ export default function TipCalculatorClient() {
 
 						{/* Total Summary */}
 						<Card>
-							<h2 className="text-sm font-medium text-muted-foreground mb-4">
+							<h2 className="text-eyebrow text-muted-foreground mb-4">
 								Total Summary
 							</h2>
 							<div className="space-y-3">
@@ -297,7 +297,7 @@ export default function TipCalculatorClient() {
 
 						{/* Quick Reference */}
 						<Card size="sm" className="bg-muted/30">
-							<h2 className="text-sm font-medium text-muted-foreground mb-3">
+							<h2 className="text-eyebrow text-muted-foreground mb-3">
 								Quick Reference for{' '}
 								{formatCurrency(fromCents(result.billCents))}
 							</h2>
@@ -322,11 +322,11 @@ export default function TipCalculatorClient() {
 
 			{/* Educational Content */}
 			<div className="space-y-4 border-t border-border pt-8">
-				<h2 className="text-lg font-semibold text-foreground">Tipping Guide</h2>
+				<h2 className="text-h4 text-foreground">Tipping Guide</h2>
 
 				<div className="grid gap-4 sm:grid-cols-2">
 					<Card size="sm">
-						<h3 className="mb-2 font-semibold text-foreground text-sm">
+						<h3 className="mb-2 text-lg font-semibold text-foreground">
 							Restaurant Service
 						</h3>
 						<p className="text-sm text-muted-foreground leading-relaxed">
@@ -336,7 +336,7 @@ export default function TipCalculatorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-2 font-semibold text-foreground text-sm">
+						<h3 className="mb-2 text-lg font-semibold text-foreground">
 							Delivery & Takeout
 						</h3>
 						<p className="text-sm text-muted-foreground leading-relaxed">
@@ -346,7 +346,7 @@ export default function TipCalculatorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-2 font-semibold text-foreground text-sm">
+						<h3 className="mb-2 text-lg font-semibold text-foreground">
 							Bar Service
 						</h3>
 						<p className="text-sm text-muted-foreground leading-relaxed">
@@ -355,7 +355,7 @@ export default function TipCalculatorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-2 font-semibold text-foreground text-sm">
+						<h3 className="mb-2 text-lg font-semibold text-foreground">
 							Large Parties
 						</h3>
 						<p className="text-sm text-muted-foreground leading-relaxed">

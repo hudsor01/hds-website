@@ -588,10 +588,7 @@ function CardTitle({
 }: HTMLAttributes<HTMLHeadingElement>) {
 	return (
 		<h3
-			className={cn(
-				'text-2xl font-semibold leading-none tracking-tight',
-				className
-			)}
+			className={cn('text-lg font-semibold text-foreground', className)}
 			{...props}
 		/>
 	)

@@ -302,9 +302,7 @@ export default function ProposalGeneratorClient() {
 		<div className="space-y-sections">
 			{/* Your Business Info */}
 			<section className="space-y-content">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-					Your Business
-				</h2>
+				<h2 className="text-eyebrow text-muted-foreground">Your Business</h2>
 				<div className="grid gap-content sm:grid-cols-2">
 					<CalculatorInput
 						label="Business Name"
@@ -380,7 +378,7 @@ export default function ProposalGeneratorClient() {
 
 			{/* Client Info */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+				<h2 className="text-eyebrow text-muted-foreground">
 					Client Information
 				</h2>
 				<div className="grid gap-content sm:grid-cols-3">
@@ -412,9 +410,7 @@ export default function ProposalGeneratorClient() {
 
 			{/* Project Info */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-					Project Details
-				</h2>
+				<h2 className="text-eyebrow text-muted-foreground">Project Details</h2>
 				<div className="grid gap-content sm:grid-cols-3">
 					<CalculatorInput
 						label="Project Name"
@@ -454,9 +450,7 @@ export default function ProposalGeneratorClient() {
 			{/* Scope of Work */}
 			<section className="space-y-content border-t border-border pt-6">
 				<div className="flex items-center justify-between">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Scope of Work
-					</h2>
+					<h2 className="text-eyebrow text-muted-foreground">Scope of Work</h2>
 					<button
 						type="button"
 						onClick={addScopeItem}
@@ -500,7 +494,7 @@ export default function ProposalGeneratorClient() {
 			{/* Timeline / Milestones */}
 			<section className="space-y-content border-t border-border pt-6">
 				<div className="flex items-center justify-between">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					<h2 className="text-eyebrow text-muted-foreground">
 						Timeline / Milestones
 					</h2>
 					<button
@@ -600,9 +594,7 @@ export default function ProposalGeneratorClient() {
 			{/* Pricing */}
 			<section className="space-y-content border-t border-border pt-6">
 				<div className="flex items-center justify-between">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Pricing
-					</h2>
+					<h2 className="text-eyebrow text-muted-foreground">Pricing</h2>
 					<button
 						type="button"
 						onClick={addPricingItem}
@@ -682,7 +674,7 @@ export default function ProposalGeneratorClient() {
 
 			{/* Terms */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+				<h2 className="text-eyebrow text-muted-foreground">
 					Terms &amp; Conditions
 				</h2>
 				<TextAreaField
@@ -703,11 +695,11 @@ export default function ProposalGeneratorClient() {
 
 			{/* Educational Content */}
 			<div className="space-y-content border-t border-border pt-8">
-				<h2 className="text-lg font-semibold text-foreground">Proposal Tips</h2>
+				<h2 className="text-h4 text-foreground">Proposal Tips</h2>
 
 				<div className="grid gap-content sm:grid-cols-2">
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Clear Scope
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -717,7 +709,7 @@ export default function ProposalGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Value-Based Pricing
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -727,7 +719,7 @@ export default function ProposalGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Realistic Timeline
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -737,7 +729,7 @@ export default function ProposalGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Expiration Date
 						</h3>
 						<p className="text-sm text-muted-foreground">

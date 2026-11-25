@@ -432,9 +432,7 @@ export default function PerformanceCalculatorClient() {
 
 			{/* Performance Tips */}
 			<div className="space-y-content border-t border-border pt-8">
-				<h2 className="text-lg font-semibold text-foreground">
-					How I Optimize Performance
-				</h2>
+				<h2 className="text-h4 text-foreground">How I Optimize Performance</h2>
 
 				<div className="space-y-3">
 					{OPTIMIZATION_TIPS.map(tip => (

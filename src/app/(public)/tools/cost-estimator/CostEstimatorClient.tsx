@@ -388,7 +388,7 @@ function CostEstimatorView({
 				will take. You get the timeline and a real price on that call.
 			</p>
 			<Card size="sm" className="bg-muted">
-				<h3 className="mb-subheading text-base font-semibold text-foreground">
+				<h3 className="mb-subheading text-lg font-semibold text-foreground">
 					What published guides say
 				</h3>
 				<ul className="list-disc space-y-tight pl-5 text-sm text-muted-foreground">
