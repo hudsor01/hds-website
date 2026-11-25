@@ -89,6 +89,15 @@ export function proxy(request: NextRequest) {
 		return new NextResponse('Blocked', { status: 403 })
 	}
 
+	// The blog paginates at /blog/page/N. Old ?page=N links go to the real
+	// page, where out-of-range numbers 404. A next.config redirect would
+	// carry ?page=N onto the new URL, so it lives here.
+	const page = url.pathname === '/blog' ? url.searchParams.get('page') : null
+	if (page !== null && /^\d+$/.test(page)) {
+		const target = page === '1' ? '/blog' : `/blog/page/${page}`
+		return NextResponse.redirect(new URL(target, request.url), 308)
+	}
+
 	// /admin/* requires a session cookie. Presence-only check; the
 	// admin layout (src/app/(admin)/admin/layout.tsx) validates the session
 	// and enforces the role. This branch keeps unauthenticated traffic out

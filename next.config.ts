@@ -69,15 +69,6 @@ const nextConfig: NextConfig = {
 				destination: '/testimonials',
 				statusCode: 301
 			},
-			// The blog paginates at /blog/page/N. Old ?page=N links (and the
-			// URLs the 2026-11-25 QA crawl tried) go to the real page; page 1
-			// then redirects to /blog and out-of-range pages 404.
-			{
-				source: '/blog',
-				has: [{ type: 'query', key: 'page', value: '(?<page>\\d+)' }],
-				destination: '/blog/page/:page',
-				permanent: true
-			},
 			// Out-of-area city pages, retired for good (see the file's note).
 			...RETIRED_LOCATION_SLUGS.map(slug => ({
 				source: `/locations/${slug}`,

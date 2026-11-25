@@ -169,6 +169,32 @@ describe('proxy()', () => {
 		}
 	})
 
+	it('sends /blog?page=N to the clean /blog/page/N URL', async () => {
+		const { proxy } = await import('@/proxy')
+		const cases: Array<[string, string]> = [
+			['https://hudsondigitalsolutions.com/blog?page=2', '/blog/page/2'],
+			['https://hudsondigitalsolutions.com/blog?page=999', '/blog/page/999'],
+			['https://hudsondigitalsolutions.com/blog?page=1', '/blog']
+		]
+		for (const [input, path] of cases) {
+			const res = proxy(makeRequest(input))
+			expect(res.status, input).toBe(308)
+			expect(res.headers.get('location'), input).toBe(
+				`https://hudsondigitalsolutions.com${path}`
+			)
+		}
+	})
+
+	it('leaves /blog alone without a numeric page param', async () => {
+		const { proxy } = await import('@/proxy')
+		for (const input of ['/blog', '/blog?page=abc', '/blog/page/2?page=3']) {
+			const res = proxy(
+				makeRequest(`https://hudsondigitalsolutions.com${input}`)
+			)
+			expect(res.status, input).toBe(200)
+		}
+	})
+
 	it('does not gate paths that merely start with "admin"', async () => {
 		const { proxy } = await import('@/proxy')
 		const res = proxy(makeRequest('http://localhost/administrator-guide'))
