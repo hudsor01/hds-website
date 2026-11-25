@@ -81,7 +81,7 @@ async function ShowcaseProjects() {
 							Featured
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							Four DFW businesses.{' '}
+							Real projects.{' '}
 							<span className="text-accent">One thing in common.</span>
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
