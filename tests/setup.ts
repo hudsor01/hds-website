@@ -89,8 +89,14 @@ mock.module('next/navigation', () => ({ ...REAL_NEXT_NAVIGATION }))
 // RULE: NEVER partial-mock a shared pure module (@/lib/utils,
 // @/lib/constants/*) in a per-file test. Use the REAL module (these are
 // pure/deterministic), or place a COMPLETE shared mock HERE in tests/setup.ts
-// (the one sanctioned place). scripts/check-test-mock-leaks.sh enforces this
-// in CI and in the local `test:unit` script.
+// (the one sanctioned place). The same goes for @/lib/logger (mocked
+// completely here), sonner (spyOn the real `toast`) and next/navigation (use
+// mockNextNavigation() from tests/test-utils.ts). A file that mocks @/lib/db
+// must call restoreRealDb() in afterAll, a file that assigns globalThis.fetch
+// must restore originalFetch, and nothing may `delete process.env.TZ`.
+// scripts/check-test-mock-leaks.sh enforces all of this in CI and in the
+// local `test:unit` script; `test:unit:random` runs the suite in 5 random
+// orders to catch leaks the guard cannot see.
 // ===================================================================
 
 // `server-only` throws on any import — that's its whole purpose, to fail
