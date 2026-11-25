@@ -62,6 +62,27 @@ describe('ProjectCard', () => {
 		}
 	})
 
+	// Every screenshot is 2880x1800 (16:10). A 4:3 featured box made
+	// object-cover trim both sides and cut off text in the screenshot.
+	test('featured image box matches the 16:10 screenshots', () => {
+		const { happyDOM } = window as unknown as HappyDomWindow
+		const previousUrl = window.location.href
+		happyDOM.setURL('http://localhost:3000/showcase')
+		try {
+			const { container } = render(
+				<Card
+					{...defaultProps}
+					featured={true}
+					imageUrl="/images/showcase/tenantflow.jpg"
+				/>
+			)
+			const box = container.querySelector('img')?.parentElement
+			expect(box?.className).toContain('aspect-[16/10]')
+		} finally {
+			happyDOM.setURL(previousUrl)
+		}
+	})
+
 	test('renders featured badge when featured is true', () => {
 		const { container } = render(<Card {...defaultProps} featured={true} />)
 		expect(within(container).getByText('Featured')).toBeTruthy()

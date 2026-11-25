@@ -336,7 +336,7 @@ function Card(props: CardProps) {
 					<div
 						className={cn(
 							'relative w-full overflow-hidden bg-muted',
-							featured ? 'aspect-[4/3]' : 'aspect-video'
+							featured ? 'aspect-[16/10]' : 'aspect-video'
 						)}
 					>
 						{/* Explicit width/height (every showcase screenshot is
