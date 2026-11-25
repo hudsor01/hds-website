@@ -7,7 +7,14 @@
 
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { NextRequest } from 'next/server'
+import * as actualRateLimiter from '@/lib/rate-limiter'
 import { cleanupMocks } from '../test-utils'
+
+// Snapshot of the module's exports, spread into the mock below so it only
+// overrides getUnifiedRateLimiter. A partial factory registered before
+// @/lib/rate-limiter's first load would drop RATE_LIMIT_CONFIGS and
+// UnifiedRateLimiter for every later file in the run.
+const RATE_LIMITER_EXPORTS = { ...actualRateLimiter }
 
 const ALLOWED_HOST = 'hudsondigitalsolutions.com'
 const ALLOWED_BASE = `https://${ALLOWED_HOST}`
@@ -21,6 +28,7 @@ beforeEach(() => {
 		}
 	}))
 	mock.module('@/lib/rate-limiter', () => ({
+		...RATE_LIMITER_EXPORTS,
 		getUnifiedRateLimiter: () => ({
 			checkLimit: mock().mockResolvedValue(true)
 		})
