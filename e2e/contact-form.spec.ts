@@ -318,6 +318,16 @@ test.describe('Contact Form', () => {
 		const messageLabel = page.locator('label[for="message"]')
 		await expect(messageLabel).toBeVisible()
 
+		// Select triggers are named by their label, not their current value
+		for (const name of [
+			/^service interest/i,
+			/^best time to contact/i,
+			/^budget range/i,
+			/^project timeline/i
+		]) {
+			await expect(page.getByRole('combobox', { name })).toBeVisible()
+		}
+
 		// Check that form has proper structure
 		const form = page.locator('form')
 		await expect(form).toBeVisible()
