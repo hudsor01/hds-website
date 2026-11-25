@@ -174,6 +174,36 @@ test.describe('Contact page', () => {
 })
 
 // ---------------------------------------------------------------------------
+// Heading order - no level skipped on the way down (QA-06)
+// ---------------------------------------------------------------------------
+
+test.describe('Heading order', () => {
+	for (const path of ['/contact', '/showcase']) {
+		test(`${path} never skips a heading level`, async ({ page }) => {
+			await page.goto(path)
+			await page.waitForLoadState('networkidle')
+			const levels = await page
+				.locator('h1, h2, h3, h4, h5, h6')
+				.evaluateAll(nodes => nodes.map(node => Number(node.tagName[1])))
+			expect(levels[0]).toBe(1)
+			const skips = levels.filter(
+				(level, i) => i > 0 && level - (levels[i - 1] ?? 0) > 1
+			)
+			expect(skips).toEqual([])
+		})
+	}
+})
+
+// ---------------------------------------------------------------------------
+// Showcase detail - unknown slugs are a real 404 (QA-02)
+// ---------------------------------------------------------------------------
+
+test('unknown showcase slug is a 404', async ({ page }) => {
+	const response = await page.goto('/showcase/does-not-exist')
+	expect(response?.status()).toBe(404)
+})
+
+// ---------------------------------------------------------------------------
 // Proxy (src/proxy.ts) - security headers and /admin gate
 // ---------------------------------------------------------------------------
 

@@ -254,14 +254,14 @@ export default function ShowcasePage() {
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							{/* Demoted to h3 so heading order across showcase is
-								    h1 (hero) > h2 (section header) > h2 (inline CTA) > h3
-								    (closing CTA). The inline CTA precedes this one in DOM
-								    order. */}
-							<h3 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							{/* h2: the closing CTA is a sibling section of the projects
+								    header and the inline CTA, so all three are h2. This one
+								    renders in the static shell, ahead of the streamed
+								    projects in server HTML, so an h3 here read as h1 > h3. */}
+							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready to be the{' '}
 								<span className="text-accent">next one on this page?</span>
-							</h3>
+							</h2>
 
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
 								You have built a real business. Your website should pull its

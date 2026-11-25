@@ -109,7 +109,7 @@ export default function ContactPage() {
 						<div className="space-y-8">
 							{/* What Happens Next card */}
 							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors space-y-6">
-								<h3 className="text-h3 text-foreground">What Happens Next?</h3>
+								<h2 className="text-h3 text-foreground">What Happens Next?</h2>
 
 								<div className="flex items-start gap-4">
 									<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
@@ -158,7 +158,7 @@ export default function ContactPage() {
 
 							{/* Contact Info */}
 							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors space-y-6">
-								<h3 className="text-h3 text-foreground">Get in Touch</h3>
+								<h2 className="text-h3 text-foreground">Get in Touch</h2>
 								<div className="space-y-4">
 									<div className="flex items-start gap-4">
 										<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">

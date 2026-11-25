@@ -32,6 +32,15 @@ import {
 	type ShowcaseItem
 } from '@/lib/showcase'
 
+// Every published showcase item is prerendered at build. "not-found" matching
+// is the Cache Components replacement for `dynamicParams = false` (same as
+// blog/[slug]/page.tsx): any other slug is a hard 404 with no render. Without
+// it the showcase loading.tsx shell streams first and an unknown slug answers
+// HTTP 200. Tradeoff: a showcase row published after a deploy 404s until the
+// next deploy. Showcase content already ships through committed scripts/sql
+// plus a deploy, so this matches current practice.
+export const unstable_paramMatching = { slug: 'not-found' }
+
 // Generate static params for all showcase items
 export async function generateStaticParams() {
 	const slugs = await getAllShowcaseSlugs()
