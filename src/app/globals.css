@@ -28,11 +28,10 @@
 	/* Accent - Warm Amber */
 	--color-accent: oklch(0.72 0.16 55);
 	--color-accent-foreground: oklch(0.2 0.03 65);
-	/* Darker variant for accent text on light backgrounds. The standard
-	 * --color-accent at 0.72 lightness only hits ~3:1 contrast on
-	 * --color-background, which fails WCAG 1.4.3 for non-large text. Use
-	 * --color-accent-text wherever the accent is used as small/medium
-	 * non-bold body or label copy. ~5:1 contrast. */
+	/* --color-accent is for fills, borders and decorative icons only. It
+	 * is 2.49:1 on --color-background, so it fails WCAG 1.4.3 even for
+	 * large text. Any accent-coloured text uses --color-accent-text
+	 * (6.03:1 on background, 5.53:1 on muted). */
 	--color-accent-text: oklch(0.5 0.16 55);
 
 	/* Semantic colors */
@@ -42,19 +41,23 @@
 	--color-destructive-muted: oklch(0.92 0.06 25);
 	--color-destructive-text: oklch(0.5 0.18 25);
 
-	--color-success: oklch(0.6 0.16 150);
+	/* Success and info fills carry white text: 5.9:1 and 5.7:1, and
+	 * still >= 4.5:1 at the /90 hover (WCAG 1.4.3). */
+	--color-success: oklch(0.48 0.13 150);
 	--color-success-foreground: oklch(0.985 0.005 150);
 	--color-success-light: oklch(0.95 0.05 150);
 	--color-success-muted: oklch(0.9 0.08 150);
 	--color-success-text: oklch(0.4 0.12 150);
 
+	/* Never as text (1.81:1 on background): warning text uses
+	 * --color-warning-text. */
 	--color-warning: oklch(0.8 0.14 80);
 	--color-warning-foreground: oklch(0.18 0.02 80);
 	--color-warning-light: oklch(0.96 0.05 80);
 	--color-warning-muted: oklch(0.92 0.08 80);
 	--color-warning-text: oklch(0.5 0.12 80);
 
-	--color-info: oklch(0.62 0.14 245);
+	--color-info: oklch(0.5 0.12 245);
 	--color-info-foreground: oklch(0.985 0.005 245);
 	--color-info-light: oklch(0.96 0.03 245);
 	--color-info-muted: oklch(0.92 0.06 245);
@@ -348,7 +351,7 @@ button,
 		border-radius: 1rem;
 	}
 
-	/* Radial amber spotlight — for hero and CTA dark sections */
+	/* Radial amber spotlight behind hero and CTA sections (decorative) */
 	.hero-spotlight {
 		background: radial-gradient(
 			ellipse 80% 55% at 50% 0%,
