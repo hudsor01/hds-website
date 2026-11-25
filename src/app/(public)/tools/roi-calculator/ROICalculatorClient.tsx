@@ -22,13 +22,18 @@ import { Button } from '@/components/ui/button'
 import { trackEvent } from '@/lib/analytics'
 import {
 	calculateRoi,
+	formatRoiMoney,
+	formatRoiPercent,
+	MAX_IMPROVEMENT,
+	MAX_INVESTMENT,
+	MAX_MONTHLY_TRAFFIC,
+	MAX_ORDER_VALUE,
 	parseRoiInput,
 	type RoiField,
 	type RoiInput,
 	type RoiRawInput,
 	type RoiResult
 } from '@/lib/roi-calculator'
-import { formatCurrency } from '@/lib/utils'
 
 interface RoiCalculatorViewProps {
 	raw: RoiRawInput
@@ -98,35 +103,35 @@ function buildResultItems(input: RoiInput, result: RoiResult): ResultItem[] {
 	const items: ResultItem[] = [
 		{
 			label: 'Current Annual Revenue',
-			value: formatCurrency(result.currentAnnualRevenue),
+			value: formatRoiMoney(result.currentAnnualRevenue),
 			description: `At your current ${formatPercent(input.conversionRate)} conversion rate`
 		},
 		{
 			label: 'Projected Annual Revenue',
-			value: formatCurrency(result.projectedAnnualRevenue),
+			value: formatRoiMoney(result.projectedAnnualRevenue),
 			description: projectedDescription,
 			highlight: true
 		},
 		{
 			label: 'Additional Monthly Revenue',
-			value: formatCurrency(result.monthlyIncrease),
+			value: formatRoiMoney(result.monthlyIncrease),
 			description: 'Extra revenue per month',
 			highlight: true
 		},
 		{
 			label: 'Additional Annual Revenue',
-			value: formatCurrency(result.annualIncrease),
+			value: formatRoiMoney(result.annualIncrease),
 			description: 'Extra revenue over 12 months',
 			highlight: true
 		}
 	]
 
 	if (input.investment !== null && result.roiPercentage !== null) {
-		const investment = formatCurrency(input.investment)
+		const investment = formatRoiMoney(input.investment)
 		items.push(
 			{
 				label: 'First-Year ROI',
-				value: `${ONE_DECIMAL.format(result.roiPercentage)}%`,
+				value: formatRoiPercent(result.roiPercentage),
 				description: `Additional annual revenue minus your ${investment} investment, divided by that investment. Based on revenue, not profit.`
 			},
 			{
@@ -239,6 +244,7 @@ function RoiCalculatorView({
 					type="number"
 					inputMode="numeric"
 					min="0"
+					max={MAX_MONTHLY_TRAFFIC}
 					step="1"
 					helpText="Average number of visitors per month"
 					required
@@ -263,6 +269,7 @@ function RoiCalculatorView({
 					type="number"
 					inputMode="decimal"
 					min="0"
+					max={MAX_ORDER_VALUE}
 					step="0.01"
 					prefix="$"
 					helpText="Average revenue per conversion or sale"
@@ -275,6 +282,7 @@ function RoiCalculatorView({
 					type="number"
 					inputMode="decimal"
 					min="0"
+					max={MAX_IMPROVEMENT}
 					step="1"
 					suffix="%"
 					helpText="A relative lift: 2% with a 20% lift is 2.4%. The 20% default is an example assumption, not a forecast."
@@ -287,6 +295,7 @@ function RoiCalculatorView({
 					type="number"
 					inputMode="decimal"
 					min="0"
+					max={MAX_INVESTMENT}
 					step="1"
 					prefix="$"
 					helpText="Your own estimate of what the improvement would cost. Leave it blank to see revenue only."

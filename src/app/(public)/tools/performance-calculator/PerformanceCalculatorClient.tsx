@@ -25,11 +25,17 @@ import {
 	scoreBand
 } from '@/lib/performance-calculator'
 import {
+	formatRoiMoney,
+	MAX_MONTHLY_TRAFFIC,
+	MAX_ORDER_VALUE,
+	ORDER_VALUE_MAX_ERROR,
+	TRAFFIC_MAX_ERROR
+} from '@/lib/roi-calculator'
+import {
 	apiErrorSchema,
 	type PagespeedMetrics,
 	pagespeedSuccessSchema
 } from '@/lib/schemas/pagespeed'
-import { formatCurrency } from '@/lib/utils'
 
 interface AnalyzedSite {
 	url: string
@@ -92,6 +98,18 @@ function parseNumber(raw: string, max?: number): number | null {
 	return value
 }
 
+/** The error for a filled-in number above its maximum, if any. */
+function maxError(
+	raw: string,
+	max: number,
+	message: string
+): string | undefined {
+	const value = Number(raw)
+	return raw.trim() !== '' && Number.isFinite(value) && value > max
+		? message
+		: undefined
+}
+
 function formatPercent(value: number): string {
 	return `${Number(value.toFixed(2))}%`
 }
@@ -120,8 +138,24 @@ export default function PerformanceCalculatorClient() {
 	const setField = (field: keyof RawInputs, value: string) =>
 		setInputs(prev => ({ ...prev, [field]: value }))
 
-	const monthlyVisitors = parseNumber(inputs.monthlyVisitors)
-	const averageOrderValue = parseNumber(inputs.averageOrderValue)
+	const monthlyVisitors = parseNumber(
+		inputs.monthlyVisitors,
+		MAX_MONTHLY_TRAFFIC
+	)
+	const averageOrderValue = parseNumber(
+		inputs.averageOrderValue,
+		MAX_ORDER_VALUE
+	)
+	const visitorsError = maxError(
+		inputs.monthlyVisitors,
+		MAX_MONTHLY_TRAFFIC,
+		TRAFFIC_MAX_ERROR
+	)
+	const orderValueError = maxError(
+		inputs.averageOrderValue,
+		MAX_ORDER_VALUE,
+		ORDER_VALUE_MAX_ERROR
+	)
 	const conversionRate = parseNumber(inputs.currentConversionRate, 100)
 	const liftPercent = parseNumber(inputs.liftPercent, 100)
 
@@ -200,14 +234,14 @@ export default function PerformanceCalculatorClient() {
 						? [
 								{
 									label: 'Current monthly revenue from these inputs',
-									value: formatCurrency(scenario.monthlyRevenue),
+									value: formatRoiMoney(scenario.monthlyRevenue),
 									description:
 										'Monthly visitors x conversion rate x average order value.'
 								},
 								{
 									label: scenarioLabel,
-									value: `+${formatCurrency(scenario.monthlyGain)}/mo`,
-									description: `${formatCurrency(scenario.annualGain)} a year. Your conversion rate goes from ${formatPercent(conversionRate ?? 0)} to ${formatPercent(scenario.scenarioConversionRatePercent)}${scenario.capped ? ' (capped at 100%)' : ''}. A what-if built on the lift you entered, not a prediction.`,
+									value: `+${formatRoiMoney(scenario.monthlyGain)}/mo`,
+									description: `${formatRoiMoney(scenario.annualGain)} a year. Your conversion rate goes from ${formatPercent(conversionRate ?? 0)} to ${formatPercent(scenario.scenarioConversionRatePercent)}${scenario.capped ? ' (capped at 100%)' : ''}. A what-if built on the lift you entered, not a prediction.`,
 									highlight: true
 								}
 							]
@@ -228,8 +262,8 @@ export default function PerformanceCalculatorClient() {
 			),
 			...(scenario
 				? [
-						`Current monthly revenue from these inputs: ${formatCurrency(scenario.monthlyRevenue)}`,
-						`${scenarioLabel}: +${formatCurrency(scenario.monthlyGain)}/mo, ${formatCurrency(scenario.annualGain)}/yr (a scenario, not a prediction)`
+						`Current monthly revenue from these inputs: ${formatRoiMoney(scenario.monthlyRevenue)}`,
+						`${scenarioLabel}: +${formatRoiMoney(scenario.monthlyGain)}/mo, ${formatRoiMoney(scenario.annualGain)}/yr (a scenario, not a prediction)`
 					]
 				: [])
 		]
@@ -265,10 +299,12 @@ export default function PerformanceCalculatorClient() {
 						type="number"
 						inputMode="numeric"
 						min="0"
+						max={MAX_MONTHLY_TRAFFIC}
 						step="1"
 						value={inputs.monthlyVisitors}
 						onChange={e => setField('monthlyVisitors', e.target.value)}
 						helpText="Average monthly website visitors"
+						error={visitorsError}
 						required
 					/>
 
@@ -278,11 +314,13 @@ export default function PerformanceCalculatorClient() {
 						type="number"
 						inputMode="decimal"
 						min="0"
+						max={MAX_ORDER_VALUE}
 						step="0.01"
 						prefix="$"
 						value={inputs.averageOrderValue}
 						onChange={e => setField('averageOrderValue', e.target.value)}
 						helpText="Average value per conversion"
+						error={orderValueError}
 						required
 					/>
 
