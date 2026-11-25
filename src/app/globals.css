@@ -152,6 +152,28 @@
 		color-mix(in oklab, var(--color-primary) 20%, transparent);
 	--shadow-glow-accent: 0 0 20px
 		color-mix(in oklab, var(--color-accent) 25%, transparent);
+
+	/* Radix accordion open/close (ui/accordion.tsx). Radix sets
+	 * --radix-accordion-content-height on the content element. */
+	--animate-accordion-down: accordion-down 0.2s ease-out;
+	--animate-accordion-up: accordion-up 0.2s ease-out;
+
+	@keyframes accordion-down {
+		from {
+			height: 0;
+		}
+		to {
+			height: var(--radix-accordion-content-height);
+		}
+	}
+	@keyframes accordion-up {
+		from {
+			height: var(--radix-accordion-content-height);
+		}
+		to {
+			height: 0;
+		}
+	}
 }
 
 /* Font family tokens. Tailwind v4 requires `@theme inline` when token
