@@ -10,16 +10,6 @@ import { cleanup } from '@testing-library/react'
  * Create isolated mock instances for common dependencies
  * These should be set up in beforeEach hooks, not at module level
  */
-function createMockLogger() {
-	return {
-		info: mock(),
-		warn: mock(),
-		error: mock(),
-		debug: mock(),
-		setContext: mock()
-	}
-}
-
 function createMockRateLimiter() {
 	return {
 		checkLimit: mock().mockResolvedValue(true),
@@ -161,7 +151,6 @@ function createMockGetClientIp() {
  * Call this in beforeEach hooks
  */
 export function setupApiMocks() {
-	const mockLogger = createMockLogger()
 	const mockRateLimiter = createMockRateLimiter()
 
 	process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test'
@@ -189,12 +178,10 @@ export function setupApiMocks() {
 		}
 	}))
 
-	mock.module('@/lib/logger', () => ({
-		logger: mockLogger,
-		createServerLogger: () => mockLogger,
-		castError: (error: unknown) =>
-			error instanceof Error ? error : new Error(String(error))
-	}))
+	// No @/lib/logger mock here: tests/setup.ts registers the complete one and
+	// re-applies it before every test. A partial logger mock registered before
+	// the module's first load drops exports (createServerLogger) for the rest
+	// of the run.
 
 	mock.module('@/lib/rate-limiter', () => ({
 		UnifiedRateLimiter: createMockUnifiedRateLimiterClass(),
@@ -253,7 +240,7 @@ export function setupApiMocks() {
 		}))
 	}))
 
-	return { mockLogger, mockRateLimiter }
+	return { mockRateLimiter }
 }
 
 /**

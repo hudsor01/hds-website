@@ -20,24 +20,6 @@ beforeEach(() => {
 			CSRF_SECRET: 'test-csrf-secret-for-testing-only-32chars'
 		}
 	}))
-	mock.module('@/lib/logger', () => ({
-		logger: {
-			debug: mock(),
-			info: mock(),
-			warn: mock(),
-			error: mock(),
-			setContext: mock()
-		},
-		createServerLogger: () => ({
-			debug: mock(),
-			info: mock(),
-			warn: mock(),
-			error: mock(),
-			setContext: mock()
-		}),
-		castError: (error: unknown) =>
-			error instanceof Error ? error : new Error(String(error))
-	}))
 	mock.module('@/lib/rate-limiter', () => ({
 		getUnifiedRateLimiter: () => ({
 			checkLimit: mock().mockResolvedValue(true)

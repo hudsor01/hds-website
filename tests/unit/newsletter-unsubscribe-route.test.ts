@@ -51,18 +51,6 @@ describe('POST /api/newsletter/unsubscribe', () => {
 			}
 		}))
 
-		mock.module('@/lib/logger', () => ({
-			logger: {
-				debug: mock(),
-				info: mock(),
-				warn: mock(),
-				error: mock(),
-				setContext: mock()
-			},
-			castError: (error: unknown) =>
-				error instanceof Error ? error : new Error(String(error))
-		}))
-
 		mock.module('@/lib/db', () => ({
 			db: {
 				update: mockDbUpdate

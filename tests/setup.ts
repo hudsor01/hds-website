@@ -187,6 +187,11 @@ function setupLoggerMock() {
 }
 
 setupLoggerMock()
+// Load @/lib/logger now, under the complete mock, so its export list is fixed
+// with every name. Bun fixes a module's export names on first evaluation; if a
+// partial factory were registered at that moment, the missing names (e.g.
+// createServerLogger) would be gone for the rest of the process.
+await import('@/lib/logger')
 
 // Mock react-simple-maps wrapper — the library triggers async SVG path
 // calculations that crash in JSDOM and cause act() warnings
