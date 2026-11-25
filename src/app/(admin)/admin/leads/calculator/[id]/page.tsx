@@ -21,6 +21,7 @@ import { Suspense } from 'react'
 import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
+import { Button } from '@/components/ui/button'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
 import { getCalculatorLeadById } from '@/lib/admin/calculator-leads-queries'
 import { routeDetailResult } from '@/lib/admin/detail-result-routing'
@@ -228,12 +229,9 @@ async function CalculatorLeadDetail({
 						{!row.contacted ? (
 							<form action={markCalculatorLeadContactedForm}>
 								<input type="hidden" name="id" value={row.id} />
-								<button
-									type="submit"
-									className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-text border border-border bg-surface-raised hover:bg-surface-base transition-smooth"
-								>
+								<Button type="submit" variant="outline" size="sm">
 									Mark contacted
-								</button>
+								</Button>
 							</form>
 						) : !row.converted ? (
 							<form
@@ -252,12 +250,9 @@ async function CalculatorLeadDetail({
 										className="field w-32"
 									/>
 								</label>
-								<button
-									type="submit"
-									className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-text border border-border bg-surface-raised hover:bg-surface-base transition-smooth"
-								>
+								<Button type="submit" variant="outline" size="sm">
 									Mark converted
-								</button>
+								</Button>
 							</form>
 						) : (
 							<p className="text-sm text-muted-foreground">

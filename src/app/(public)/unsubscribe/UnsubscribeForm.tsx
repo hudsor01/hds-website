@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
+import { Button } from '@/components/ui/button'
 import { csrfFetch } from '@/lib/api/csrf-fetch'
 import { logger } from '@/lib/logger'
 
@@ -65,13 +66,15 @@ async function unsubscribeAction(
 function SubmitButton() {
 	const { pending } = useFormStatus()
 	return (
-		<button
+		<Button
 			type="submit"
+			variant="accent"
+			size="lg"
+			className="w-full"
 			disabled={pending}
-			className="w-full px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:bg-accent/90 disabled:opacity-50 transition-colors"
 		>
 			{pending ? 'Processing...' : 'Unsubscribe'}
-		</button>
+		</Button>
 	)
 }
 

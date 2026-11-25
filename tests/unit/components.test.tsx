@@ -226,7 +226,7 @@ describe('Button Component', () => {
 
 		rerender(<Button size="lg">Large</Button>)
 		button = screen.getByRole('button')
-		expect(button).toHaveClass('h-10')
+		expect(button).toHaveClass('h-12')
 	})
 
 	it('should be disabled when disabled prop is true', () => {

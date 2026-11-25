@@ -153,12 +153,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 									<ArrowRight className="w-4 h-4" aria-hidden="true" />
 								</Link>
 							</Button>
-							<Button
-								asChild
-								variant="outline"
-								size="xl"
-								className="border-2 border-foreground/25 hover:border-accent"
-							>
+							<Button asChild variant="outline-strong" size="xl">
 								<Link href="#included">See What&apos;s Included</Link>
 							</Button>
 						</div>

@@ -174,12 +174,7 @@ export default async function TestimonialsPage() {
 										<ArrowRight className="w-5 h-5" aria-hidden="true" />
 									</Link>
 								</Button>
-								<Button
-									asChild
-									variant="outline"
-									size="xl"
-									className="border-2 border-foreground/25 hover:border-accent"
-								>
+								<Button asChild variant="outline-strong" size="xl">
 									<Link href="/showcase">View Showcase</Link>
 								</Button>
 							</div>

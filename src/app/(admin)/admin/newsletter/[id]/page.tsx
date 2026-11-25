@@ -23,6 +23,7 @@ import { Suspense } from 'react'
 import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
+import { Button } from '@/components/ui/button'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
 import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import { getSubscriberById } from '@/lib/admin/newsletter-queries'
@@ -66,9 +67,6 @@ export function generateStaticParams() {
 interface SubscriberDetailPageProps {
 	params: Promise<{ id: string }>
 }
-
-const ACTION_BTN_CLASS =
-	'inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-text border border-border bg-surface-raised hover:bg-surface-base transition-smooth'
 
 async function SubscriberLoader({ params }: SubscriberDetailPageProps) {
 	const { id } = await params
@@ -147,16 +145,16 @@ async function SubscriberLoader({ params }: SubscriberDetailPageProps) {
 					{row.status === 'active' ? (
 						<form action={unsubscribeForm}>
 							<input type="hidden" name="id" value={row.id} />
-							<button type="submit" className={ACTION_BTN_CLASS}>
+							<Button type="submit" variant="outline" size="sm">
 								Unsubscribe
-							</button>
+							</Button>
 						</form>
 					) : row.status === 'unsubscribed' ? (
 						<form action={resubscribeForm}>
 							<input type="hidden" name="id" value={row.id} />
-							<button type="submit" className={ACTION_BTN_CLASS}>
+							<Button type="submit" variant="outline" size="sm">
 								Re-subscribe
-							</button>
+							</Button>
 						</form>
 					) : (
 						<p className="text-sm text-muted-foreground">

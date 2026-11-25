@@ -2,6 +2,7 @@
 
 import * as Sentry from '@sentry/nextjs'
 import { useEffect } from 'react'
+import { Button } from '@/components/ui/button'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import './globals.css'
 
@@ -56,22 +57,19 @@ export default function GlobalError({
 					)}
 
 					<div className="flex gap-3 justify-center flex-wrap">
-						<button
-							type="button"
-							onClick={reset}
-							className="px-6 py-3 bg-primary text-primary-foreground rounded-lg text-base font-medium cursor-pointer border-0"
-						>
+						<Button type="button" size="lg" onClick={reset}>
 							Try again
-						</button>
-						<button
+						</Button>
+						<Button
 							type="button"
+							variant="secondary"
+							size="lg"
 							onClick={() => {
 								window.location.href = '/'
 							}}
-							className="px-6 py-3 bg-border text-foreground rounded-lg text-base font-medium cursor-pointer border-0"
 						>
 							Go home
-						</button>
+						</Button>
 					</div>
 
 					<div className="mt-8 p-4 bg-muted rounded-lg">

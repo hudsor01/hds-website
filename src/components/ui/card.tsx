@@ -296,7 +296,7 @@ function Card(props: CardProps) {
 						asChild
 						variant={popular ? 'default' : 'secondary'}
 						size="lg"
-						className="w-full font-bold"
+						className="w-full"
 					>
 						<Link href={href}>{cta}</Link>
 					</Button>

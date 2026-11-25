@@ -50,6 +50,7 @@ import {
 	FormFieldSet
 } from '@/components/admin/FormFieldSet'
 import { UploadProgressBar } from '@/components/admin/UploadProgressBar'
+import { Button } from '@/components/ui/button'
 import { useBlobUpload } from '@/hooks/use-blob-upload'
 import {
 	ACCEPT_ATTRIBUTE,
@@ -69,9 +70,6 @@ interface ImageUploadFieldProps {
 }
 
 const URL_INPUT_CLS = 'field'
-
-const REMOVE_BUTTON_CLS =
-	'inline-flex items-center px-2 py-1 rounded-md text-xs font-medium text-destructive border border-destructive/40 hover:bg-destructive/10 transition-smooth'
 
 const DROP_ZONE_BASE_CLS =
 	'flex items-center justify-center rounded-md border border-dashed px-3 py-2 text-sm transition-smooth cursor-pointer'
@@ -228,8 +226,10 @@ export function ImageUploadField({
 									unoptimized
 								/>
 							</div>
-							<button
+							<Button
 								type="button"
+								variant="destructive"
+								size="sm"
 								onClick={() => {
 									if (localPreview) {
 										URL.revokeObjectURL(localPreview)
@@ -237,10 +237,9 @@ export function ImageUploadField({
 									}
 									onChange(null)
 								}}
-								className={REMOVE_BUTTON_CLS}
 							>
 								Remove
-							</button>
+							</Button>
 						</div>
 					)}
 
@@ -287,13 +286,15 @@ export function ImageUploadField({
 							</p>
 						)}
 						{retryExceeded && !uploadsDisabled && (
-							<button
+							<Button
 								type="button"
+								variant="link"
+								size="sm"
+								className="px-0"
 								onClick={clearError}
-								className="text-xs font-medium text-accent-text hover:underline"
 							>
 								Reset upload
-							</button>
+							</Button>
 						)}
 					</div>
 

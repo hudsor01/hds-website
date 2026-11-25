@@ -27,6 +27,7 @@ import { Suspense } from 'react'
 import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
+import { Button } from '@/components/ui/button'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
 import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import { getLeadById } from '@/lib/admin/leads-queries'
@@ -342,12 +343,9 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 							className="field"
 							placeholder="Type a note about this lead..."
 						/>
-						<button
-							type="submit"
-							className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-text border border-border bg-surface-raised hover:bg-surface-base transition-smooth"
-						>
+						<Button type="submit" variant="outline" size="sm">
 							Add note
-						</button>
+						</Button>
 					</form>
 					{notes.length === 0 ? (
 						<p className="text-sm text-muted-foreground">No notes yet.</p>

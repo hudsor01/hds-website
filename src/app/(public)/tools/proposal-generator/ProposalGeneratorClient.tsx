@@ -13,6 +13,7 @@ import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { DocumentDownloadPanel } from '@/components/tools/DocumentDownloadPanel'
 import { DraftActions } from '@/components/tools/DraftActions'
 import { TextAreaField } from '@/components/tools/TextAreaField'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useClientDefaults } from '@/hooks/use-client-defaults'
 import { useHydrated } from '@/hooks/use-hydrated'
@@ -451,14 +452,16 @@ export default function ProposalGeneratorClient() {
 			<section className="space-y-content border-t border-border pt-6">
 				<div className="flex items-center justify-between">
 					<h2 className="text-eyebrow text-muted-foreground">Scope of Work</h2>
-					<button
+					<Button
 						type="button"
+						variant="link"
+						size="sm"
+						className="px-0"
 						onClick={addScopeItem}
-						className="flex items-center gap-1 text-sm text-accent-text hover:underline underline-offset-4"
 					>
-						<Plus className="w-4 h-4" aria-hidden="true" />
+						<Plus aria-hidden="true" />
 						Add Item
-					</button>
+					</Button>
 				</div>
 				{proposalData.scopeItems.map((item, index) => {
 					const number = index + 1
@@ -477,15 +480,17 @@ export default function ProposalGeneratorClient() {
 								placeholder={`Scope item ${number}...`}
 								className="field flex-1"
 							/>
-							<button
+							<Button
 								type="button"
+								variant="ghost"
+								size="icon"
+								className="hover:text-destructive"
 								onClick={() => removeScopeItem(index)}
 								disabled={proposalData.scopeItems.length === 1}
-								className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
 								aria-label={`Remove scope item ${number}`}
 							>
-								<Trash2 className="w-4 h-4" aria-hidden="true" />
-							</button>
+								<Trash2 aria-hidden="true" />
+							</Button>
 						</div>
 					)
 				})}
@@ -497,14 +502,16 @@ export default function ProposalGeneratorClient() {
 					<h2 className="text-eyebrow text-muted-foreground">
 						Timeline / Milestones
 					</h2>
-					<button
+					<Button
 						type="button"
+						variant="link"
+						size="sm"
+						className="px-0"
 						onClick={addMilestone}
-						className="flex items-center gap-1 text-sm text-accent-text hover:underline underline-offset-4"
 					>
-						<Plus className="w-4 h-4" aria-hidden="true" />
+						<Plus aria-hidden="true" />
 						Add Phase
-					</button>
+					</Button>
 				</div>
 				{proposalData.milestones.map((milestone, index) => {
 					const number = index + 1
@@ -576,15 +583,17 @@ export default function ProposalGeneratorClient() {
 								/>
 							</div>
 							<div className="flex justify-end sm:col-span-1">
-								<button
+								<Button
 									type="button"
+									variant="ghost"
+									size="icon"
+									className="hover:text-destructive"
 									onClick={() => removeMilestone(milestone.id)}
 									disabled={proposalData.milestones.length === 1}
-									className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
 									aria-label={`Remove milestone ${number}`}
 								>
-									<Trash2 className="w-4 h-4" aria-hidden="true" />
-								</button>
+									<Trash2 aria-hidden="true" />
+								</Button>
 							</div>
 						</div>
 					)
@@ -595,14 +604,16 @@ export default function ProposalGeneratorClient() {
 			<section className="space-y-content border-t border-border pt-6">
 				<div className="flex items-center justify-between">
 					<h2 className="text-eyebrow text-muted-foreground">Pricing</h2>
-					<button
+					<Button
 						type="button"
+						variant="link"
+						size="sm"
+						className="px-0"
 						onClick={addPricingItem}
-						className="flex items-center gap-1 text-sm text-accent-text hover:underline underline-offset-4"
 					>
-						<Plus className="w-4 h-4" aria-hidden="true" />
+						<Plus aria-hidden="true" />
 						Add Item
-					</button>
+					</Button>
 				</div>
 				{proposalData.pricingItems.map((item, index) => {
 					const number = index + 1
@@ -642,15 +653,17 @@ export default function ProposalGeneratorClient() {
 								placeholder="0.00"
 								className="field w-28 sm:w-32 text-right"
 							/>
-							<button
+							<Button
 								type="button"
+								variant="ghost"
+								size="icon"
+								className="hover:text-destructive"
 								onClick={() => removePricingItem(item.id)}
 								disabled={proposalData.pricingItems.length === 1}
-								className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
 								aria-label={`Remove pricing item ${number}`}
 							>
-								<Trash2 className="w-4 h-4" aria-hidden="true" />
-							</button>
+								<Trash2 aria-hidden="true" />
+							</Button>
 						</div>
 					)
 				})}

@@ -79,12 +79,7 @@ export default function ServicesPage() {
 								<ArrowRight className="w-4 h-4" />
 							</Link>
 						</Button>
-						<Button
-							asChild
-							variant="outline"
-							size="xl"
-							className="border-2 border-foreground/25 hover:border-accent"
-						>
+						<Button asChild variant="outline-strong" size="xl">
 							<Link href="#process">See My Process</Link>
 						</Button>
 					</div>
@@ -195,12 +190,7 @@ export default function ServicesPage() {
 									</Link>
 								</Button>
 
-								<Button
-									asChild
-									variant="outline"
-									size="xl"
-									className="border-2 border-foreground/25 hover:border-accent"
-								>
+								<Button asChild variant="outline-strong" size="xl">
 									<Link href="#services-list">View Services</Link>
 								</Button>
 							</div>

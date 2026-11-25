@@ -77,12 +77,7 @@ export default function NotFound() {
 								Return Home
 							</Link>
 						</Button>
-						<Button
-							asChild
-							variant="outline"
-							size="xl"
-							className="border-2 border-foreground/25 hover:border-accent"
-						>
+						<Button asChild variant="outline-strong" size="xl">
 							<Link href="/contact">
 								<MessageSquare className="w-5 h-5" />
 								Get Help

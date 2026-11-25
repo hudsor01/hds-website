@@ -9,6 +9,7 @@ import { AlertCircle, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import { useId, useState } from 'react'
 import type { ToolAction } from '@/components/layout/ToolPageLayout'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
+import { Button } from '@/components/ui/button'
 import { trackEvent } from '@/lib/analytics'
 import {
 	formatJson,
@@ -224,30 +225,30 @@ export default function JsonFormatterClient() {
 			</div>
 
 			<div className="grid grid-cols-3 gap-3">
-				<button
+				<Button
 					type="button"
+					variant="accent"
 					onClick={() => run('format')}
 					disabled={!inputJson.trim()}
-					className="rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					Format
-				</button>
-				<button
+				</Button>
+				<Button
 					type="button"
+					variant="outline"
 					onClick={() => run('minify')}
 					disabled={!inputJson.trim()}
-					className="rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					Minify
-				</button>
-				<button
+				</Button>
+				<Button
 					type="button"
+					variant="outline"
 					onClick={validate}
 					disabled={!inputJson.trim()}
-					className="rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					Validate
-				</button>
+				</Button>
 			</div>
 		</div>
 	)

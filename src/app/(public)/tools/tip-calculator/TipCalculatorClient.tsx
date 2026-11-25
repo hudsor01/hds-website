@@ -5,10 +5,11 @@
 
 'use client'
 
-import { Percent, Users } from 'lucide-react'
+import { Minus, Percent, Plus, Users } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
 import {
@@ -27,13 +28,6 @@ const TIP_PRESETS = [
 	{ value: 20, label: '20%' },
 	{ value: 25, label: '25%' }
 ]
-
-const PRESET_BUTTON_BASE =
-	'py-3 px-2 rounded-lg text-sm font-semibold transition-colors'
-const PRESET_BUTTON_ACTIVE = 'bg-accent text-accent-foreground'
-const PRESET_BUTTON_IDLE = 'bg-muted text-muted-foreground hover:bg-muted/80'
-const STEPPER_BUTTON =
-	'w-12 h-12 rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 text-xl font-bold transition-colors'
 
 /** Accepts an empty field or a finite number inside [min, max]. */
 function isAcceptedNumber(raw: string, min: number, max: number): boolean {
@@ -134,29 +128,27 @@ export default function TipCalculatorClient() {
 					{TIP_PRESETS.map(preset => {
 						const isActive = !useCustomTip && presetPercent === preset.value
 						return (
-							<button
+							<Button
 								key={preset.value}
 								type="button"
+								variant={isActive ? 'accent' : 'muted'}
+								className="px-2"
 								aria-pressed={isActive}
 								onClick={() => selectTipPreset(preset.value)}
-								className={`${PRESET_BUTTON_BASE} ${
-									isActive ? PRESET_BUTTON_ACTIVE : PRESET_BUTTON_IDLE
-								}`}
 							>
 								{preset.label}
-							</button>
+							</Button>
 						)
 					})}
-					<button
+					<Button
 						type="button"
+						variant={useCustomTip ? 'accent' : 'muted'}
+						className="px-2"
 						aria-pressed={useCustomTip}
 						onClick={() => setUseCustomTip(true)}
-						className={`${PRESET_BUTTON_BASE} ${
-							useCustomTip ? PRESET_BUTTON_ACTIVE : PRESET_BUTTON_IDLE
-						}`}
 					>
 						Custom
-					</button>
+					</Button>
 				</div>
 
 				{useCustomTip && (
@@ -185,15 +177,16 @@ export default function TipCalculatorClient() {
 				</legend>
 
 				<div className="flex items-center gap-4">
-					<button
+					<Button
 						type="button"
+						variant="muted"
+						size="icon-lg"
 						aria-label="Remove a person"
 						onClick={() => setSplitCount(prev => Math.max(MIN_SPLIT, prev - 1))}
-						className={STEPPER_BUTTON}
 						disabled={splitCount <= MIN_SPLIT}
 					>
-						-
-					</button>
+						<Minus aria-hidden="true" />
+					</Button>
 					<div className="flex-1 text-center">
 						<div className="text-3xl font-bold text-foreground">
 							{splitCount}
@@ -202,15 +195,16 @@ export default function TipCalculatorClient() {
 							{splitCount === 1 ? 'person' : 'people'}
 						</div>
 					</div>
-					<button
+					<Button
 						type="button"
+						variant="muted"
+						size="icon-lg"
 						aria-label="Add a person"
 						onClick={() => setSplitCount(prev => Math.min(MAX_SPLIT, prev + 1))}
-						className={STEPPER_BUTTON}
 						disabled={splitCount >= MAX_SPLIT}
 					>
-						+
-					</button>
+						<Plus aria-hidden="true" />
+					</Button>
 				</div>
 			</fieldset>
 

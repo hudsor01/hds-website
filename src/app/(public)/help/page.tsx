@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 import {
 	getAllPublishedArticles,
 	getCategoriesWithCounts,
@@ -139,13 +140,12 @@ export default async function HelpCenterPage() {
 							I&apos;m here to help. Reach out and I&apos;ll get back to you
 							within 2 hours during business hours.
 						</p>
-						<Link
-							href="/contact"
-							className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-accent text-accent-foreground font-semibold hover:bg-accent/90 transition-colors"
-						>
-							Contact Support
-							<ArrowRight className="size-4" />
-						</Link>
+						<Button asChild variant="accent" size="lg">
+							<Link href="/contact">
+								Contact Support
+								<ArrowRight className="size-4" />
+							</Link>
+						</Button>
 					</div>
 				</div>
 			</section>

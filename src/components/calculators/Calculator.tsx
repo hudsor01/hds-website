@@ -9,6 +9,7 @@ import {
 	saveCalculation
 } from '@/app/(public)/actions/ttl-calculator'
 import { InputPanel } from '@/components/InputPanel/InputPanel'
+import { Button } from '@/components/ui/button'
 import { TIMEOUTS } from '@/lib/constants/timeouts'
 import { logger } from '@/lib/logger'
 import { formatCurrency } from '@/lib/utils'
@@ -301,13 +302,15 @@ export function Calculator() {
 									}
 									className="field flex-1"
 								/>
-								<button
+								<Button
+									type="button"
+									variant="accent"
+									size="icon"
 									onClick={copyShareLink}
-									className="px-3 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors"
 									aria-label="Copy link"
 								>
-									<Copy className="w-4 h-4" />
-								</button>
+									<Copy aria-hidden="true" />
+								</Button>
 							</div>
 							<p className="text-xs text-muted-foreground mt-1">
 								This link will work for 90 days
@@ -331,35 +334,40 @@ export function Calculator() {
 									onChange={e => setEmailInput(e.target.value)}
 									className="field flex-1"
 								/>
-								<button
+								<Button
+									type="button"
+									variant="accent"
+									size="icon"
 									onClick={handleEmailResults}
 									disabled={isPending || !emailInput}
-									className="px-3 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 									aria-label="Send email"
 								>
-									<Mail className="w-4 h-4" />
-								</button>
+									<Mail aria-hidden="true" />
+								</Button>
 							</div>
 						</div>
 
 						{/* Print Button */}
 						<div className="flex gap-3">
-							<button
+							<Button
+								type="button"
+								variant="muted"
+								className="flex-1"
 								onClick={() => {
 									setShowShareModal(false)
 									setTimeout(handlePrintPDF, TIMEOUTS.PRINT_DELAY)
 								}}
-								className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-colors"
 							>
-								<Printer className="w-4 h-4" />
+								<Printer aria-hidden="true" />
 								Print Results
-							</button>
-							<button
+							</Button>
+							<Button
+								type="button"
+								variant="ghost"
 								onClick={() => setShowShareModal(false)}
-								className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
 							>
 								Close
-							</button>
+							</Button>
 						</div>
 					</div>
 				</div>

@@ -450,22 +450,12 @@ export default function AboutPage() {
 									</Link>
 								</Button>
 
-								<Button
-									asChild
-									variant="outline"
-									size="xl"
-									className="border-2 border-foreground/25 hover:border-accent"
-								>
+								<Button asChild variant="outline-strong" size="xl">
 									<Link href="/services">View Services</Link>
 								</Button>
 
 								{BUSINESS_INFO.phone && (
-									<Button
-										asChild
-										variant="outline"
-										size="xl"
-										className="border-2 border-foreground/25 hover:border-accent"
-									>
+									<Button asChild variant="outline-strong" size="xl">
 										<a href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}>
 											<Phone className="w-5 h-5" />
 											{BUSINESS_INFO.phone}

@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import type { ToolAction } from '@/components/layout/ToolPageLayout'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
 import { logger } from '@/lib/logger'
@@ -283,12 +284,9 @@ export default function MetaTagGeneratorClient() {
 					</label>
 				</div>
 
-				<button
-					type="submit"
-					className="w-full rounded-md bg-accent px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-accent/80"
-				>
+				<Button type="submit" variant="accent" size="lg" className="w-full">
 					Generate meta tags
-				</button>
+				</Button>
 			</form>
 
 			{/* Educational Content */}

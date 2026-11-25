@@ -186,12 +186,7 @@ export default function WebsiteMigrationPage() {
 							</Link>
 						</Button>
 						{BUSINESS_INFO.phone && (
-							<Button
-								asChild
-								variant="outline"
-								size="xl"
-								className="border-2 border-foreground/25 hover:border-accent"
-							>
+							<Button asChild variant="outline-strong" size="xl">
 								<a href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}>
 									<Phone className="w-4 h-4" />
 									{BUSINESS_INFO.phone}
@@ -433,12 +428,7 @@ export default function WebsiteMigrationPage() {
 								</Button>
 
 								{BUSINESS_INFO.phone && (
-									<Button
-										asChild
-										variant="outline"
-										size="xl"
-										className="border-2 border-foreground/25 hover:border-accent"
-									>
+									<Button asChild variant="outline-strong" size="xl">
 										<a href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}>
 											<Phone className="w-5 h-5" />
 											Call {BUSINESS_INFO.phone}

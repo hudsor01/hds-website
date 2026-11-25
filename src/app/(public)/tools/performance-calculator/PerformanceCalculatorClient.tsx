@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
 import { logger } from '@/lib/logger'
@@ -362,23 +363,22 @@ export default function PerformanceCalculatorClient() {
 					</Card>
 				)}
 
-				<button
+				<Button
 					type="submit"
+					variant="accent"
+					size="lg"
+					className="w-full"
 					disabled={isAnalyzing}
-					className="w-full rounded-md bg-accent px-6 py-3 text-base font-semibold text-accent-foreground shadow-xs hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					{isAnalyzing ? (
-						<span className="flex items-center justify-center">
-							<Loader2
-								className="-ml-1 mr-3 h-5 w-5 animate-spin"
-								aria-hidden="true"
-							/>
+						<>
+							<Loader2 className="size-5 animate-spin" aria-hidden="true" />
 							Analyzing Website...
-						</span>
+						</>
 					) : (
 						'Analyze Performance'
 					)}
-				</button>
+				</Button>
 
 				<p
 					aria-live="polite"
@@ -505,17 +505,19 @@ export default function PerformanceCalculatorClient() {
 				}}
 			/>
 
-			<button
+			<Button
 				type="button"
+				variant="outline"
+				size="lg"
+				className="mt-content-block w-full"
 				onClick={() => {
 					setAnalyzed(null)
 					setError('')
 				}}
-				className="mt-content-block flex w-full items-center justify-center gap-2 rounded-md border border-border bg-surface-raised px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted"
 			>
-				<ArrowLeft className="h-4 w-4" aria-hidden="true" />
+				<ArrowLeft aria-hidden="true" />
 				Analyze Another Site
-			</button>
+			</Button>
 		</div>
 	) : undefined
 

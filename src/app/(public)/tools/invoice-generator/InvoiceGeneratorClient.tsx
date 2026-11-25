@@ -13,6 +13,7 @@ import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { DocumentDownloadPanel } from '@/components/tools/DocumentDownloadPanel'
 import { DraftActions } from '@/components/tools/DraftActions'
 import { TextAreaField } from '@/components/tools/TextAreaField'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useClientDefaults } from '@/hooks/use-client-defaults'
 import { useHydrated } from '@/hooks/use-hydrated'
@@ -489,14 +490,16 @@ export default function InvoiceGeneratorClient() {
 				<section className="space-y-content border-t border-border pt-6">
 					<div className="flex items-center justify-between">
 						<h2 className="text-eyebrow text-muted-foreground">Line Items</h2>
-						<button
+						<Button
 							type="button"
+							variant="link"
+							size="sm"
+							className="px-0"
 							onClick={addLineItem}
-							className="flex items-center gap-1 text-sm text-accent-text hover:underline underline-offset-4"
 						>
-							<Plus className="w-4 h-4" aria-hidden="true" />
+							<Plus aria-hidden="true" />
 							Add Item
-						</button>
+						</Button>
 					</div>
 
 					{/* Column headings for sighted desktop users; inputs keep their own labels */}
@@ -595,15 +598,17 @@ export default function InvoiceGeneratorClient() {
 									</span>
 								</p>
 								<div className="sm:col-span-1 flex justify-end">
-									<button
+									<Button
 										type="button"
+										variant="ghost"
+										size="icon"
+										className="hover:text-destructive"
 										onClick={() => removeLineItem(item.id)}
 										disabled={invoiceData.lineItems.length === 1}
-										className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30 disabled:cursor-not-allowed"
 										aria-label={`Remove line item ${line}`}
 									>
-										<Trash2 className="w-4 h-4" aria-hidden="true" />
-									</button>
+										<Trash2 aria-hidden="true" />
+									</Button>
 								</div>
 							</div>
 						)

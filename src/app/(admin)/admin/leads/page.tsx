@@ -39,6 +39,7 @@ import {
 	StatusFilterBar,
 	type StatusFilterOption
 } from '@/components/admin/StatusFilterBar'
+import { Button } from '@/components/ui/button'
 import {
 	Pagination,
 	PaginationContent,
@@ -264,12 +265,9 @@ export default function AdminLeadsPage({ searchParams }: AdminLeadsPageProps) {
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
 				<h1 className="text-2xl font-semibold text-foreground">Leads</h1>
-				<Link
-					href="/admin/leads/calculator"
-					className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-text border border-border bg-surface-raised hover:bg-surface-base transition-smooth"
-				>
-					Calculator leads
-				</Link>
+				<Button asChild variant="outline" size="sm">
+					<Link href="/admin/leads/calculator">Calculator leads</Link>
+				</Button>
 			</div>
 			<Suspense fallback={null}>
 				<RevenueSummary />
