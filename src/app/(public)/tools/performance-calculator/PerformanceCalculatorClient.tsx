@@ -17,6 +17,7 @@ import { trackEvent } from '@/lib/analytics'
 import { logger } from '@/lib/logger'
 import {
 	DEFAULT_LIFT_PERCENT,
+	formatLabValue,
 	indefiniteArticle,
 	isGoodLabValue,
 	LAB_METRICS,
@@ -258,7 +259,7 @@ export default function PerformanceCalculatorClient() {
 			`PageSpeed performance score (mobile, one run): ${score}/100 (${band})`,
 			...LAB_METRICS.map(
 				guide =>
-					`${guide.abbr}: ${analyzed.metrics[guide.key].displayValue} (good: ${guide.goodLabel})`
+					`${guide.abbr}: ${formatLabValue(guide, analyzed.metrics[guide.key])} (good: ${guide.goodLabel})`
 			),
 			...(scenario
 				? [
@@ -473,7 +474,7 @@ export default function PerformanceCalculatorClient() {
 									{guide.abbr} <span className="text-xs">({guide.name})</span>
 								</dt>
 								<dd className="text-xl font-bold text-foreground">
-									{metric.displayValue}
+									{formatLabValue(guide, metric)}
 								</dd>
 								<dd className="text-xs text-muted-foreground">
 									Good: {guide.goodLabel}
