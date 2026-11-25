@@ -134,8 +134,10 @@
 	--shadow-md: 0 4px 12px oklch(0 0 0 / 0.08), 0 2px 4px oklch(0 0 0 / 0.04);
 	--shadow-lg: 0 8px 24px oklch(0 0 0 / 0.1), 0 4px 8px oklch(0 0 0 / 0.06);
 	--shadow-xl: 0 20px 40px oklch(0 0 0 / 0.12), 0 8px 16px oklch(0 0 0 / 0.08);
-	--shadow-glow: 0 0 30px oklch(from var(--color-primary) l c h / 0.2);
-	--shadow-glow-accent: 0 0 20px oklch(from var(--color-accent) l c h / 0.25);
+	--shadow-glow: 0 0 30px
+		color-mix(in oklab, var(--color-primary) 20%, transparent);
+	--shadow-glow-accent: 0 0 20px
+		color-mix(in oklab, var(--color-accent) 25%, transparent);
 }
 
 /* Font family tokens. Tailwind v4 requires `@theme inline` when token
@@ -263,8 +265,8 @@ body {
 	--font-sans: var(--font-hanken-grotesk), system-ui, sans-serif;
 	--font-display: var(--font-roboto-serif), Georgia, serif;
 	--font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
-	background: var(--background);
-	color: var(--foreground);
+	background-color: var(--color-background);
+	color: var(--color-foreground);
 	font-family: var(--font-sans);
 }
 
@@ -304,13 +306,13 @@ body {
  * validation (Chrome / Firefox / Safari support since 2023). Cheap
  * persistent inline error indicator for the audit-reported "no
  * required-field highlights" complaint (#245). The `:focus` carve-out
- * keeps the active field's primary focus ring instead of stacking
- * red + primary outlines while the user types. */
+ * keeps the active field's focus outline instead of stacking a red
+ * border under it while the user types. */
 input:user-invalid:not(:focus),
 textarea:user-invalid:not(:focus),
 select:user-invalid:not(:focus) {
-	border-color: var(--destructive);
-	box-shadow: 0 0 0 1px var(--destructive);
+	border-color: var(--color-destructive);
+	box-shadow: 0 0 0 1px var(--color-destructive);
 }
 
 /* WCAG 2.5.8 minimum touch targets — scoped to standalone interactive
@@ -369,16 +371,16 @@ button,
 /* Utilities used in components */
 @layer components {
 	.glass-card {
-		background: oklch(from var(--card) l c h / 0.9);
+		background: color-mix(in oklab, var(--color-card) 90%, transparent);
 		backdrop-filter: blur(24px) saturate(1.2);
-		border: 1px solid oklch(from var(--border) l c h / 0.5);
+		border: 1px solid color-mix(in oklab, var(--color-border) 50%, transparent);
 		border-radius: 1rem;
 	}
 
 	.glass-card-light {
-		background: oklch(from var(--card) l c h / 0.6);
+		background: color-mix(in oklab, var(--color-card) 60%, transparent);
 		backdrop-filter: blur(16px);
-		border: 1px solid oklch(from var(--border) l c h / 0.4);
+		border: 1px solid color-mix(in oklab, var(--color-border) 40%, transparent);
 		border-radius: 1rem;
 	}
 
@@ -386,7 +388,7 @@ button,
 	.hero-spotlight {
 		background: radial-gradient(
 			ellipse 80% 55% at 50% 0%,
-			oklch(from var(--color-accent) l c h / 0.1),
+			color-mix(in oklab, var(--color-accent) 10%, transparent),
 			transparent 65%
 		);
 	}
@@ -509,19 +511,21 @@ button,
 	}
 
 	.link-primary {
-		color: var(--primary);
+		color: var(--color-primary);
 		text-decoration: underline;
-		text-decoration-color: oklch(from var(--primary) l c h / 0.3);
-	}
-
-	.link-accent {
-		color: var(--accent);
-		text-decoration: underline;
-		text-decoration-color: oklch(from var(--accent) l c h / 0.3);
+		text-decoration-color: color-mix(
+			in oklab,
+			var(--color-primary) 30%,
+			transparent
+		);
 	}
 
 	.surface-overlay {
-		background-color: oklch(from var(--foreground) l c h / 0.04);
+		background-color: color-mix(
+			in oklab,
+			var(--color-foreground) 4%,
+			transparent
+		);
 	}
 }
 
