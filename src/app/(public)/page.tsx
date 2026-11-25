@@ -431,7 +431,7 @@ export default function HomePage() {
 						className="mt-10 flex items-center gap-3 max-w-xs mx-auto"
 					>
 						<span className="h-px flex-1 bg-border/60" />
-						<span className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+						<span className="text-xs uppercase tracking-wider text-muted-foreground">
 							or
 						</span>
 						<span className="h-px flex-1 bg-border/60" />

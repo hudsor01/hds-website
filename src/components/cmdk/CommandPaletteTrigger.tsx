@@ -45,7 +45,7 @@ export default function CommandPaletteTrigger() {
 			<Search className="h-3.5 w-3.5" aria-hidden="true" />
 			<span>Search</span>
 			<span
-				className="flex items-center gap-1 ml-1 text-[10px] font-mono opacity-80"
+				className="flex items-center gap-1 ml-1 text-xs font-mono opacity-80"
 				aria-hidden="true"
 			>
 				<kbd className="px-1.5 py-0.5 rounded border border-border bg-muted/50">
