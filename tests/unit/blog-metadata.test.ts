@@ -11,8 +11,11 @@ import { generateMetadata as postMetadata } from '@/app/(public)/blog/[slug]/pag
 import { generateMetadata as authorMetadata } from '@/app/(public)/blog/author/[slug]/page'
 import { generateMetadata as tagMetadata } from '@/app/(public)/blog/tag/[slug]/page'
 import { getAllPosts, getAuthors, getTags } from '@/lib/blog'
-import { BLOG_TITLE_SUFFIX, brandedTitle } from '@/lib/blog-metadata'
 import { BLOG_AUTHOR_META_DESCRIPTIONS, BLOG_TAGS } from '@/lib/constants/blog'
+import {
+	BRAND_SUFFIX as BLOG_TITLE_SUFFIX,
+	brandedTitle
+} from '@/lib/seo-config'
 
 const OLD_SUFFIX = ' - Hudson Digital Solutions'
 const DASHES = /[–—]/
@@ -45,16 +48,6 @@ function expectDescriptionInWindow(description: unknown) {
 	expect(text).not.toMatch(DASHES)
 	expect(text).not.toMatch(COMMA_BEFORE_CONJUNCTION)
 }
-
-describe('brandedTitle', () => {
-	test('adds the suffix only when the full title fits in 60 characters', () => {
-		expect(brandedTitle('Short')).toBe(`Short${BLOG_TITLE_SUFFIX}`)
-		const fits = 'x'.repeat(60 - BLOG_TITLE_SUFFIX.length)
-		expect(brandedTitle(fits)).toBe(`${fits}${BLOG_TITLE_SUFFIX}`)
-		const tooLong = `${fits}x`
-		expect(brandedTitle(tooLong)).toBe(tooLong)
-	})
-})
 
 describe('blog post titles', () => {
 	test('every post title fits, keeps its frontmatter title and drops the old suffix', async () => {

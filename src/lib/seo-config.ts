@@ -70,14 +70,26 @@ export const BRAND_SUFFIX = ' | Hudson Digital'
 export const MAX_TITLE_LENGTH = 60
 
 /**
+ * The one title rule for every page: `page` plus " | Hudson Digital" when
+ * the whole title fits in 60 characters (search results cut longer ones),
+ * otherwise `page` alone. The page-specific part is never rewritten or
+ * truncated.
+ */
+export function brandedTitle(page: string): string {
+	const full = `${page}${BRAND_SUFFIX}`
+	return full.length <= MAX_TITLE_LENGTH ? full : page
+}
+
+/**
  * Title for a page whose name comes from data (a DB row or content list),
  * which no literal-title test can see: "{name} | {qualifier} | Hudson
- * Digital", dropping the qualifier when that would pass 60 characters. A
- * name that is too long on its own is kept whole; only its row can fix it.
+ * Digital", dropping the qualifier, then the brand, when the title would
+ * pass 60 characters. A name that is too long on its own is kept whole;
+ * only its row can fix it.
  */
 export function qualifiedTitle(name: string, qualifier: string): string {
 	const full = `${name} | ${qualifier}${BRAND_SUFFIX}`
-	return full.length <= MAX_TITLE_LENGTH ? full : `${name}${BRAND_SUFFIX}`
+	return full.length <= MAX_TITLE_LENGTH ? full : brandedTitle(name)
 }
 
 export function absoluteUrl(path: string): string {

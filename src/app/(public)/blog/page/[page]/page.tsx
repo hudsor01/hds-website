@@ -3,8 +3,7 @@ import { notFound, permanentRedirect } from 'next/navigation'
 import { BlogArchive } from '@/components/blog/BlogArchive'
 import { BlogSidebar } from '@/components/blog/BlogSidebar'
 import { getBlogPageCount } from '@/lib/blog'
-import { brandedTitle } from '@/lib/blog-metadata'
-import { buildMetadata } from '@/lib/seo-config'
+import { brandedTitle, buildMetadata } from '@/lib/seo-config'
 
 interface BlogListingPageProps {
 	params: Promise<{ page: string }>

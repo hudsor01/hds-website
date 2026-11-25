@@ -19,11 +19,10 @@ import {
 import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { getAllPosts, getPostBySlug, getPostsByTag } from '@/lib/blog'
-import { brandedTitle } from '@/lib/blog-metadata'
 import { prepareBlogContent } from '@/lib/blog-toc'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { getServiceForTags } from '@/lib/constants/services'
-import { buildMetadata } from '@/lib/seo-config'
+import { brandedTitle, buildMetadata } from '@/lib/seo-config'
 import {
 	BUSINESS_ID,
 	generateAuthorSchema,

@@ -4,8 +4,8 @@ import { notFound } from 'next/navigation'
 import { BlogPostCard } from '@/components/blog/BlogPostCard'
 import { BackLink } from '@/components/utilities/BackLink'
 import { getAuthorBySlug, getAuthors, getPostsByAuthor } from '@/lib/blog'
-import { authorMetaDescription, brandedTitle } from '@/lib/blog-metadata'
-import { buildMetadata } from '@/lib/seo-config'
+import { authorMetaDescription } from '@/lib/blog-metadata'
+import { brandedTitle, buildMetadata } from '@/lib/seo-config'
 
 interface AuthorPageProps {
 	params: Promise<{ slug: string }>

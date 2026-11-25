@@ -9,8 +9,7 @@ import {
 	getTags,
 	getTagsWithCounts
 } from '@/lib/blog'
-import { brandedTitle } from '@/lib/blog-metadata'
-import { buildMetadata } from '@/lib/seo-config'
+import { brandedTitle, buildMetadata } from '@/lib/seo-config'
 
 interface TagPageProps {
 	params: Promise<{ slug: string }>

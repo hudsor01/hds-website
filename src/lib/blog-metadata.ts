@@ -1,20 +1,9 @@
 /**
- * Title rules for the blog routes. Search results cut titles past about 60
- * characters, so the brand suffix is added only when the whole title still
- * fits. The page-specific part (a post's frontmatter title) is never
- * rewritten or truncated.
+ * Metadata helpers for the blog routes. Titles use `brandedTitle` from
+ * `@/lib/seo-config`, the one title rule for the whole site.
  */
 import { BLOG_AUTHOR_META_DESCRIPTIONS } from '@/lib/constants/blog'
 import type { BlogAuthor } from '@/types/blog'
-
-export const BLOG_TITLE_SUFFIX = ' | Hudson Digital'
-export const BLOG_TITLE_MAX = 60
-
-/** `page` plus the brand suffix when the result fits in 60 characters. */
-export function brandedTitle(page: string): string {
-	const full = `${page}${BLOG_TITLE_SUFFIX}`
-	return full.length <= BLOG_TITLE_MAX ? full : page
-}
 
 const AUTHOR_META_DESCRIPTIONS: Readonly<Record<string, string | undefined>> =
 	BLOG_AUTHOR_META_DESCRIPTIONS

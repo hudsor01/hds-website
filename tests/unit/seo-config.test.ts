@@ -9,6 +9,7 @@ import { describe, expect, test } from 'bun:test'
 import {
 	absoluteUrl,
 	BRAND_SUFFIX,
+	brandedTitle,
 	buildMetadata,
 	MAX_TITLE_LENGTH,
 	qualifiedTitle
@@ -109,5 +110,24 @@ describe('qualifiedTitle', () => {
 		const name = 'x'.repeat(MAX_TITLE_LENGTH - ' | Q | Hudson Digital'.length)
 		expect(qualifiedTitle(name, 'Q').length).toBe(MAX_TITLE_LENGTH)
 		expect(qualifiedTitle(name, 'Q')).toContain(' | Q | ')
+	})
+
+	test('drops the brand too when the name alone fills the title', () => {
+		const name = 'x'.repeat(MAX_TITLE_LENGTH - 5)
+		expect(qualifiedTitle(name, 'Q')).toBe(name)
+	})
+})
+
+describe('brandedTitle', () => {
+	test('adds the brand only when the full title fits in 60 characters', () => {
+		expect(brandedTitle('Short')).toBe(`Short${BRAND_SUFFIX}`)
+		const fits = 'x'.repeat(MAX_TITLE_LENGTH - BRAND_SUFFIX.length)
+		expect(brandedTitle(fits)).toBe(`${fits}${BRAND_SUFFIX}`)
+		expect(brandedTitle(`${fits}x`)).toBe(`${fits}x`)
+	})
+
+	test('the protected TTL title drops the brand instead of passing 60', () => {
+		const page = 'Texas TTL Calculator: Tax, Title and License'
+		expect(brandedTitle(page)).toBe(page)
 	})
 })
