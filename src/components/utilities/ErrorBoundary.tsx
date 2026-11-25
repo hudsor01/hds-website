@@ -108,8 +108,12 @@ export function DefaultErrorFallback({
 	return (
 		<div className="min-h-screen bg-background flex-center">
 			<div className="max-w-md w-full text-center">
-				<Card variant="glass" size="lg" className="border border-danger/20">
-					<AlertTriangle className="w-16 h-16 text-danger mx-auto mb-content-block" />
+				<Card
+					variant="glass"
+					size="lg"
+					className="border border-destructive/20"
+				>
+					<AlertTriangle className="w-16 h-16 text-destructive mx-auto mb-content-block" />
 
 					<h2 className="text-h3 text-foreground mb-heading">
 						Oops! Something went wrong
@@ -121,12 +125,12 @@ export function DefaultErrorFallback({
 					</p>
 
 					{errorObj && (
-						<details className="text-left mb-content-block bg-bg-overlay/30 rounded-lg border border-danger/20">
-							<summary className="text-danger cursor-pointer mb-subheading flex-between">
+						<details className="text-left mb-content-block bg-bg-overlay/30 rounded-lg border border-destructive/20">
+							<summary className="text-destructive-text cursor-pointer mb-subheading flex-between">
 								<span>Error Details</span>
 								<button
 									onClick={copyErrorDetails}
-									className="ml-2 p-1 hover:bg-danger/20 rounded transition-colors"
+									className="ml-2 p-1 hover:bg-destructive/20 rounded transition-colors"
 									title="Copy error details"
 								>
 									{copied ? (
@@ -137,12 +141,12 @@ export function DefaultErrorFallback({
 								</button>
 							</summary>
 							<div className="mt-3">
-								<pre className="text-xs text-secondary-foreground overflow-auto scrollbar-hide whitespace-pre-wrap">
+								<pre className="text-xs text-secondary-foreground overflow-auto whitespace-pre-wrap">
 									{errorObj.message}
 									{'\n'}
 									{errorObj.stack}
 								</pre>
-								<div className="mt-3 pt-3 border-t border-danger/20 flex flex-col sm:flex-row gap-tight">
+								<div className="mt-3 pt-3 border-t border-destructive/20 flex flex-col sm:flex-row gap-tight">
 									<button
 										onClick={copyErrorDetails}
 										className="flex items-center gap-tight text-xs link-primary py-1"
@@ -253,7 +257,7 @@ export function ComponentErrorBoundary({
 					</p>
 					<button
 						onClick={resetErrorBoundary}
-						className="mt-2 text-xs text-warning hover:text-warning dark:text-warning dark:hover:text-warning link-hover"
+						className="mt-2 text-xs text-warning hover:text-warning dark:text-warning dark:hover:text-warning"
 					>
 						Retry
 					</button>
