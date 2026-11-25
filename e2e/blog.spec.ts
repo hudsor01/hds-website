@@ -168,6 +168,50 @@ test.describe('Blog Journey', () => {
 		})
 	}
 
+	test('listing pages link to each other and stay disjoint', async ({
+		page
+	}) => {
+		await page.goto('/blog')
+		const pager = page.locator('nav[aria-label="Blog pages"]')
+		await expect(pager.locator('a[href="/blog/page/2"]').first()).toBeVisible()
+
+		const allArticles = (scope: string) =>
+			page
+				.locator(`${scope} article a[href^="/blog/"]`)
+				.evaluateAll((els: Element[]) =>
+					els.map(el => el.getAttribute('href') ?? '')
+				)
+		const scope = 'div.flex-1'
+		const firstPage = await allArticles(scope)
+		expect(firstPage).toHaveLength(10)
+
+		const response = await page.goto('/blog/page/2')
+		expect(response?.status()).toBe(200)
+		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+			'href',
+			'https://hudsondigitalsolutions.com/blog/page/2'
+		)
+		const secondPage = await allArticles(scope)
+		expect(secondPage).toHaveLength(10)
+		expect(secondPage.filter(href => firstPage.includes(href))).toEqual([])
+		await expect(
+			page.locator('nav[aria-label="Blog pages"] a[aria-current="page"]')
+		).toHaveText('2')
+	})
+
+	test('page 1 redirects to /blog and out-of-range pages 404', async ({
+		page,
+		request
+	}) => {
+		await page.goto('/blog/page/1')
+		await expect(page).toHaveURL(/\/blog$/)
+
+		for (const path of ['/blog/page/999', '/blog/page/abc', '/blog/page/0']) {
+			const response = await request.get(path)
+			expect(response.status()).toBe(404)
+		}
+	})
+
 	test('should return 404 for an unknown slug', async ({ page }) => {
 		const response = await page.goto('/blog/wp-login.php')
 		expect(response?.status()).toBe(404)

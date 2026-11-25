@@ -52,10 +52,14 @@ describe('blog data layer', () => {
 
 	test('getPosts paginates with a default page size of 10', async () => {
 		const all = await getAllPosts()
-		const page1 = (await getPosts()).posts
+		const first = await getPosts()
 		const page2 = (await getPosts({ limit: 10, page: 2 })).posts
-		expect(page1.map(p => p.slug)).toEqual(all.slice(0, 10).map(p => p.slug))
+		expect(first.posts.map(p => p.slug)).toEqual(
+			all.slice(0, 10).map(p => p.slug)
+		)
 		expect(page2.map(p => p.slug)).toEqual(all.slice(10, 20).map(p => p.slug))
+		expect(first.total).toBe(all.length)
+		expect(first.totalPages).toBe(Math.max(1, Math.ceil(all.length / 10)))
 	})
 
 	test('getPostBySlug returns the full post, null for unknown slugs', async () => {
