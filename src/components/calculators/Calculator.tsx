@@ -27,6 +27,7 @@ export function Calculator() {
 		calculationResults,
 		isLoading,
 		error,
+		fieldErrors,
 		updateInput,
 		setVehicleInput,
 		saveCurrentCalculation
@@ -234,6 +235,7 @@ export function Calculator() {
 							}
 							addToComparison={addToComparison}
 							comparisonVehicles={comparisonVehicles}
+							fieldErrors={fieldErrors}
 						/>
 					</div>
 
@@ -243,6 +245,7 @@ export function Calculator() {
 							calculationResults={calculationResults}
 							isLoading={isLoading}
 							error={error}
+							hasFieldErrors={Object.keys(fieldErrors).length > 0}
 							handleSaveCalculation={handleSaveCalculation}
 							saveSuccess={saveSuccess}
 							handleEmailResults={handleEmailResults}

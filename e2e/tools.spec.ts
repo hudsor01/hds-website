@@ -132,6 +132,21 @@ test.describe('Texas TTL Calculator', () => {
 		await expect(page.getByText('$2,500.00')).toBeVisible()
 		await expect(page.getByText('$2,691.00')).toBeVisible()
 	})
+
+	test('rejects a negative purchase price with an inline error', async ({
+		page
+	}) => {
+		await page.locator('#purchasePrice').fill('-5000')
+		await expect(page.getByText('Enter a price of $0 or more.')).toBeVisible()
+		await expect(page.locator('#purchasePrice')).toHaveAttribute(
+			'aria-invalid',
+			'true'
+		)
+		await expect(
+			page.getByText('Fix the highlighted fields to see your results.')
+		).toBeVisible()
+		await expect(page.getByText('Total TTL')).toHaveCount(0)
+	})
 })
 
 test.describe('Invoice Generator', () => {

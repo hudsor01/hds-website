@@ -8,17 +8,22 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select'
-import { COUNTY_FEES } from '@/lib/ttl-calculator/calculator'
+import {
+	COUNTY_FEES,
+	type TtlFieldErrors
+} from '@/lib/ttl-calculator/calculator'
 import type { VehicleInputs as VehicleInput } from '@/types/ttl-types'
 
 interface VehicleInputsProps {
 	vehicleInput: VehicleInput
 	updateInput: (field: keyof VehicleInput, value: unknown) => void
+	fieldErrors: TtlFieldErrors
 }
 
 export function VehicleInputs({
 	vehicleInput,
-	updateInput
+	updateInput,
+	fieldErrors
 }: VehicleInputsProps) {
 	return (
 		<div className="space-y-content">
@@ -30,6 +35,7 @@ export function VehicleInputs({
 					id="purchasePrice"
 					value={vehicleInput.purchasePrice}
 					onChange={value => updateInput('purchasePrice', value)}
+					error={fieldErrors.purchasePrice}
 					placeholder="0"
 				/>
 
@@ -39,6 +45,7 @@ export function VehicleInputs({
 					id="downPayment"
 					value={vehicleInput.downPayment}
 					onChange={value => updateInput('downPayment', value)}
+					error={fieldErrors.downPayment}
 					placeholder="0"
 				/>
 			</div>
@@ -51,6 +58,7 @@ export function VehicleInputs({
 					id="tradeInValue"
 					value={vehicleInput.tradeInValue}
 					onChange={value => updateInput('tradeInValue', value)}
+					error={fieldErrors.tradeInValue}
 					placeholder="0"
 				/>
 

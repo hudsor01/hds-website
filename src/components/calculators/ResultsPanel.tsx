@@ -26,6 +26,8 @@ interface ResultsPanelProps {
 	calculationResults: CalculationResults | null
 	isLoading: boolean
 	error: string | null
+	/** Some inputs are invalid, so there are no results to show */
+	hasFieldErrors: boolean
 	handleSaveCalculation: () => void
 	saveSuccess: boolean
 	handleEmailResults: () => void
@@ -45,6 +47,7 @@ export function ResultsPanel({
 	calculationResults,
 	isLoading,
 	error,
+	hasFieldErrors,
 	handleSaveCalculation,
 	saveSuccess,
 	handleEmailResults,
@@ -223,7 +226,13 @@ export function ResultsPanel({
 					</>
 				)}
 
-				{!calculationResults && !isLoading && (
+				{!calculationResults && !isLoading && hasFieldErrors && (
+					<div className="text-center py-8 text-muted-foreground">
+						<p>Fix the highlighted fields to see your results.</p>
+					</div>
+				)}
+
+				{!calculationResults && !isLoading && !hasFieldErrors && (
 					<div className="text-center py-8 text-muted-foreground">
 						<p>Enter vehicle information to see calculation results</p>
 					</div>

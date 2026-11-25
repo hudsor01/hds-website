@@ -9,20 +9,24 @@ import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import { getResendClient } from '@/lib/resend-client'
 import { ttlCalculations } from '@/lib/schemas/ttl'
+import { ttlAmountsSchema } from '@/lib/ttl-calculator/calculator'
 import { formatCurrency } from '@/lib/utils'
 import type { CalculationResults, VehicleInputs } from '@/types/ttl-types'
 
-// Validation schemas
+// Validation schemas. Money and rate inputs reuse the calculator's
+// constraints, so a saved or shared calculation cannot carry a negative
+// price, trade-in, down payment or rebate.
+const amounts = ttlAmountsSchema.shape
 const vehicleInputsSchema = z.object({
-	purchasePrice: z.number(),
-	tradeInValue: z.number().optional(),
+	purchasePrice: amounts.purchasePrice,
+	tradeInValue: amounts.tradeInValue.optional(),
 	vehicleWeight: z.number().optional(),
 	isElectric: z.boolean().optional(),
 	isNewVehicle: z.boolean().optional(),
 	county: z.string(),
 	loanTermMonths: z.number().optional(),
-	interestRate: z.number().optional(),
-	downPayment: z.number().optional(),
+	interestRate: amounts.interestRate.optional(),
+	downPayment: amounts.downPayment.optional(),
 	paymentFrequency: z.string().optional(),
 	zipCode: z.string().optional(),
 	loanStartDate: z.string().optional(),
@@ -30,7 +34,7 @@ const vehicleInputsSchema = z.object({
 	leaseBuyout: z.number().optional(),
 	residualValue: z.number().optional(),
 	moneyFactor: z.number().optional(),
-	rebateAmount: z.number().optional()
+	rebateAmount: amounts.rebateAmount
 })
 
 const calculationResultsSchema = z.object({

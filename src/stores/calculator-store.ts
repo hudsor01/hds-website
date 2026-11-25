@@ -1,7 +1,11 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { logger } from '@/lib/logger'
-import { calculateResults } from '@/lib/ttl-calculator/calculator'
+import {
+	calculateResults,
+	type TtlFieldErrors,
+	validateVehicleInputs
+} from '@/lib/ttl-calculator/calculator'
 import {
 	clearAllCalculations,
 	deleteCalculation,
@@ -49,16 +53,26 @@ function ensureVehicleInputsComplete(
 // Results are always derived from the inputs: every input change, saved or
 // shared calculation load and storage rehydrate recomputes them, so the
 // panel can never show results for different inputs (or none at all).
+// Invalid money or rate inputs show field errors and no results.
 function resultsFor(
 	input: VehicleInputs
-): Pick<CalculatorState, 'calculationResults' | 'error'> {
+): Pick<CalculatorState, 'calculationResults' | 'error' | 'fieldErrors'> {
+	const fieldErrors = validateVehicleInputs(input)
+	if (Object.keys(fieldErrors).length > 0) {
+		return { calculationResults: null, error: null, fieldErrors }
+	}
 	try {
-		return { calculationResults: calculateResults(input), error: null }
+		return {
+			calculationResults: calculateResults(input),
+			error: null,
+			fieldErrors: {}
+		}
 	} catch (err) {
 		logger.error('TTL calculation failed', err)
 		return {
 			calculationResults: null,
-			error: err instanceof Error ? err.message : 'Calculation failed'
+			error: err instanceof Error ? err.message : 'Calculation failed',
+			fieldErrors: {}
 		}
 	}
 }
@@ -69,6 +83,8 @@ interface CalculatorState {
 	calculationResults: CalculationResults | null
 	isLoading: boolean
 	error: string | null
+	/** Invalid money or rate inputs, by field. Not persisted. */
+	fieldErrors: TtlFieldErrors
 
 	// Saved calculations
 	savedCalculations: SavedCalculation[]
@@ -96,7 +112,6 @@ export const useCalculatorStore = create<CalculatorState>()(
 			vehicleInput: ensureVehicleInputsComplete({}),
 			...resultsFor(ensureVehicleInputsComplete({})),
 			isLoading: false,
-			error: null,
 			savedCalculations: [],
 
 			// Actions

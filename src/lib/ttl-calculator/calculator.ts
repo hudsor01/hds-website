@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import type {
 	CalculationResults,
 	PaymentResults,
@@ -115,6 +116,67 @@ function calculateRegistrationFee(
 	)
 }
 
+export const MAX_INTEREST_RATE = 30
+
+const PRICE_ERROR = 'Enter a price of $0 or more.'
+const TRADE_IN_ERROR = 'Enter a trade-in of $0 or more.'
+const DOWN_PAYMENT_ERROR = 'Enter a down payment of $0 or more.'
+const REBATE_ERROR = 'Enter a rebate of $0 or more.'
+const RATE_ERROR = `Enter a rate from 0% to ${MAX_INTEREST_RATE}%.`
+
+/**
+ * The money and rate inputs the math trusts. A negative price, trade-in,
+ * down payment or rebate (or a negative rate) produces a plausible-looking
+ * but wrong result, so it is rejected here instead of clamped away.
+ * Shared with the save action so stored calculations obey the same rules.
+ */
+export const ttlAmountsSchema = z.object({
+	purchasePrice: z.number({ error: PRICE_ERROR }).nonnegative(PRICE_ERROR),
+	tradeInValue: z.number({ error: TRADE_IN_ERROR }).nonnegative(TRADE_IN_ERROR),
+	downPayment: z
+		.number({ error: DOWN_PAYMENT_ERROR })
+		.nonnegative(DOWN_PAYMENT_ERROR),
+	rebateAmount: z
+		.number({ error: REBATE_ERROR })
+		.nonnegative(REBATE_ERROR)
+		.optional(),
+	interestRate: z
+		.number({ error: RATE_ERROR })
+		.min(0, RATE_ERROR)
+		.max(MAX_INTEREST_RATE, RATE_ERROR)
+})
+
+export type TtlAmountField = keyof z.infer<typeof ttlAmountsSchema>
+export type TtlFieldErrors = Partial<Record<TtlAmountField, string>>
+
+function isAmountField(key: PropertyKey | undefined): key is TtlAmountField {
+	return typeof key === 'string' && key in ttlAmountsSchema.shape
+}
+
+/** The first problem with each money or rate input; empty when all are valid. */
+export function validateVehicleInputs(
+	input: Pick<VehicleInputs, TtlAmountField>
+): TtlFieldErrors {
+	const parsed = ttlAmountsSchema.safeParse({
+		purchasePrice: input.purchasePrice,
+		tradeInValue: input.tradeInValue,
+		downPayment: input.downPayment,
+		rebateAmount: input.rebateAmount,
+		interestRate: input.interestRate
+	})
+	if (parsed.success) {
+		return {}
+	}
+	const errors: TtlFieldErrors = {}
+	for (const issue of parsed.error.issues) {
+		const field = issue.path[0]
+		if (isAmountField(field) && errors[field] === undefined) {
+			errors[field] = issue.message
+		}
+	}
+	return errors
+}
+
 /**
  * Calculate Texas Title & License fees.
  * Pure: deterministic given the same inputs.
@@ -130,7 +192,8 @@ export function calculateTTL(input: VehicleInputs): TTLResults {
 	// Taxable value: sales price less trade-in and dealer discounts
 	// (Comptroller Motor Vehicle Tax Guide). A manufacturer rebate the dealer
 	// passes to the buyer counts as a cash discount (Comptroller letter ruling
-	// 202503002P), so it comes off too.
+	// 202503002P), so it comes off too. Inputs are validated first
+	// (validateVehicleInputs); the clamp only guards the math.
 	const taxableAmount = Math.max(
 		0,
 		input.purchasePrice - input.tradeInValue - (input.rebateAmount ?? 0)

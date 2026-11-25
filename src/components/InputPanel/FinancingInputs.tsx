@@ -10,6 +10,11 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select'
+import {
+	MAX_INTEREST_RATE,
+	type TtlFieldErrors
+} from '@/lib/ttl-calculator/calculator'
+import { cn } from '@/lib/utils'
 import type { VehicleInputs } from '@/types/ttl-types'
 
 const LOAN_TERMS = [24, 36, 48, 60, 72, 84] as const
@@ -17,12 +22,15 @@ const LOAN_TERMS = [24, 36, 48, 60, 72, 84] as const
 interface FinancingInputsProps {
 	vehicleInput: VehicleInputs
 	updateInput: (field: string, value: unknown) => void
+	fieldErrors: TtlFieldErrors
 }
 
 export function FinancingInputs({
 	vehicleInput,
-	updateInput
+	updateInput,
+	fieldErrors
 }: FinancingInputsProps) {
+	const rateError = fieldErrors.interestRate
 	return (
 		<Card size="sm" className="rounded-none">
 			<h3 className="text-lg font-medium mb-3">Financing Information</h3>
@@ -34,11 +42,25 @@ export function FinancingInputs({
 						id="interestRate"
 						name="interestRate"
 						type="number"
+						min="0"
+						max={MAX_INTEREST_RATE}
 						step="0.1"
 						value={vehicleInput.interestRate}
 						onChange={e => updateInput('interestRate', Number(e.target.value))}
 						placeholder="0.0"
+						className={cn(rateError && 'border-destructive border-2')}
+						aria-invalid={rateError ? true : undefined}
+						aria-describedby={rateError ? 'interestRate-error' : undefined}
 					/>
+					{rateError && (
+						<p
+							id="interestRate-error"
+							className="text-destructive text-xs"
+							role="alert"
+						>
+							{rateError}
+						</p>
+					)}
 				</div>
 
 				<div className="space-y-tight">

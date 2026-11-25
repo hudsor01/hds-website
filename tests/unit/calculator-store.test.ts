@@ -105,6 +105,40 @@ describe('Calculator Store', () => {
 		expect(second?.paymentResults?.monthlyPayment).toBeGreaterThan(0)
 	})
 
+	it('rejects a negative purchase price with a field error and no results', () => {
+		const { updateInput } = useCalculatorStore.getState()
+		updateInput('purchasePrice', -5000)
+		const state = useCalculatorStore.getState()
+		expect(state.calculationResults).toBeNull()
+		expect(state.error).toBeNull()
+		expect(state.fieldErrors.purchasePrice).toBe('Enter a price of $0 or more.')
+
+		updateInput('purchasePrice', 30000)
+		const fixed = useCalculatorStore.getState()
+		expect(fixed.calculationResults).not.toBeNull()
+		expect(fixed.fieldErrors).toEqual({})
+	})
+
+	it('rejects a negative trade-in and an out-of-range rate', () => {
+		const { updateInput } = useCalculatorStore.getState()
+		updateInput('tradeInValue', -10000)
+		updateInput('interestRate', -5)
+		const state = useCalculatorStore.getState()
+		expect(state.calculationResults).toBeNull()
+		expect(Object.keys(state.fieldErrors).sort()).toEqual([
+			'interestRate',
+			'tradeInValue'
+		])
+	})
+
+	it('setVehicleInput (shared link load) validates the inputs', () => {
+		const { setVehicleInput, vehicleInput } = useCalculatorStore.getState()
+		setVehicleInput({ ...vehicleInput, downPayment: -1 })
+		const state = useCalculatorStore.getState()
+		expect(state.calculationResults).toBeNull()
+		expect(state.fieldErrors.downPayment).toBeDefined()
+	})
+
 	it('calculate() recomputes results and clears loading', () => {
 		const { calculate } = useCalculatorStore.getState()
 		calculate()
