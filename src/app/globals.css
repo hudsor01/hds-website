@@ -1,4 +1,7 @@
-@import 'tailwindcss';
+/* Class detection scans src/ only (path is relative to this file). The
+ * repo root also holds planning docs, test fixtures, reports and coverage
+ * output whose quoted class names would otherwise ship as dead CSS. */
+@import 'tailwindcss' source('..');
 
 @theme {
 	/* Base surfaces */
