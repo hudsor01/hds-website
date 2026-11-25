@@ -19,6 +19,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { getAllPosts, getPostBySlug, getPostsByTag } from '@/lib/blog'
+import { brandedTitle } from '@/lib/blog-metadata'
 import { prepareBlogContent } from '@/lib/blog-toc'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { getServiceForTags } from '@/lib/constants/services'
@@ -64,7 +65,7 @@ export async function generateMetadata({
 
 	if (!post) {
 		return {
-			title: 'Post Not Found - Hudson Digital Solutions',
+			title: brandedTitle('Post Not Found'),
 			description: 'The requested blog post could not be found.'
 		}
 	}
@@ -79,7 +80,9 @@ export async function generateMetadata({
 	// A post's own feature_image wins; otherwise this route's
 	// opengraph-image.tsx renders a card with the post title.
 	return buildMetadata({
-		title: `${post.title} - Hudson Digital Solutions`,
+		// Frontmatter titles are never rewritten; the brand rides along only
+		// when the full title stays within 60 characters.
+		title: brandedTitle(post.title),
 		description,
 		path: `/blog/${post.slug}`,
 		socialTitle: post.title,
@@ -366,7 +369,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 								Ready for the website your business has earned?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Let&apos;s map out what it needs, and build something that turns
+								Let&apos;s map out what it needs and build something that turns
 								your reputation into booked customers.
 							</p>
 							<Button asChild variant="accent" size="xl">

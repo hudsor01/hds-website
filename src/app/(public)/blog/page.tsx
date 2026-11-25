@@ -134,7 +134,7 @@ export default function BlogPage() {
 						Website Tips for Small Businesses
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						Practical insights on websites, getting found on Google, and growing
+						Practical insights on websites, getting found on Google and growing
 						a small business online.
 					</p>
 				</div>
@@ -163,8 +163,8 @@ export default function BlogPage() {
 									Curious what a site would cost?
 								</h3>
 								<p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-									Get a free website plan for your business: pages, timeline,
-									and a clear price.
+									Get a free website plan for your business: pages, timeline and
+									a clear price.
 								</p>
 								<Button asChild variant="accent" className="w-full">
 									<Link href="/contact">Get My Free Website Plan</Link>

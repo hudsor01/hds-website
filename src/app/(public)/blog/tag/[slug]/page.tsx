@@ -9,6 +9,7 @@ import {
 	getTags,
 	getTagsWithCounts
 } from '@/lib/blog'
+import { brandedTitle } from '@/lib/blog-metadata'
 import { buildMetadata } from '@/lib/seo-config'
 
 interface TagPageProps {
@@ -23,7 +24,7 @@ export async function generateMetadata({
 
 	if (!tag) {
 		return {
-			title: 'Tag Not Found - Hudson Digital Solutions',
+			title: brandedTitle('Tag Not Found'),
 			description: 'The requested tag could not be found.'
 		}
 	}
@@ -33,7 +34,7 @@ export async function generateMetadata({
 	const posts = await getPostsByTag(tag.slug)
 
 	return buildMetadata({
-		title: `${tag.name} - Blog - Hudson Digital Solutions`,
+		title: brandedTitle(`${tag.name} Articles`),
 		description:
 			tag.description ||
 			`Browse Hudson Digital Solutions blog articles tagged ${tag.name}, with practical guides and insights on web design and growing your small business online.`,
