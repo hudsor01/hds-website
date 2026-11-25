@@ -1,4 +1,4 @@
-import { describe, expect, it, type mock } from 'bun:test'
+import { beforeEach, describe, expect, it, type mock } from 'bun:test'
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { TOOLS } from '@/app/(public)/tools/tools-data'
@@ -26,15 +26,20 @@ import {
 	renderUrlset,
 	xmlResponse
 } from '@/lib/sitemap/xml'
+import { restoreRealDb } from '../test-utils'
 
 const SITE_URL = 'https://hudsondigitalsolutions.com'
 const NOW = new Date()
 
-// No module mocks: loadSitemapSources() wraps each DB-backed source
-// (showcase, help articles, testimonials) in try/catch and falls back to an
-// empty list, so without a database it still emits the static +
+// No module mocks of our own: loadSitemapSources() wraps each DB-backed
+// source (showcase, help articles, testimonials) in try/catch and falls back
+// to an empty list, so without a database it still emits the static +
 // registry-derived URLs we assert here. Blog URLs come from the compiled
-// content/blog module.
+// content/blog module. The counts assume that no-op db, so pin it: another
+// file's mock.module('@/lib/db') fixture rows would otherwise add URLs.
+beforeEach(() => {
+	restoreRealDb()
+})
 
 async function entries(): Promise<SitemapEntry[]> {
 	return buildSitemapEntries(await loadSitemapSources())

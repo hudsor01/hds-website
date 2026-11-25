@@ -3,9 +3,17 @@
  * Tests for critical API endpoints including newsletter subscription
  */
 
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import {
+	afterAll,
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	mock
+} from 'bun:test'
 import { NextRequest } from 'next/server'
-import { cleanupMocks, setupApiMocks } from '../test-utils'
+import { cleanupMocks, restoreRealDb, setupApiMocks } from '../test-utils'
 
 /**
  * Creates a Drizzle ORM-compatible db mock.
@@ -57,6 +65,12 @@ afterEach(() => {
 // ================================
 // Newsletter Subscribe API Tests
 // ================================
+
+// mock.module('@/lib/db') outlives this file (mock.restore() never undoes
+// it), so hand later files the real no-op db.
+afterAll(() => {
+	restoreRealDb()
+})
 
 describe('Newsletter Subscribe API', () => {
 	it('should return 400 for invalid email', async () => {

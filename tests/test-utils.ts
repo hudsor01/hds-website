@@ -204,32 +204,12 @@ export function setupApiMocks() {
 		) => handler
 	}))
 
-	mock.module('@/lib/db', () => ({
-		db: {
-			select: mock().mockReturnValue({
-				from: mock().mockReturnValue({
-					where: mock().mockReturnValue({
-						limit: mock().mockResolvedValue([])
-					}),
-					orderBy: mock().mockResolvedValue([]),
-					limit: mock().mockResolvedValue([])
-				})
-			}),
-			insert: mock().mockReturnValue({
-				values: mock().mockReturnValue({
-					returning: mock().mockResolvedValue([])
-				})
-			}),
-			update: mock().mockReturnValue({
-				set: mock().mockReturnValue({
-					where: mock().mockResolvedValue([])
-				})
-			}),
-			delete: mock().mockReturnValue({
-				where: mock().mockResolvedValue([])
-			})
-		}
-	}))
+	// The real `@/lib/db` is already a no-op proxy that resolves every query
+	// to [] (TEST_ENV has no POSTGRES_URL). Pin it instead of registering a
+	// stub: a stub registered here would outlive the file and reach every
+	// later suite. Tests that need specific rows mock `@/lib/db` after this
+	// call and restore it in afterAll.
+	restoreRealDb()
 
 	mock.module('@/lib/resend-client', () => ({
 		isResendConfigured: mock().mockReturnValue(true),
@@ -310,6 +290,25 @@ export function setupNextMocks() {
 			return (() => null) as React.ComponentType<P>
 		}
 	}))
+}
+
+/**
+ * Re-register `@/lib/db` with the genuine export (the createMockDb no-op
+ * proxy, since TEST_ENV omits POSTGRES_URL) that tests/setup.ts captured at
+ * preload. mock.module() is process-global and mock.restore() never undoes
+ * it, so a file that stubs `@/lib/db` with fixture rows hands those rows to
+ * every later file. Every file that calls mock.module('@/lib/db', ...) must
+ * call this in afterAll (scripts/check-test-mock-leaks.sh enforces it), and a
+ * suite that depends on the real no-op db calls it in beforeEach.
+ */
+export function restoreRealDb(): void {
+	const realDb = (globalThis as { __REAL_DB__?: unknown }).__REAL_DB__
+	if (realDb === undefined) {
+		throw new Error(
+			'tests/setup.ts must capture __REAL_DB__ before restoreRealDb() runs'
+		)
+	}
+	mock.module('@/lib/db', () => ({ db: realDb }))
 }
 
 /**

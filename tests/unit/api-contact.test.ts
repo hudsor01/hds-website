@@ -6,9 +6,17 @@
  * envelope. The fire-and-forget side-effects scheduled via next/server
  * `after()` are stubbed in tests/setup.ts.
  */
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import {
+	afterAll,
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	mock
+} from 'bun:test'
 import { NextRequest } from 'next/server'
-import { cleanupMocks, setupApiMocks } from '../test-utils'
+import { cleanupMocks, restoreRealDb, setupApiMocks } from '../test-utils'
 
 const VALID_BODY = {
 	firstName: 'Riley',
@@ -78,6 +86,12 @@ function mockContactService(opts: MockOpts) {
 		}))
 	}
 }
+
+// mock.module('@/lib/db') outlives this file (mock.restore() never undoes
+// it), so hand later files the real no-op db.
+afterAll(() => {
+	restoreRealDb()
+})
 
 describe('POST /api/contact', () => {
 	beforeEach(() => {
@@ -179,7 +193,9 @@ describe('POST /api/contact', () => {
 				insert: mock(() => ({
 					values: mock((v: Record<string, unknown>) => {
 						valuesCalls.push(v)
-						return { returning: mock().mockResolvedValue([{ id: 'lead-uuid' }]) }
+						return {
+							returning: mock().mockResolvedValue([{ id: 'lead-uuid' }])
+						}
 					})
 				})),
 				select: selectStub()
@@ -254,7 +270,9 @@ describe('POST /api/contact', () => {
 						}
 					}
 					return {
-						values: mock().mockRejectedValue(new Error('touchpoint write failed'))
+						values: mock().mockRejectedValue(
+							new Error('touchpoint write failed')
+						)
 					}
 				}),
 				select: selectStub()

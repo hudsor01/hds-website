@@ -1,9 +1,17 @@
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import {
+	afterAll,
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	mock
+} from 'bun:test'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { ReactElement } from 'react'
-import { mockNextNavigation } from '../test-utils'
+import { mockNextNavigation, restoreRealDb } from '../test-utils'
 
 const renderWithQueryClient = (ui: ReactElement) => {
 	const queryClient = new QueryClient({
@@ -25,6 +33,12 @@ const renderWithQueryClient = (ui: ReactElement) => {
 
 // Set database environment variables for testing
 process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test'
+
+// mock.module('@/lib/db') outlives this file (mock.restore() never undoes
+// it), so hand later files the real no-op db.
+afterAll(() => {
+	restoreRealDb()
+})
 
 describe('ContactForm Component', () => {
 	beforeEach(() => {

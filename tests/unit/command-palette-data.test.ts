@@ -3,13 +3,20 @@
  * entries come from the compiled post index (no article bodies) and showcase
  * entries degrade to none without a database (tests run on the mock db).
  */
-import { describe, expect, test } from 'bun:test'
+import { beforeEach, describe, expect, test } from 'bun:test'
 import type { ReactElement } from 'react'
 import CommandPaletteData from '@/components/cmdk/CommandPaletteData'
 import type { PaletteEntry } from '@/components/cmdk/types'
 import { getPostIndex } from '@/lib/blog'
+import { restoreRealDb } from '../test-utils'
 
 describe('CommandPaletteData', () => {
+	// Pin the real no-op db: another file's mock.module('@/lib/db') fixture
+	// rows (or a non-thenable chain) would otherwise reach the showcase query.
+	beforeEach(() => {
+		restoreRealDb()
+	})
+
 	test('passes blog entries without article content', async () => {
 		const element = (await CommandPaletteData()) as ReactElement<{
 			entries: PaletteEntry[]

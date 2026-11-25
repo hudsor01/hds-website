@@ -7,9 +7,17 @@
  * - loadCalculation() Zod safeParse on JSONB inputs/results
  */
 
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import {
+	afterAll,
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	mock
+} from 'bun:test'
 import type { CalculationResults, VehicleInputs } from '@/types/ttl-types'
-import { cleanupMocks } from '../test-utils'
+import { cleanupMocks, restoreRealDb } from '../test-utils'
 
 // Minimal valid inputs/results — Zod schema marks most VehicleInputs fields
 // as optional, so these minimal fixtures are sufficient for runtime validation.
@@ -64,6 +72,12 @@ function setupCommonMocks(dbMock: Record<string, unknown>) {
 // ===================================================================
 // saveCalculation — share code generation
 // ===================================================================
+
+// mock.module('@/lib/db') outlives this file (mock.restore() never undoes
+// it), so hand later files the real no-op db.
+afterAll(() => {
+	restoreRealDb()
+})
 
 describe('saveCalculation — share code generation', () => {
 	beforeEach(() => {

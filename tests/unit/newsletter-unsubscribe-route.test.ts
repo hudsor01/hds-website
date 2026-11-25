@@ -9,10 +9,18 @@
  * runs in a different file order than the local one.
  */
 
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import {
+	afterAll,
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	mock
+} from 'bun:test'
 import { NextRequest } from 'next/server'
 import { generateUnsubscribeToken } from '@/lib/unsubscribe-token'
-import { cleanupMocks } from '../test-utils'
+import { cleanupMocks, restoreRealDb } from '../test-utils'
 
 const TEST_EMAIL = 'user@example.com'
 
@@ -23,6 +31,12 @@ function makeRequest(body: unknown): NextRequest {
 		headers: { 'Content-Type': 'application/json' }
 	})
 }
+
+// mock.module('@/lib/db') outlives this file (mock.restore() never undoes
+// it), so hand later files the real no-op db.
+afterAll(() => {
+	restoreRealDb()
+})
 
 describe('POST /api/newsletter/unsubscribe', () => {
 	let mockDbUpdate: ReturnType<typeof mock>

@@ -2,7 +2,8 @@
  * Showcase Data Layer Tests
  * Tests the unified showcase system that combines portfolio and case studies
  */
-import { beforeEach, describe, expect, mock, test } from 'bun:test'
+import { afterAll, beforeEach, describe, expect, mock, test } from 'bun:test'
+import { restoreRealDb } from '../test-utils'
 
 // Mock the database module before importing showcase
 const mockSelect = mock(() => ({
@@ -47,6 +48,12 @@ import {
 	type ShowcaseItem,
 	type ShowcaseType
 } from '@/lib/showcase'
+
+// mock.module('@/lib/db') outlives this file (mock.restore() never undoes
+// it), so hand later files the real no-op db.
+afterAll(() => {
+	restoreRealDb()
+})
 
 describe('Showcase Data Layer', () => {
 	beforeEach(() => {
