@@ -68,6 +68,7 @@ function isBlockedIpv4(host: string): boolean {
 function isBlockedIpv6(host: string): boolean {
 	const hextets = host.split(':')
 	const first = Number.parseInt(hextets[0] || '0', 16)
+	const second = Number.parseInt(hextets[1] || '0', 16)
 	return (
 		// ::/8 covers :: (unspecified), ::1 (loopback), ::a.b.c.d
 		// (IPv4-compatible, e.g. ::7f00:1) and ::ffff:a.b.c.d (IPv4-mapped)
@@ -79,8 +80,11 @@ function isBlockedIpv6(host: string): boolean {
 		(first & 0xffc0) === 0xfec0 ||
 		// ff00::/8 multicast
 		(first & 0xff00) === 0xff00 ||
-		// 64:ff9b::/32 NAT64, which embeds an IPv4 address
-		(hextets[0] === '64' && hextets[1] === 'ff9b')
+		// 64:ff9b::/32 NAT64, 2002::/16 6to4 and 2001::/32 Teredo, which
+		// all embed an IPv4 address (6to4 can carry 127.0.0.1)
+		(first === 0x64 && second === 0xff9b) ||
+		first === 0x2002 ||
+		(first === 0x2001 && second === 0)
 	)
 }
 
@@ -99,7 +103,8 @@ function isBlockedIpv6(host: string): boolean {
  *    100.64/10 and 224/4 upward (multicast, reserved, broadcast). URL
  *    canonicalises 2130706433, 0x7f.1 and 127.1 to 127.0.0.1 first
  *  - IPv6 ::/8 (unspecified, loopback, IPv4-compatible, IPv4-mapped),
- *    fc00::/7, fe80::/10, fec0::/10, ff00::/8 and 64:ff9b::/32
+ *    fc00::/7, fe80::/10, fec0::/10, ff00::/8, 64:ff9b::/32, 2002::/16
+ *    (6to4) and 2001::/32 (Teredo)
  *
  * A DNS name that resolves to a private address cannot be caught without
  * resolving it, which is not needed while only Google fetches the URL.

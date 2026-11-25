@@ -262,6 +262,8 @@ describe('GET /api/pagespeed (SSRF guard gaps, QA-17)', () => {
 		'http://[::]/',
 		'http://[::127.0.0.1]/',
 		'http://[64:ff9b::7f00:1]/',
+		'http://[2002:7f00:1::]/',
+		'http://[2001:0:4136:e378::1]/',
 		'http://[ff02::1]/',
 		// Trailing-dot internal names
 		'http://localhost./',
@@ -307,11 +309,16 @@ describe('GET /api/pagespeed (SSRF guard gaps, QA-17)', () => {
 		expect(res.status).toBe(400)
 	})
 
-	it('lets public domains that start with fc or fd through to PSI', async () => {
+	it('lets fc/fd domains and public IPv6 through to PSI', async () => {
 		const fetchSpy = stubFetch(lighthouseBody())
 		fetchSpy.mockClear()
 		const { GET } = await import('@/app/api/pagespeed/route')
-		const allowed = ['https://fdic.gov/', 'https://fcc.gov/', 'https://fd.io/']
+		const allowed = [
+			'https://fdic.gov/',
+			'https://fcc.gov/',
+			'https://fd.io/',
+			'http://[2001:4860:4860::8888]/'
+		]
 		for (const url of allowed) {
 			const res = await GET(makeRequest(url))
 			expect(res.status, url).toBe(200)
