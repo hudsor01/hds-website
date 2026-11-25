@@ -64,14 +64,19 @@ export function FinancingInputs({
 				</div>
 
 				<div className="space-y-tight">
-					<Label htmlFor="loanTermMonths">Loan Term</Label>
+					<Label id="loanTermMonths-label" htmlFor="loanTermMonths">
+						Loan Term
+					</Label>
 					<Select
 						value={String(vehicleInput.loanTermMonths)}
 						onValueChange={value =>
 							updateInput('loanTermMonths', Number(value))
 						}
 					>
-						<SelectTrigger id="loanTermMonths">
+						<SelectTrigger
+							id="loanTermMonths"
+							aria-labelledby="loanTermMonths-label"
+						>
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>

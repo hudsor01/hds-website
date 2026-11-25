@@ -64,12 +64,14 @@ export function VehicleInputs({
 
 				{/* County */}
 				<div className="space-y-tight">
-					<Label htmlFor="county">Texas County</Label>
+					<Label id="county-label" htmlFor="county">
+						Texas County
+					</Label>
 					<Select
 						value={vehicleInput.county}
 						onValueChange={value => updateInput('county', value)}
 					>
-						<SelectTrigger id="county">
+						<SelectTrigger id="county" aria-labelledby="county-label">
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
@@ -88,12 +90,14 @@ export function VehicleInputs({
 				<div className="flex items-center gap-3">
 					<Checkbox
 						id="new-vehicle"
+						aria-labelledby="new-vehicle-label"
 						checked={vehicleInput.isNewVehicle}
 						onCheckedChange={(checked: boolean) =>
 							updateInput('isNewVehicle', checked)
 						}
 					/>
 					<Label
+						id="new-vehicle-label"
 						htmlFor="new-vehicle"
 						className="text-sm font-normal cursor-pointer"
 					>
@@ -104,12 +108,14 @@ export function VehicleInputs({
 				<div className="flex items-center gap-3">
 					<Checkbox
 						id="used-vehicle"
+						aria-labelledby="used-vehicle-label"
 						checked={!vehicleInput.isNewVehicle}
 						onCheckedChange={(checked: boolean) =>
 							updateInput('isNewVehicle', !checked)
 						}
 					/>
 					<Label
+						id="used-vehicle-label"
 						htmlFor="used-vehicle"
 						className="text-sm font-normal cursor-pointer"
 					>
@@ -120,12 +126,14 @@ export function VehicleInputs({
 				<div className="flex items-center gap-3">
 					<Checkbox
 						id="electric-vehicle"
+						aria-labelledby="electric-vehicle-label"
 						checked={vehicleInput.isElectric}
 						onCheckedChange={(checked: boolean) =>
 							updateInput('isElectric', checked)
 						}
 					/>
 					<Label
+						id="electric-vehicle-label"
 						htmlFor="electric-vehicle"
 						className="text-sm font-normal cursor-pointer"
 					>

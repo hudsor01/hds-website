@@ -551,7 +551,9 @@ function MortgageCalculatorView({
 
 				<div className="grid gap-content md:grid-cols-2">
 					<div className="space-y-tight">
-						<Label htmlFor="program">Loan Type</Label>
+						<Label id="program-label" htmlFor="program">
+							Loan Type
+						</Label>
 						<Select
 							value={program}
 							onValueChange={value => {
@@ -567,7 +569,7 @@ function MortgageCalculatorView({
 								)
 							}}
 						>
-							<SelectTrigger id="program">
+							<SelectTrigger id="program" aria-labelledby="program-label">
 								<SelectValue />
 							</SelectTrigger>
 							<SelectContent>
@@ -581,13 +583,15 @@ function MortgageCalculatorView({
 					</div>
 
 					<div className="space-y-tight">
-						<Label htmlFor="loanTerm">Loan Term</Label>
+						<Label id="loanTerm-label" htmlFor="loanTerm">
+							Loan Term
+						</Label>
 						<Select
 							value={String(termYears)}
 							onValueChange={value => setParams({ term: Number(value) })}
 							disabled={program === 'usda'}
 						>
-							<SelectTrigger id="loanTerm">
+							<SelectTrigger id="loanTerm" aria-labelledby="loanTerm-label">
 								<SelectValue />
 							</SelectTrigger>
 							<SelectContent>
@@ -617,14 +621,16 @@ function MortgageCalculatorView({
 				{program === 'va' && (
 					<div className="space-y-tight rounded-lg border border-border p-4">
 						<div className="space-y-tight">
-							<Label htmlFor="vaUse">VA Loan Use</Label>
+							<Label id="vaUse-label" htmlFor="vaUse">
+								VA Loan Use
+							</Label>
 							<Select
 								value={vaFirstUse ? 'first' : 'subsequent'}
 								onValueChange={value =>
 									setParams({ vafirst: value === 'first' })
 								}
 							>
-								<SelectTrigger id="vaUse">
+								<SelectTrigger id="vaUse" aria-labelledby="vaUse-label">
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent>
@@ -638,6 +644,7 @@ function MortgageCalculatorView({
 						<div className="flex items-start gap-tight pt-2">
 							<Checkbox
 								id="vaExempt"
+								aria-labelledby="vaExempt-label"
 								checked={vaExempt}
 								onCheckedChange={value => {
 									if (typeof value === 'boolean') {
@@ -645,7 +652,11 @@ function MortgageCalculatorView({
 									}
 								}}
 							/>
-							<Label htmlFor="vaExempt" className="font-normal leading-snug">
+							<Label
+								id="vaExempt-label"
+								htmlFor="vaExempt"
+								className="font-normal leading-snug"
+							>
 								Exempt from the funding fee (for example, you receive VA
 								disability compensation)
 							</Label>
@@ -657,6 +668,7 @@ function MortgageCalculatorView({
 					<div className="flex items-start gap-tight">
 						<Checkbox
 							id="financeFee"
+							aria-labelledby="financeFee-label"
 							checked={financeFee}
 							onCheckedChange={value => {
 								if (typeof value === 'boolean') {
@@ -664,7 +676,11 @@ function MortgageCalculatorView({
 								}
 							}}
 						/>
-						<Label htmlFor="financeFee" className="font-normal leading-snug">
+						<Label
+							id="financeFee-label"
+							htmlFor="financeFee"
+							className="font-normal leading-snug"
+						>
 							Add the {upfrontFeeName} to the loan instead of paying it at
 							closing
 						</Label>

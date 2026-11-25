@@ -147,6 +147,24 @@ test.describe('Texas TTL Calculator', () => {
 		).toBeVisible()
 		await expect(page.getByText('Total TTL')).toHaveCount(0)
 	})
+
+	test('names every dropdown and checkbox by its label', async ({ page }) => {
+		await expect(
+			page.getByRole('combobox', { name: 'Texas County', exact: true })
+		).toBeVisible()
+		await expect(
+			page.getByRole('combobox', { name: 'Loan Term', exact: true })
+		).toBeVisible()
+		await expect(
+			page.getByRole('checkbox', { name: /^New Vehicle/ })
+		).toBeVisible()
+		await expect(
+			page.getByRole('checkbox', { name: /^Used Vehicle/ })
+		).toBeVisible()
+		await expect(
+			page.getByRole('checkbox', { name: /^Electric Vehicle/ })
+		).toBeVisible()
+	})
 })
 
 test.describe('Invoice Generator', () => {

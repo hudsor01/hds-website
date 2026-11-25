@@ -64,12 +64,18 @@ export function PaystubNavigation({
 
 			{documentType === 'paystub' && (
 				<div className="mb-5 flex items-center justify-center gap-tight">
-					<Label>Select Pay Period:</Label>
+					<Label id="pay-period-label" htmlFor="pay-period">
+						Select Pay Period:
+					</Label>
 					<Select
 						value={selectedPeriod.toString()}
 						onValueChange={value => setSelectedPeriod(parseInt(value, 10))}
 					>
-						<SelectTrigger className="w-40">
+						<SelectTrigger
+							id="pay-period"
+							aria-labelledby="pay-period-label"
+							className="w-40"
+						>
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>

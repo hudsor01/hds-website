@@ -199,14 +199,16 @@ function CostEstimatorView({
 		>
 			{/* Website Type */}
 			<div className="space-y-tight">
-				<Label htmlFor="websiteType">Website Type *</Label>
+				<Label id="websiteType-label" htmlFor="websiteType">
+					Website Type *
+				</Label>
 				<Select
 					name="websiteType"
 					value={websiteType ?? ''}
 					onValueChange={handleTypeChange}
 					required
 				>
-					<SelectTrigger id="websiteType">
+					<SelectTrigger id="websiteType" aria-labelledby="websiteType-label">
 						<SelectValue placeholder="Select a type..." />
 					</SelectTrigger>
 					<SelectContent>
@@ -249,11 +251,16 @@ function CostEstimatorView({
 						>
 							<div className="flex h-5 items-center">
 								<Checkbox
+									id={`feature-${feature.value}`}
+									aria-labelledby={`feature-${feature.value}-label`}
 									checked={features.includes(feature.value)}
 									onCheckedChange={() => handleFeatureToggle(feature.value)}
 								/>
 							</div>
-							<div className="ml-3 text-sm font-medium text-foreground">
+							<div
+								id={`feature-${feature.value}-label`}
+								className="ml-3 text-sm font-medium text-foreground"
+							>
 								{feature.label}
 							</div>
 						</label>
@@ -263,7 +270,9 @@ function CostEstimatorView({
 
 			{/* Design Complexity */}
 			<div className="space-y-tight">
-				<Label htmlFor="designComplexity">Design Complexity</Label>
+				<Label id="designComplexity-label" htmlFor="designComplexity">
+					Design Complexity
+				</Label>
 				<Select
 					name="designComplexity"
 					value={design}
@@ -274,7 +283,10 @@ function CostEstimatorView({
 						}
 					}}
 				>
-					<SelectTrigger id="designComplexity">
+					<SelectTrigger
+						id="designComplexity"
+						aria-labelledby="designComplexity-label"
+					>
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>
@@ -289,7 +301,9 @@ function CostEstimatorView({
 
 			{/* Timeline */}
 			<div className="space-y-tight">
-				<Label htmlFor="timeline">Project Timeline</Label>
+				<Label id="timeline-label" htmlFor="timeline">
+					Project Timeline
+				</Label>
 				<Select
 					name="timeline"
 					value={timeline}
@@ -300,7 +314,7 @@ function CostEstimatorView({
 						}
 					}}
 				>
-					<SelectTrigger id="timeline">
+					<SelectTrigger id="timeline" aria-labelledby="timeline-label">
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>
@@ -317,6 +331,7 @@ function CostEstimatorView({
 			<div className="flex items-start gap-3">
 				<Checkbox
 					id="maintenance"
+					aria-labelledby="maintenance-label"
 					checked={maint}
 					onCheckedChange={value => {
 						if (typeof value === 'boolean') {
@@ -325,7 +340,11 @@ function CostEstimatorView({
 					}}
 				/>
 				<div className="text-sm">
-					<Label htmlFor="maintenance" className="font-medium">
+					<Label
+						id="maintenance-label"
+						htmlFor="maintenance"
+						className="font-medium"
+					>
 						Include ongoing maintenance
 					</Label>
 					<p className="text-muted-foreground">
