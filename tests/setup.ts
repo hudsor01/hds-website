@@ -2,6 +2,7 @@
 import { GlobalRegistrator } from '@happy-dom/global-registrator'
 import '@testing-library/jest-dom'
 import { afterAll, afterEach, beforeAll, beforeEach, mock } from 'bun:test'
+import { cleanup } from '@testing-library/react'
 import * as actualNavigation from 'next/navigation'
 
 // CRITICAL: Mock @/env BEFORE any other imports that depend on it
@@ -311,6 +312,11 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+	// Unmount every RTL render. RTL's own auto-cleanup registers its afterEach
+	// only in the first file that imports it, so renders in later files would
+	// otherwise pile up in the shared document ("multiple elements with the
+	// role navigation").
+	cleanup()
 	// Clear all mocks after each test for isolation
 	// Note: env mock will be re-applied in beforeEach
 	mock.restore()
