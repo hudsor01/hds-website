@@ -722,7 +722,7 @@ button,
 	.typography {
 		font-size: 1.0625rem;
 		line-height: 1.8;
-		color: var(--foreground);
+		color: var(--color-foreground);
 	}
 	.typography h1 {
 		font-size: var(--font-size-3xl);
@@ -740,7 +740,7 @@ button,
 		margin-top: 3rem;
 		margin-bottom: 1rem;
 		padding-bottom: 0.5rem;
-		border-bottom: 1px solid var(--border-subtle, var(--border));
+		border-bottom: 1px solid var(--color-border-subtle);
 	}
 	.typography h3 {
 		font-size: var(--font-size-xl);
@@ -760,25 +760,30 @@ button,
 	.typography > p:first-of-type {
 		font-size: 1.2rem;
 		line-height: 1.7;
-		color: var(--muted-foreground);
+		color: var(--color-muted-foreground);
 	}
 	.typography strong {
 		font-weight: var(--font-weight-semibold);
-		color: var(--foreground);
+		color: var(--color-foreground);
 	}
 	.typography a {
-		color: var(--primary);
+		color: var(--color-primary);
 		text-decoration: underline;
-		text-decoration-color: color-mix(in oklab, var(--primary) 35%, transparent);
+		text-decoration-color: color-mix(
+			in oklab,
+			var(--color-primary) 35%,
+			transparent
+		);
 		text-underline-offset: 3px;
 		text-decoration-thickness: 2px;
 		transition:
 			color 0.15s ease,
 			text-decoration-color 0.15s ease;
 	}
+	/* Hover text uses accent-text: plain accent is 2.49:1 on the page. */
 	.typography a:hover {
-		color: var(--accent);
-		text-decoration-color: var(--accent);
+		color: var(--color-accent-text);
+		text-decoration-color: var(--color-accent);
 	}
 	/* Generic list rules first (lower specificity before the ul>li rules
 	   below, to satisfy no-descending-specificity). */
@@ -801,7 +806,7 @@ button,
 		list-style: decimal;
 	}
 	.typography ol > li::marker {
-		color: var(--accent-text, var(--accent));
+		color: var(--color-accent-text);
 		font-weight: var(--font-weight-semibold);
 	}
 	/* Brand-colored custom bullets. */
@@ -816,16 +821,16 @@ button,
 		width: 0.4rem;
 		height: 0.4rem;
 		border-radius: 9999px;
-		background: var(--accent);
+		background: var(--color-accent);
 	}
 	/* Blockquote as a soft callout card, not just an italic indent. */
 	.typography blockquote {
 		margin-block: 1.75rem;
 		padding: 1rem 1.5rem;
-		border-left: 4px solid var(--accent);
+		border-left: 4px solid var(--color-accent);
 		border-radius: 0.5rem;
-		background: color-mix(in oklab, var(--accent) 7%, var(--card));
-		color: var(--foreground);
+		background: color-mix(in oklab, var(--color-accent) 7%, var(--color-card));
+		color: var(--color-foreground);
 		font-size: 1.125rem;
 	}
 	.typography blockquote p:last-child {
@@ -833,7 +838,7 @@ button,
 	}
 	.typography code {
 		padding: 0.15rem 0.4rem;
-		background: var(--secondary);
+		background: var(--color-secondary);
 		border-radius: 0.375rem;
 		font-family: var(--font-mono);
 		font-size: 0.875em;
@@ -842,8 +847,8 @@ button,
 	.typography pre {
 		margin-block: 1.5rem;
 		padding: 1.25rem 1.5rem;
-		background: var(--surface-sunken, var(--secondary));
-		border: 1px solid var(--border-subtle, var(--border));
+		background: var(--color-surface-sunken);
+		border: 1px solid var(--color-border-subtle);
 		border-radius: 0.75rem;
 		overflow-x: auto;
 		line-height: 1.6;
@@ -856,12 +861,12 @@ button,
 	.typography img {
 		margin-block: 1.75rem;
 		border-radius: 0.75rem;
-		border: 1px solid var(--border-subtle, var(--border));
+		border: 1px solid var(--color-border-subtle);
 	}
 	.typography hr {
 		margin-block: 2.5rem;
 		border: 0;
-		border-top: 1px solid var(--border-subtle, var(--border));
+		border-top: 1px solid var(--color-border-subtle);
 	}
 	/* Scroll-margin so in-page anchor jumps (table of contents) clear the
 	   sticky navbar, per the shadcn typography reference. */
@@ -878,21 +883,21 @@ button,
 		font-size: 0.95rem;
 	}
 	.typography thead {
-		background: var(--surface-sunken, var(--secondary));
+		background: var(--color-surface-sunken);
 	}
 	.typography th,
 	.typography td {
 		padding: 0.625rem 0.875rem;
-		border: 1px solid var(--border-subtle, var(--border));
+		border: 1px solid var(--color-border-subtle);
 		text-align: left;
 		vertical-align: top;
 	}
 	.typography th {
 		font-weight: var(--font-weight-semibold);
-		color: var(--foreground);
+		color: var(--color-foreground);
 	}
 	.typography tbody tr:nth-child(even) {
-		background: color-mix(in oklab, var(--secondary) 50%, transparent);
+		background: color-mix(in oklab, var(--color-secondary) 50%, transparent);
 	}
 	/* Don't let the last element add trailing space before the author card. */
 	.typography > *:last-child {
