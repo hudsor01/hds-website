@@ -7,13 +7,12 @@
  * token patterns that have historically slipped past review:
  *
  *   - `*-texter` (typo for `*-text`) — saw 6 instances in PR #183
- *   - `*-dark` utilities outside the legitimate `grid-pattern-dark`
- *     custom @utility — `--color-*-dark` tokens were removed in PR #183
+ *   - `*-dark` utilities — `--color-*-dark` tokens were removed in PR #183
  *     since they were never consumed
  *
  * Implementation notes:
  *   - Uses match-level allowlisting (not line-level), so a line containing
- *     both a legitimate `grid-pattern-dark` and a buggy `hover:bg-foo-dark`
+ *     both an allowlisted `*-dark` class and a buggy `hover:bg-foo-dark`
  *     correctly reports only the second.
  *   - Class-name matching anchors on whitespace, quotes, or string boundaries
  *     (the only positions Tailwind utilities appear in real source). This
@@ -45,7 +44,8 @@ const CLASS_END = '(?=$|[\\s"\'`])'
 // Allowlist of legitimate `*-dark` matches (custom @utility classes that
 // happen to share the suffix). Compared against the captured class string,
 // not the surrounding line, so adjacent violations on the same line still fire.
-const DARK_ALLOWLIST = new Set(['grid-pattern-dark', 'dark:grid-pattern-dark'])
+// Empty since the grid-pattern variants collapsed into one `grid-pattern`.
+const DARK_ALLOWLIST = new Set<string>()
 
 /**
  * Build the regex that matches a whole Tailwind utility ending in `-${suffix}`,
@@ -188,7 +188,7 @@ describe('CSS class hygiene', () => {
 		expect(violations).toEqual([])
 	})
 
-	test('no broken `*-dark` utilities in src/ outside `grid-pattern-dark`', async () => {
+	test('no broken `*-dark` utilities in src/', async () => {
 		const matches = await findMatches(suffixPattern('dark'))
 		const violations = matches.filter(v => !DARK_ALLOWLIST.has(v.match))
 		if (violations.length > 0) {

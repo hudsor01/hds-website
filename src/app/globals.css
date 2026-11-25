@@ -382,75 +382,6 @@ button,
 		border-radius: 1rem;
 	}
 
-	/* Grid background patterns (use existing --border token) */
-	.grid-pattern {
-		background-image:
-			linear-gradient(
-				oklch(from var(--border) l c h / 0.4) 1px,
-				transparent 1px
-			),
-			linear-gradient(
-				90deg,
-				oklch(from var(--border) l c h / 0.4) 1px,
-				transparent 1px
-			);
-		background-size: 32px 32px;
-	}
-	.grid-pattern-light {
-		background-image:
-			linear-gradient(
-				oklch(from var(--border) l c h / 0.25) 1px,
-				transparent 1px
-			),
-			linear-gradient(
-				90deg,
-				oklch(from var(--border) l c h / 0.25) 1px,
-				transparent 1px
-			);
-		background-size: 40px 40px;
-	}
-	.grid-pattern-subtle {
-		background-image:
-			linear-gradient(
-				oklch(from var(--border) l c h / 0.15) 1px,
-				transparent 1px
-			),
-			linear-gradient(
-				90deg,
-				oklch(from var(--border) l c h / 0.15) 1px,
-				transparent 1px
-			);
-		background-size: 48px 48px;
-	}
-	.grid-pattern-minimal {
-		background-image:
-			linear-gradient(
-				oklch(from var(--border) l c h / 0.08) 1px,
-				transparent 1px
-			),
-			linear-gradient(
-				90deg,
-				oklch(from var(--border) l c h / 0.08) 1px,
-				transparent 1px
-			);
-		background-size: 64px 64px;
-	}
-
-	/* Dark-mode optimised grid — 18% opacity so lines are visible on dark bg */
-	.grid-pattern-dark {
-		background-image:
-			linear-gradient(
-				oklch(from var(--color-border) l c h / 0.18) 1px,
-				transparent 1px
-			),
-			linear-gradient(
-				90deg,
-				oklch(from var(--color-border) l c h / 0.18) 1px,
-				transparent 1px
-			);
-		background-size: 52px 52px;
-	}
-
 	/* Radial amber spotlight — for hero and CTA dark sections */
 	.hero-spotlight {
 		background: radial-gradient(
@@ -592,6 +523,20 @@ button,
 	.surface-overlay {
 		background-color: oklch(from var(--foreground) l c h / 0.04);
 	}
+}
+
+/* Hero grid background. One parametric pattern: set --grid-size or
+ * --grid-alpha on the element to change the cell or line strength. */
+@utility grid-pattern {
+	--grid-line: color-mix(
+		in oklab,
+		var(--color-border) var(--grid-alpha, 15%),
+		transparent
+	);
+	background-image:
+		linear-gradient(var(--grid-line) 1px, transparent 1px),
+		linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+	background-size: var(--grid-size, 3rem) var(--grid-size, 3rem);
 }
 
 /* Spacing utilities */

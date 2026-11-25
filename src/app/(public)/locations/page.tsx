@@ -26,7 +26,7 @@ export default function LocationsPage() {
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div

@@ -245,13 +245,6 @@ describe('BackgroundPattern Component', () => {
 		expect(element).toHaveClass('surface-overlay')
 	})
 
-	it('should render grid pattern overlay', () => {
-		const { container } = render(<div className="grid-pattern" />)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('grid-pattern')
-	})
-
 	it('should apply blur effects correctly', () => {
 		const { container } = render(<div className="blur-3xl" />)
 
@@ -528,26 +521,5 @@ describe('Grid Pattern Utilities', () => {
 
 		const element = container.firstChild
 		expect(element).toHaveClass('grid-pattern')
-	})
-
-	it('should apply grid-pattern-light variant', () => {
-		const { container } = render(<div className="grid-pattern-light" />)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('grid-pattern-light')
-	})
-
-	it('should apply grid-pattern-subtle variant', () => {
-		const { container } = render(<div className="grid-pattern-subtle" />)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('grid-pattern-subtle')
-	})
-
-	it('should apply grid-pattern-minimal variant', () => {
-		const { container } = render(<div className="grid-pattern-minimal" />)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('grid-pattern-minimal')
 	})
 })

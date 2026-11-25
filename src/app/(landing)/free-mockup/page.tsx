@@ -91,7 +91,7 @@ export default function FreeMockupPage() {
 
 			<section className="relative overflow-hidden">
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div className="relative z-10 container-wide px-4 sm:px-6 pt-16 pb-20">

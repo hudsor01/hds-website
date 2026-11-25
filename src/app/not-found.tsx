@@ -43,7 +43,7 @@ export default function NotFound() {
 				className="min-h-screen pt-14 bg-background flex items-center justify-center px-4 sm:px-6 relative overflow-hidden"
 			>
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div
