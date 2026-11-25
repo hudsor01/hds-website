@@ -2,7 +2,8 @@ import { describe, expect, test } from 'bun:test'
 import {
 	calculatePayment,
 	calculateResults,
-	calculateTTL
+	calculateTTL,
+	validateVehicleInputs
 } from '@/lib/ttl-calculator/calculator'
 import type { VehicleInputs } from '@/types/ttl-types'
 
@@ -151,5 +152,67 @@ describe('calculatePayment', () => {
 		const long = calculatePayment(inputs({ loanTermMonths: 72 }), 0)
 		expect(short.monthlyPayment).toBeGreaterThan(long.monthlyPayment)
 		expect(short.totalInterest).toBeLessThan(long.totalInterest)
+	})
+})
+
+describe('validateVehicleInputs', () => {
+	test('accepts the defaults', () => {
+		expect(validateVehicleInputs(inputs())).toEqual({})
+	})
+
+	test('accepts zero for every money input and the rate', () => {
+		expect(
+			validateVehicleInputs(
+				inputs({
+					purchasePrice: 0,
+					tradeInValue: 0,
+					downPayment: 0,
+					rebateAmount: 0,
+					interestRate: 0
+				})
+			)
+		).toEqual({})
+	})
+
+	test('accepts a missing rebate and the 30% rate ceiling', () => {
+		expect(
+			validateVehicleInputs(
+				inputs({ rebateAmount: undefined, interestRate: 30 })
+			)
+		).toEqual({})
+	})
+
+	test('rejects a negative purchase price (the -5000 report case)', () => {
+		expect(validateVehicleInputs(inputs({ purchasePrice: -5000 }))).toEqual({
+			purchasePrice: 'Enter a price of $0 or more.'
+		})
+	})
+
+	test('rejects a negative trade-in, down payment and rebate', () => {
+		expect(
+			validateVehicleInputs(
+				inputs({ tradeInValue: -1, downPayment: -1, rebateAmount: -1 })
+			)
+		).toEqual({
+			tradeInValue: 'Enter a trade-in of $0 or more.',
+			downPayment: 'Enter a down payment of $0 or more.',
+			rebateAmount: 'Enter a rebate of $0 or more.'
+		})
+	})
+
+	test('rejects a rate below 0% or above 30%', () => {
+		const message = 'Enter a rate from 0% to 30%.'
+		expect(validateVehicleInputs(inputs({ interestRate: -0.1 }))).toEqual({
+			interestRate: message
+		})
+		expect(validateVehicleInputs(inputs({ interestRate: 31 }))).toEqual({
+			interestRate: message
+		})
+	})
+
+	test('rejects NaN from a cleared or malformed field', () => {
+		expect(
+			validateVehicleInputs(inputs({ interestRate: Number.NaN }))
+		).toHaveProperty('interestRate')
 	})
 })

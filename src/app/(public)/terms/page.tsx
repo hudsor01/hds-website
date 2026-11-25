@@ -4,7 +4,7 @@ import { pageDate } from '@/lib/sitemap/page-dates'
 import { formatCalendarDate } from '@/lib/utils'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Terms of Service | Hudson Digital Solutions',
+	title: 'Terms of Service | Hudson Digital',
 	description:
 		'Read the Terms of Service for Hudson Digital Solutions. Understand your rights and obligations when using our website and services.',
 	path: '/terms'

@@ -19,7 +19,7 @@ import { getApprovedTestimonials } from '@/lib/testimonials'
 export async function generateMetadata(): Promise<Metadata> {
 	const testimonials = await getApprovedTestimonials()
 	return buildMetadata({
-		title: 'Client Reviews | Hudson Digital Solutions',
+		title: 'Client Reviews | Hudson Digital',
 		description:
 			'Reviews from Dallas-Fort Worth small business owners I have built websites for, published in their own words after the project.',
 		path: '/testimonials',

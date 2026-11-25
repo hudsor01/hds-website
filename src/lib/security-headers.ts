@@ -83,6 +83,10 @@ const STATIC_SECURITY_HEADERS = {
 	// Enforce HTTPS (HSTS). Matches Vercel's platform default. No
 	// includeSubDomains / preload: that would lock every subdomain to HTTPS
 	// for the full max-age, including any that are not served over TLS.
+	// Checked 2026-11-25: a wildcard *.hudsondigitalsolutions.com CNAME points
+	// every subdomain at Vercel, which serves an expired wildcard cert there
+	// (only www has a valid cert). Add includeSubDomains once that wildcard
+	// record is gone and every remaining web subdomain has a valid cert.
 	'Strict-Transport-Security': 'max-age=63072000',
 
 	// Cross-origin policies. No Cross-Origin-Embedder-Policy: nothing here

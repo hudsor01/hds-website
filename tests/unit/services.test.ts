@@ -49,6 +49,13 @@ describe('SERVICES', () => {
 		}
 	})
 
+	test('meta titles carry the short brand suffix within 60 characters', () => {
+		for (const service of SERVICES) {
+			expect(service.metaTitle.endsWith(' | Hudson Digital')).toBe(true)
+			expect(service.metaTitle.length).toBeLessThanOrEqual(60)
+		}
+	})
+
 	test('every page has content to rank with', () => {
 		for (const service of SERVICES) {
 			expect(service.overview.length).toBeGreaterThan(0)

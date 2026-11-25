@@ -4,6 +4,7 @@ import { Plus, Settings } from 'lucide-react'
 import { CurrencyInput } from '@/components/forms/CurrencyInput'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import type { TtlFieldErrors } from '@/lib/ttl-calculator/calculator'
 import type {
 	PaymentResults,
 	TTLResults,
@@ -20,13 +21,15 @@ interface AdvancedOptionsProps {
 		payment: PaymentResults
 		name: string
 	}>
+	fieldErrors: TtlFieldErrors
 }
 
 export function AdvancedOptions({
 	vehicleInput,
 	updateInput,
 	addToComparison,
-	comparisonVehicles
+	comparisonVehicles,
+	fieldErrors
 }: AdvancedOptionsProps) {
 	return (
 		<Card size="sm" className="rounded-none">
@@ -40,6 +43,7 @@ export function AdvancedOptions({
 				id="rebateAmount"
 				value={vehicleInput.rebateAmount ?? 0}
 				onChange={value => updateInput('rebateAmount', value)}
+				error={fieldErrors.rebateAmount}
 				placeholder="0"
 			/>
 			<p className="text-xs text-muted-foreground mt-2">

@@ -2,11 +2,17 @@
  * Website Cost Estimator Client Component
  * An illustrative planning model with URL state, shown beside published
  * market ranges for context. Not market data and not a quote.
+ *
+ * Reading the URL with nuqs suspends prerendering, so only that part sits
+ * behind Suspense: the fallback renders the same page (heading,
+ * description and form) with default values, which keeps the H1 and form
+ * in the server HTML.
  */
 
 'use client'
 
-import { useQueryStates } from 'nuqs'
+import { type Nullable, useQueryStates, type Values } from 'nuqs'
+import { Suspense } from 'react'
 import { toast } from 'sonner'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
@@ -31,6 +37,7 @@ import {
 	FEATURES,
 	type Feature,
 	formatWholeDollars,
+	INCLUDED_PAGES,
 	MAX_PAGES,
 	MIN_PAGES,
 	parsePageCount,
@@ -51,8 +58,31 @@ const CLUTCH_FIGURES = [
 
 const PAGES_ERROR = `Enter a whole number from ${MIN_PAGES} to ${MAX_PAGES}.`
 
-export function CostEstimatorClient() {
-	const [params, setParams] = useQueryStates(estimatorParsers)
+type EstimatorParams = Values<typeof estimatorParsers>
+
+interface CostEstimatorViewProps {
+	params: EstimatorParams
+	setParams: (values: Partial<Nullable<EstimatorParams>> | null) => void
+	interactive: boolean
+}
+
+/** Matches the estimatorParsers defaults, for the server-rendered shell. */
+const DEFAULT_PARAMS: EstimatorParams = {
+	type: null,
+	pages: String(INCLUDED_PAGES),
+	features: [],
+	design: 'standard',
+	timeline: 'normal',
+	maint: false
+}
+
+const noop = () => undefined
+
+function CostEstimatorView({
+	params,
+	setParams,
+	interactive
+}: CostEstimatorViewProps) {
 	const { type: websiteType, features, design, timeline, maint } = params
 	const pages = parsePageCount(params.pages)
 
@@ -75,6 +105,9 @@ export function CostEstimatorClient() {
 			return
 		}
 		setParams({ type: selected.value })
+		if (!interactive) {
+			return
+		}
 		trackEvent('calculator_used', {
 			calculator_type: 'cost-estimator',
 			website_type: selected.value,
@@ -166,14 +199,16 @@ export function CostEstimatorClient() {
 		>
 			{/* Website Type */}
 			<div className="space-y-tight">
-				<Label htmlFor="websiteType">Website Type *</Label>
+				<Label id="websiteType-label" htmlFor="websiteType">
+					Website Type *
+				</Label>
 				<Select
 					name="websiteType"
 					value={websiteType ?? ''}
 					onValueChange={handleTypeChange}
 					required
 				>
-					<SelectTrigger id="websiteType">
+					<SelectTrigger id="websiteType" aria-labelledby="websiteType-label">
 						<SelectValue placeholder="Select a type..." />
 					</SelectTrigger>
 					<SelectContent>
@@ -216,11 +251,16 @@ export function CostEstimatorClient() {
 						>
 							<div className="flex h-5 items-center">
 								<Checkbox
+									id={`feature-${feature.value}`}
+									aria-labelledby={`feature-${feature.value}-label`}
 									checked={features.includes(feature.value)}
 									onCheckedChange={() => handleFeatureToggle(feature.value)}
 								/>
 							</div>
-							<div className="ml-3 text-sm font-medium text-foreground">
+							<div
+								id={`feature-${feature.value}-label`}
+								className="ml-3 text-sm font-medium text-foreground"
+							>
 								{feature.label}
 							</div>
 						</label>
@@ -230,7 +270,9 @@ export function CostEstimatorClient() {
 
 			{/* Design Complexity */}
 			<div className="space-y-tight">
-				<Label htmlFor="designComplexity">Design Complexity</Label>
+				<Label id="designComplexity-label" htmlFor="designComplexity">
+					Design Complexity
+				</Label>
 				<Select
 					name="designComplexity"
 					value={design}
@@ -241,7 +283,10 @@ export function CostEstimatorClient() {
 						}
 					}}
 				>
-					<SelectTrigger id="designComplexity">
+					<SelectTrigger
+						id="designComplexity"
+						aria-labelledby="designComplexity-label"
+					>
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>
@@ -256,7 +301,9 @@ export function CostEstimatorClient() {
 
 			{/* Timeline */}
 			<div className="space-y-tight">
-				<Label htmlFor="timeline">Project Timeline</Label>
+				<Label id="timeline-label" htmlFor="timeline">
+					Project Timeline
+				</Label>
 				<Select
 					name="timeline"
 					value={timeline}
@@ -267,7 +314,7 @@ export function CostEstimatorClient() {
 						}
 					}}
 				>
-					<SelectTrigger id="timeline">
+					<SelectTrigger id="timeline" aria-labelledby="timeline-label">
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>
@@ -284,6 +331,7 @@ export function CostEstimatorClient() {
 			<div className="flex items-start gap-3">
 				<Checkbox
 					id="maintenance"
+					aria-labelledby="maintenance-label"
 					checked={maint}
 					onCheckedChange={value => {
 						if (typeof value === 'boolean') {
@@ -292,7 +340,11 @@ export function CostEstimatorClient() {
 					}}
 				/>
 				<div className="text-sm">
-					<Label htmlFor="maintenance" className="font-medium">
+					<Label
+						id="maintenance-label"
+						htmlFor="maintenance"
+						className="font-medium"
+					>
 						Include ongoing maintenance
 					</Label>
 					<p className="text-muted-foreground">
@@ -336,9 +388,9 @@ export function CostEstimatorClient() {
 				will take. You get the timeline and a real price on that call.
 			</p>
 			<Card size="sm" className="bg-muted">
-				<h4 className="mb-subheading text-base font-semibold text-foreground">
+				<h3 className="mb-subheading text-base font-semibold text-foreground">
 					What published guides say
-				</h4>
+				</h3>
 				<ul className="list-disc space-y-tight pl-5 text-sm text-muted-foreground">
 					{CLUTCH_FIGURES.map(figure => (
 						<li key={figure}>{figure}</li>
@@ -376,5 +428,34 @@ export function CostEstimatorClient() {
 			}
 			actions={actions}
 		/>
+	)
+}
+
+function CostEstimatorWithUrlState() {
+	const [params, setParams] = useQueryStates(estimatorParsers)
+	return (
+		<CostEstimatorView
+			params={params}
+			setParams={values => {
+				void setParams(values)
+			}}
+			interactive
+		/>
+	)
+}
+
+export function CostEstimatorClient() {
+	return (
+		<Suspense
+			fallback={
+				<CostEstimatorView
+					params={DEFAULT_PARAMS}
+					setParams={noop}
+					interactive={false}
+				/>
+			}
+		>
+			<CostEstimatorWithUrlState />
+		</Suspense>
 	)
 }

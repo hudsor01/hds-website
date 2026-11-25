@@ -33,7 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
 	)
 
 	return buildMetadata({
-		title: 'Help Center | Hudson Digital Solutions',
+		title: 'Help Center | Hudson Digital',
 		description:
 			'Browse the Hudson Digital Solutions help center for answers to common questions, step-by-step guides for the free tools, billing details and account support.',
 		path: '/help',

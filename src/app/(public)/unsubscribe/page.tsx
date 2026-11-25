@@ -3,7 +3,7 @@ import { buildMetadata } from '@/lib/seo-config'
 import { UnsubscribeForm } from './UnsubscribeForm'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Unsubscribe | Hudson Digital Solutions',
+	title: 'Unsubscribe | Hudson Digital',
 	description:
 		'Unsubscribe from Hudson Digital Solutions email communications.',
 	path: '/unsubscribe',

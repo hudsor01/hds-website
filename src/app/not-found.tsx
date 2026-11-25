@@ -22,7 +22,7 @@ import NavbarLight from '@/components/layout/Navbar'
 import { Button } from '@/components/ui/button'
 
 export const metadata = {
-	title: '404 - Page Not Found | Hudson Digital Solutions',
+	title: '404 - Page Not Found | Hudson Digital',
 	description:
 		'Page not found. Return to Hudson Digital Solutions for premium web development and digital strategy services.',
 	robots: {

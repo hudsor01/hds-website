@@ -6,11 +6,18 @@
  */
 
 import { describe, expect, test } from 'bun:test'
-import { absoluteUrl, buildMetadata } from '@/lib/seo-config'
+import {
+	absoluteUrl,
+	BRAND_SUFFIX,
+	brandedTitle,
+	buildMetadata,
+	MAX_TITLE_LENGTH,
+	qualifiedTitle
+} from '@/lib/seo-config'
 
 describe('buildMetadata', () => {
 	const meta = buildMetadata({
-		title: 'ROI Calculator | Hudson Digital Solutions',
+		title: 'ROI Calculator | Hudson Digital',
 		description: 'Work out the return on a better website.',
 		path: '/tools/roi-calculator',
 		socialTitle: 'ROI Calculator'
@@ -79,5 +86,48 @@ describe('buildMetadata', () => {
 	test('the homepage canonical has no trailing slash; bad paths throw', () => {
 		expect(absoluteUrl('/')).toBe('https://hudsondigitalsolutions.com')
 		expect(() => absoluteUrl('tools')).toThrow()
+	})
+})
+
+describe('qualifiedTitle', () => {
+	test('keeps the qualifier while the title fits in 60 characters', () => {
+		expect(qualifiedTitle('TenantFlow', 'Case Study')).toBe(
+			'TenantFlow | Case Study | Hudson Digital'
+		)
+	})
+
+	test('drops the qualifier when it would pass 60 characters', () => {
+		const name = 'Connecting Your Domain to the New Site'
+		expect(`${name} | Help Center${BRAND_SUFFIX}`.length).toBeGreaterThan(
+			MAX_TITLE_LENGTH
+		)
+		const title = qualifiedTitle(name, 'Help Center')
+		expect(title).toBe(`${name} | Hudson Digital`)
+		expect(title.length).toBeLessThanOrEqual(MAX_TITLE_LENGTH)
+	})
+
+	test('keeps a 60-character title with its qualifier', () => {
+		const name = 'x'.repeat(MAX_TITLE_LENGTH - ' | Q | Hudson Digital'.length)
+		expect(qualifiedTitle(name, 'Q').length).toBe(MAX_TITLE_LENGTH)
+		expect(qualifiedTitle(name, 'Q')).toContain(' | Q | ')
+	})
+
+	test('drops the brand too when the name alone fills the title', () => {
+		const name = 'x'.repeat(MAX_TITLE_LENGTH - 5)
+		expect(qualifiedTitle(name, 'Q')).toBe(name)
+	})
+})
+
+describe('brandedTitle', () => {
+	test('adds the brand only when the full title fits in 60 characters', () => {
+		expect(brandedTitle('Short')).toBe(`Short${BRAND_SUFFIX}`)
+		const fits = 'x'.repeat(MAX_TITLE_LENGTH - BRAND_SUFFIX.length)
+		expect(brandedTitle(fits)).toBe(`${fits}${BRAND_SUFFIX}`)
+		expect(brandedTitle(`${fits}x`)).toBe(`${fits}x`)
+	})
+
+	test('the protected TTL title drops the brand instead of passing 60', () => {
+		const page = 'Texas TTL Calculator: Tax, Title and License'
+		expect(brandedTitle(page)).toBe(page)
 	})
 })

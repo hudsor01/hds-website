@@ -4,6 +4,7 @@
  */
 
 import { connection, type NextRequest } from 'next/server'
+import { z } from 'zod'
 import { env } from '@/env'
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
 import { errorResponse, successResponse } from '@/lib/api/responses'
@@ -29,17 +30,84 @@ const PAGESPEED_API_URL =
 export const maxDuration = 60
 const PAGESPEED_FETCH_TIMEOUT_MS = 55_000
 
+const urlParamSchema = z.url()
+
+/** IPv4 ranges that are private, local or not unicast. */
+function isBlockedIpv4(host: string): boolean {
+	const ipv4 = host.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/)
+	if (!ipv4) {
+		return false
+	}
+	const octets = ipv4.slice(1, 5).map(n => Number(n))
+	if (octets.some(n => n > 255)) {
+		return true
+	}
+	const [a, b] = octets as [number, number, number, number]
+	return (
+		// 0.0.0.0/8 is "this host on this network"; on Linux it routes to
+		// localhost
+		a === 0 ||
+		a === 10 ||
+		a === 127 ||
+		(a === 169 && b === 254) ||
+		(a === 172 && b >= 16 && b <= 31) ||
+		(a === 192 && b === 168) ||
+		// 100.64.0.0/10 carrier-grade NAT
+		(a === 100 && b >= 64 && b <= 127) ||
+		// 224.0.0.0/4 multicast, 240.0.0.0/4 reserved, 255.255.255.255
+		a >= 224
+	)
+}
+
+/**
+ * IPv6 ranges that are not public unicast. Only called for an IPv6
+ * literal, so a domain such as fdic.gov never meets the fc00::/7 rule.
+ * URL has already normalised the address (lower case, leading zeros
+ * dropped, an embedded IPv4 written as hex).
+ */
+function isBlockedIpv6(host: string): boolean {
+	const hextets = host.split(':')
+	const first = Number.parseInt(hextets[0] || '0', 16)
+	const second = Number.parseInt(hextets[1] || '0', 16)
+	return (
+		// ::/8 covers :: (unspecified), ::1 (loopback), ::a.b.c.d
+		// (IPv4-compatible, e.g. ::7f00:1) and ::ffff:a.b.c.d (IPv4-mapped)
+		(first & 0xff00) === 0 ||
+		// fc00::/7 unique local
+		(first & 0xfe00) === 0xfc00 ||
+		// fe80::/10 link-local and fec0::/10 old site-local
+		(first & 0xffc0) === 0xfe80 ||
+		(first & 0xffc0) === 0xfec0 ||
+		// ff00::/8 multicast
+		(first & 0xff00) === 0xff00 ||
+		// 64:ff9b::/32 NAT64, 2002::/16 6to4 and 2001::/32 Teredo, which
+		// all embed an IPv4 address (6to4 can carry 127.0.0.1)
+		(first === 0x64 && second === 0xff9b) ||
+		first === 0x2002 ||
+		(first === 0x2001 && second === 0)
+	)
+}
+
 /**
  * Reject URLs that point at private/internal address space. The pagespeed
- * tool is meant for public-internet URLs only — defending against SSRF if
- * Google's API ever changes behavior or if a future caller fetches
- * server-side themselves.
+ * tool is meant for public-internet URLs only. The route never fetches the
+ * URL itself (only Google's API does), but this defends against SSRF if
+ * Google's API ever changes behavior or a future caller fetches it
+ * server-side.
  *
  * Blocks:
  *  - non-http(s) schemes (file:, gopher:, ftp:, etc.)
- *  - bare hostnames that are known internal (localhost, *.local)
- *  - IPv4 in private ranges (10/8, 172.16/12, 192.168/16, 169.254/16, 127/8)
- *  - IPv6 loopback (::1) and unique-local (fc00::/7)
+ *  - internal names (localhost, *.localhost, *.local, *.internal), with
+ *    or without a trailing dot
+ *  - IPv4 0/8, 10/8, 127/8, 169.254/16, 172.16/12, 192.168/16,
+ *    100.64/10 and 224/4 upward (multicast, reserved, broadcast). URL
+ *    canonicalises 2130706433, 0x7f.1 and 127.1 to 127.0.0.1 first
+ *  - IPv6 ::/8 (unspecified, loopback, IPv4-compatible, IPv4-mapped),
+ *    fc00::/7, fe80::/10, fec0::/10, ff00::/8, 64:ff9b::/32, 2002::/16
+ *    (6to4) and 2001::/32 (Teredo)
+ *
+ * A DNS name that resolves to a private address cannot be caught without
+ * resolving it, which is not needed while only Google fetches the URL.
  */
 function isPublicHttpUrl(rawUrl: string): boolean {
 	let parsed: URL
@@ -52,56 +120,24 @@ function isPublicHttpUrl(rawUrl: string): boolean {
 		return false
 	}
 
-	// URL.hostname strips brackets from IPv6 addresses on most engines,
-	// but keep a defensive trim for the rare case where it doesn't.
-	const host = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, '')
+	const hostname = parsed.hostname.toLowerCase()
+	if (hostname.startsWith('[')) {
+		return !isBlockedIpv6(hostname.slice(1, -1))
+	}
+
+	// "localhost." is the same host as "localhost"
+	const host = hostname.endsWith('.') ? hostname.slice(0, -1) : hostname
 	if (
+		host === '' ||
 		host === 'localhost' ||
+		host.endsWith('.localhost') ||
 		host.endsWith('.local') ||
-		host.endsWith('.internal') ||
-		host.endsWith('.localhost')
+		host.endsWith('.internal')
 	) {
 		return false
 	}
 
-	// IPv4 numeric check
-	const ipv4 = host.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/)
-	if (ipv4) {
-		const octets = ipv4.slice(1, 5).map(n => Number(n))
-		if (octets.some(n => n > 255)) {
-			return false
-		}
-		const [a, b] = octets as [number, number, number, number]
-		// 0.0.0.0/8 is the "this host on this network" range — on Linux
-		// it routes to localhost. Block the entire /8.
-		if (a === 0) {
-			return false
-		}
-		if (a === 10 || a === 127 || (a === 169 && b === 254)) {
-			return false
-		}
-		if (a === 172 && b >= 16 && b <= 31) {
-			return false
-		}
-		if (a === 192 && b === 168) {
-			return false
-		}
-	}
-
-	// IPv6: loopback (::1), unique-local (fc00::/7 → fc00–fdff prefixes),
-	// and IPv4-mapped IPv6 (::ffff:a.b.c.d, normalised by URL parser to
-	// `::ffff:` followed by hex). The mapped form bypasses the IPv4 regex
-	// above, so explicitly reject anything starting with `::ffff:`.
-	if (
-		host === '::1' ||
-		host.startsWith('fc') ||
-		host.startsWith('fd') ||
-		host.startsWith('::ffff:')
-	) {
-		return false
-	}
-
-	return true
+	return !isBlockedIpv4(host)
 }
 
 function labMetric(
@@ -117,18 +153,21 @@ function labMetric(
 
 async function handlePageSpeed(request: NextRequest) {
 	const { searchParams } = new URL(request.url)
-	const url = searchParams.get('url')
+	const rawUrl = searchParams.get('url')
 
-	if (!url) {
+	if (!rawUrl) {
 		return errorResponse('URL parameter is required', 400)
 	}
 
-	if (!isPublicHttpUrl(url)) {
+	const parsedUrl = urlParamSchema.safeParse(rawUrl)
+	if (!parsedUrl.success || !isPublicHttpUrl(parsedUrl.data)) {
 		return errorResponse(
 			'Enter a public http or https address, like https://example.com',
 			400
 		)
 	}
+
+	const url = parsedUrl.data
 
 	// connection() forces dynamic rendering; only call it once we know we
 	// have a real URL to fetch. Calling it for invalid input wastes a

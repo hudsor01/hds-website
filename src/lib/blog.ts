@@ -80,14 +80,30 @@ function toSummary({
 
 // ─── API Functions ──────────────────────────────────────────────────────────
 
+/** Posts per page on /blog and /blog/page/N. */
+export const BLOG_PAGE_SIZE = 10
+
+/**
+ * One page of published posts, newest first, plus the totals a pager needs.
+ * A page past the end returns no posts.
+ */
 export async function getPosts(options?: {
 	limit?: number
 	page?: number
-}): Promise<{ posts: BlogPostSummary[] }> {
-	const limit = options?.limit ?? 10
+}): Promise<{ posts: BlogPostSummary[]; total: number; totalPages: number }> {
+	const limit = options?.limit ?? BLOG_PAGE_SIZE
 	const page = options?.page ?? 1
 	const offset = (page - 1) * limit
-	return { posts: POSTS.slice(offset, offset + limit).map(toSummary) }
+	return {
+		posts: POSTS.slice(offset, offset + limit).map(toSummary),
+		total: POSTS.length,
+		totalPages: Math.max(1, Math.ceil(POSTS.length / limit))
+	}
+}
+
+/** Listing pages at BLOG_PAGE_SIZE; always at least 1 (page 1 is /blog). */
+export async function getBlogPageCount(): Promise<number> {
+	return Math.max(1, Math.ceil(POSTS.length / BLOG_PAGE_SIZE))
 }
 
 /** Every published post, newest first. For sitemaps and static params. */

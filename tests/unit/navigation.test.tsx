@@ -166,6 +166,37 @@ describe('Footer Component', () => {
 		const footer = screen.getByRole('contentinfo')
 		expect(footer).toBeInTheDocument()
 	})
+
+	// The footer follows every page's h1 (and on streamed pages can precede
+	// it in server HTML), so its section labels are h2 and nothing deeper.
+	it('uses h2 section labels and no h3/h4 headings', async () => {
+		const { default: Footer } = await import('@/components/layout/Footer')
+		render(<Footer />)
+
+		expect(screen.queryAllByRole('heading', { level: 3 })).toHaveLength(0)
+		expect(screen.queryAllByRole('heading', { level: 4 })).toHaveLength(0)
+		const h2Names = screen
+			.getAllByRole('heading', { level: 2 })
+			.map(heading => heading.textContent?.trim())
+		expect(h2Names).toEqual([
+			'Solutions',
+			'Company',
+			'Resources',
+			'Rather just talk?'
+		])
+		expect(screen.getByText('HDS')).toBeInTheDocument()
+	})
+
+	it('does not link the empty help center but keeps testimonials', async () => {
+		const { default: Footer } = await import('@/components/layout/Footer')
+		const { container } = render(<Footer />)
+
+		expect(container.querySelector('a[href="/help"]')).toBeNull()
+		expect(screen.getByRole('link', { name: 'Testimonials' })).toHaveAttribute(
+			'href',
+			'/testimonials'
+		)
+	})
 })
 
 describe('Navigation Accessibility', () => {

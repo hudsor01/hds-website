@@ -73,10 +73,6 @@ describe('POST /api/newsletter/unsubscribe', () => {
 			newsletterSubscribers: { email: 'email' }
 		}))
 
-		mock.module('drizzle-orm', () => ({
-			eq: mock((col: unknown, val: unknown) => ({ col, val }))
-		}))
-
 		// Pre-compute a valid token via the real HMAC helper. emailSchema
 		// will lowercase the request email before the route runs, so the
 		// token must be computed over the lowercased value too.

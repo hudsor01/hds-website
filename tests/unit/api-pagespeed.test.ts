@@ -245,3 +245,91 @@ describe('GET /api/pagespeed (upstream call and response contract)', () => {
 		expect(route.maxDuration).toBe(60)
 	})
 })
+
+describe('GET /api/pagespeed (SSRF guard gaps, QA-17)', () => {
+	beforeEach(() => {
+		setupApiMocks()
+	})
+
+	afterEach(() => {
+		cleanupMocks()
+	})
+
+	const REJECTED = [
+		// IPv6 link-local, unspecified, IPv4-compatible and NAT64
+		'http://[fe80::1]/',
+		'http://[febf::1]/',
+		'http://[::]/',
+		'http://[::127.0.0.1]/',
+		'http://[64:ff9b::7f00:1]/',
+		'http://[2002:7f00:1::]/',
+		'http://[2001:0:4136:e378::1]/',
+		'http://[ff02::1]/',
+		// Trailing-dot internal names
+		'http://localhost./',
+		'http://LOCALHOST./',
+		'http://app.localhost./',
+		// CGNAT, multicast and broadcast
+		'http://100.64.0.1/',
+		'http://100.127.255.255/',
+		'http://224.0.0.1/',
+		'http://255.255.255.255/',
+		// Other spellings of 127.0.0.1 (URL canonicalises them)
+		'http://2130706433/',
+		'http://0x7f.1/',
+		'http://127.1/',
+		'http://127.0.0.1./',
+		// Not a URL at all
+		'not a url'
+	]
+
+	it('rejects every gap with a 400 and never calls fetch', async () => {
+		// Stubbed so a regression could never reach Google; the spy can
+		// carry calls from earlier tests in this file
+		const fetchSpy = stubFetch(lighthouseBody())
+		fetchSpy.mockClear()
+		const { GET } = await import('@/app/api/pagespeed/route')
+		for (const url of REJECTED) {
+			const res = await GET(makeRequest(url))
+			expect(res.status, url).toBe(400)
+			const body = apiErrorSchema.safeParse(await res.json())
+			expect(body.success, url).toBe(true)
+		}
+		const psiCalls = fetchSpy.mock.calls.filter(([input]) =>
+			String(input).startsWith('https://www.googleapis.com/')
+		)
+		expect(psiCalls).toHaveLength(0)
+	})
+
+	it('rejects an empty url= as missing', async () => {
+		const { GET } = await import('@/app/api/pagespeed/route')
+		const res = await GET(
+			new NextRequest('http://localhost/api/pagespeed?url=')
+		)
+		expect(res.status).toBe(400)
+	})
+
+	it('lets fc/fd domains and public IPv6 through to PSI', async () => {
+		const fetchSpy = stubFetch(lighthouseBody())
+		fetchSpy.mockClear()
+		const { GET } = await import('@/app/api/pagespeed/route')
+		const allowed = [
+			'https://fdic.gov/',
+			'https://fcc.gov/',
+			'https://fd.io/',
+			'http://[2001:4860:4860::8888]/'
+		]
+		for (const url of allowed) {
+			const res = await GET(makeRequest(url))
+			expect(res.status, url).toBe(200)
+		}
+		const requested = fetchSpy.mock.calls
+			.map(([input]) => String(input))
+			.filter(input => input.startsWith('https://www.googleapis.com/'))
+			.map(input => new URL(input))
+		expect(requested.map(u => `${u.origin}${u.pathname}`)).toEqual(
+			allowed.map(() => PSI_ENDPOINT)
+		)
+		expect(requested.map(u => u.searchParams.get('url'))).toEqual(allowed)
+	})
+})

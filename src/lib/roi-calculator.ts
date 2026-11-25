@@ -12,6 +12,7 @@
  */
 
 import { z } from 'zod'
+import { formatCurrency } from '@/lib/utils'
 
 export interface RoiRawInput {
 	monthlyTraffic: string
@@ -58,23 +59,41 @@ export interface RoiResult {
 
 const MAX_CONVERSION_RATE = 100
 
+// Upper bounds keep the projections in a range a real site could have, so
+// a typo such as 1e12 visitors gets an error instead of a 22-digit result.
+export const MAX_MONTHLY_TRAFFIC = 100_000_000
+export const MAX_ORDER_VALUE = 1_000_000
+/** Relative lift in percent */
+export const MAX_IMPROVEMENT = 1_000
+export const MAX_INVESTMENT = 100_000_000
+
+export const TRAFFIC_MAX_ERROR = 'Enter 100,000,000 visitors or fewer.'
+export const ORDER_VALUE_MAX_ERROR = 'Enter a value of $1,000,000 or less.'
+
 const FIELD_SCHEMAS: Record<RoiField, z.ZodNumber> = {
 	monthlyTraffic: z
 		.number({ error: 'Enter visitors as a number.' })
-		.positive('Enter visitors above 0.'),
+		.positive('Enter visitors above 0.')
+		.max(MAX_MONTHLY_TRAFFIC, TRAFFIC_MAX_ERROR),
 	conversionRate: z
 		.number({ error: 'Enter the rate as a number.' })
 		.positive('Enter a rate above 0%.')
 		.max(MAX_CONVERSION_RATE, 'Enter a rate of 100% or less.'),
 	averageOrderValue: z
 		.number({ error: 'Enter the value as a number.' })
-		.positive('Enter a value above $0.'),
+		.positive('Enter a value above $0.')
+		.max(MAX_ORDER_VALUE, ORDER_VALUE_MAX_ERROR),
 	improvementPercentage: z
 		.number({ error: 'Enter the lift as a number.' })
-		.positive('Enter a lift above 0%.'),
+		.positive('Enter a lift above 0%.')
+		.max(MAX_IMPROVEMENT, 'Enter a lift of 1,000% or less.'),
 	investment: z
 		.number({ error: 'Enter the amount as a number.' })
 		.positive('Enter an amount above $0, or leave it blank.')
+		.max(
+			MAX_INVESTMENT,
+			'Enter an amount of $100,000,000 or less, or leave it blank.'
+		)
 }
 
 const REQUIRED_FIELDS: readonly RoiField[] = [
@@ -178,4 +197,38 @@ export function calculateRoi(input: RoiInput): RoiResult {
 		roiPercentage,
 		paybackMonths
 	}
+}
+
+// From $1,000,000 up, money reads as "$1.25M" or "$24T" instead of a long
+// run of digits.
+const COMPACT_FROM = 1_000_000
+
+const COMPACT_MONEY = new Intl.NumberFormat('en-US', {
+	style: 'currency',
+	currency: 'USD',
+	notation: 'compact',
+	maximumFractionDigits: 2
+})
+
+const ONE_DECIMAL = new Intl.NumberFormat('en-US', {
+	maximumFractionDigits: 1
+})
+
+const COMPACT_NUMBER = new Intl.NumberFormat('en-US', {
+	notation: 'compact',
+	maximumFractionDigits: 1
+})
+
+/** Dollars and cents below $1,000,000, compact ("$1.25M") from there up. */
+export function formatRoiMoney(value: number): string {
+	return Math.abs(value) < COMPACT_FROM
+		? formatCurrency(value)
+		: COMPACT_MONEY.format(value)
+}
+
+/** A percentage to one decimal, compact ("1.5M%") from 1,000,000% up. */
+export function formatRoiPercent(value: number): string {
+	const formatter =
+		Math.abs(value) < COMPACT_FROM ? ONE_DECIMAL : COMPACT_NUMBER
+	return `${formatter.format(value)}%`
 }

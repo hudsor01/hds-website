@@ -4,7 +4,7 @@ import { pageDate } from '@/lib/sitemap/page-dates'
 import { formatCalendarDate } from '@/lib/utils'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Privacy Policy | Hudson Digital Solutions',
+	title: 'Privacy Policy | Hudson Digital',
 	description:
 		'Learn how Hudson Digital Solutions collects, uses, and protects your personal information. Our commitment to your privacy and data security.',
 	path: '/privacy'

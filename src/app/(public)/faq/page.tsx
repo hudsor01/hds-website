@@ -11,7 +11,7 @@ import { generateFaqSchema } from '@/lib/seo-utils'
 import FaqClient from './FaqClient'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Frequently Asked Questions | Hudson Digital Solutions',
+	title: 'Frequently Asked Questions | Hudson Digital',
 	description:
 		'Real answers about my small business web design in Dallas-Fort Worth: pricing, process, timelines and what every site I build includes.',
 	path: '/faq',

@@ -80,6 +80,7 @@ function GenericField({
 }: GenericFieldProps) {
 	const field = useFieldContext<string>()
 	const fieldId = field.name
+	const labelId = `${fieldId}-label`
 	const errorId = `${fieldId}-error`
 	const hintId = `${fieldId}-hint`
 	const hasError = field.state.meta.errors.length > 0
@@ -127,7 +128,14 @@ function GenericField({
 						value={field.state.value ?? ''}
 						onValueChange={value => field.handleChange(value)}
 					>
-						<SelectTrigger id={fieldId} {...ariaProps}>
+						{/* A role="combobox" button takes its name from its content
+						    (the selected value), not from <label for>, so tie it to
+						    the visible label explicitly. */}
+						<SelectTrigger
+							id={fieldId}
+							aria-labelledby={labelId}
+							{...ariaProps}
+						>
 							<SelectValue placeholder={placeholder} />
 						</SelectTrigger>
 						<SelectContent>
@@ -170,7 +178,7 @@ function GenericField({
 
 	return (
 		<Field>
-			<FieldLabel htmlFor={fieldId}>
+			<FieldLabel id={labelId} htmlFor={fieldId}>
 				{label}
 				{required && <RequiredMarker />}
 			</FieldLabel>

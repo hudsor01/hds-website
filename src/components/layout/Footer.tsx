@@ -26,14 +26,13 @@ const footerLinks = {
 		{ name: 'Contact', href: ROUTES.CONTACT }
 	],
 	// Resources column added so the hub pages that no other nav/footer
-	// surface links to - Service Areas, FAQ, Help Center, Testimonials -
+	// surface links to - Service Areas, FAQ, Testimonials -
 	// have a durable crawlable inbound link instead of being reachable
 	// only via the sitemap or the JS-only command palette.
 	resources: [
 		{ name: 'Blog', href: ROUTES.BLOG },
 		{ name: 'Service Areas', href: ROUTES.LOCATIONS },
 		{ name: 'FAQ', href: ROUTES.FAQ },
-		{ name: 'Help Center', href: ROUTES.HELP },
 		{ name: 'Testimonials', href: ROUTES.TESTIMONIALS }
 	]
 }
@@ -86,7 +85,7 @@ export default function Footer() {
 							<div className="mb-content-block">
 								<div className="flex items-center gap-tight mb-3">
 									<Rocket className="w-7 h-7 text-accent" />
-									<h3 className="text-h4 text-foreground">HDS</h3>
+									<p className="text-h4 font-display text-foreground">HDS</p>
 								</div>
 								<p className="text-accent text-xs font-semibold mb-subheading">
 									Websites built like revenue systems for DFW small businesses.
@@ -118,9 +117,9 @@ export default function Footer() {
 						{/* Solutions Links */}
 						<div className="md:col-span-1">
 							<nav aria-label="Solutions navigation">
-								<h4 className="text-foreground font-semibold mb-heading">
+								<h2 className="text-foreground font-semibold mb-heading">
 									Solutions
-								</h4>
+								</h2>
 								<ul className="space-y-tight" role="list">
 									{footerLinks.solutions.map(link => (
 										<li key={link.name}>
@@ -140,9 +139,9 @@ export default function Footer() {
 						{/* Company Links */}
 						<div className="md:col-span-1">
 							<nav aria-label="Company navigation">
-								<h4 className="text-foreground font-semibold mb-heading">
+								<h2 className="text-foreground font-semibold mb-heading">
 									Company
-								</h4>
+								</h2>
 								<ul className="space-y-tight" role="list">
 									{footerLinks.company.map(link => (
 										<li key={link.name}>
@@ -162,9 +161,9 @@ export default function Footer() {
 						{/* Resources Links */}
 						<div className="md:col-span-1">
 							<nav aria-label="Resources navigation">
-								<h4 className="text-foreground font-semibold mb-heading">
+								<h2 className="text-foreground font-semibold mb-heading">
 									Resources
-								</h4>
+								</h2>
 								<ul className="space-y-tight" role="list">
 									{footerLinks.resources.map(link => (
 										<li key={link.name}>
@@ -189,9 +188,9 @@ export default function Footer() {
 						    keep — email and phone are the unique value vs. the
 						    form-routing CTA card above. */}
 						<div className="md:col-span-1">
-							<h4 className="text-foreground font-semibold mb-heading">
+							<h2 className="text-foreground font-semibold mb-heading">
 								Rather just talk?
-							</h4>
+							</h2>
 							<p className="text-xs text-muted-foreground mb-heading">
 								Email or call me. Fastest way to a quote with no form to fill
 								out.

@@ -12,7 +12,7 @@ import { LOCATIONS } from '@/lib/locations'
 import { buildMetadata } from '@/lib/seo-config'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Dallas-Fort Worth Service Areas | Hudson Digital Solutions',
+	title: 'Dallas-Fort Worth Service Areas | Hudson Digital',
 	description:
 		'Web design from a Lewisville studio for small businesses across Dallas-Fort Worth: Lewisville, Dallas, Fort Worth, Arlington and the cities around them.',
 	path: '/locations',

@@ -31,7 +31,7 @@ import {
 	getCategoryBySlug,
 	helpArticleDate
 } from '@/lib/help-articles'
-import { buildMetadata } from '@/lib/seo-config'
+import { buildMetadata, qualifiedTitle } from '@/lib/seo-config'
 
 interface PageProps {
 	params: Promise<{ category: string }>
@@ -77,7 +77,7 @@ export async function generateMetadata({
 	const articles = await getArticlesByCategory(category)
 
 	return buildMetadata({
-		title: `${categoryInfo.name} | Help Center | Hudson Digital Solutions`,
+		title: qualifiedTitle(categoryInfo.name, 'Help Center'),
 		description: categoryInfo.metaDescription,
 		path: `/help/${category}`,
 		noindex: !articles.some(article => helpArticleDate(article))

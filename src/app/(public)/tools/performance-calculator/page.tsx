@@ -9,7 +9,7 @@ import { buildMetadata } from '@/lib/seo-config'
 import PerformanceCalculatorClient from './PerformanceCalculatorClient'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Site Speed Revenue Calculator | Hudson Digital Solutions',
+	title: 'Site Speed Revenue Calculator | Hudson Digital',
 	description:
 		'Run a free mobile PageSpeed test on your site, see your score and lab metrics, then model the revenue at stake with a conversion lift you choose.',
 	path: '/tools/performance-calculator',

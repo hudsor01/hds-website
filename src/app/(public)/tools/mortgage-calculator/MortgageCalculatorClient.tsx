@@ -3,19 +3,26 @@
  * Full monthly payment by loan type (conventional, FHA, VA), cash to close,
  * extra payments and a yearly amortization schedule. Inputs live in the URL
  * so a calculation can be shared. Math lives in src/lib/mortgage-calculator.
+ *
+ * Reading the URL with nuqs suspends prerendering, so only that part sits
+ * behind Suspense: the fallback renders the same page (heading,
+ * description and form) with default values, which keeps the H1 and form
+ * in the server HTML.
  */
 
 'use client'
 
 import {
+	type Nullable,
 	parseAsBoolean,
 	parseAsFloat,
 	parseAsInteger,
 	parseAsString,
 	parseAsStringLiteral,
-	useQueryState
+	useQueryStates,
+	type Values
 } from 'nuqs'
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, Suspense, useState } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
 import type { ToolAction } from '@/components/layout/ToolPageLayout'
@@ -83,6 +90,67 @@ const DEFAULTS = {
 	pmiRate: 0.5,
 	closingCosts: 8500
 }
+
+// URL keys are part of shared links, so they must not change. Down payment
+// is stored as a percent (dpp) or, once typed in dollars, as dollars (dp);
+// dp wins when present, matching older shared links. Property tax is a
+// yearly dollar amount (tax) or a rate (taxr).
+const MORTGAGE_PARSERS = {
+	price: parseAsFloat.withDefault(DEFAULTS.price),
+	dp: parseAsFloat,
+	dpp: parseAsFloat.withDefault(DEFAULTS.downPercent),
+	type: parseAsStringLiteral(PROGRAMS).withDefault('conventional'),
+	rate: parseAsFloat.withDefault(DEFAULTS.rate),
+	term: parseAsInteger.withDefault(DEFAULTS.term),
+	start: parseAsString,
+	tax: parseAsFloat,
+	taxr: parseAsFloat.withDefault(DEFAULTS.taxRate),
+	ins: parseAsFloat.withDefault(DEFAULTS.insurance),
+	hoa: parseAsFloat.withDefault(0),
+	pmir: parseAsFloat.withDefault(DEFAULTS.pmiRate),
+	vafirst: parseAsBoolean.withDefault(true),
+	vaexempt: parseAsBoolean.withDefault(false),
+	finfee: parseAsBoolean.withDefault(true),
+	cc: parseAsFloat.withDefault(DEFAULTS.closingCosts),
+	pts: parseAsFloat.withDefault(0),
+	credits: parseAsFloat.withDefault(0),
+	xm: parseAsFloat.withDefault(0),
+	xy: parseAsFloat.withDefault(0)
+}
+
+type MortgageParams = Values<typeof MORTGAGE_PARSERS>
+
+interface MortgageCalculatorViewProps {
+	params: MortgageParams
+	setParams: (values: Partial<Nullable<MortgageParams>> | null) => void
+	interactive: boolean
+}
+
+/** Matches the MORTGAGE_PARSERS defaults, for the server-rendered shell. */
+const DEFAULT_PARAMS: MortgageParams = {
+	price: DEFAULTS.price,
+	dp: null,
+	dpp: DEFAULTS.downPercent,
+	type: 'conventional',
+	rate: DEFAULTS.rate,
+	term: DEFAULTS.term,
+	start: null,
+	tax: null,
+	taxr: DEFAULTS.taxRate,
+	ins: DEFAULTS.insurance,
+	hoa: 0,
+	pmir: DEFAULTS.pmiRate,
+	vafirst: true,
+	vaexempt: false,
+	finfee: true,
+	cc: DEFAULTS.closingCosts,
+	pts: 0,
+	credits: 0,
+	xm: 0,
+	xy: 0
+}
+
+const noop = () => undefined
 
 /** "YYYY-MM" for the month after today, the usual first payment month. */
 function nextMonth(): string {
@@ -152,75 +220,33 @@ function ModeToggle({ label, options, active, onChange }: ModeToggleProps) {
 	)
 }
 
-export function MortgageCalculatorClient() {
-	const [homePrice, setHomePrice] = useQueryState(
-		'price',
-		parseAsFloat.withDefault(DEFAULTS.price)
-	)
-	// Down payment is stored as a percent (dpp) or, once typed in dollars,
-	// as dollars (dp). dp wins when present, matching older shared links.
-	const [downDollars, setDownDollars] = useQueryState('dp', parseAsFloat)
-	const [downPercent, setDownPercent] = useQueryState(
-		'dpp',
-		parseAsFloat.withDefault(DEFAULTS.downPercent)
-	)
-	const [program, setProgram] = useQueryState(
-		'type',
-		parseAsStringLiteral(PROGRAMS).withDefault('conventional')
-	)
-	const [interestRate, setInterestRate] = useQueryState(
-		'rate',
-		parseAsFloat.withDefault(DEFAULTS.rate)
-	)
-	const [termYears, setTermYears] = useQueryState(
-		'term',
-		parseAsInteger.withDefault(DEFAULTS.term)
-	)
-	const [startMonth, setStartMonth] = useQueryState('start', parseAsString)
-	// Property tax as a yearly dollar amount (tax) or a rate (taxr).
-	const [taxAmount, setTaxAmount] = useQueryState('tax', parseAsFloat)
-	const [taxRate, setTaxRate] = useQueryState(
-		'taxr',
-		parseAsFloat.withDefault(DEFAULTS.taxRate)
-	)
-	const [insurance, setInsurance] = useQueryState(
-		'ins',
-		parseAsFloat.withDefault(DEFAULTS.insurance)
-	)
-	const [hoa, setHoa] = useQueryState('hoa', parseAsFloat.withDefault(0))
-	const [pmiRate, setPmiRate] = useQueryState(
-		'pmir',
-		parseAsFloat.withDefault(DEFAULTS.pmiRate)
-	)
-	const [vaFirstUse, setVaFirstUse] = useQueryState(
-		'vafirst',
-		parseAsBoolean.withDefault(true)
-	)
-	const [vaExempt, setVaExempt] = useQueryState(
-		'vaexempt',
-		parseAsBoolean.withDefault(false)
-	)
-	const [financeFee, setFinanceFee] = useQueryState(
-		'finfee',
-		parseAsBoolean.withDefault(true)
-	)
-	const [closingCosts, setClosingCosts] = useQueryState(
-		'cc',
-		parseAsFloat.withDefault(DEFAULTS.closingCosts)
-	)
-	const [points, setPoints] = useQueryState('pts', parseAsFloat.withDefault(0))
-	const [credits, setCredits] = useQueryState(
-		'credits',
-		parseAsFloat.withDefault(0)
-	)
-	const [extraMonthly, setExtraMonthly] = useQueryState(
-		'xm',
-		parseAsFloat.withDefault(0)
-	)
-	const [extraYearly, setExtraYearly] = useQueryState(
-		'xy',
-		parseAsFloat.withDefault(0)
-	)
+function MortgageCalculatorView({
+	params,
+	setParams,
+	interactive
+}: MortgageCalculatorViewProps) {
+	const {
+		price: homePrice,
+		dp: downDollars,
+		dpp: downPercent,
+		type: program,
+		rate: interestRate,
+		term: termYears,
+		start: startMonth,
+		tax: taxAmount,
+		taxr: taxRate,
+		ins: insurance,
+		hoa,
+		pmir: pmiRate,
+		vafirst: vaFirstUse,
+		vaexempt: vaExempt,
+		finfee: financeFee,
+		cc: closingCosts,
+		pts: points,
+		credits,
+		xm: extraMonthly,
+		xy: extraYearly
+	} = params
 
 	const [results, setResults] = useState<MortgageResults | null>(null)
 	const [error, setError] = useState('')
@@ -267,16 +293,19 @@ export function MortgageCalculatorClient() {
 	}
 
 	const handleDownPercent = (value: string) => {
-		setDownDollars(null)
-		setDownPercent(toNumber(value))
+		setParams({ dp: null, dpp: toNumber(value) })
 	}
 
 	const handleDownDollars = (value: string) => {
 		const dollars = toNumber(value)
-		setDownDollars(dollars)
-		if (homePrice > 0) {
-			setDownPercent(Math.round((dollars / homePrice) * 1000) / 10)
-		}
+		setParams(
+			homePrice > 0
+				? {
+						dp: dollars,
+						dpp: Math.round((dollars / homePrice) * 1000) / 10
+					}
+				: { dp: dollars }
+		)
 	}
 
 	const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -285,6 +314,9 @@ export function MortgageCalculatorClient() {
 			const calculated = calculateMortgage(buildInputs())
 			setResults(calculated)
 			setError('')
+			if (!interactive) {
+				return
+			}
 			trackEvent('calculator_used', {
 				calculator_type: 'mortgage-calculator',
 				home_price: homePrice,
@@ -308,26 +340,7 @@ export function MortgageCalculatorClient() {
 		setError('')
 		setShowSchedule(false)
 		setDownInDollars(false)
-		setHomePrice(null)
-		setDownDollars(null)
-		setDownPercent(null)
-		setProgram(null)
-		setInterestRate(null)
-		setTermYears(null)
-		setStartMonth(null)
-		setTaxAmount(null)
-		setTaxRate(null)
-		setInsurance(null)
-		setHoa(null)
-		setPmiRate(null)
-		setVaFirstUse(null)
-		setVaExempt(null)
-		setFinanceFee(null)
-		setClosingCosts(null)
-		setPoints(null)
-		setCredits(null)
-		setExtraMonthly(null)
-		setExtraYearly(null)
+		setParams(null)
 	}
 
 	const payoffLabel = results
@@ -481,11 +494,15 @@ export function MortgageCalculatorClient() {
 					value={homePrice || ''}
 					onChange={e => {
 						const price = toNumber(e.target.value)
-						setHomePrice(price)
 						// In dollar mode the dollars stay put; keep the percent in step
-						if (downInDollars && price > 0) {
-							setDownPercent(Math.round((downPayment / price) * 1000) / 10)
-						}
+						setParams(
+							downInDollars && price > 0
+								? {
+										price,
+										dpp: Math.round((downPayment / price) * 1000) / 10
+									}
+								: { price }
+						)
 					}}
 					prefix="$"
 					helpText="Purchase price of the home"
@@ -534,18 +551,25 @@ export function MortgageCalculatorClient() {
 
 				<div className="grid gap-content md:grid-cols-2">
 					<div className="space-y-tight">
-						<Label htmlFor="program">Loan Type</Label>
+						<Label id="program-label" htmlFor="program">
+							Loan Type
+						</Label>
 						<Select
 							value={program}
 							onValueChange={value => {
-								setProgram(value as LoanProgram)
-								// USDA guaranteed loans are 30-year fixed only
-								if (value === 'usda') {
-									setTermYears(30)
+								const selected = PROGRAMS.find(p => p === value)
+								if (!selected) {
+									return
 								}
+								// USDA guaranteed loans are 30-year fixed only
+								setParams(
+									selected === 'usda'
+										? { type: selected, term: 30 }
+										: { type: selected }
+								)
 							}}
 						>
-							<SelectTrigger id="program">
+							<SelectTrigger id="program" aria-labelledby="program-label">
 								<SelectValue />
 							</SelectTrigger>
 							<SelectContent>
@@ -559,13 +583,15 @@ export function MortgageCalculatorClient() {
 					</div>
 
 					<div className="space-y-tight">
-						<Label htmlFor="loanTerm">Loan Term</Label>
+						<Label id="loanTerm-label" htmlFor="loanTerm">
+							Loan Term
+						</Label>
 						<Select
 							value={String(termYears)}
-							onValueChange={value => setTermYears(Number(value))}
+							onValueChange={value => setParams({ term: Number(value) })}
 							disabled={program === 'usda'}
 						>
-							<SelectTrigger id="loanTerm">
+							<SelectTrigger id="loanTerm" aria-labelledby="loanTerm-label">
 								<SelectValue />
 							</SelectTrigger>
 							<SelectContent>
@@ -595,12 +621,16 @@ export function MortgageCalculatorClient() {
 				{program === 'va' && (
 					<div className="space-y-tight rounded-lg border border-border p-4">
 						<div className="space-y-tight">
-							<Label htmlFor="vaUse">VA Loan Use</Label>
+							<Label id="vaUse-label" htmlFor="vaUse">
+								VA Loan Use
+							</Label>
 							<Select
 								value={vaFirstUse ? 'first' : 'subsequent'}
-								onValueChange={value => setVaFirstUse(value === 'first')}
+								onValueChange={value =>
+									setParams({ vafirst: value === 'first' })
+								}
 							>
-								<SelectTrigger id="vaUse">
+								<SelectTrigger id="vaUse" aria-labelledby="vaUse-label">
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent>
@@ -614,14 +644,19 @@ export function MortgageCalculatorClient() {
 						<div className="flex items-start gap-tight pt-2">
 							<Checkbox
 								id="vaExempt"
+								aria-labelledby="vaExempt-label"
 								checked={vaExempt}
 								onCheckedChange={value => {
 									if (typeof value === 'boolean') {
-										setVaExempt(value)
+										setParams({ vaexempt: value })
 									}
 								}}
 							/>
-							<Label htmlFor="vaExempt" className="font-normal leading-snug">
+							<Label
+								id="vaExempt-label"
+								htmlFor="vaExempt"
+								className="font-normal leading-snug"
+							>
 								Exempt from the funding fee (for example, you receive VA
 								disability compensation)
 							</Label>
@@ -633,14 +668,19 @@ export function MortgageCalculatorClient() {
 					<div className="flex items-start gap-tight">
 						<Checkbox
 							id="financeFee"
+							aria-labelledby="financeFee-label"
 							checked={financeFee}
 							onCheckedChange={value => {
 								if (typeof value === 'boolean') {
-									setFinanceFee(value)
+									setParams({ finfee: value })
 								}
 							}}
 						/>
-						<Label htmlFor="financeFee" className="font-normal leading-snug">
+						<Label
+							id="financeFee-label"
+							htmlFor="financeFee"
+							className="font-normal leading-snug"
+						>
 							Add the {upfrontFeeName} to the loan instead of paying it at
 							closing
 						</Label>
@@ -656,7 +696,7 @@ export function MortgageCalculatorClient() {
 						max="30"
 						step="0.125"
 						value={interestRate || ''}
-						onChange={e => setInterestRate(toNumber(e.target.value))}
+						onChange={e => setParams({ rate: toNumber(e.target.value) })}
 						suffix="%"
 						helpText="The rate your lender quoted"
 						required
@@ -666,7 +706,7 @@ export function MortgageCalculatorClient() {
 						id="startMonth"
 						type="month"
 						value={startMonth ?? ''}
-						onChange={e => setStartMonth(e.target.value || null)}
+						onChange={e => setParams({ start: e.target.value || null })}
 						helpText="Leave blank for next month"
 					/>
 				</div>
@@ -684,8 +724,8 @@ export function MortgageCalculatorClient() {
 							active={taxInDollars ? 1 : 0}
 							onChange={index =>
 								index === 1
-									? setTaxAmount(Math.round(taxAnnual))
-									: setTaxAmount(null)
+									? setParams({ tax: Math.round(taxAnnual) })
+									: setParams({ tax: null })
 							}
 						/>
 					</div>
@@ -697,7 +737,7 @@ export function MortgageCalculatorClient() {
 							min="0"
 							step="100"
 							value={taxAmount ?? ''}
-							onChange={e => setTaxAmount(toNumber(e.target.value))}
+							onChange={e => setParams({ tax: toNumber(e.target.value) })}
 							prefix="$"
 							helpText="Yearly tax bill, after any homestead exemption"
 						/>
@@ -710,7 +750,7 @@ export function MortgageCalculatorClient() {
 							max="10"
 							step="0.01"
 							value={taxRate || ''}
-							onChange={e => setTaxRate(toNumber(e.target.value))}
+							onChange={e => setParams({ taxr: toNumber(e.target.value) })}
 							suffix="%"
 							helpText={`${formatCurrency(taxAnnual)} a year. Use the combined rate from your county appraisal district.`}
 						/>
@@ -725,7 +765,7 @@ export function MortgageCalculatorClient() {
 						min="0"
 						step="100"
 						value={insurance || ''}
-						onChange={e => setInsurance(toNumber(e.target.value))}
+						onChange={e => setParams({ ins: toNumber(e.target.value) })}
 						prefix="$"
 						suffix="/yr"
 						helpText="Yearly premium from your insurance quote"
@@ -737,7 +777,7 @@ export function MortgageCalculatorClient() {
 						min="0"
 						step="10"
 						value={hoa || ''}
-						onChange={e => setHoa(toNumber(e.target.value))}
+						onChange={e => setParams({ hoa: toNumber(e.target.value) })}
 						prefix="$"
 						suffix="/mo"
 						helpText="Leave blank if there is no HOA"
@@ -753,7 +793,7 @@ export function MortgageCalculatorClient() {
 						max="5"
 						step="0.05"
 						value={pmiRate || ''}
-						onChange={e => setPmiRate(toNumber(e.target.value))}
+						onChange={e => setParams({ pmir: toNumber(e.target.value) })}
 						suffix="%/yr"
 						helpText="Ask your lender. It depends on your credit score and down payment. PMI drops off once you owe 78% of the original value."
 					/>
@@ -780,7 +820,7 @@ export function MortgageCalculatorClient() {
 					min="0"
 					step="100"
 					value={closingCosts || ''}
-					onChange={e => setClosingCosts(toNumber(e.target.value))}
+					onChange={e => setParams({ cc: toNumber(e.target.value) })}
 					prefix="$"
 					helpText="Lender, title and prepaid costs from page 2 of your Loan Estimate"
 				/>
@@ -793,7 +833,7 @@ export function MortgageCalculatorClient() {
 						max="10"
 						step="0.125"
 						value={points || ''}
-						onChange={e => setPoints(toNumber(e.target.value))}
+						onChange={e => setParams({ pts: toNumber(e.target.value) })}
 						helpText="1 point costs 1% of the loan"
 					/>
 					<CalculatorInput
@@ -803,7 +843,7 @@ export function MortgageCalculatorClient() {
 						min="0"
 						step="100"
 						value={credits || ''}
-						onChange={e => setCredits(toNumber(e.target.value))}
+						onChange={e => setParams({ credits: toNumber(e.target.value) })}
 						prefix="$"
 						helpText="Money toward your closing costs"
 					/>
@@ -819,7 +859,7 @@ export function MortgageCalculatorClient() {
 						min="0"
 						step="25"
 						value={extraMonthly || ''}
-						onChange={e => setExtraMonthly(toNumber(e.target.value))}
+						onChange={e => setParams({ xm: toNumber(e.target.value) })}
 						prefix="$"
 						helpText="Added to principal every month"
 					/>
@@ -830,7 +870,7 @@ export function MortgageCalculatorClient() {
 						min="0"
 						step="100"
 						value={extraYearly || ''}
-						onChange={e => setExtraYearly(toNumber(e.target.value))}
+						onChange={e => setParams({ xy: toNumber(e.target.value) })}
 						prefix="$"
 						helpText="One extra principal payment a year"
 					/>
@@ -932,5 +972,34 @@ export function MortgageCalculatorClient() {
 			resultPlaceholder="Enter your loan details to calculate your payment"
 			actions={actions}
 		/>
+	)
+}
+
+function MortgageCalculatorWithUrlState() {
+	const [params, setParams] = useQueryStates(MORTGAGE_PARSERS)
+	return (
+		<MortgageCalculatorView
+			params={params}
+			setParams={values => {
+				void setParams(values)
+			}}
+			interactive
+		/>
+	)
+}
+
+export function MortgageCalculatorClient() {
+	return (
+		<Suspense
+			fallback={
+				<MortgageCalculatorView
+					params={DEFAULT_PARAMS}
+					setParams={noop}
+					interactive={false}
+				/>
+			}
+		>
+			<MortgageCalculatorWithUrlState />
+		</Suspense>
 	)
 }

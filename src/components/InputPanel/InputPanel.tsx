@@ -1,7 +1,8 @@
 'use client'
 
 import { Calculator } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import type { TtlFieldErrors } from '@/lib/ttl-calculator/calculator'
 import type {
 	PaymentResults,
 	TTLResults,
@@ -21,31 +22,42 @@ interface InputPanelProps {
 		payment: PaymentResults
 		name: string
 	}>
+	fieldErrors: TtlFieldErrors
 }
 
 export function InputPanel({
 	vehicleInput,
 	updateInput,
 	addToComparison,
-	comparisonVehicles
+	comparisonVehicles,
+	fieldErrors
 }: InputPanelProps) {
 	return (
 		<Card>
 			<CardHeader>
 				<div className="flex items-center gap-tight">
 					<Calculator className="w-5 h-5 text-accent" />
-					<CardTitle>Vehicle Information</CardTitle>
+					{/* CardTitle is always an h3; this section sits right under the H1 */}
+					<h2 className="text-2xl font-semibold leading-none tracking-tight">
+						Vehicle Information
+					</h2>
 				</div>
 			</CardHeader>
 			<CardContent className="space-y-content">
-				<VehicleInputs vehicleInput={vehicleInput} updateInput={updateInput} />
+				<VehicleInputs
+					vehicleInput={vehicleInput}
+					updateInput={updateInput}
+					fieldErrors={fieldErrors}
+				/>
 				<FinancingInputs
 					vehicleInput={vehicleInput}
 					updateInput={updateInput}
+					fieldErrors={fieldErrors}
 				/>
 				<AdvancedOptions
 					vehicleInput={vehicleInput}
 					updateInput={updateInput}
+					fieldErrors={fieldErrors}
 					addToComparison={addToComparison}
 					comparisonVehicles={comparisonVehicles}
 				/>

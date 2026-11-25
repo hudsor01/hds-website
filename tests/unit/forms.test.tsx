@@ -127,6 +127,28 @@ describe('ContactForm Component', () => {
 		expect(selects.length).toBeGreaterThan(0)
 	})
 
+	it('names each select by its visible label, not its value', async () => {
+		const { default: ContactForm } = await import(
+			'@/components/forms/ContactForm'
+		)
+		renderWithQueryClient(<ContactForm />)
+
+		for (const name of [
+			/service interest/i,
+			/best time to contact/i,
+			/budget range/i,
+			/project timeline/i
+		]) {
+			const trigger = screen.getByRole('combobox', { name })
+			const labelId = trigger.getAttribute('aria-labelledby')
+			expect(labelId).toBeTruthy()
+			expect(document.getElementById(labelId ?? '')?.tagName).toBe('LABEL')
+		}
+		expect(
+			screen.queryByRole('combobox', { name: 'Under $5,000' })
+		).not.toBeInTheDocument()
+	})
+
 	it('should render form with proper structure', async () => {
 		const { default: ContactForm } = await import(
 			'@/components/forms/ContactForm'

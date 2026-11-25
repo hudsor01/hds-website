@@ -46,7 +46,7 @@ export async function generateMetadata({
 
 	if (!location) {
 		return {
-			title: 'Location Not Found - Hudson Digital Solutions',
+			title: 'Location Not Found | Hudson Digital',
 			description: 'The requested location page could not be found.'
 		}
 	}

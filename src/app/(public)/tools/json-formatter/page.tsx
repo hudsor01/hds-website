@@ -8,7 +8,7 @@ import { buildMetadata } from '@/lib/seo-config'
 import JsonFormatterClient from './JsonFormatterClient'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'JSON Formatter | Hudson Digital Solutions',
+	title: 'JSON Formatter | Hudson Digital',
 	description:
 		'Format, validate and minify JSON online. Values stay exactly as written, with warnings for duplicate keys or rounded numbers and errors by line and column.',
 	path: '/tools/json-formatter',

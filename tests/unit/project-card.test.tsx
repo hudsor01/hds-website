@@ -2,6 +2,11 @@ import { describe, expect, test } from 'bun:test'
 import { render, within } from '@testing-library/react'
 import { Card } from '@/components/ui/card'
 
+// happy-dom's per-window control API (tests/happydom.ts registers it).
+interface HappyDomWindow {
+	happyDOM: { setURL: (url: string) => void }
+}
+
 describe('ProjectCard', () => {
 	const defaultProps = {
 		variant: 'project' as const,
@@ -36,6 +41,46 @@ describe('ProjectCard', () => {
 		expect(within(container).getByText('React')).toBeTruthy()
 		expect(within(container).getByText('TypeScript')).toBeTruthy()
 		expect(within(container).getByText('Next.js')).toBeTruthy()
+	})
+
+	test('project image carries intrinsic width and height', () => {
+		// next/image resolves its src against window.location in dev, and
+		// happy-dom starts on about:blank, which is not a valid base URL.
+		const { happyDOM } = window as unknown as HappyDomWindow
+		const previousUrl = window.location.href
+		happyDOM.setURL('http://localhost:3000/showcase')
+		try {
+			const { container } = render(
+				<Card {...defaultProps} imageUrl="/images/showcase/tenantflow.jpg" />
+			)
+			const img = container.querySelector('img')
+			expect(img?.getAttribute('width')).toBe('2880')
+			expect(img?.getAttribute('height')).toBe('1800')
+			expect(img?.getAttribute('data-nimg')).not.toBe('fill')
+		} finally {
+			happyDOM.setURL(previousUrl)
+		}
+	})
+
+	// Every screenshot is 2880x1800 (16:10). A 4:3 featured box made
+	// object-cover trim both sides and cut off text in the screenshot.
+	test('featured image box matches the 16:10 screenshots', () => {
+		const { happyDOM } = window as unknown as HappyDomWindow
+		const previousUrl = window.location.href
+		happyDOM.setURL('http://localhost:3000/showcase')
+		try {
+			const { container } = render(
+				<Card
+					{...defaultProps}
+					featured={true}
+					imageUrl="/images/showcase/tenantflow.jpg"
+				/>
+			)
+			const box = container.querySelector('img')?.parentElement
+			expect(box?.className).toContain('aspect-[16/10]')
+		} finally {
+			happyDOM.setURL(previousUrl)
+		}
 	})
 
 	test('renders featured badge when featured is true', () => {

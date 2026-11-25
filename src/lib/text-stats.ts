@@ -1,16 +1,16 @@
 /**
  * Text statistics for the Word & Character Counter.
  *
- * Uses `Intl.Segmenter` (supported in every current browser and in Bun or
- * Node) so the counts follow Unicode's rules for every language:
+ * The site is English only, so counts follow English rules. Uses
+ * `Intl.Segmenter` with the `en` locale (supported in every current
+ * browser and in Bun or Node):
  * - Characters are grapheme clusters, what a reader sees as one character:
  *   an emoji, a flag or an accented letter counts once.
- * - Words are word-like segments, so unspaced Chinese or Japanese text is
- *   split into words, and a standalone dash or emoji is not a word. Parts
- *   joined by a hyphen (well-known) count as one word.
- * - Sentences follow Unicode sentence breaks, so a last sentence without a
- *   period counts, and CJK full stops (。) end a sentence. Common English
- *   abbreviations (Dr., e.g.) and initials do not.
+ * - Words are word-like segments, so a standalone dash or emoji is not a
+ *   word. Parts joined by a hyphen (well-known) count as one word.
+ * - Sentences follow sentence breaks, so a last sentence without a period
+ *   counts. Common English abbreviations (Dr., e.g.) and initials do not
+ *   end a sentence.
  *
  * A simpler regex fallback covers runtimes without `Intl.Segmenter`.
  */
@@ -44,6 +44,7 @@ const EMPTY: TextStats = {
 	readingTimeMinutes: 0
 }
 
+const LOCALE = 'en'
 const HAS_LETTER_OR_DIGIT = /[\p{L}\p{N}]/u
 const WHITESPACE_ONLY = /^\s+$/u
 const HYPHENS = new Set(['-', '\u2010', '\u2011'])
@@ -100,7 +101,7 @@ export function analyzeText(text: string): TextStats {
 	const Segmenter = getSegmenter()
 	const graphemes = Segmenter
 		? Array.from(
-				new Segmenter(undefined, { granularity: 'grapheme' }).segment(text),
+				new Segmenter(LOCALE, { granularity: 'grapheme' }).segment(text),
 				s => s.segment
 			)
 		: Array.from(text)
@@ -140,7 +141,7 @@ function countWords(text: string, Segmenter: SegmenterCtor): number {
 	let count = 0
 	let previousWasWord = false
 	let hyphenAfterWord = false
-	for (const segment of new Segmenter(undefined, {
+	for (const segment of new Segmenter(LOCALE, {
 		granularity: 'word'
 	}).segment(text)) {
 		if (segment.isWordLike) {
@@ -160,7 +161,7 @@ function countWords(text: string, Segmenter: SegmenterCtor): number {
 
 function countSentences(text: string, Segmenter: SegmenterCtor): number {
 	const segments = Array.from(
-		new Segmenter(undefined, { granularity: 'sentence' }).segment(text),
+		new Segmenter(LOCALE, { granularity: 'sentence' }).segment(text),
 		s => s.segment
 	).filter(s => HAS_LETTER_OR_DIGIT.test(s))
 
@@ -188,27 +189,15 @@ function endsWithAbbreviation(segment: string): boolean {
 	return /^\p{L}$/u.test(word) || /^(?:\p{L}\.)+\p{L}$/u.test(word)
 }
 
-// Han, Hiragana and Katakana characters each count as a word when
-// no segmenter is available to find real word boundaries.
-const CJK_CHAR = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u
-
 function countWordsFallback(text: string): number {
-	let count = 0
-	for (const token of text.trim().split(/\s+/u)) {
-		if (!HAS_LETTER_OR_DIGIT.test(token)) {
-			continue
-		}
-		const cjk = Array.from(token).filter(char => CJK_CHAR.test(char)).length
-		const rest = token.replace(new RegExp(CJK_CHAR.source, 'gu'), ' ')
-		count += cjk + (HAS_LETTER_OR_DIGIT.test(rest) ? 1 : 0)
-	}
-	return count
+	return text
+		.trim()
+		.split(/\s+/u)
+		.filter(token => HAS_LETTER_OR_DIGIT.test(token)).length
 }
 
 function countSentencesFallback(text: string): number {
 	return text
-		.split(
-			/(?<=[.!?\u3002\uFF01\uFF1F]+["')\]\u2019\u201D]*)\s+|(?<=[\u3002\uFF01\uFF1F])/u
-		)
+		.split(/(?<=[.!?]+["')\]\u2019\u201D]*)\s+/u)
 		.filter(s => HAS_LETTER_OR_DIGIT.test(s)).length
 }

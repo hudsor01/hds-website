@@ -68,14 +68,6 @@ describe('analyzeText', () => {
 		).toBe(2)
 	})
 
-	test('CJK full stops end sentences', () => {
-		expect(analyzeText('今日は晴れです。明日は雨です。').sentences).toBe(2)
-	})
-
-	test('unspaced CJK text is split into words, not counted as one', () => {
-		expect(analyzeText('我喜欢编程').words).toBeGreaterThan(1)
-	})
-
 	test('a standalone dash is not a word', () => {
 		expect(analyzeText('Fast — and cheap').words).toBe(3)
 		expect(analyzeText('wait - what').words).toBe(2)
@@ -112,7 +104,7 @@ describe('analyzeText', () => {
 })
 
 describe('analyzeText without Intl.Segmenter (fallback)', () => {
-	test('still counts the last sentence, CJK words and stops', () => {
+	test('still counts the last sentence, words and stops', () => {
 		const original = Intl.Segmenter
 		Object.defineProperty(Intl, 'Segmenter', {
 			value: undefined,
@@ -121,8 +113,8 @@ describe('analyzeText without Intl.Segmenter (fallback)', () => {
 		})
 		try {
 			expect(analyzeText('Hello world. This is a test').sentences).toBe(2)
-			expect(analyzeText('今日は晴れです。明日は雨です。').sentences).toBe(2)
-			expect(analyzeText('我喜欢编程').words).toBe(5)
+			expect(analyzeText('Is it done? Yes! Ship it.').sentences).toBe(3)
+			expect(analyzeText('well-known tools work').words).toBe(3)
 			expect(analyzeText('Fast - and cheap').words).toBe(3)
 			expect(analyzeText('hello world').characters).toBe(11)
 		} finally {

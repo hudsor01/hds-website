@@ -164,7 +164,9 @@ export function PaystubForm({
 				</h2>
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 					<div className="space-y-tight">
-						<Label htmlFor="filingStatus">Filing Status</Label>
+						<Label id="filingStatus-label" htmlFor="filingStatus">
+							Filing Status
+						</Label>
 						<Select
 							value={paystubData.filingStatus}
 							onValueChange={value =>
@@ -174,7 +176,10 @@ export function PaystubForm({
 								}))
 							}
 						>
-							<SelectTrigger id="filingStatus">
+							<SelectTrigger
+								id="filingStatus"
+								aria-labelledby="filingStatus-label"
+							>
 								<SelectValue placeholder="Select status" />
 							</SelectTrigger>
 							<SelectContent>
@@ -188,7 +193,9 @@ export function PaystubForm({
 					</div>
 
 					<div className="space-y-tight">
-						<Label htmlFor="taxYear">Tax Year</Label>
+						<Label id="taxYear-label" htmlFor="taxYear">
+							Tax Year
+						</Label>
 						<Select
 							value={paystubData.taxYear.toString()}
 							onValueChange={value =>
@@ -200,6 +207,7 @@ export function PaystubForm({
 						>
 							<SelectTrigger
 								id="taxYear"
+								aria-labelledby="taxYear-label"
 								aria-invalid={!!formErrors.taxYear}
 								className={
 									formErrors.taxYear ? 'border-destructive border-2' : undefined
@@ -223,9 +231,11 @@ export function PaystubForm({
 					</div>
 
 					<div className="space-y-tight">
-						<Label htmlFor="state">State</Label>
+						<Label id="state-label" htmlFor="state">
+							State
+						</Label>
 						<Select value={selectedState} onValueChange={setSelectedState}>
-							<SelectTrigger id="state">
+							<SelectTrigger id="state" aria-labelledby="state-label">
 								<SelectValue placeholder="Select State" />
 							</SelectTrigger>
 							<SelectContent>
@@ -265,12 +275,17 @@ export function PaystubForm({
 				</h2>
 				<div className="grid grid-cols-1 md:grid-cols-1 gap-5">
 					<div className="space-y-tight">
-						<Label htmlFor="payFrequency">Pay Period</Label>
+						<Label id="payFrequency-label" htmlFor="payFrequency">
+							Pay Period
+						</Label>
 						<Select
 							value={payFrequency}
 							onValueChange={value => setPayFrequency(value as PayFrequency)}
 						>
-							<SelectTrigger id="payFrequency">
+							<SelectTrigger
+								id="payFrequency"
+								aria-labelledby="payFrequency-label"
+							>
 								<SelectValue placeholder="Select period" />
 							</SelectTrigger>
 							<SelectContent>
@@ -458,6 +473,7 @@ function WithholdingSection({
 				<div className="flex items-start gap-3 mb-5">
 					<Checkbox
 						id="multipleJobs"
+						aria-labelledby="multipleJobs-label"
 						checked={withholding.multipleJobs}
 						onCheckedChange={value => {
 							if (typeof value === 'boolean') {
@@ -465,7 +481,11 @@ function WithholdingSection({
 							}
 						}}
 					/>
-					<Label htmlFor="multipleJobs" className="font-normal leading-snug">
+					<Label
+						id="multipleJobs-label"
+						htmlFor="multipleJobs"
+						className="font-normal leading-snug"
+					>
 						Step 2(c): I checked the box for multiple jobs or a spouse who works
 					</Label>
 				</div>

@@ -9,7 +9,7 @@ import {
 	getTags,
 	getTagsWithCounts
 } from '@/lib/blog'
-import { buildMetadata } from '@/lib/seo-config'
+import { brandedTitle, buildMetadata } from '@/lib/seo-config'
 
 interface TagPageProps {
 	params: Promise<{ slug: string }>
@@ -23,7 +23,7 @@ export async function generateMetadata({
 
 	if (!tag) {
 		return {
-			title: 'Tag Not Found - Hudson Digital Solutions',
+			title: brandedTitle('Tag Not Found'),
 			description: 'The requested tag could not be found.'
 		}
 	}
@@ -33,7 +33,7 @@ export async function generateMetadata({
 	const posts = await getPostsByTag(tag.slug)
 
 	return buildMetadata({
-		title: `${tag.name} - Blog - Hudson Digital Solutions`,
+		title: brandedTitle(`${tag.name} Articles`),
 		description:
 			tag.description ||
 			`Browse Hudson Digital Solutions blog articles tagged ${tag.name}, with practical guides and insights on web design and growing your small business online.`,
@@ -94,11 +94,16 @@ export default async function TagPage({ params }: TagPageProps) {
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
 					{posts.length > 0 ? (
-						<div className="grid gap-sections md:grid-cols-2 lg:grid-cols-3">
-							{posts.map(post => (
-								<BlogPostCard key={post.id} post={post} />
-							))}
-						</div>
+						<>
+							<h2 className="text-h3 text-foreground mb-comfortable">
+								Articles tagged {tag.name}
+							</h2>
+							<div className="grid gap-sections md:grid-cols-2 lg:grid-cols-3">
+								{posts.map(post => (
+									<BlogPostCard key={post.id} post={post} />
+								))}
+							</div>
+						</>
 					) : (
 						<div className="text-center py-section-sm">
 							<p className="text-muted-foreground text-lg">

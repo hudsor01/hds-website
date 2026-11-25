@@ -111,6 +111,107 @@ test.describe('Blog Journey', () => {
 		).toBeVisible()
 	})
 
+	for (const slug of [
+		'spf-dkim-dmarc-for-small-business-email',
+		'beyond-just-works-why-businesses-need-websites-that-dominate'
+	]) {
+		test(`table of contents links resolve on ${slug}`, async ({ page }) => {
+			await page.setViewportSize({ width: 1280, height: 900 })
+			await page.goto(`/blog/${slug}`)
+			const links = page.locator('nav[aria-label="Table of contents"] a')
+			await expect(links.first()).toBeVisible()
+
+			const items = await links.evaluateAll((els: Element[]) =>
+				els.map(el => ({
+					href: el.getAttribute('href') ?? '',
+					text: el.textContent ?? ''
+				}))
+			)
+			expect(items.length).toBeGreaterThanOrEqual(2)
+			for (const { href, text } of items) {
+				expect(text).not.toContain('&')
+				const id = decodeURIComponent(href.replace(/^#/, ''))
+				await expect(page.locator(`[id="${id}"]`)).toHaveCount(1)
+			}
+
+			const last = items.at(-1)
+			if (!last) {
+				throw new Error('table of contents is empty')
+			}
+			await links.last().click()
+			await expect(
+				page.locator(`[id="${decodeURIComponent(last.href.slice(1))}"]`)
+			).toBeInViewport()
+		})
+	}
+
+	for (const path of [
+		'/blog',
+		'/blog/tag/seo',
+		'/blog/tag/business',
+		'/blog/author/richard-hudson'
+	]) {
+		test(`heading levels never skip on ${path}`, async ({ page }) => {
+			await page.goto(path)
+			await expect(page.locator('main h1')).toHaveCount(1)
+			await expect(page.locator('main article').first()).toBeVisible()
+			const levels = await page
+				.locator('main :is(h1, h2, h3, h4, h5, h6)')
+				.evaluateAll((els: Element[]) =>
+					els.map(el => Number(el.tagName.slice(1)))
+				)
+			expect(levels[0]).toBe(1)
+			for (let i = 1; i < levels.length; i++) {
+				const previous = levels[i - 1] ?? 1
+				expect(levels[i] ?? 1).toBeLessThanOrEqual(previous + 1)
+			}
+		})
+	}
+
+	test('listing pages link to each other and stay disjoint', async ({
+		page
+	}) => {
+		await page.goto('/blog')
+		const pager = page.locator('nav[aria-label="Blog pages"]')
+		await expect(pager.locator('a[href="/blog/page/2"]').first()).toBeVisible()
+
+		const allArticles = (scope: string) =>
+			page
+				.locator(`${scope} article a[href^="/blog/"]`)
+				.evaluateAll((els: Element[]) =>
+					els.map(el => el.getAttribute('href') ?? '')
+				)
+		const scope = 'div.flex-1'
+		const firstPage = await allArticles(scope)
+		expect(firstPage).toHaveLength(10)
+
+		const response = await page.goto('/blog/page/2')
+		expect(response?.status()).toBe(200)
+		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+			'href',
+			'https://hudsondigitalsolutions.com/blog/page/2'
+		)
+		const secondPage = await allArticles(scope)
+		expect(secondPage).toHaveLength(10)
+		expect(secondPage.filter(href => firstPage.includes(href))).toEqual([])
+		await expect(
+			page.locator('nav[aria-label="Blog pages"] a[aria-current="page"]')
+		).toHaveText('2')
+	})
+
+	test('page 1 redirects to /blog and out-of-range pages 404', async ({
+		page,
+		request
+	}) => {
+		await page.goto('/blog/page/1')
+		await expect(page).toHaveURL(/\/blog$/)
+
+		for (const path of ['/blog/page/999', '/blog/page/abc', '/blog/page/0']) {
+			const response = await request.get(path)
+			expect(response.status()).toBe(404)
+		}
+	})
+
 	test('should return 404 for an unknown slug', async ({ page }) => {
 		const response = await page.goto('/blog/wp-login.php')
 		expect(response?.status()).toBe(404)

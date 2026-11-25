@@ -1,6 +1,12 @@
 import { describe, expect, test } from 'bun:test'
 import {
 	calculateRoi,
+	formatRoiMoney,
+	formatRoiPercent,
+	MAX_IMPROVEMENT,
+	MAX_INVESTMENT,
+	MAX_MONTHLY_TRAFFIC,
+	MAX_ORDER_VALUE,
 	parseRoiInput,
 	type RoiRawInput
 } from '@/lib/roi-calculator'
@@ -150,5 +156,85 @@ describe('calculateRoi', () => {
 		expect(r.monthlyIncrease).toBe(0)
 		expect(r.paybackMonths).toBeNull()
 		expect(r.roiPercentage).toBe(-100)
+	})
+})
+
+describe('upper bounds (QA-14)', () => {
+	function errorsFor(overrides: Partial<RoiRawInput>) {
+		const parsed = parseRoiInput({ ...RAW, ...overrides })
+		return parsed.status === 'invalid' ? parsed.errors : {}
+	}
+
+	test('rejects 1e12 visitors and one visitor over the maximum', () => {
+		for (const monthlyTraffic of ['1e12', '100000001']) {
+			expect(errorsFor({ monthlyTraffic })).toEqual({
+				monthlyTraffic: 'Enter 100,000,000 visitors or fewer.'
+			})
+		}
+	})
+
+	test('rejects an order value, lift or investment over its maximum', () => {
+		expect(errorsFor({ averageOrderValue: '1000001' })).toEqual({
+			averageOrderValue: 'Enter a value of $1,000,000 or less.'
+		})
+		expect(errorsFor({ improvementPercentage: '1001' })).toEqual({
+			improvementPercentage: 'Enter a lift of 1,000% or less.'
+		})
+		expect(errorsFor({ investment: '100000001' })).toEqual({
+			investment: 'Enter an amount of $100,000,000 or less, or leave it blank.'
+		})
+	})
+
+	test('accepts every field at exactly its maximum', () => {
+		const parsed = parseRoiInput({
+			monthlyTraffic: String(MAX_MONTHLY_TRAFFIC),
+			conversionRate: '100',
+			averageOrderValue: String(MAX_ORDER_VALUE),
+			improvementPercentage: String(MAX_IMPROVEMENT),
+			investment: String(MAX_INVESTMENT)
+		})
+		expect(parsed.status).toBe('ok')
+	})
+
+	test('results stay finite at the maximum bounds', () => {
+		const result = calculateRoi({
+			monthlyTraffic: MAX_MONTHLY_TRAFFIC,
+			conversionRate: 50,
+			averageOrderValue: MAX_ORDER_VALUE,
+			improvementPercentage: MAX_IMPROVEMENT,
+			investment: MAX_INVESTMENT
+		})
+		for (const value of [
+			result.projectedAnnualRevenue,
+			result.annualIncrease,
+			result.roiPercentage ?? 0,
+			result.paybackMonths ?? 0
+		]) {
+			expect(Number.isFinite(value)).toBe(true)
+		}
+	})
+})
+
+describe('formatRoiMoney', () => {
+	test('shows dollars and cents below $1,000,000', () => {
+		expect(formatRoiMoney(999999.99)).toBe('$999,999.99')
+		expect(formatRoiMoney(0)).toBe('$0.00')
+	})
+
+	test('switches to compact notation from $1,000,000', () => {
+		expect(formatRoiMoney(1_000_000)).toBe('$1M')
+		expect(formatRoiMoney(1_250_000)).toBe('$1.25M')
+		expect(formatRoiMoney(24e12)).toBe('$24T')
+	})
+})
+
+describe('formatRoiPercent', () => {
+	test('one decimal below 1,000,000%', () => {
+		expect(formatRoiPercent(1234.56)).toBe('1,234.6%')
+		expect(formatRoiPercent(-50)).toBe('-50%')
+	})
+
+	test('compact from 1,000,000%', () => {
+		expect(formatRoiPercent(1_500_000)).toBe('1.5M%')
 	})
 })

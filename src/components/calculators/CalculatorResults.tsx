@@ -151,9 +151,9 @@ export function CalculatorResults({
 					size="none"
 					className="border-2 border-dashed border-accent/60 bg-accent/10 card-padding"
 				>
-					<h4 className="mb-subheading text-lg font-semibold text-foreground">
+					<h3 className="mb-subheading text-lg font-semibold text-foreground">
 						Email me these results
-					</h4>
+					</h3>
 					<p className="mb-heading text-sm text-muted-foreground">
 						Get a copy of the numbers above in your inbox.
 					</p>
@@ -205,9 +205,9 @@ export function CalculatorResults({
 
 			{/* CTA */}
 			<Card className="text-center">
-				<h4 className="mb-subheading text-lg font-semibold text-foreground">
+				<h3 className="mb-subheading text-lg font-semibold text-foreground">
 					Want to talk through your results?
-				</h4>
+				</h3>
 				<p className="mb-heading text-sm text-muted-foreground">
 					Book a free 30-minute website plan call. I&apos;ll go over these
 					numbers with you, then give you a timeline and a real price.

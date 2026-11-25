@@ -1,12 +1,10 @@
-import { ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { Suspense } from 'react'
+import { BlogArchive } from '@/components/blog/BlogArchive'
 import { BlogPostCard } from '@/components/blog/BlogPostCard'
 import { BlogPostCardSkeleton } from '@/components/blog/BlogPostCardSkeleton'
-import { TagList } from '@/components/blog/TagList'
-import { Button } from '@/components/ui/button'
-import { getFeaturedPosts, getPosts, getTagsWithCounts } from '@/lib/blog'
+import { BlogSidebar } from '@/components/blog/BlogSidebar'
+import { getFeaturedPosts } from '@/lib/blog'
 import { buildMetadata } from '@/lib/seo-config'
 
 export const metadata: Metadata = buildMetadata({
@@ -50,50 +48,6 @@ async function FeaturedSection() {
 	)
 }
 
-async function AllPostsSection() {
-	const allPostsResult = await getPosts({ limit: 10 })
-	const allPosts = allPostsResult.posts
-	return (
-		<>
-			<div className="mb-10">
-				<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-					All Articles
-				</p>
-				<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-					All Articles
-				</h2>
-				<p className="text-lead text-muted-foreground max-w-2xl">
-					Practical guides for business owners who want more from their
-					technology
-				</p>
-			</div>
-
-			{allPosts.length === 0 ? (
-				<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
-					<p className="text-sm text-muted-foreground leading-relaxed">
-						No articles found. Check back soon for new content!
-					</p>
-				</div>
-			) : (
-				<div className="space-y-6">
-					{allPosts.map(post => (
-						<BlogPostCard key={post.id} post={post} />
-					))}
-				</div>
-			)}
-		</>
-	)
-}
-
-async function TagsSection() {
-	const tags = await getTagsWithCounts()
-	const populated = tags.filter(tag => tag.count > 0)
-	if (populated.length === 0) {
-		return null
-	}
-	return <TagList tags={populated} />
-}
-
 function PostListSkeleton() {
 	return (
 		<div className="space-y-6" aria-hidden="true">
@@ -134,7 +88,7 @@ export default function BlogPage() {
 						Website Tips for Small Businesses
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						Practical insights on websites, getting found on Google, and growing
+						Practical insights on websites, getting found on Google and growing
 						a small business online.
 					</p>
 				</div>
@@ -152,47 +106,11 @@ export default function BlogPage() {
 						{/* Main Content */}
 						<div className="flex-1">
 							<Suspense fallback={<PostListSkeleton />}>
-								<AllPostsSection />
+								<BlogArchive page={1} />
 							</Suspense>
 						</div>
 
-						{/* Sidebar */}
-						<aside className="w-full lg:w-80 space-y-6">
-							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
-								<h3 className="text-h3 text-foreground mb-3 text-balance">
-									Curious what a site would cost?
-								</h3>
-								<p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-									Get a free website plan for your business: pages, timeline,
-									and a clear price.
-								</p>
-								<Button asChild variant="accent" className="w-full">
-									<Link href="/contact">Get My Free Website Plan</Link>
-								</Button>
-								<p className="text-xs text-muted-foreground mt-3">
-									30-minute call. No commitment.
-								</p>
-							</div>
-
-							<Suspense fallback={null}>
-								<TagsSection />
-							</Suspense>
-
-							<div className="rounded-xl border border-border bg-surface-raised p-8 text-center hover:border-border-strong transition-colors">
-								<h3 className="text-h3 text-foreground mb-3 text-balance">
-									Ready for a better website?
-								</h3>
-								<p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-									Let&apos;s build the one your business deserves.
-								</p>
-								<Button asChild variant="accent">
-									<Link href="/contact">
-										Get My Free Website Plan
-										<ArrowRight className="w-4 h-4" />
-									</Link>
-								</Button>
-							</div>
-						</aside>
+						<BlogSidebar />
 					</div>
 				</div>
 			</section>

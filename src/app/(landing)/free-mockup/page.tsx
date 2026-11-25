@@ -8,7 +8,7 @@ import { ROUTES } from '@/lib/constants/routes'
 
 export const metadata: Metadata = {
 	alternates: { canonical: '/free-mockup' },
-	title: 'Free Website Mockup for Your Business | Hudson Digital Solutions',
+	title: 'Free Website Mockup for Your Business | Hudson Digital',
 	description:
 		'See your new website before you pay anything. I design a free custom mockup for Dallas-Fort Worth small businesses, no cost and no obligation.',
 	openGraph: {

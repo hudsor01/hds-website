@@ -1,26 +1,27 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import {
-	isSupportedStateCode,
-	isSupportedTaxYear,
-	normalizeFilingStatus
-} from '@/lib/paystub-calculator/supported-inputs'
 import { usePaystubCalculations } from './use-paystub-calculations'
 import { usePaystubForm } from './use-paystub-form'
 import { usePaystubPersistence } from './use-paystub-persistence'
 import { usePaystubUI } from './use-paystub-ui'
-import { usePaystubUrlState } from './use-paystub-url-state'
+import {
+	applyPaystubUrlState,
+	hasPaystubUrlState,
+	readPaystubUrlState,
+	restoredPaystubStateCode
+} from './use-paystub-url-state'
 import { usePaystubValidation } from './use-paystub-validation'
+
+const noop = () => undefined
 
 export function usePaystubGenerator() {
 	const formState = usePaystubForm()
 	const uiState = usePaystubUI()
-	const { urlState, setUrlState, clearUrlState, generateShareableUrl } =
-		usePaystubUrlState()
-
 	// Track if we've initialized from URL params
 	const hasInitializedFromUrl = useRef(false)
+	// Set by PaystubUrlSync once it mounts
+	const clearUrlRef = useRef<() => void>(noop)
 
 	const validation = usePaystubValidation({
 		paystubData: formState.paystubData,
@@ -55,98 +56,35 @@ export function usePaystubGenerator() {
 		setWithholding: formState.setWithholding
 	})
 
-	// Initialize form from URL params on first load (URL takes priority over localStorage)
+	// Restore a shared link once, after the localStorage restore above, so
+	// the URL takes priority. It reads window.location directly rather than
+	// through nuqs, so the page does not read search params while it
+	// prerenders; PaystubUrlSync mirrors later changes back to the URL.
+	const { setPaystubData, setSelectedState } = formState
 	useEffect(() => {
 		if (hasInitializedFromUrl.current) {
 			return
 		}
-
-		const hasAnyUrlParam = Object.values(urlState).some(v => v !== null)
-		if (!hasAnyUrlParam) {
-			hasInitializedFromUrl.current = true
-			return
-		}
-
-		// Apply URL params to form state
-		formState.setPaystubData(prev => ({
-			...prev,
-			employeeName: urlState.name ?? prev.employeeName,
-			employeeId: urlState.id ?? prev.employeeId,
-			employerName: urlState.employer ?? prev.employerName,
-			hourlyRate: urlState.rate ?? prev.hourlyRate,
-			hoursPerPeriod: urlState.hours ?? prev.hoursPerPeriod,
-			filingStatus: normalizeFilingStatus(urlState.status) ?? prev.filingStatus,
-			// Clamp a restored year to the supported set; a stale shared ?year=2024
-			// (HIGH/LOW asymmetry: nuqs passes it through unchanged) falls back to the
-			// form default rather than feeding an unbacked year into the calculation.
-			taxYear:
-				urlState.year != null && isSupportedTaxYear(urlState.year)
-					? urlState.year
-					: prev.taxYear
-		}))
-
-		if (urlState.state) {
-			// Only restore a supported code; drop unsupported values (e.g. AL) so a
-			// stale shared URL never feeds an unsupported state into the calculation
-			// and never produces a defensive silent $0 (PAYSTUB-10).
-			if (isSupportedStateCode(urlState.state)) {
-				formState.setSelectedState(urlState.state.toUpperCase())
-			}
-		}
-
 		hasInitializedFromUrl.current = true
-	}, [urlState, formState])
 
-	// Sync form state to URL when values change (after initial load)
-	const { paystubData, selectedState } = formState
-	const {
-		employeeName,
-		employeeId,
-		employerName,
-		hourlyRate,
-		hoursPerPeriod,
-		filingStatus,
-		taxYear
-	} = paystubData
-
-	useEffect(() => {
-		if (!hasInitializedFromUrl.current) {
+		const urlState = readPaystubUrlState(window.location.search)
+		if (!hasPaystubUrlState(urlState)) {
 			return
 		}
 
-		const hasData = employeeName || hourlyRate || hoursPerPeriod
-		if (!hasData) {
-			return
+		setPaystubData(prev => applyPaystubUrlState(prev, urlState))
+		const stateCode = restoredPaystubStateCode(urlState)
+		if (stateCode) {
+			setSelectedState(stateCode)
 		}
-
-		setUrlState({
-			name: employeeName || null,
-			id: employeeId || null,
-			employer: employerName || null,
-			rate: hourlyRate || null,
-			hours: hoursPerPeriod || null,
-			status: filingStatus,
-			year: taxYear,
-			state: selectedState || null
-		})
-	}, [
-		employeeName,
-		employeeId,
-		employerName,
-		hourlyRate,
-		hoursPerPeriod,
-		filingStatus,
-		taxYear,
-		selectedState,
-		setUrlState
-	])
+	}, [setPaystubData, setSelectedState])
 
 	const handleClearForm = () => {
 		formState.resetForm()
 		uiState.resetUI()
 		validation.resetErrors()
 		persistence.clearForm()
-		clearUrlState()
+		clearUrlRef.current()
 	}
 
 	const generatePaystubs = () => {
@@ -191,7 +129,7 @@ export function usePaystubGenerator() {
 		handlePrint: uiState.handlePrint,
 		backToForm: uiState.backToForm,
 
-		// URL sharing
-		generateShareableUrl
+		// URL sync (PaystubUrlSync)
+		clearUrlRef
 	}
 }

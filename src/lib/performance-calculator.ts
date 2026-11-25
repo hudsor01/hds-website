@@ -5,7 +5,7 @@
  * the PageSpeed metrics plus the visitor's current inputs.
  */
 
-import type { PagespeedMetrics } from '@/lib/schemas/pagespeed'
+import type { LabMetric, PagespeedMetrics } from '@/lib/schemas/pagespeed'
 
 // Lighthouse performance score bands:
 // https://developer.chrome.com/docs/lighthouse/performance/performance-scoring
@@ -41,6 +41,9 @@ interface LabMetricGuide {
 
 // Good thresholds from web.dev: LCP and CLS (https://web.dev/articles/vitals),
 // TBT (https://web.dev/articles/tbt), FCP (https://web.dev/articles/fcp).
+// LCP, CLS and FCP are "or less". TBT is strict: web.dev says "sites should
+// strive to have a Total Blocking Time of less than 200 milliseconds", so
+// 200 ms itself is not good.
 export const LAB_METRICS: readonly LabMetricGuide[] = [
 	{
 		key: 'lcp',
@@ -91,6 +94,58 @@ export function isGoodLabValue(
 	return guide.key === 'tbt'
 		? numericValue < guide.goodAtMost
 		: numericValue <= guide.goodAtMost
+}
+
+interface LabValueFormat {
+	/** One display step, in numericValue units */
+	step: number
+	/** Rounding direction that keeps the shown value's verdict exact */
+	round: 'down' | 'up'
+	format: (value: number) => string
+}
+
+const WHOLE = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 })
+
+// Lighthouse's displayValue rounds TBT to 10 ms and timings to 0.1 s, so
+// 196 ms showed as "200 ms" next to "under 200 ms (met)". The shown value
+// is built from numericValue instead, rounded toward the side of the
+// threshold the raw value is on: down for TBT (floor(x) < 200 exactly when
+// x < 200), up for the "or less" metrics.
+const LAB_VALUE_FORMATS: Record<LabMetricKey, LabValueFormat> = {
+	tbt: { step: 1, round: 'down', format: v => `${WHOLE.format(v)} ms` },
+	lcp: { step: 10, round: 'up', format: v => `${(v / 1000).toFixed(2)} s` },
+	fcp: { step: 10, round: 'up', format: v => `${(v / 1000).toFixed(2)} s` },
+	cls: { step: 0.001, round: 'up', format: v => String(Number(v.toFixed(3))) }
+}
+
+// Float noise (0.07 * 1000 is 70.00000000000001) must not round up a step
+const ROUNDING_EPSILON = 1e-9
+
+/**
+ * The value to show next to the good/not met verdict. It is rounded so it
+ * can never read as the other side of the threshold from the verdict;
+ * without a numericValue it falls back to Lighthouse's displayValue.
+ */
+export function formatLabValue(
+	guide: LabMetricGuide,
+	metric: LabMetric
+): string {
+	const { numericValue } = metric
+	if (numericValue === null) {
+		return metric.displayValue
+	}
+	const { step, round, format } = LAB_VALUE_FORMATS[guide.key]
+	const steps = numericValue / step
+	let shown =
+		(round === 'down'
+			? Math.floor(steps + ROUNDING_EPSILON)
+			: Math.ceil(steps - ROUNDING_EPSILON)) * step
+	// Guard the epsilon: a raw value a hair past the threshold must still
+	// show past it
+	if (isGoodLabValue(guide, shown) !== isGoodLabValue(guide, numericValue)) {
+		shown += round === 'down' ? -step : step
+	}
+	return format(shown)
 }
 
 /**

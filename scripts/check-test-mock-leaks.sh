@@ -15,7 +15,9 @@
 # sub-second, and order-independent, unlike a last-running canary test.
 #
 # Denylist scope (see .planning/phases/17-test-suite-isolation/17-01-PLAN.md
-# guard_scope_note): @/lib/utils and @/lib/constants/* only. @/lib/schemas/* is
+# guard_scope_note): @/lib/utils, @/lib/constants/* and drizzle-orm. drizzle-orm
+# was added 2026-11-25: a per-file mock exporting only `eq` broke every later
+# DB test on CI with "Export named 'sql' not found". @/lib/schemas/* is
 # intentionally NOT banned -- newsletter-unsubscribe-route.test.ts
 # legitimately stubs Drizzle table barrels as complete column-key objects.
 #
@@ -23,9 +25,10 @@
 
 set -euo pipefail
 
-# Denylist pattern: mock.module('@/lib/utils'...) or mock.module('@/lib/constants/...')
+# Denylist pattern: mock.module('@/lib/utils'...), mock.module('@/lib/constants/...')
+# or mock.module('drizzle-orm'...)
 # Single or double quotes accepted. tests/setup.ts is the sanctioned exception.
-PATTERN="mock\.module\((['\"])@/lib/(utils|constants/)"
+PATTERN="mock\.module\((['\"])(@/lib/(utils|constants/)|drizzle-orm['\"])"
 
 # Use `command grep` to bypass any interactive alias (some dev shells alias grep
 # to ripgrep, which would silently change pipe/flag semantics). --exclude drops

@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation'
 import { BlogPostCard } from '@/components/blog/BlogPostCard'
 import { BackLink } from '@/components/utilities/BackLink'
 import { getAuthorBySlug, getAuthors, getPostsByAuthor } from '@/lib/blog'
-import { buildMetadata } from '@/lib/seo-config'
+import { authorMetaDescription } from '@/lib/blog-metadata'
+import { brandedTitle, buildMetadata } from '@/lib/seo-config'
 
 interface AuthorPageProps {
 	params: Promise<{ slug: string }>
@@ -18,7 +19,7 @@ export async function generateMetadata({
 
 	if (!author) {
 		return {
-			title: 'Author Not Found - Hudson Digital Solutions',
+			title: brandedTitle('Author Not Found'),
 			description: 'The requested author could not be found.'
 		}
 	}
@@ -28,10 +29,8 @@ export async function generateMetadata({
 	const posts = await getPostsByAuthor(author.slug)
 
 	return buildMetadata({
-		title: `${author.name} - Blog - Hudson Digital Solutions`,
-		description:
-			author.bio ||
-			`Read articles, guides and insights written by ${author.name} on the Hudson Digital Solutions blog about web design and small business growth.`,
+		title: brandedTitle(`Articles by ${author.name}`),
+		description: authorMetaDescription(author),
 		path: `/blog/author/${author.slug}`,
 		noindex: posts.length === 0
 	})

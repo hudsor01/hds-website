@@ -8,7 +8,7 @@ import { buildMetadata } from '@/lib/seo-config'
 import TipCalculatorClient from './TipCalculatorClient'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Tip Calculator | Hudson Digital Solutions',
+	title: 'Tip Calculator | Hudson Digital',
 	description:
 		'Calculate tip amounts and split bills among multiple people. Free tip calculator with customizable percentages and per-person breakdown.',
 	path: '/tools/tip-calculator',

@@ -10,11 +10,11 @@
 import type { Metadata } from 'next'
 import { Calculator } from '@/components/calculators/Calculator'
 import { JsonLd } from '@/components/utilities/JsonLd'
-import { buildMetadata } from '@/lib/seo-config'
+import { brandedTitle, buildMetadata } from '@/lib/seo-config'
 import { TEXAS_SALES_TAX_RATE } from '@/lib/ttl-calculator/calculator'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Texas TTL Calculator: Tax, Title and License | Hudson Digital',
+	title: brandedTitle('Texas TTL Calculator: Tax, Title and License'),
 	description: `Free Texas TTL calculator for car buyers and dealers. Estimate the ${TEXAS_SALES_TAX_RATE * 100}% sales tax, title, registration and county fees, plus a monthly payment.`,
 	path: '/tools/ttl-calculator',
 	socialTitle: 'Texas TTL Calculator',
