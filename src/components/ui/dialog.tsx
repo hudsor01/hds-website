@@ -25,10 +25,7 @@ function DialogOverlay({
 	return (
 		<DialogPrimitive.Overlay
 			data-slot="dialog-overlay"
-			className={cn(
-				'dialog-overlay data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
-				className
-			)}
+			className={cn('dialog-overlay', className)}
 			{...props}
 		/>
 	)
@@ -47,10 +44,7 @@ function DialogContent({
 			<DialogOverlay />
 			<DialogPrimitive.Content
 				data-slot="dialog-content"
-				className={cn(
-					'dialog-content data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
-					className
-				)}
+				className={cn('dialog-content', className)}
 				{...props}
 			>
 				{children}

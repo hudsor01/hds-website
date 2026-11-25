@@ -148,7 +148,7 @@ export function Calculator() {
 	}
 
 	const handlePrintPDF = () => {
-		// Uses CSS @media print styles from print.css
+		// Browser print dialog; overlays opt out with print:hidden
 		window.print()
 	}
 
@@ -258,7 +258,7 @@ export function Calculator() {
 				</div>
 
 				{/* Footer with disclaimer */}
-				<div className="mt-12 text-center text-sm text-muted-foreground print-footer">
+				<div className="mt-12 text-center text-sm text-muted-foreground">
 					<p>
 						Disclaimer: This calculator provides estimates based on Texas state
 						fees and regulations. Actual fees may vary.
@@ -273,7 +273,7 @@ export function Calculator() {
 			{/* Share Modal */}
 			{showShareModal && (
 				<div
-					className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 no-print"
+					className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 print:hidden"
 					onClick={() => setShowShareModal(false)}
 				>
 					<div
