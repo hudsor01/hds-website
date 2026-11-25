@@ -39,7 +39,12 @@ interface ArticleMetadata {
 }
 
 export interface PageMetadata {
-	/** Full document title, brand suffix included. */
+	/**
+	 * Full document title ending in " | Hudson Digital", 60 characters max
+	 * where the page part allows. There is no title template (the root
+	 * layout title is a plain string), so the suffix is written here once
+	 * per page and can never double.
+	 */
 	title: string
 	description: string
 	/** Site-relative path, e.g. `/tools/roi-calculator`; `/` for the homepage. */

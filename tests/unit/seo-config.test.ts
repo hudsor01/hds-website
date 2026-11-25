@@ -10,7 +10,7 @@ import { absoluteUrl, buildMetadata } from '@/lib/seo-config'
 
 describe('buildMetadata', () => {
 	const meta = buildMetadata({
-		title: 'ROI Calculator | Hudson Digital Solutions',
+		title: 'ROI Calculator | Hudson Digital',
 		description: 'Work out the return on a better website.',
 		path: '/tools/roi-calculator',
 		socialTitle: 'ROI Calculator'

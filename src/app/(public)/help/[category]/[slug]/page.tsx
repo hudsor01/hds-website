@@ -57,7 +57,7 @@ export async function generateMetadata({
 	}
 
 	return buildMetadata({
-		title: `${article.title} | Help Center | Hudson Digital Solutions`,
+		title: `${article.title} | Help Center | Hudson Digital`,
 		description:
 			article.excerpt || `Read about ${article.title} in the help center.`,
 		path: `/help/${category}/${slug}`,

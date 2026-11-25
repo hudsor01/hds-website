@@ -51,8 +51,7 @@ export const SERVICES: readonly Service[] = [
 		description:
 			'A professional website built for your business from scratch: clean custom design, mobile-ready and fast. Comes with an admin panel so you control your content without calling a developer.',
 		headline: 'Website Design for Dallas-Fort Worth Small Businesses',
-		metaTitle:
-			'Small Business Website Design in Dallas-Fort Worth | Hudson Digital',
+		metaTitle: 'Small Business Web Design in DFW | Hudson Digital',
 		metaDescription:
 			'Custom website design for Dallas-Fort Worth small businesses: mobile-first, fast and built to bring in calls. Priced per project after a free plan call.',
 		overviewHeading: 'What does a small business website need to do?',
@@ -114,8 +113,7 @@ export const SERVICES: readonly Service[] = [
 		description:
 			'A great website only works if customers can find it. I build in the SEO, speed and local-search details that put your business in front of the people already searching for what you do.',
 		headline: 'Local SEO for Dallas-Fort Worth Businesses',
-		metaTitle:
-			'Local SEO and Google Business Profile Setup in DFW | Hudson Digital',
+		metaTitle: 'Local SEO and Google Business Profile Setup | Hudson Digital',
 		metaDescription:
 			'Local SEO for Dallas-Fort Worth small businesses: Google Business Profile setup, fast pages and search-ready structure so nearby customers find you.',
 		overviewHeading: 'How do local customers find your business?',
@@ -177,8 +175,7 @@ export const SERVICES: readonly Service[] = [
 		description:
 			'Once your site is live, I can wire in the extras: let customers book online, take payments and make sure no inquiry slips through the cracks.',
 		headline: 'Online Booking, Payments and Lead Follow-Up',
-		metaTitle:
-			'Online Booking and Payment Setup for Small Businesses | Hudson Digital',
+		metaTitle: 'Booking and Payments for Small Business | Hudson Digital',
 		metaDescription:
 			'Online booking, Stripe payments, calendar sync and automatic lead follow-up for Dallas-Fort Worth small businesses, wired into your website and CRM.',
 		overviewHeading: 'Why wire booking and payments into your website?',

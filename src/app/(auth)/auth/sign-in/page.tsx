@@ -11,7 +11,7 @@ import { SignInForm } from '@/components/auth/SignInForm'
 import { Card } from '@/components/ui/card'
 
 export const metadata: Metadata = {
-	title: 'Sign in',
+	title: 'Sign in | Hudson Digital',
 	description: 'Sign in to your Hudson Digital Solutions account.',
 	robots: { index: false, follow: false }
 }

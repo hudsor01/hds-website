@@ -77,7 +77,7 @@ export async function generateMetadata({
 	const articles = await getArticlesByCategory(category)
 
 	return buildMetadata({
-		title: `${categoryInfo.name} | Help Center | Hudson Digital Solutions`,
+		title: `${categoryInfo.name} | Help Center | Hudson Digital`,
 		description: categoryInfo.metaDescription,
 		path: `/help/${category}`,
 		noindex: !articles.some(article => helpArticleDate(article))

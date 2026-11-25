@@ -71,7 +71,7 @@ export async function generateMetadata({
 	const socialTitle = `${item.title} | ${typeLabel}`
 
 	return buildMetadata({
-		title: `${socialTitle} | Hudson Digital Solutions`,
+		title: `${socialTitle} | Hudson Digital`,
 		description: item.description,
 		path: `/showcase/${slug}`,
 		socialTitle,

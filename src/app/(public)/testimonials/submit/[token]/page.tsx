@@ -41,13 +41,13 @@ export async function generateMetadata({
 
 	if (result.status === 'not-found') {
 		return {
-			title: 'Invalid Link | Hudson Digital Solutions',
+			title: 'Invalid Link | Hudson Digital',
 			robots
 		}
 	}
 
 	return {
-		title: 'Share Your Feedback | Hudson Digital Solutions',
+		title: 'Share Your Feedback | Hudson Digital',
 		description:
 			'Thank you for working with me. Please share your experience with Hudson Digital Solutions.',
 		robots
