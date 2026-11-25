@@ -68,7 +68,7 @@ export default function AboutPage() {
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						About Me
 					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+					<h1 className="text-page-title text-foreground text-balance">
 						Built Around Your Business
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
@@ -86,7 +86,7 @@ export default function AboutPage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							My Story
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							The Experience Behind Your Website
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -191,7 +191,7 @@ export default function AboutPage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							My Toolkit
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							What I Build With
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -265,7 +265,7 @@ export default function AboutPage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							The Founder
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							The Builder Behind the Work
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -369,7 +369,7 @@ export default function AboutPage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							My Principles
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							How I Work
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -429,7 +429,7 @@ export default function AboutPage() {
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready to build{' '}
 								<span className="text-accent-text">
 									the website you&apos;ve earned?

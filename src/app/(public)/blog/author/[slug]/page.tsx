@@ -73,7 +73,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
 							/>
 						)}
 						<div className="text-center md:text-left">
-							<h1 className="text-page-title text-foreground leading-tight text-balance mb-heading">
+							<h1 className="text-page-title text-foreground text-balance mb-heading">
 								{author.name}
 							</h1>
 							{author.bio && (

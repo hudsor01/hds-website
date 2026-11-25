@@ -68,7 +68,7 @@ export default async function HelpCenterPage() {
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Help Center
 					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+					<h1 className="text-page-title text-foreground text-balance">
 						How can I help?
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-8">
@@ -85,7 +85,7 @@ export default async function HelpCenterPage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Browse Topics
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Browse by Category
 						</h2>
 					</div>

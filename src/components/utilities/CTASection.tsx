@@ -36,7 +36,7 @@ export function CTASection({
 						aria-hidden="true"
 					/>
 					<div className="relative z-10">
-						<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+						<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 							{title}
 						</h2>
 						<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">

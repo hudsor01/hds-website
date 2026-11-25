@@ -100,7 +100,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 						</span>
 					</div>
 
-					<h1 className="text-page-title text-foreground leading-tight text-balance mb-6">
+					<h1 className="text-page-title text-foreground text-balance mb-6">
 						{item.title}
 					</h1>
 
@@ -160,7 +160,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 							<>
 								{item.challenge && (
 									<div>
-										<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+										<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 											The Challenge
 										</h2>
 										<div className="rounded-xl border border-border bg-surface-raised p-8">
@@ -173,7 +173,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 
 								{item.solution && (
 									<div>
-										<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+										<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 											The Solution
 										</h2>
 										<div className="rounded-xl border border-border bg-surface-raised p-8">
@@ -204,7 +204,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 
 								{item.results && (
 									<div>
-										<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+										<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 											The Results
 										</h2>
 										<div className="rounded-xl border border-border bg-surface-raised p-8">
@@ -234,7 +234,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 							<>
 								{item.longDescription && (
 									<div>
-										<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+										<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 											About This Project
 										</h2>
 										<div className="rounded-xl border border-border bg-surface-raised p-8">
@@ -247,7 +247,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 
 								{item.technologies && item.technologies.length > 0 && (
 									<div>
-										<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+										<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 											Tech Stack
 										</h2>
 										<div className="rounded-xl border border-border bg-surface-raised p-8">
@@ -267,7 +267,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 
 								{item.externalLink && (
 									<div>
-										<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+										<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 											Links
 										</h2>
 										<div className="rounded-xl border border-border bg-surface-raised p-8">
@@ -302,7 +302,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 						{/* Testimonial - shown for both types if available */}
 						{item.testimonialText && (
 							<div>
-								<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+								<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 									Client Testimonial
 								</h2>
 								<div className="rounded-xl border border-border bg-surface-raised p-8">

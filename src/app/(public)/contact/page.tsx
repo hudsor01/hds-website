@@ -92,7 +92,7 @@ export default function ContactPage() {
 								<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 									Free Website Plan
 								</p>
-								<h1 className="text-page-title text-foreground leading-tight text-balance">
+								<h1 className="text-page-title text-foreground text-balance">
 									Get Your Free Website Plan
 								</h1>
 								<p className="mt-4 text-lead text-muted-foreground">
@@ -247,7 +247,7 @@ export default function ContactPage() {
 						    flagged the prior "Nationwide" claim as conflicting with
 						    those signals and with the site's TX-headquartered
 						    address (1301 Cherry Hill Ln, Lewisville, TX 75067). */}
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Based in Dallas-Fort Worth. Working across the South.
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">

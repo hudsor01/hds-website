@@ -26,7 +26,7 @@ export default function PrivacyPage() {
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Legal
 					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+					<h1 className="text-page-title text-foreground text-balance">
 						Privacy Policy
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">

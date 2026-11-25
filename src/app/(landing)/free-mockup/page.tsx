@@ -101,7 +101,7 @@ export default function FreeMockupPage() {
 							<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 								Free Website Mockup
 							</p>
-							<h1 className="text-page-title text-foreground leading-tight text-balance">
+							<h1 className="text-page-title text-foreground text-balance">
 								See your new website before you pay anything.
 							</h1>
 							<p className="mt-4 text-lead text-muted-foreground">

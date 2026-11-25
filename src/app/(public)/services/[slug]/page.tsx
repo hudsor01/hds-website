@@ -140,7 +140,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							{service.title}
 						</p>
-						<h1 className="text-page-title text-foreground leading-tight text-balance mb-6">
+						<h1 className="text-page-title text-foreground text-balance mb-6">
 							<Headline text={service.headline} />
 						</h1>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto mb-10">
@@ -169,15 +169,12 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			{/* Overview */}
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide max-w-3xl mx-auto">
-					<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+					<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 						{service.overviewHeading}
 					</h2>
 					<div className="space-y-4">
 						{service.overview.map(paragraph => (
-							<p
-								key={paragraph}
-								className="text-lead text-muted-foreground leading-relaxed"
-							>
+							<p key={paragraph} className="text-lead text-muted-foreground">
 								{paragraph}
 							</p>
 						))}
@@ -195,7 +192,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							What You Get
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							What&apos;s Included
 						</h2>
 					</div>
@@ -230,7 +227,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Questions
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Common Questions
 						</h2>
 					</div>
@@ -259,7 +256,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 				<section className="py-section-sm px-4 sm:px-6 bg-surface-sunken">
 					<div className="container-wide max-w-5xl mx-auto">
 						<div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-comfortable">
-							<h2 className="text-section-title text-foreground text-balance">
+							<h2 className="text-h1 text-foreground text-balance">
 								From the Blog
 							</h2>
 							<Link
@@ -282,7 +279,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			{/* Other services */}
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide max-w-4xl mx-auto">
-					<h2 className="text-section-title text-foreground mb-comfortable text-center text-balance">
+					<h2 className="text-h1 text-foreground mb-comfortable text-center text-balance">
 						Other Services
 					</h2>
 					<div className="grid gap-6 sm:grid-cols-2">
@@ -313,7 +310,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Let&apos;s Talk About Your Site
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">

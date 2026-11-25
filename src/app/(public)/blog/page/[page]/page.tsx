@@ -69,7 +69,7 @@ export default async function BlogListingPage({
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Practical Insights
 					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+					<h1 className="text-page-title text-foreground text-balance">
 						Website Tips for Small Businesses
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">

@@ -37,7 +37,7 @@ export default function LocationsPage() {
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Service Locations
 					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+					<h1 className="text-page-title text-foreground text-balance">
 						Web Design Across Dallas-Fort Worth
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
@@ -83,7 +83,7 @@ export default function LocationsPage() {
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Outside North Texas?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">

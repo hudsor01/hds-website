@@ -374,13 +374,6 @@ describe('Typography Utilities', () => {
 		expect(heading).toHaveClass('text-clamp-xl')
 	})
 
-	it('should apply responsive text sizing', () => {
-		const { container } = render(<p className="text-responsive-md">Text</p>)
-
-		const text = container.firstChild
-		expect(text).toHaveClass('text-responsive-md')
-	})
-
 	it('should apply accent text styling', () => {
 		const { container } = render(<span className="text-accent">Accent</span>)
 

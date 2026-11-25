@@ -169,7 +169,7 @@ export default function WebsiteMigrationPage() {
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Website Migration
 					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+					<h1 className="text-page-title text-foreground text-balance">
 						Switch Website Platforms Without Losing Your Domain, Rankings, or
 						Customers
 					</h1>
@@ -209,7 +209,7 @@ export default function WebsiteMigrationPage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							What&apos;s at Stake
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							What Happens When You Leave Your Provider Without a Plan
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -245,7 +245,7 @@ export default function WebsiteMigrationPage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Side by Side
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Managed Platforms vs. Owning Your Website
 						</h2>
 					</div>
@@ -294,7 +294,7 @@ export default function WebsiteMigrationPage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							How It Works
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Your Migration in 4 Steps
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -333,7 +333,7 @@ export default function WebsiteMigrationPage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							After Migration
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							What You Walk Away With
 						</h2>
 					</div>
@@ -413,7 +413,7 @@ export default function WebsiteMigrationPage() {
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready to own your website{' '}
 								<span className="text-accent-text">for real?</span>
 							</h2>

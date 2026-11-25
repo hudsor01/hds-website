@@ -105,7 +105,7 @@ export default function HomePage() {
 					<div className="grid lg:grid-cols-5 gap-12 xl:gap-16 items-center">
 						{/* Left — headline + CTAs */}
 						<div className="lg:col-span-3 flex flex-col gap-8">
-							<h1 className="text-page-title text-foreground leading-tight text-balance">
+							<h1 className="text-page-title text-foreground text-balance">
 								You earned the reviews. Now you need the website to match.
 							</h1>
 
@@ -212,7 +212,7 @@ export default function HomePage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							What You Get
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							A Website That Earns Its Keep
 						</h2>
 					</div>
@@ -271,7 +271,7 @@ export default function HomePage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Try For Free
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Free Business Tools
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -373,7 +373,7 @@ export default function HomePage() {
 							</p>
 							<span aria-hidden="true" className="h-px w-8 bg-accent/40" />
 						</div>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Ready to give your business the website it&apos;s earned?
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">

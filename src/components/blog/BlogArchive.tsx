@@ -19,7 +19,7 @@ export async function BlogArchive({ page }: BlogArchiveProps) {
 				<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 					All Articles
 				</p>
-				<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+				<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 					All Articles
 				</h2>
 				<p className="text-lead text-muted-foreground max-w-2xl">

@@ -69,7 +69,7 @@ export default async function TestimonialsPage() {
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Client Reviews
 					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+					<h1 className="text-page-title text-foreground text-balance">
 						What Clients Say
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
@@ -159,7 +159,7 @@ export default async function TestimonialsPage() {
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready for a website that{' '}
 								<span className="text-accent-text">brings in work?</span>
 							</h2>

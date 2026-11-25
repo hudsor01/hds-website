@@ -233,7 +233,7 @@ function Card(props: CardProps) {
 						<h3 className="text-h4 text-foreground mb-subheading text-balance group-hover:text-accent-text transition-colors">
 							{name}
 						</h3>
-						<div className="text-section-title font-black text-accent-text mb-subheading">
+						<div className="text-h1 text-accent-text mb-subheading">
 							{price}
 						</div>
 						<div className="typography">

@@ -74,7 +74,7 @@ export default async function TagPage({ params }: TagPageProps) {
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Tag
 					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance mb-heading">
+					<h1 className="text-page-title text-foreground text-balance mb-heading">
 						{tag.name}
 					</h1>
 					{tag.description && (

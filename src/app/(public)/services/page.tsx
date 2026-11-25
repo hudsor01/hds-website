@@ -64,7 +64,7 @@ export default function ServicesPage() {
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						What I Do
 					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+					<h1 className="text-page-title text-foreground text-balance">
 						Websites Built for Small Businesses
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
@@ -98,7 +98,7 @@ export default function ServicesPage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							What I Build
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							A Website, Done Right
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -116,7 +116,7 @@ export default function ServicesPage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Track Record
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Proven Results
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -153,7 +153,7 @@ export default function ServicesPage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							How It Works
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							My Process
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -174,7 +174,7 @@ export default function ServicesPage() {
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready for a website that{' '}
 								<span className="text-accent-text">
 									works as hard as you do?

@@ -1,5 +1,28 @@
 import { type ClassValue, clsx } from 'clsx'
-import { twMerge } from 'tailwind-merge'
+import { extendTailwindMerge } from 'tailwind-merge'
+
+// The heading API, prose steps and .text-eyebrow are font sizes that
+// tailwind-merge does not know. Without this it files them as text colors
+// and drops them when a color follows: twMerge('text-h4 text-foreground')
+// returns 'text-foreground'. Keep in step with the --text-* roles in
+// globals.css.
+const twMerge = extendTailwindMerge({
+	extend: {
+		theme: {
+			text: [
+				'page-title',
+				'h1',
+				'h2',
+				'h3',
+				'h4',
+				'lead',
+				'eyebrow',
+				'prose',
+				'prose-lead'
+			]
+		}
+	}
+})
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))

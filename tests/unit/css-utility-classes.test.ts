@@ -11,7 +11,7 @@
  * The real compiler decides: globals.css is loaded into Tailwind's
  * design system and every candidate is asked for its CSS. A class also
  * counts as defined when globals.css declares it as a selector
- * (`@layer components` classes such as `.text-h1`), or when it is a
+ * (`@layer components` classes such as `.text-eyebrow`), or when it is a
  * `group` / `peer` marker.
  *
  * Which string literals are class lists:

@@ -99,7 +99,7 @@ function StatusPanel({ tone, title, children }: StatusPanelProps) {
 							aria-hidden="true"
 						/>
 					</div>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+					<h1 className="text-page-title text-foreground text-balance">
 						{title}
 					</h1>
 					<div className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
@@ -173,7 +173,7 @@ async function TokenContent({ token }: { token: string }) {
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 						Client Feedback
 					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+					<h1 className="text-page-title text-foreground text-balance">
 						Thank You, {request.client_name}!
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">

@@ -186,9 +186,7 @@ function NewsletterSignupContent({
 				<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 					Stay in the loop
 				</p>
-				<h2 className="text-section-title text-foreground mb-3 text-balance">
-					{title}
-				</h2>
+				<h2 className="text-h1 text-foreground mb-3 text-balance">{title}</h2>
 				<p className="text-muted-foreground mb-6 max-w-xl mx-auto leading-relaxed">
 					{description}
 				</p>

@@ -240,7 +240,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 								)}
 
 								{/* Title */}
-								<h1 className="text-page-title text-foreground leading-tight text-balance mb-content-block">
+								<h1 className="text-page-title text-foreground text-balance mb-content-block">
 									{post.title}
 								</h1>
 
@@ -364,7 +364,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready for the website your business has earned?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">

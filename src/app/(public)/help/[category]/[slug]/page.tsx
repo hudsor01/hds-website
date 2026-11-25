@@ -164,7 +164,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 					<div className="rounded-xl border border-border bg-surface-raised p-8 md:p-10">
 						{/* Article Header */}
 						<header className="mb-comfortable">
-							<h1 className="text-page-title text-foreground leading-tight text-balance mb-3">
+							<h1 className="text-page-title text-foreground text-balance mb-3">
 								{article.title}
 							</h1>
 							{updatedDate && (
@@ -203,17 +203,6 @@ export default async function HelpArticlePage({ params }: PageProps) {
 											</a>
 										)
 									},
-									// Custom heading styles
-									h2: ({ children }) => (
-										<h2 className="text-xl md:text-2xl font-semibold text-foreground mt-heading mb-heading pb-2 border-b border-border">
-											{children}
-										</h2>
-									),
-									h3: ({ children }) => (
-										<h3 className="text-lg md:text-xl font-semibold text-foreground mt-content-block mb-3">
-											{children}
-										</h3>
-									),
 									// Custom list styles
 									ul: ({ children }) => (
 										<ul className="list-disc pl-6 space-y-tight my-4">

@@ -80,7 +80,7 @@ async function ShowcaseProjects() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Featured
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Real projects.{' '}
 							<span className="text-accent-text">One thing in common.</span>
 						</h2>
@@ -200,7 +200,7 @@ export default function ShowcasePage() {
 						    and one early audit even misread it as a missing logo
 						    (audit #243). Static now; the brand "personality" was
 						    costing us comprehension. */}
-					<h1 className="text-page-title text-foreground leading-tight">
+					<h1 className="text-page-title text-foreground text-balance">
 						Real Projects. Real Results.
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
@@ -258,7 +258,7 @@ export default function ShowcasePage() {
 								    header and the inline CTA, so all three are h2. This one
 								    renders in the static shell, ahead of the streamed
 								    projects in server HTML, so an h3 here read as h1 > h3. */}
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready to be the{' '}
 								<span className="text-accent-text">next one on this page?</span>
 							</h2>

@@ -132,7 +132,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 							<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-2">
 								Help Center
 							</p>
-							<h1 className="text-page-title text-foreground leading-tight text-balance">
+							<h1 className="text-page-title text-foreground text-balance">
 								{categoryInfo.name}
 							</h1>
 							<p className="text-lead text-muted-foreground mt-2">

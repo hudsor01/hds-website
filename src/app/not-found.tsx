@@ -60,7 +60,7 @@ export default function NotFound() {
 					</div>
 
 					<div className="mb-10">
-						<h2 className="text-section-title text-foreground mb-4 text-balance">
+						<h2 className="text-h1 text-foreground mb-4 text-balance">
 							Page Not Found
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-xl mx-auto">

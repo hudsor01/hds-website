@@ -104,7 +104,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 							{location.city}, {location.stateCode}
 						</span>
 					</div>
-					<h1 className="text-page-title text-foreground leading-tight text-balance mb-6">
+					<h1 className="text-page-title text-foreground text-balance mb-6">
 						{location.tagline}
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -120,7 +120,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							What I Offer
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							What I Build in {location.city}
 						</h2>
 					</div>
@@ -149,7 +149,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Coverage
 						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Areas I Serve in {location.city}
 						</h2>
 					</div>
@@ -179,7 +179,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready to Grow Your {location.city} Business?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
