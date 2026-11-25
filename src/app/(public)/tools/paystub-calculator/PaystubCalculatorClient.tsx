@@ -1,13 +1,18 @@
 /**
  * Paystub Calculator
  * Generate detailed payroll breakdowns with federal and state tax calculations
+ *
+ * Only PaystubUrlSync reads search params, so only it sits behind
+ * Suspense: the heading, intro and form stay in the server HTML.
  */
 
 'use client'
 
+import { Suspense } from 'react'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { PaystubForm } from '@/components/paystub/PaystubForm'
 import { PaystubNavigation } from '@/components/paystub/PaystubNavigation'
+import { PaystubUrlSync } from '@/components/paystub/PaystubUrlSync'
 import { Card } from '@/components/ui/card'
 import { usePaystubGenerator } from '@/hooks/use-paystub-generator'
 import { stateInsuranceLabel } from '@/lib/paystub-calculator/state-tax-calculations'
@@ -189,20 +194,30 @@ export default function PaystubCalculatorClient() {
 		) : null
 
 	return (
-		<ToolPageLayout
-			title="Paystub Calculator"
-			description="See take-home pay for each 2026 paycheck. Federal withholding follows the IRS payroll method with your Form W-4, plus Social Security, Medicare, pre-tax 401(k) and health premiums. State withholding uses the payroll formulas for CA, NY, IL, PA and MA, including CA SDI and NY and MA paid leave."
-			columns="single"
-			formSlot={formSlot}
-			resultSlot={resultSlot}
-			hasResult={
-				generator.resultsVisible && generator.paystubData.payPeriods.length > 0
-			}
-			actions={
-				generator.resultsVisible
-					? [{ type: 'print', label: 'Print', onClick: () => window.print() }]
-					: undefined
-			}
-		/>
+		<>
+			<Suspense fallback={null}>
+				<PaystubUrlSync
+					paystubData={generator.paystubData}
+					selectedState={generator.selectedState}
+					clearUrlRef={generator.clearUrlRef}
+				/>
+			</Suspense>
+			<ToolPageLayout
+				title="Paystub Calculator"
+				description="See take-home pay for each 2026 paycheck. Federal withholding follows the IRS payroll method with your Form W-4, plus Social Security, Medicare, pre-tax 401(k) and health premiums. State withholding uses the payroll formulas for CA, NY, IL, PA and MA, including CA SDI and NY and MA paid leave."
+				columns="single"
+				formSlot={formSlot}
+				resultSlot={resultSlot}
+				hasResult={
+					generator.resultsVisible &&
+					generator.paystubData.payPeriods.length > 0
+				}
+				actions={
+					generator.resultsVisible
+						? [{ type: 'print', label: 'Print', onClick: () => window.print() }]
+						: undefined
+				}
+			/>
+		</>
 	)
 }

@@ -2,11 +2,17 @@
  * Website Cost Estimator Client Component
  * An illustrative planning model with URL state, shown beside published
  * market ranges for context. Not market data and not a quote.
+ *
+ * Reading the URL with nuqs suspends prerendering, so only that part sits
+ * behind Suspense: the fallback renders the same page (heading,
+ * description and form) with default values, which keeps the H1 and form
+ * in the server HTML.
  */
 
 'use client'
 
-import { useQueryStates } from 'nuqs'
+import { type Nullable, useQueryStates, type Values } from 'nuqs'
+import { Suspense } from 'react'
 import { toast } from 'sonner'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
@@ -31,6 +37,7 @@ import {
 	FEATURES,
 	type Feature,
 	formatWholeDollars,
+	INCLUDED_PAGES,
 	MAX_PAGES,
 	MIN_PAGES,
 	parsePageCount,
@@ -51,8 +58,31 @@ const CLUTCH_FIGURES = [
 
 const PAGES_ERROR = `Enter a whole number from ${MIN_PAGES} to ${MAX_PAGES}.`
 
-export function CostEstimatorClient() {
-	const [params, setParams] = useQueryStates(estimatorParsers)
+type EstimatorParams = Values<typeof estimatorParsers>
+
+interface CostEstimatorViewProps {
+	params: EstimatorParams
+	setParams: (values: Partial<Nullable<EstimatorParams>> | null) => void
+	interactive: boolean
+}
+
+/** Matches the estimatorParsers defaults, for the server-rendered shell. */
+const DEFAULT_PARAMS: EstimatorParams = {
+	type: null,
+	pages: String(INCLUDED_PAGES),
+	features: [],
+	design: 'standard',
+	timeline: 'normal',
+	maint: false
+}
+
+const noop = () => undefined
+
+function CostEstimatorView({
+	params,
+	setParams,
+	interactive
+}: CostEstimatorViewProps) {
 	const { type: websiteType, features, design, timeline, maint } = params
 	const pages = parsePageCount(params.pages)
 
@@ -75,6 +105,9 @@ export function CostEstimatorClient() {
 			return
 		}
 		setParams({ type: selected.value })
+		if (!interactive) {
+			return
+		}
 		trackEvent('calculator_used', {
 			calculator_type: 'cost-estimator',
 			website_type: selected.value,
@@ -376,5 +409,34 @@ export function CostEstimatorClient() {
 			}
 			actions={actions}
 		/>
+	)
+}
+
+function CostEstimatorWithUrlState() {
+	const [params, setParams] = useQueryStates(estimatorParsers)
+	return (
+		<CostEstimatorView
+			params={params}
+			setParams={values => {
+				void setParams(values)
+			}}
+			interactive
+		/>
+	)
+}
+
+export function CostEstimatorClient() {
+	return (
+		<Suspense
+			fallback={
+				<CostEstimatorView
+					params={DEFAULT_PARAMS}
+					setParams={noop}
+					interactive={false}
+				/>
+			}
+		>
+			<CostEstimatorWithUrlState />
+		</Suspense>
 	)
 }

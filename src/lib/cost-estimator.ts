@@ -69,7 +69,7 @@ const TIMELINE_VALUES = TIMELINES.map(t => t.value)
 
 export const MIN_PAGES = 1
 export const MAX_PAGES = 100
-const INCLUDED_PAGES = 5
+export const INCLUDED_PAGES = 5
 const COST_PER_EXTRA_PAGE = 500
 const RUSH_MULTIPLIER = 1.25
 const RUSH_WEEKS_FACTOR = 0.7
