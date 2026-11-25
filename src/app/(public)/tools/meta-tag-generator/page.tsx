@@ -8,7 +8,7 @@ import { buildMetadata } from '@/lib/seo-config'
 import MetaTagGeneratorClient from './MetaTagGeneratorClient'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Meta Tag Generator | Hudson Digital Solutions',
+	title: 'Meta Tag Generator | Hudson Digital',
 	description:
 		'Generate title, description, canonical, Open Graph and X (Twitter) Card tags for your web pages. Free meta tag generator with a live preview.',
 	path: '/tools/meta-tag-generator',

@@ -8,7 +8,7 @@ import { buildMetadata } from '@/lib/seo-config'
 import PaystubCalculatorClient from './PaystubCalculatorClient'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'Paystub Calculator | Hudson Digital Solutions',
+	title: 'Paystub Calculator | Hudson Digital',
 	description:
 		'Free 2026 paystub calculator. Federal withholding from your W-4, Social Security, Medicare, 401(k) and state tax for CA, NY, IL, PA and MA.',
 	path: '/tools/paystub-calculator',

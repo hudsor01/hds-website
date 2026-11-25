@@ -8,7 +8,7 @@ import { buildMetadata } from '@/lib/seo-config'
 import { ROICalculatorClient } from './ROICalculatorClient'
 
 export const metadata: Metadata = buildMetadata({
-	title: 'ROI Calculator | Hudson Digital Solutions',
+	title: 'ROI Calculator | Hudson Digital',
 	description:
 		'Estimate the added revenue from a higher website conversion rate. Enter what you would spend to see first-year ROI and payback months. Free ROI calculator.',
 	path: '/tools/roi-calculator',
