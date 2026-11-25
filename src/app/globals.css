@@ -529,14 +529,12 @@ button,
 	}
 }
 
-/* Hero grid background. One parametric pattern: set --grid-size or
- * --grid-alpha on the element to change the cell or line strength. */
+/* Hero grid background: --color-border lines at 15%, 3rem cells. Set
+ * --grid-size on the element to change the cell. The alpha stays a
+ * literal so Tailwind's no-color-mix fallback keeps it (with a var()
+ * percentage the fallback drops to a solid border-color line). */
 @utility grid-pattern {
-	--grid-line: color-mix(
-		in oklab,
-		var(--color-border) var(--grid-alpha, 15%),
-		transparent
-	);
+	--grid-line: color-mix(in oklab, var(--color-border) 15%, transparent);
 	background-image:
 		linear-gradient(var(--grid-line) 1px, transparent 1px),
 		linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
