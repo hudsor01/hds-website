@@ -134,12 +134,11 @@ export default function JsonFormatterClient() {
 		}
 	]
 
-	const borderClass =
-		status?.kind === 'error'
-			? 'border-destructive'
-			: status?.kind === 'valid'
-				? 'border-success'
-				: 'border-border'
+	// An error border comes from .field[aria-invalid] (set below).
+	const fieldClass =
+		status?.kind === 'valid'
+			? 'field font-mono border-success'
+			: 'field font-mono'
 
 	const formSlot = (
 		<div className="space-y-comfortable">
@@ -174,7 +173,7 @@ export default function JsonFormatterClient() {
 					onChange={e => changeInput(e.target.value)}
 					aria-describedby={status ? statusId : undefined}
 					aria-invalid={status?.kind === 'error' ? true : undefined}
-					className={`w-full rounded-md border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground ${borderClass}`}
+					className={fieldClass}
 					rows={10}
 					placeholder='{"key": "value"}'
 					spellCheck={false}
@@ -213,7 +212,7 @@ export default function JsonFormatterClient() {
 						id={indentId}
 						value={indent}
 						onChange={e => changeIndent(e.target.value as JsonIndent)}
-						className="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
+						className="field w-auto"
 					>
 						{INDENT_OPTIONS.map(option => (
 							<option key={option.value} value={option.value}>

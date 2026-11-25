@@ -95,7 +95,7 @@ export default function CommaSeparatorClient() {
 					id="comma-separator-input"
 					value={input}
 					onChange={event => setInput(event.target.value)}
-					className="w-full rounded-md border border-border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground"
+					className="field font-mono"
 					rows={8}
 					placeholder={PLACEHOLDER}
 					spellCheck={false}
@@ -120,7 +120,7 @@ export default function CommaSeparatorClient() {
 						id={delimiterFieldId}
 						value={delimiter}
 						onChange={event => setDelimiter(event.target.value as Delimiter)}
-						className="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
+						className="field w-auto"
 					>
 						{DELIMITER_OPTIONS.map(option => (
 							<option key={option.value} value={option.value}>
@@ -141,7 +141,7 @@ export default function CommaSeparatorClient() {
 						id={quoteFieldId}
 						value={quote}
 						onChange={event => setQuote(event.target.value as QuoteStyle)}
-						className="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
+						className="field w-auto"
 					>
 						{QUOTE_OPTIONS.map(option => (
 							<option key={option.value} value={option.value}>
@@ -160,7 +160,7 @@ export default function CommaSeparatorClient() {
 						type="checkbox"
 						checked={dedupe}
 						onChange={event => setDedupe(event.target.checked)}
-						className="rounded border-border text-accent"
+						className="size-4 accent-primary"
 					/>
 					Remove duplicates
 				</label>

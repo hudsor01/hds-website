@@ -249,7 +249,7 @@ async function CalculatorLeadDetail({
 										min="0"
 										step="0.01"
 										required
-										className="w-32 rounded-md border border-border bg-surface-base p-2 text-sm text-foreground"
+										className="field w-32"
 									/>
 								</label>
 								<button

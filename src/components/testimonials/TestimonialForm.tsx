@@ -41,8 +41,7 @@ const RATING_LABELS: Record<number, string> = {
 	5: 'Excellent'
 }
 
-const INPUT_CLS =
-	'w-full rounded-md border border-border bg-background px-4 py-2.5 text-foreground'
+const INPUT_CLS = 'field'
 
 function starLabel(star: number): string {
 	return star === 1 ? 'Rate 1 star' : `Rate ${star} stars`
@@ -271,7 +270,7 @@ export function TestimonialForm({ token, defaultName }: TestimonialFormProps) {
 					value={formData.content}
 					onChange={e => handleChange('content', e.target.value)}
 					rows={5}
-					className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground"
+					className="field"
 					placeholder="Tell me about your experience working with Hudson Digital Solutions..."
 					aria-describedby="content-count"
 					required

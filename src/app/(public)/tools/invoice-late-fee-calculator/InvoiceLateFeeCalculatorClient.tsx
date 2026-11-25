@@ -100,7 +100,7 @@ export default function InvoiceLateFeeCalculatorClient() {
 					id={modeFieldId}
 					value={mode}
 					onChange={event => setMode(event.target.value as LateFeeMode)}
-					className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+					className="field"
 				>
 					<option value="percent">Percentage of the invoice</option>
 					<option value="flat">Flat one-time fee</option>
@@ -140,7 +140,7 @@ export default function InvoiceLateFeeCalculatorClient() {
 							id={periodFieldId}
 							value={period}
 							onChange={event => setPeriod(event.target.value as FeePeriod)}
-							className="rounded-md border border-border bg-background px-3 py-2.5 text-sm text-foreground"
+							className="field w-auto"
 						>
 							{PERIODS.map(p => (
 								<option key={p.value} value={p.value}>

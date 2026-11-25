@@ -48,8 +48,7 @@ const proposalDraft = createLocalStorageDraft(
 
 const VALIDITY_DAYS = 30
 
-const ROW_INPUT_CLASS =
-	'w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground'
+const ROW_INPUT_CLASS = 'field'
 
 const createPricingItem = (): ProposalPricingItem => ({
 	id: crypto.randomUUID(),
@@ -482,7 +481,7 @@ export default function ProposalGeneratorClient() {
 								value={item}
 								onChange={e => handleScopeItemChange(index, e.target.value)}
 								placeholder={`Scope item ${number}...`}
-								className="flex-1 rounded-md border border-border bg-background px-4 py-2 text-sm text-foreground"
+								className="field flex-1"
 							/>
 							<button
 								type="button"
@@ -631,7 +630,7 @@ export default function ProposalGeneratorClient() {
 									handlePricingChange(item.id, { description: e.target.value })
 								}
 								placeholder="Service or deliverable..."
-								className="flex-1 min-w-0 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+								className="field flex-1 min-w-0"
 							/>
 							<label htmlFor={`pricing-price-${item.id}`} className="sr-only">
 								Pricing item {number} price in dollars
@@ -649,7 +648,7 @@ export default function ProposalGeneratorClient() {
 									})
 								}
 								placeholder="0.00"
-								className="w-28 sm:w-32 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground text-right"
+								className="field w-28 sm:w-32 text-right"
 							/>
 							<button
 								type="button"

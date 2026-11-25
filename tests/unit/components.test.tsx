@@ -125,10 +125,8 @@ describe('FloatingInput Component', () => {
 
 		const input = screen.getByRole('textbox', { name: /Disabled Input/i })
 		expect(input).toBeDisabled()
-		expect(input).toHaveClass(
-			'disabled:cursor-not-allowed',
-			'disabled:opacity-50'
-		)
+		// The disabled look (cursor, opacity) is .field:disabled in globals.css
+		expect(input).toHaveClass('field')
 	})
 
 	it('should call onBlur when focus is lost', () => {
@@ -424,34 +422,25 @@ describe('Button Polish — COMP-01', () => {
 })
 
 describe('Input Polish — COMP-02', () => {
-	it('input has aria-invalid:border-destructive class', () => {
+	// Border, fill, size and the invalid state live in the .field component
+	// class (globals.css), shared by every primitive and native control.
+	it('input uses the shared field treatment', () => {
 		const { container } = render(<Input />)
 		const input = container.querySelector('input')
-		expect(input?.className ?? '').toContain('aria-invalid:border-destructive')
+		expect(input).toHaveClass('field')
 	})
 
-	it('input has aria-invalid:focus-visible:outline-destructive class', () => {
+	it('input carries no per-primitive border, fill or ring utilities', () => {
 		const { container } = render(<Input />)
-		const input = container.querySelector('input')
-		expect(input?.className ?? '').toContain(
-			'aria-invalid:focus-visible:outline-destructive'
-		)
+		const cls = container.querySelector('input')?.className ?? ''
+		expect(cls).not.toContain('border-input')
+		expect(cls).not.toMatch(/(^|\s)bg-/)
+		expect(cls).not.toContain('ring')
 	})
 
-	it('input uses bg-surface-sunken (not bg-background) for depth', () => {
-		const { container } = render(<Input />)
-		const input = container.querySelector('input')
-		const cls = input?.className ?? ''
-		expect(cls).toContain('bg-surface-sunken')
-		expect(cls).not.toContain('bg-background')
-	})
-
-	it('textarea already has aria-invalid:border-destructive (parity check)', () => {
+	it('textarea shares the field treatment (parity check)', () => {
 		const { container } = render(<Textarea />)
-		const textarea = container.querySelector('textarea')
-		expect(textarea?.className ?? '').toContain(
-			'aria-invalid:border-destructive'
-		)
+		expect(container.querySelector('textarea')).toHaveClass('field')
 	})
 })
 

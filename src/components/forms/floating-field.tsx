@@ -95,7 +95,7 @@ export function FloatingInput({
 				disabled={disabled}
 				id={id || name}
 				placeholder=" "
-				className={cn('pt-4 pb-2', isActive && 'border-accent', className)}
+				className={cn('pt-4 pb-2', isActive && 'border-accent-text', className)}
 				{...props}
 			/>
 
@@ -165,7 +165,7 @@ export function FloatingTextarea({
 				placeholder=" "
 				className={cn(
 					'pt-6 pb-2 resize-none',
-					isActive && 'border-accent',
+					isActive && 'border-accent-text',
 					className
 				)}
 				{...props}

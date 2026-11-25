@@ -115,7 +115,7 @@ export function UnsubscribeForm({ email, token }: UnsubscribeFormProps) {
 					aria-readonly="true"
 					aria-describedby={state.error ? 'unsubscribe-error' : undefined}
 					aria-invalid={state.error ? 'true' : undefined}
-					className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground"
+					className="field"
 				/>
 				<input type="hidden" name="token" value={token} />
 			</div>

@@ -166,7 +166,7 @@ export default function MetaTagGeneratorClient() {
 							name="pageDescription"
 							value={inputs.description}
 							onChange={e => handleInputChange('description', e.target.value)}
-							className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground"
+							className="field"
 							rows={3}
 							required
 							aria-invalid={errors.description ? true : undefined}
@@ -280,7 +280,7 @@ export default function MetaTagGeneratorClient() {
 							type="checkbox"
 							checked={includeDocumentBasics}
 							onChange={e => setIncludeDocumentBasics(e.target.checked)}
-							className="rounded border-border text-accent"
+							className="size-4 accent-primary"
 						/>
 						Include charset and viewport lines (once per page, only if your
 						template lacks them)

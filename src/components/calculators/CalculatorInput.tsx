@@ -42,12 +42,7 @@ export function CalculatorInput({
 
 				<Input
 					id={id}
-					className={cn(
-						prefix && 'pl-7',
-						suffix && 'pr-12',
-						error && 'border-destructive',
-						className
-					)}
+					className={cn(prefix && 'pl-7', suffix && 'pr-12', className)}
 					aria-invalid={error ? true : undefined}
 					aria-describedby={
 						error ? `${id}-error` : helpText ? `${id}-help` : undefined

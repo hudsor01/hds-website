@@ -239,7 +239,7 @@ export default function TimeCardCalculatorClient() {
 									onChange={event =>
 										updateRow(row.id, { overnight: event.target.checked })
 									}
-									className="rounded border-border text-accent"
+									className="size-4 accent-primary"
 								/>
 								Overnight shift (clock-out is the next day)
 							</label>

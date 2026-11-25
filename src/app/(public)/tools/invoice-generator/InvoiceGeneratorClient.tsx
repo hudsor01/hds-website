@@ -59,8 +59,7 @@ const DEFAULT_TERMS: InvoicePaymentTerms = 'Net 30'
 const IRS_RECORDS_URL =
 	'https://www.irs.gov/businesses/small-businesses-self-employed/how-long-should-i-keep-records'
 
-const LINE_INPUT_CLASS =
-	'w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground'
+const LINE_INPUT_CLASS = 'field'
 
 const LINE_LABEL_CLASS = 'text-xs text-muted-foreground sm:sr-only'
 
@@ -463,7 +462,7 @@ export default function InvoiceGeneratorClient() {
 								name="paymentTerms"
 								value={invoiceData.paymentTerms}
 								onChange={e => handlePaymentTermsChange(e.target.value)}
-								className="w-full rounded-md border border-border bg-background px-4 py-2.5 text-foreground"
+								className="field"
 							>
 								{INVOICE_PAYMENT_TERMS.map(term => (
 									<option key={term} value={term}>
@@ -651,7 +650,7 @@ export default function InvoiceGeneratorClient() {
 										}))
 									}
 									placeholder="0"
-									className="w-24 rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground text-right"
+									className="field w-24 text-right"
 								/>
 							</div>
 							{invoiceData.taxRate > 0 && (

@@ -14,7 +14,6 @@ import {
 	MAX_INTEREST_RATE,
 	type TtlFieldErrors
 } from '@/lib/ttl-calculator/calculator'
-import { cn } from '@/lib/utils'
 import type { VehicleInputs } from '@/types/ttl-types'
 
 const LOAN_TERMS = [24, 36, 48, 60, 72, 84] as const
@@ -48,7 +47,6 @@ export function FinancingInputs({
 						value={vehicleInput.interestRate}
 						onChange={e => updateInput('interestRate', Number(e.target.value))}
 						placeholder="0.0"
-						className={cn(rateError && 'border-destructive border-2')}
 						aria-invalid={rateError ? true : undefined}
 						aria-describedby={rateError ? 'interestRate-error' : undefined}
 					/>

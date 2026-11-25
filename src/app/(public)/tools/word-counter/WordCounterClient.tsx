@@ -50,7 +50,7 @@ export default function WordCounterClient() {
 					id="word-counter-input"
 					value={text}
 					onChange={event => setText(event.target.value)}
-					className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
+					className="field"
 					rows={14}
 					placeholder="Type or paste your text to count words, characters, sentences and reading time."
 				/>

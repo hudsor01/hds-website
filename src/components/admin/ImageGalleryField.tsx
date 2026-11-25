@@ -44,8 +44,7 @@ interface ImageGalleryFieldProps {
 	error?: string
 }
 
-const URL_INPUT_CLS =
-	'flex-1 px-3 py-2 rounded-md border border-border bg-background text-foreground'
+const URL_INPUT_CLS = 'field flex-1'
 
 const ADD_BUTTON_CLS =
 	'inline-flex items-center px-3 py-2 rounded-md text-sm font-medium text-surface-base bg-accent-text hover:opacity-90 transition-smooth disabled:opacity-60'

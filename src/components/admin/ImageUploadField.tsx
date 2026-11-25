@@ -68,8 +68,7 @@ interface ImageUploadFieldProps {
 	error?: FieldErrorLike
 }
 
-const URL_INPUT_CLS =
-	'w-full px-3 py-2 rounded-md border border-border bg-background text-foreground'
+const URL_INPUT_CLS = 'field'
 
 const REMOVE_BUTTON_CLS =
 	'inline-flex items-center px-2 py-1 rounded-md text-xs font-medium text-destructive border border-destructive/40 hover:bg-destructive/10 transition-smooth'

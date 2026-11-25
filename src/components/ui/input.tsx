@@ -5,7 +5,7 @@ import type { InputHTMLAttributes, Ref } from 'react'
 import { cn } from '@/lib/utils'
 
 const inputVariants = cva(
-	'flex h-10 w-full rounded-md border border-input bg-surface-sunken px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground aria-invalid:border-destructive aria-invalid:focus-visible:outline-destructive disabled:cursor-not-allowed disabled:opacity-50',
+	'field flex file:border-0 file:bg-transparent file:text-sm file:font-medium',
 	{
 		variants: {
 			variant: {

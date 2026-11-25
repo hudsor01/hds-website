@@ -1,6 +1,5 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { cn } from '@/lib/utils'
 
 interface CurrencyInputProps {
 	label: string
@@ -41,7 +40,7 @@ export function CurrencyInput({
 					value={value || ''}
 					onChange={e => onChange(parseFloat(e.target.value) || 0)}
 					variant="currency"
-					className={cn(error && 'border-destructive border-2', className)}
+					className={className}
 					placeholder={placeholder}
 					aria-invalid={!!error}
 				/>

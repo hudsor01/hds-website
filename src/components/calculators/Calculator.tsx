@@ -299,7 +299,7 @@ export function Calculator() {
 											? `${window.location.origin}${window.location.pathname}?c=${shareCode}`
 											: ''
 									}
-									className="flex-1 px-3 py-2 bg-muted rounded-lg text-sm text-foreground border border-border"
+									className="field flex-1"
 								/>
 								<button
 									onClick={copyShareLink}
@@ -329,7 +329,7 @@ export function Calculator() {
 									placeholder="your@email.com"
 									value={emailInput}
 									onChange={e => setEmailInput(e.target.value)}
-									className="flex-1 px-3 py-2 bg-background rounded-lg text-sm text-foreground border border-border"
+									className="field flex-1"
 								/>
 								<button
 									onClick={handleEmailResults}

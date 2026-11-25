@@ -194,9 +194,8 @@ describe('ContactForm Component', () => {
 		renderWithQueryClient(<ContactForm />)
 
 		const nameInput = screen.getByLabelText(/first name/i)
-		// shadcn Input uses these standard classes
-		expect(nameInput).toHaveClass('rounded-md')
-		expect(nameInput).toHaveClass('border')
+		// Every form control shares the .field treatment (globals.css)
+		expect(nameInput).toHaveClass('field')
 	})
 
 	it('should render all textbox inputs', async () => {

@@ -209,9 +209,6 @@ export function PaystubForm({
 								id="taxYear"
 								aria-labelledby="taxYear-label"
 								aria-invalid={!!formErrors.taxYear}
-								className={
-									formErrors.taxYear ? 'border-destructive border-2' : undefined
-								}
 							>
 								<SelectValue placeholder="Select year" />
 							</SelectTrigger>

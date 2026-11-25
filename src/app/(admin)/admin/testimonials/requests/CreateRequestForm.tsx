@@ -30,8 +30,7 @@ const DEFAULTS: FormShape = {
 	projectName: ''
 }
 
-const INPUT_CLS =
-	'w-full px-3 py-2 rounded-md border border-border bg-background text-foreground'
+const INPUT_CLS = 'field'
 
 export function CreateRequestForm() {
 	const [formError, setFormError] = useState<string | null>(null)

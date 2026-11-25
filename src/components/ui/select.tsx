@@ -7,7 +7,7 @@ import type { ComponentPropsWithoutRef } from 'react'
 import { cn } from '@/lib/utils'
 
 const selectTriggerVariants = cva(
-	'flex-between h-10 w-full rounded-md border border-input bg-surface-sunken px-3 py-2 text-sm placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+	'field flex items-center justify-between gap-tight text-left [&>span]:line-clamp-1',
 	{
 		variants: {
 			variant: {

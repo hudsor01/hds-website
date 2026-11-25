@@ -221,7 +221,7 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 								min="0"
 								required
 								defaultValue={lead.dealValue ?? ''}
-								className="rounded-md border border-border bg-surface-base px-3 py-1.5 text-sm text-foreground"
+								className="field w-auto"
 							/>
 						</label>
 						<button
@@ -339,7 +339,7 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 							rows={3}
 							maxLength={4000}
 							required
-							className="w-full rounded-md border border-border bg-surface-base p-2 text-sm text-foreground"
+							className="field"
 							placeholder="Type a note about this lead..."
 						/>
 						<button
