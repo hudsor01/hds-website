@@ -34,6 +34,8 @@ describe('ToolPageLayout — TOOL-01: Header', () => {
 
 		const heading = screen.getByRole('heading', { level: 1, name: 'Test Tool' })
 		expect(heading).toBeInTheDocument()
+		// D2: tool titles use the same page-title step as every other page.
+		expect(heading.className).toContain('text-page-title')
 	})
 
 	it('renders description paragraph with text-lead and text-muted-foreground classes', () => {

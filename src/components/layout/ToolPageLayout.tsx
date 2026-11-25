@@ -258,7 +258,7 @@ export function ToolPageLayout({
 
 				{/* Header */}
 				<div className="mb-10">
-					<h1 className="mb-3 text-h1 text-foreground leading-tight">
+					<h1 className="mb-3 text-page-title text-foreground text-balance">
 						{title}
 					</h1>
 					<p className="max-w-2xl text-lead text-muted-foreground">

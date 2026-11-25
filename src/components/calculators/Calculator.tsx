@@ -209,7 +209,7 @@ export function Calculator() {
 			<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 max-w-6xl mx-auto">
 				{/* Header */}
 				<div className="mb-10">
-					<h1 className="mb-3 text-h1 text-foreground leading-tight">
+					<h1 className="mb-3 text-page-title text-foreground text-balance">
 						Texas TTL Calculator
 					</h1>
 					<p className="max-w-2xl text-lead text-muted-foreground">
