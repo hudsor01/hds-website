@@ -235,6 +235,86 @@ test.describe('Contract Generator', () => {
 	})
 })
 
+// These pages read URL state behind Suspense (QA-04); shared links must
+// still restore after hydration and Start over must still clear the URL
+test.describe('Tool URL state after the server-rendered shell', () => {
+	test('a shared mortgage link restores and Start Over clears it', async ({
+		page
+	}) => {
+		await page.goto('/tools/mortgage-calculator?price=500000&dp=50000&type=fha')
+		// Wait for the streamed content to replace the Suspense fallback
+		await page.waitForLoadState('networkidle')
+		await expect(page.locator('#homePrice')).toHaveValue('500000')
+		await expect(page.locator('#downPayment')).toHaveValue('50000')
+		await expect(
+			page.getByRole('combobox', { name: 'Loan Type', exact: true })
+		).toContainText('FHA')
+
+		await page.getByRole('button', { name: 'Calculate Payment' }).click()
+		await page.getByRole('button', { name: 'Start Over' }).click()
+		await expect(page).toHaveURL(/\/tools\/mortgage-calculator$/)
+		await expect(page.locator('#homePrice')).toHaveValue('350000')
+	})
+
+	test('a shared cost estimator link restores and Start over clears it', async ({
+		page
+	}) => {
+		await page.goto(
+			'/tools/cost-estimator?type=e-commerce&pages=12&features=blog,payment'
+		)
+		// Wait for the streamed content to replace the Suspense fallback
+		await page.waitForLoadState('networkidle')
+		await expect(page.locator('#numberOfPages')).toHaveValue('12')
+		await expect(
+			page.getByRole('combobox', { name: /^Website Type/ })
+		).toContainText('E-Commerce Store')
+		await expect(
+			page.getByRole('checkbox', { name: 'Blog/News Section' })
+		).toBeChecked()
+
+		await page.getByRole('button', { name: 'Start over' }).click()
+		await expect(page).toHaveURL(/\/tools\/cost-estimator$/)
+		await expect(page.locator('#numberOfPages')).toHaveValue('5')
+	})
+
+	test('the paystub form mirrors to the URL and Clear Form clears it', async ({
+		page
+	}) => {
+		await page.goto('/tools/paystub-calculator?name=Jane&rate=30&hours=80')
+		// Wait for the streamed content to replace the Suspense fallback
+		await page.waitForLoadState('networkidle')
+		await expect(page.locator('#employeeName')).toHaveValue('Jane')
+		await expect(page.locator('#hourlyRate')).toHaveValue('30')
+
+		await page.locator('#employeeName').fill('Janet')
+		await expect(page).toHaveURL(/name=Janet/)
+
+		await page.getByRole('button', { name: 'Clear Form' }).click()
+		await expect(page).not.toHaveURL(/name=/)
+		await expect(page.locator('#employeeName')).toHaveValue('')
+	})
+})
+
+test.describe('ROI Calculator bounds', () => {
+	test('a 1e12 visitor link shows the visitors error and no results', async ({
+		page
+	}) => {
+		await page.goto(
+			'/tools/roi-calculator?traffic=1000000000000&conv=2&aov=100'
+		)
+		await expect(
+			page.getByText('Enter 100,000,000 visitors or fewer.')
+		).toBeVisible()
+		await expect(page.getByText('Current Annual Revenue')).toHaveCount(0)
+	})
+
+	test('large results read in compact notation', async ({ page }) => {
+		await page.goto('/tools/roi-calculator?traffic=100000000&conv=2&aov=1000')
+		// 100,000,000 x 2% x $1,000 x 12 = $24 billion a year
+		await expect(page.getByText('$24B', { exact: true })).toBeVisible()
+	})
+})
+
 // Heading levels in the page content (the footer is owned elsewhere) must
 // never skip a level going down, for example an h2 followed by an h4.
 async function headingSkips(page: Page): Promise<string[]> {
