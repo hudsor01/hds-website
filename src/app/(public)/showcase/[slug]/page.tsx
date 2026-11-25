@@ -19,7 +19,8 @@ import {
 } from '@/components/ui/breadcrumb'
 import { CTASection } from '@/components/utilities/CTASection'
 import { JsonLd } from '@/components/utilities/JsonLd'
-import { buildMetadata } from '@/lib/seo-config'
+import { env } from '@/env'
+import { buildMetadata, qualifiedTitle } from '@/lib/seo-config'
 import {
 	BUSINESS_ID,
 	generateBreadcrumbSchema,
@@ -31,6 +32,7 @@ import {
 	isDetailedShowcase,
 	type ShowcaseItem
 } from '@/lib/showcase'
+import { showcaseStaticParams } from './static-params'
 
 // Every published showcase item is prerendered at build. "not-found" matching
 // is the Cache Components replacement for `dynamicParams = false` (same as
@@ -41,16 +43,13 @@ import {
 // plus a deploy, so this matches current practice.
 export const unstable_paramMatching = { slug: 'not-found' }
 
-// Generate static params for all showcase items
+// With a database configured, an empty slug list fails the build instead of
+// shipping a deploy where every showcase page 404s (see static-params.ts).
 export async function generateStaticParams() {
-	const slugs = await getAllShowcaseSlugs()
-	const results = slugs.map(slug => ({ slug }))
-
-	if (results.length === 0) {
-		return [{ slug: '__placeholder__' }]
-	}
-
-	return results
+	return showcaseStaticParams(
+		await getAllShowcaseSlugs(),
+		Boolean(env.POSTGRES_URL)
+	)
 }
 
 export async function generateMetadata({
@@ -71,7 +70,7 @@ export async function generateMetadata({
 	const socialTitle = `${item.title} | ${typeLabel}`
 
 	return buildMetadata({
-		title: `${socialTitle} | Hudson Digital`,
+		title: qualifiedTitle(item.title, typeLabel),
 		description: item.description,
 		path: `/showcase/${slug}`,
 		socialTitle,
