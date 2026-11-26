@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/nextjs'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { BUSINESS_INFO } from '@/lib/constants/business'
+import { fontVariables } from './fonts'
 import './globals.css'
 
 export default function GlobalError({
@@ -19,7 +20,7 @@ export default function GlobalError({
 	}, [error])
 
 	return (
-		<html lang="en">
+		<html lang="en" className={fontVariables}>
 			<body className="min-h-screen flex items-center justify-center p-6 font-sans bg-background text-foreground">
 				<div className="max-w-md w-full text-center">
 					<div className="w-16 h-16 mx-auto mb-6 bg-destructive-light rounded-full flex items-center justify-center">

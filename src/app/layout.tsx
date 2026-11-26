@@ -92,7 +92,7 @@ export default function RootLayout({
 	return (
 		<html
 			lang="en"
-			className="motion-safe:scroll-smooth"
+			className={`${fontVariables} motion-safe:scroll-smooth`}
 			data-scroll-behavior="smooth"
 		>
 			<head>
@@ -158,7 +158,7 @@ export default function RootLayout({
 				<meta name="HandheldFriendly" content="true" />
 				<meta name="MobileOptimized" content="320" />
 			</head>
-			<body className={`${fontVariables} antialiased`} suppressHydrationWarning>
+			<body className="antialiased" suppressHydrationWarning>
 				<a
 					href="#main-content"
 					className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-background focus:text-foreground focus:rounded-md focus:shadow-lg"

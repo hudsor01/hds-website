@@ -191,13 +191,11 @@
 	}
 }
 
-/* Font family tokens. Tailwind v4 requires `@theme inline` when token
- * values reference runtime CSS variables (e.g. next/font output) so the
- * generated utilities (`font-sans`, `font-display`, `font-mono`) inline
- * the runtime var directly instead of looping through `--font-sans` at
- * `:root` (where the runtime var is undefined). See:
- * https://tailwindcss.com/docs/theme#referencing-other-variables */
-@theme inline {
+/* Font family tokens. next/font puts its source variables
+ * (--font-hanken-grotesk ...) on <html> (fonts.ts), so these resolve at
+ * :root: preflight's html font-family, the h1-h6 and code base rules and
+ * the font-sans / font-display / font-mono utilities all read them. */
+@theme {
 	--font-sans: var(--font-hanken-grotesk), system-ui, sans-serif;
 	--font-display: var(--font-roboto-serif), Georgia, serif;
 	--font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
@@ -241,20 +239,9 @@ html {
 	scrollbar-gutter: stable;
 }
 
-/* `@theme inline` inlines font tokens into Tailwind utility classes at
- * build time but does NOT emit `--font-sans` (etc.) as runtime custom
- * properties on `:root`. Bare `var(--font-sans)` consumers (body rule
- * below, h1-h6 in @layer base, code in @layer base) therefore need the
- * var defined at a cascade level where `--font-hanken-grotesk` etc.
- * are visible — `<body>` is where next/font puts those variables, so
- * we assign here. */
 body {
-	--font-sans: var(--font-hanken-grotesk), system-ui, sans-serif;
-	--font-display: var(--font-roboto-serif), Georgia, serif;
-	--font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 	background-color: var(--color-background);
 	color: var(--color-foreground);
-	font-family: var(--font-sans);
 }
 
 /* `@layer base` so utility classes like `font-sans` (emitted to

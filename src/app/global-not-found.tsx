@@ -5,10 +5,8 @@ import './globals.css'
 
 export default function GlobalNotFound() {
 	return (
-		<html lang="en">
-			<body
-				className={`${fontVariables} antialiased min-h-screen flex items-center justify-center p-6 font-sans bg-background text-foreground`}
-			>
+		<html lang="en" className={fontVariables}>
+			<body className="antialiased min-h-screen flex items-center justify-center p-6 font-sans bg-background text-foreground">
 				<div className="max-w-2xl w-full text-center">
 					<div className="w-32 h-32 mx-auto mb-8 bg-muted rounded-full flex items-center justify-center text-5xl text-muted-foreground">
 						404
