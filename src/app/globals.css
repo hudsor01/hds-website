@@ -127,9 +127,11 @@
 	 * size (WCAG 1.4.4); a bare vw term never grows with either. Zoom also
 	 * shrinks the CSS viewport, so a fluid heading is under 2x at the 200%
 	 * step on wide windows. WCAG 1.4.4 asks only that text can reach 200%
-	 * by some zoom level, so keep max <= 2.5 x min: every step then reaches
-	 * 2x within the browser's 500% zoom. */
-	--text-page-title: clamp(2.5rem, 1.8424rem + 2.697vw, 4rem);
+	 * by some zoom level. Safari's page zoom stops at 300%, so every step
+	 * must reach 2x by 300% (page-title's max is 3.8rem for that reason);
+	 * max <= 2.5 x min also guarantees 2x within the 500% of Chrome and
+	 * Firefox. */
+	--text-page-title: clamp(2.5rem, 1.9303rem + 2.3372vw, 3.8rem);
 	--text-page-title--line-height: 1.1;
 	--text-page-title--letter-spacing: var(--tracking-tight);
 	--text-page-title--font-weight: var(--font-weight-black);

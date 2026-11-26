@@ -57,15 +57,17 @@ const FLUID_STEPS = ['page-title', 'h1', 'h2', 'h3', 'h4', 'lead'] as const
 const MIN_VIEWPORT = 390
 const MAX_VIEWPORT = 1280
 const ROOT_PX = 16
-// clamp(2.5rem, 1.8424rem + 2.697vw, 4rem)
+// clamp(2.5rem, 1.9303rem + 2.3372vw, 3.8rem)
 const FLUID_CLAMP =
 	/^clamp\(\s*([\d.]+)rem\s*,\s*([\d.]+)rem\s*\+\s*([\d.]+)vw\s*,\s*([\d.]+)rem\s*\)$/
 
 // WCAG 1.4.4 zoom reach. Barvian's bound: with max <= 2.5 x min a clamp
 // always reaches 2x within 500% zoom.
 const MAX_FLUID_RATIO = 2.5
-// Chrome's preset zoom steps from 100% up (its maximum is 500%).
-const ZOOM_STEPS = [1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5] as const
+// Preset zoom steps from 100% up to 300%: Safari's page zoom maximum
+// (Chrome and Firefox reach 500%), so 2x must be reachable by 300% for
+// the rule to hold in every browser.
+const ZOOM_STEPS = [1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3] as const
 // Window widths in device-independent px: a small phone to a 4K desktop.
 const MIN_WINDOW = 320
 const MAX_WINDOW = 3840
@@ -276,7 +278,7 @@ describe('one type scale', () => {
 			expect(failures).toEqual([])
 		})
 
-		test(`every window from ${MIN_WINDOW} to ${MAX_WINDOW}px reaches 2x at a Chrome zoom step`, async () => {
+		test(`every window from ${MIN_WINDOW} to ${MAX_WINDOW}px reaches 2x by 300% zoom (Safari's maximum)`, async () => {
 			const { sizes } = await compiledFluidSizes()
 			const failures: string[] = []
 			for (const size of sizes) {
@@ -307,7 +309,9 @@ describe('one type scale', () => {
 				vwPerCss: 0.05393,
 				max: 64
 			}
-			expect(bestEnlargement(steep, MIN_WINDOW)).toBe(5)
+			// On a phone the size sits on its min clamp, so the best step is
+			// the top zoom step itself.
+			expect(bestEnlargement(steep, MIN_WINDOW)).toBe(ZOOM_STEPS.at(-1) ?? 0)
 			expect(bestEnlargement(steep, MAX_VIEWPORT)).toBeLessThan(2)
 		})
 	})
