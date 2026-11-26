@@ -104,7 +104,7 @@ export default function ToolsCatalog() {
 									variant="glassLight"
 									size="lg"
 									hover={true}
-									className="group flex flex-col"
+									className="group relative flex flex-col hover:border-accent/40 has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-ring"
 								>
 									<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
 										<tool.Icon className="h-5 w-5 text-accent" />
@@ -128,12 +128,20 @@ export default function ToolsCatalog() {
 										))}
 									</ul>
 
+									{/* Stretched link: the ::after overlay spans the whole
+									    card, so a click anywhere on it follows this one link
+									    (no nested interactives, no block content inside <a>).
+									    The card, not the CTA text, carries the focus ring. */}
 									<Link
 										href={tool.href}
-										className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text hover:underline underline-offset-4 transition-colors"
+										className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text underline-offset-4 transition-colors group-hover:underline focus-visible:underline focus-visible:outline-none after:absolute after:inset-0 after:rounded-xl"
 									>
 										{tool.cta}
-										<ArrowRight className="h-4 w-4" />
+										<span className="sr-only">, {tool.title}</span>
+										<ArrowRight
+											aria-hidden="true"
+											className="h-4 w-4 transition-smooth motion-safe:group-hover:translate-x-1"
+										/>
 									</Link>
 								</Card>
 							))}

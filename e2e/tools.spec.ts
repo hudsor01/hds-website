@@ -46,6 +46,53 @@ test.describe('Tools Index', () => {
 			page.locator('a[href="/tools/contract-generator"]')
 		).toBeVisible()
 	})
+
+	// Stretched link: the CTA's ::after overlay covers the card, so a click
+	// on the description (not the link text) still opens the tool. A raw
+	// mouse click at the text's center, because Playwright's locator click
+	// refuses a point whose hit target (the overlay) is outside the <p>.
+	test('clicking a card description opens that tool', async ({ page }) => {
+		const card = page
+			.getByRole('heading', { level: 3, name: 'ROI Calculator' })
+			.locator('..')
+		const description = card.getByText(/Your website is a revenue system/)
+		await description.scrollIntoViewIfNeeded()
+		const box = await description.boundingBox()
+		if (!box) {
+			throw new Error('ROI Calculator description is not rendered')
+		}
+		await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2)
+		await expect(page).toHaveURL(/\/tools\/roi-calculator$/)
+	})
+
+	test('keyboard focus on a card link outlines the whole card', async ({
+		page,
+		browserName
+	}) => {
+		const card = page
+			.getByRole('heading', { level: 3, name: 'ROI Calculator' })
+			.locator('..')
+		const link = card.getByRole('link')
+		// Focus the search box, then Tab: the first card link is next.
+		// WebKit, like Safari, skips links on a plain Tab; Option+Tab reaches them.
+		await page.getByRole('searchbox', { name: 'Search tools' }).focus()
+		await page.keyboard.press(browserName === 'webkit' ? 'Alt+Tab' : 'Tab')
+		await expect(link).toBeFocused()
+
+		const outline = await card.evaluate(el => {
+			const style = getComputedStyle(el)
+			return {
+				style: style.outlineStyle,
+				width: style.outlineWidth,
+				offset: style.outlineOffset
+			}
+		})
+		expect(outline).toEqual({ style: 'solid', width: '2px', offset: '2px' })
+		// The ring is on the card, not doubled on the small CTA text
+		expect(await link.evaluate(el => getComputedStyle(el).outlineStyle)).toBe(
+			'none'
+		)
+	})
 })
 
 test.describe('Paystub Calculator', () => {
