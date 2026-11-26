@@ -26,18 +26,16 @@ export default function LocationsPage() {
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						Service Locations
-					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-eyebrow mb-3">Service Locations</p>
+					<h1 className="text-page-title text-foreground text-balance">
 						Web Design Across Dallas-Fort Worth
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
@@ -48,16 +46,16 @@ export default function LocationsPage() {
 			</section>
 
 			{/* Locations Grid */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<ul className="grid gap-4 sm:grid-cols-2 max-w-3xl mx-auto">
 						{LOCATIONS.map(location => (
 							<li key={location.slug}>
 								<Link
 									href={`/locations/${location.slug}`}
-									className="group flex h-full flex-col rounded-xl border border-border bg-surface-raised p-6 transition-colors hover:border-accent"
+									className="group flex h-full flex-col rounded-xl border border-border bg-card p-6 transition-colors hover:border-accent"
 								>
-									<span className="flex items-center gap-2 text-h4 text-foreground group-hover:text-accent transition-colors">
+									<span className="flex items-center gap-2 text-h4 text-foreground group-hover:text-accent-text transition-colors">
 										<MapPin
 											className="h-5 w-5 shrink-0 text-accent"
 											aria-hidden="true"
@@ -75,15 +73,15 @@ export default function LocationsPage() {
 			</section>
 
 			{/* CTA Section */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Outside North Texas?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">

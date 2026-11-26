@@ -46,8 +46,7 @@ export interface SearchInputProps {
 // search bar reads as part of the same toolbar without coupling the two
 // components -- copy the literal class string instead of importing the
 // constants so each component stays independently restyleable.
-const INPUT_CLASSES =
-	'px-3 py-1.5 rounded-md text-sm border border-border bg-surface-raised text-foreground placeholder:text-muted-foreground'
+const INPUT_CLASSES = 'field w-auto'
 
 const Q_PARSER = parseAsString.withDefault('').withOptions({
 	shallow: false,

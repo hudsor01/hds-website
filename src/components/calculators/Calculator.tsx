@@ -9,6 +9,7 @@ import {
 	saveCalculation
 } from '@/app/(public)/actions/ttl-calculator'
 import { InputPanel } from '@/components/InputPanel/InputPanel'
+import { Button } from '@/components/ui/button'
 import { TIMEOUTS } from '@/lib/constants/timeouts'
 import { logger } from '@/lib/logger'
 import { formatCurrency } from '@/lib/utils'
@@ -148,7 +149,7 @@ export function Calculator() {
 	}
 
 	const handlePrintPDF = () => {
-		// Uses CSS @media print styles from print.css
+		// Browser print dialog; overlays opt out with print:hidden
 		window.print()
 	}
 
@@ -205,11 +206,13 @@ export function Calculator() {
 	}
 
 	return (
-		<main className="min-h-screen bg-background">
-			<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 max-w-6xl mx-auto">
+		// A <div>, not <main>: the (public) layout already renders the page's
+		// single <main id="main-content"> landmark.
+		<div className="min-h-screen bg-background">
+			<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20">
 				{/* Header */}
 				<div className="mb-10">
-					<h1 className="mb-3 text-h1 text-foreground leading-tight">
+					<h1 className="mb-3 text-page-title text-foreground text-balance">
 						Texas TTL Calculator
 					</h1>
 					<p className="max-w-2xl text-lead text-muted-foreground">
@@ -258,7 +261,7 @@ export function Calculator() {
 				</div>
 
 				{/* Footer with disclaimer */}
-				<div className="mt-12 text-center text-sm text-muted-foreground print-footer">
+				<div className="mt-12 text-center text-sm text-muted-foreground">
 					<p>
 						Disclaimer: This calculator provides estimates based on Texas state
 						fees and regulations. Actual fees may vary.
@@ -273,11 +276,11 @@ export function Calculator() {
 			{/* Share Modal */}
 			{showShareModal && (
 				<div
-					className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 no-print"
+					className="fixed inset-0 bg-overlay flex items-center justify-center z-modal print:hidden"
 					onClick={() => setShowShareModal(false)}
 				>
 					<div
-						className="bg-card rounded-lg shadow-xl p-6 max-w-md w-full mx-4"
+						className="bg-card rounded-xl shadow-xl p-6 max-w-md w-full mx-4"
 						onClick={e => e.stopPropagation()}
 					>
 						<div className="flex items-center gap-3 mb-4">
@@ -299,15 +302,17 @@ export function Calculator() {
 											? `${window.location.origin}${window.location.pathname}?c=${shareCode}`
 											: ''
 									}
-									className="flex-1 px-3 py-2 bg-muted rounded-lg text-sm text-foreground border border-border"
+									className="field flex-1"
 								/>
-								<button
+								<Button
+									type="button"
+									variant="accent"
+									size="icon"
 									onClick={copyShareLink}
-									className="px-3 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors"
 									aria-label="Copy link"
 								>
-									<Copy className="w-4 h-4" />
-								</button>
+									<Copy aria-hidden="true" />
+								</Button>
 							</div>
 							<p className="text-xs text-muted-foreground mt-1">
 								This link will work for 90 days
@@ -329,41 +334,46 @@ export function Calculator() {
 									placeholder="your@email.com"
 									value={emailInput}
 									onChange={e => setEmailInput(e.target.value)}
-									className="flex-1 px-3 py-2 bg-background rounded-lg text-sm text-foreground border border-border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+									className="field flex-1"
 								/>
-								<button
+								<Button
+									type="button"
+									variant="accent"
+									size="icon"
 									onClick={handleEmailResults}
 									disabled={isPending || !emailInput}
-									className="px-3 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 									aria-label="Send email"
 								>
-									<Mail className="w-4 h-4" />
-								</button>
+									<Mail aria-hidden="true" />
+								</Button>
 							</div>
 						</div>
 
 						{/* Print Button */}
 						<div className="flex gap-3">
-							<button
+							<Button
+								type="button"
+								variant="muted"
+								className="flex-1"
 								onClick={() => {
 									setShowShareModal(false)
 									setTimeout(handlePrintPDF, TIMEOUTS.PRINT_DELAY)
 								}}
-								className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-colors"
 							>
-								<Printer className="w-4 h-4" />
+								<Printer aria-hidden="true" />
 								Print Results
-							</button>
-							<button
+							</Button>
+							<Button
+								type="button"
+								variant="ghost"
 								onClick={() => setShowShareModal(false)}
-								className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
 							>
 								Close
-							</button>
+							</Button>
 						</div>
 					</div>
 				</div>
 			)}
-		</main>
+		</div>
 	)
 }

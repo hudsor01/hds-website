@@ -98,7 +98,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 		<div className="min-h-screen bg-background">
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20">
+				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20">
 					{/* Breadcrumb */}
 					<Breadcrumb className="mb-8">
 						<BreadcrumbList>
@@ -122,14 +122,15 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 					</Breadcrumb>
 
 					<div className="flex items-center gap-6">
-						<div className="size-16 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0">
+						<div
+							aria-hidden="true"
+							className="size-16 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0"
+						>
 							{ICON_MAP[categoryInfo.icon] || <HelpCircle className="size-8" />}
 						</div>
 						<div>
-							<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">
-								Help Center
-							</p>
-							<h1 className="text-page-title text-foreground leading-tight text-balance">
+							<p className="text-eyebrow mb-2">Help Center</p>
+							<h1 className="text-page-title text-foreground text-balance">
 								{categoryInfo.name}
 							</h1>
 							<p className="text-lead text-muted-foreground mt-2">
@@ -141,8 +142,8 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 			</section>
 
 			{/* Articles List */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<Link
 						href="/help"
 						className="inline-flex items-center gap-tight text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"
@@ -152,7 +153,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 					</Link>
 
 					{articles.length === 0 ? (
-						<div className="rounded-xl border border-border bg-surface-raised p-10 text-center">
+						<div className="rounded-xl border border-border bg-card p-10 text-center">
 							<HelpCircle className="size-12 mx-auto text-muted-foreground mb-heading" />
 							<h2 className="text-h4 text-foreground mb-subheading">
 								No articles yet
@@ -170,15 +171,18 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 									href={`/help/${category}/${article.slug}`}
 									className="block group"
 								>
-									<div className="rounded-xl border border-border bg-surface-raised p-6 hover:border-border-strong transition-colors">
+									<div className="rounded-xl border border-border bg-card p-6 hover:border-border-strong transition-colors">
 										<div className="flex items-start gap-4">
-											<div className="size-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0">
+											<div
+												aria-hidden="true"
+												className="size-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0"
+											>
 												<FileText className="size-5" />
 											</div>
 											<div className="flex-1 min-w-0">
-												<h2 className="font-semibold text-foreground group-hover:text-accent transition-colors flex items-center gap-tight">
+												<h2 className="font-semibold text-foreground group-hover:text-accent-text transition-colors flex items-center gap-tight">
 													{article.title}
-													<ArrowRight className="size-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0" />
+													<ArrowRight className="size-4 opacity-0 motion-safe:-translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-[opacity,translate] shrink-0" />
 												</h2>
 												{article.excerpt && (
 													<p className="text-sm text-muted-foreground mt-1 line-clamp-2">
@@ -194,7 +198,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 					)}
 
 					{/* Contact CTA */}
-					<div className="mt-10 rounded-xl border border-border bg-surface-raised p-8 text-center hover:border-border-strong transition-colors">
+					<div className="mt-10 rounded-xl border border-border bg-card p-8 text-center hover:border-border-strong transition-colors">
 						<p className="text-sm text-muted-foreground mb-4">
 							Need more help with {categoryInfo.name.toLowerCase()}?
 						</p>

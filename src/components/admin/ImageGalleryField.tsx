@@ -27,6 +27,7 @@ import {
 } from 'react'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { UploadProgressBar } from '@/components/admin/UploadProgressBar'
+import { Button } from '@/components/ui/button'
 import { useBlobUpload } from '@/hooks/use-blob-upload'
 import {
 	ACCEPT_ATTRIBUTE,
@@ -44,14 +45,7 @@ interface ImageGalleryFieldProps {
 	error?: string
 }
 
-const URL_INPUT_CLS =
-	'flex-1 px-3 py-2 rounded-md border border-border bg-background text-foreground'
-
-const ADD_BUTTON_CLS =
-	'inline-flex items-center px-3 py-2 rounded-md text-sm font-medium text-surface-base bg-accent-text hover:opacity-90 transition-smooth disabled:opacity-60'
-
-const REMOVE_BUTTON_CLS =
-	'inline-flex items-center px-2 py-1 rounded-md text-xs font-medium text-destructive border border-destructive/40 hover:bg-destructive/10 transition-smooth'
+const URL_INPUT_CLS = 'field flex-1'
 
 const DROP_ZONE_BASE_CLS =
 	'flex items-center justify-center rounded-md border border-dashed px-3 py-2 text-sm transition-smooth cursor-pointer'
@@ -201,7 +195,7 @@ export function ImageGalleryField({
 									key={url}
 									className="flex flex-col gap-2 rounded-md border border-border p-2"
 								>
-									<div className="relative h-24 w-full overflow-hidden rounded bg-surface-base">
+									<div className="relative h-24 w-full overflow-hidden rounded-md bg-background">
 										<Image
 											src={url}
 											alt={`${label} ${index + 1}`}
@@ -218,14 +212,15 @@ export function ImageGalleryField({
 										>
 											{url.split('/').pop()}
 										</span>
-										<button
+										<Button
 											type="button"
+											variant="destructive"
+											size="sm"
 											onClick={() => removeAt(index)}
-											className={REMOVE_BUTTON_CLS}
 											aria-label={`Remove image ${index + 1}`}
 										>
 											Remove
-										</button>
+										</Button>
 									</div>
 								</li>
 							))}
@@ -235,7 +230,7 @@ export function ImageGalleryField({
 									aria-busy="true"
 									className="flex flex-col gap-2 rounded-md border border-dashed border-accent-text/60 p-2"
 								>
-									<div className="relative h-24 w-full overflow-hidden rounded bg-surface-base">
+									<div className="relative h-24 w-full overflow-hidden rounded-md bg-background">
 										<Image
 											src={localPreview}
 											alt={`${label} uploading`}
@@ -296,13 +291,15 @@ export function ImageGalleryField({
 							</p>
 						)}
 						{retryExceeded && !uploadsDisabled && (
-							<button
+							<Button
 								type="button"
+								variant="link"
+								size="sm"
+								className="px-0"
 								onClick={clearError}
-								className="text-xs font-medium text-accent-text hover:underline"
 							>
 								Reset upload
-							</button>
+							</Button>
 						)}
 					</div>
 
@@ -331,14 +328,14 @@ export function ImageGalleryField({
 								}
 							}}
 						/>
-						<button
+						<Button
 							type="button"
+							size="sm"
 							onClick={addUrl}
 							disabled={isUploading || urlDraft.trim() === ''}
-							className={ADD_BUTTON_CLS}
 						>
 							Add
-						</button>
+						</Button>
 					</div>
 				</div>
 			)}

@@ -38,7 +38,7 @@ bun run test:e2e --debug             # Debug mode
 
 # Specific Tests
 bun run test:e2e --grep "Mobile"     # Mobile tests only
-bun run test:e2e --grep "Dark Mode"  # Dark mode tests only
+bun run test:e2e --grep "Dark Mode"  # Light-only checks under OS dark
 bun run test:e2e --grep "Visual"     # Visual regression only
 
 # Screenshots
@@ -57,7 +57,7 @@ bun run test:ci                      # Full CI test suite
 |------|-------|-------------|
 | `e2e/mobile-responsiveness.spec.ts` | Mobile viewports, touch targets | `--grep "Mobile"` |
 | `e2e/visual-regression.spec.ts` | Screenshot comparisons | `--grep "Visual"` |
-| `e2e/dark-mode-comprehensive.spec.ts` | Dark mode, WCAG contrast | `--grep "Dark Mode"` |
+| `e2e/dark-mode-comprehensive.spec.ts` | Light only under an OS dark preference | `--grep "Dark Mode"` |
 | `e2e/cross-browser.spec.ts` | Browser compatibility | All by default |
 | `tests/unit/api-routes.test.ts` | API validation | `bun test tests/unit/api-routes.test.ts` |
 
@@ -75,15 +75,13 @@ bun run test:ci                      # Full CI test suite
 ### Visual Regression ❌
 - [ ] Baseline screenshots exist
 - [ ] OKLCH colors applied
-- [ ] Dark mode consistent
+- [ ] OS-dark baselines match light
 - [ ] All pages render correctly
 
-### Dark Mode ❌
-- [ ] Theme toggle button
-- [ ] localStorage persistence
-- [ ] WCAG AA contrast (4.5:1)
-- [ ] System preference detection
-- [ ] Dark colors on all pages
+### Dark Mode (light only)
+- [ ] No `.dark` class, computed `color-scheme: light`
+- [ ] Body background is the light `--color-background`
+- [ ] No element changes color under an OS dark preference
 
 ### Cross-Browser ❌
 - [ ] Works in Chromium
@@ -112,10 +110,9 @@ bun run test:ci                      # Full CI test suite
 
 ### P1 - High (Should Pass)
 1. Touch targets 44x44px
-2. Dark mode toggle works
-3. Theme persistence
-4. Cross-browser compatibility
-5. Visual regression baselines
+2. Light rendering under an OS dark preference
+3. Cross-browser compatibility
+4. Visual regression baselines
 
 ### P2 - Medium (Nice to Have)
 1. Animation transitions
@@ -146,13 +143,13 @@ bun run test:e2e --grep "Mobile.*375"
 bun run test:e2e --grep "Mobile" --headed --slowMo=1000
 ```
 
-### Dark Mode Failures
+### Dark Mode (light only) Failures
 ```bash
-# Test dark mode only
+# Light-only checks under an OS dark preference
 bun run test:e2e --grep "Dark Mode"
 
-# Check specific contrast
-bun run test:e2e --grep "WCAG.*body text"
+# Source-level guard (dark: utilities, .dark block)
+bun test tests/unit/css-class-hygiene.test.ts
 ```
 
 ### Cross-Browser Failures
@@ -193,10 +190,13 @@ const primaryColor = getComputedStyle(root).getPropertyValue('--color-primary');
 expect(primaryColor.trim()).toContain('oklch');
 ```
 
-### Dark Mode
+### Light Only Under OS Dark
 ```typescript
-const isDark = document.documentElement.classList.contains('dark');
-expect(isDark).toBe(true);
+await page.emulateMedia({ colorScheme: 'dark' });
+const isDark = await page.evaluate(() =>
+  document.documentElement.classList.contains('dark')
+);
+expect(isDark).toBe(false);
 ```
 
 ---
@@ -228,7 +228,7 @@ expect(isDark).toBe(true);
 | Unit Tests | 80% | 0% |
 | E2E Tests | Critical paths | 0% |
 | Mobile | All viewports | 0% |
-| Dark Mode | All pages | 0% |
+| Light only (OS dark) | /, /contact, /tools/json-formatter | 0% |
 | Browsers | 3 browsers | 0% |
 
 ---
@@ -259,7 +259,6 @@ tests/
 
 2. **Implement Features**
    - Mobile responsive navigation
-   - Dark mode toggle
    - OKLCH color system
    - Form validation
 

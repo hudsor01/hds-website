@@ -16,7 +16,7 @@
  *
  * The active chip is marked with `aria-current="page"` (same idiom the
  * Sidebar uses for the active nav item) and gets a slightly heavier visual
- * weight via foreground text + surface-base background.
+ * weight via foreground text + background fill.
  */
 
 export type StatusFilterOption = {
@@ -34,9 +34,8 @@ export interface StatusFilterBarProps {
 
 const CHIP_BASE =
 	'inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium border border-border transition-smooth'
-const CHIP_INACTIVE =
-	'text-muted-foreground bg-surface-raised hover:bg-surface-base'
-const CHIP_ACTIVE = 'text-foreground bg-surface-base'
+const CHIP_INACTIVE = 'text-muted-foreground bg-card hover:bg-background'
+const CHIP_ACTIVE = 'text-foreground bg-background'
 
 export function StatusFilterBar({
 	baseHref,

@@ -64,7 +64,7 @@ export function ResultsPanel({
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-tight">
 						<FileText className="w-6 h-6 text-accent" />
-						<h2 className="text-xl font-bold">Calculation Results</h2>
+						<h2 className="text-h4 text-foreground">Calculation Results</h2>
 					</div>
 					{calculationResults && (
 						<span className="px-3 py-1 text-sm text-muted-foreground border border-border rounded-md">
@@ -101,7 +101,7 @@ export function ResultsPanel({
 							<CardHeader>
 								<div className="flex items-center gap-tight">
 									<CreditCard className="h-4 w-4 text-accent" />
-									<CardTitle className="text-lg">TTL Breakdown</CardTitle>
+									<CardTitle>TTL Breakdown</CardTitle>
 								</div>
 							</CardHeader>
 							<CardContent className="space-y-3">
@@ -138,7 +138,7 @@ export function ResultsPanel({
 							<CardHeader>
 								<div className="flex items-center gap-tight">
 									<DollarSign className="h-4 w-4 text-accent" />
-									<CardTitle className="text-lg">Monthly Payment</CardTitle>
+									<CardTitle>Monthly Payment</CardTitle>
 								</div>
 							</CardHeader>
 							<CardContent className="space-y-3">
@@ -238,7 +238,7 @@ export function ResultsPanel({
 					</div>
 				)}
 
-				<div className="rounded-lg border bg-secondary/10 p-3 text-xs text-muted-foreground">
+				<div className="rounded-xl border bg-secondary/10 p-3 text-xs text-muted-foreground">
 					<p>
 						<strong>Note:</strong> This calculator provides estimates based on
 						Texas state fees and regulations. Actual fees may vary by county and

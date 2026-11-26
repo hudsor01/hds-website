@@ -8,7 +8,8 @@ import { createTestLogger } from './test-logger'
  * because baseline screenshots don't exist yet.
  *
  * Test Coverage:
- * - All critical pages in light and dark mode
+ * - All critical pages under a light and a dark OS preference (the site is
+ *   light only, so the dark baselines must match the light rendering)
  * - Screenshot comparisons for visual regression
  * - Monochromatic color palette verification
  * - OKLCH color value validation
@@ -103,9 +104,11 @@ test.describe('Visual Regression - Light Mode', { tag: '@visual' }, () => {
 	}
 })
 
+// The site is light only. These baselines pin that an OS dark preference
+// renders the same light page (no dark: utilities, no .dark palette).
 test.describe('Visual Regression - Dark Mode', { tag: '@visual' }, () => {
 	test.beforeEach(async ({ page }) => {
-		// Force dark mode
+		// OS dark preference; the page must still render light
 		await page.emulateMedia({ colorScheme: 'dark' })
 	})
 
@@ -121,7 +124,7 @@ test.describe('Visual Regression - Dark Mode', { tag: '@visual' }, () => {
 			await page.goto(pageDef.path)
 			await page.waitForLoadState('networkidle')
 
-			// Wait for dark mode to apply and animations to complete
+			// Wait for animations to complete
 			await page.waitForTimeout(500)
 
 			logger.step('Taking screenshot')
@@ -146,7 +149,7 @@ test.describe('Visual Regression - Dark Mode', { tag: '@visual' }, () => {
 			await page.goto(pageDef.path)
 			await page.waitForLoadState('networkidle')
 
-			// Wait for dark mode to apply and animations to complete
+			// Wait for animations to complete
 			await page.waitForTimeout(500)
 
 			logger.step('Taking screenshot')
@@ -245,6 +248,7 @@ test.describe('Error Page Visual Regression', { tag: '@visual' }, () => {
 	}, testInfo) => {
 		const logger = createTestLogger(testInfo.title)
 
+		// OS dark preference; the light-only 404 page must still render light
 		await page.emulateMedia({ colorScheme: 'dark' })
 
 		logger.step('Navigating to non-existent page')

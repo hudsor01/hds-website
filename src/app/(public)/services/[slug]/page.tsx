@@ -96,14 +96,14 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 max-w-4xl mx-auto">
+				<div className="relative z-10 container-content pt-28 pb-16 sm:pt-32 sm:pb-20">
 					<Breadcrumb className="mb-8">
 						<BreadcrumbList>
 							<BreadcrumbItem>
@@ -137,10 +137,8 @@ export default async function ServicePage({ params }: ServicePageProps) {
 					</Breadcrumb>
 
 					<div className="text-center">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							{service.title}
-						</p>
-						<h1 className="text-page-title text-foreground leading-tight text-balance mb-6">
+						<p className="text-eyebrow mb-3">{service.title}</p>
+						<h1 className="text-page-title text-foreground text-balance mb-6">
 							<Headline text={service.headline} />
 						</h1>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto mb-10">
@@ -153,12 +151,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 									<ArrowRight className="w-4 h-4" aria-hidden="true" />
 								</Link>
 							</Button>
-							<Button
-								asChild
-								variant="outline"
-								size="xl"
-								className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-							>
+							<Button asChild variant="outline-strong" size="xl">
 								<Link href="#included">See What&apos;s Included</Link>
 							</Button>
 						</div>
@@ -167,17 +160,14 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			</section>
 
 			{/* Overview */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-3xl mx-auto">
-					<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+			<section className="py-section-sm">
+				<div className="container-content">
+					<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 						{service.overviewHeading}
 					</h2>
 					<div className="space-y-4">
 						{service.overview.map(paragraph => (
-							<p
-								key={paragraph}
-								className="text-lead text-muted-foreground leading-relaxed"
-							>
+							<p key={paragraph} className="text-lead text-muted-foreground">
 								{paragraph}
 							</p>
 						))}
@@ -186,16 +176,11 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			</section>
 
 			{/* Included */}
-			<section
-				id="included"
-				className="py-section-sm px-4 sm:px-6 bg-surface-sunken scroll-mt-24"
-			>
-				<div className="container-wide max-w-5xl mx-auto">
+			<section id="included" className="py-section-sm bg-muted scroll-mt-24">
+				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							What You Get
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">What You Get</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							What&apos;s Included
 						</h2>
 					</div>
@@ -203,7 +188,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 						{service.included.map(detail => (
 							<li
 								key={detail.title}
-								className="rounded-xl border border-border bg-surface-raised p-8"
+								className="rounded-xl border border-border bg-card p-8"
 							>
 								<div className="flex items-start gap-3 mb-3">
 									<CheckCircle
@@ -224,13 +209,11 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			</section>
 
 			{/* FAQ */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-3xl mx-auto">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Questions
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">Questions</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Common Questions
 						</h2>
 					</div>
@@ -246,7 +229,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 					</div>
 					<p className="text-sm text-muted-foreground text-center mt-8">
 						More answers on the{' '}
-						<Link href="/faq" className="text-accent hover:underline">
+						<Link href="/faq" className="link-primary">
 							FAQ page
 						</Link>
 						.
@@ -256,15 +239,15 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
 			{/* Related posts */}
 			{relatedPosts.length > 0 && (
-				<section className="py-section-sm px-4 sm:px-6 bg-surface-sunken">
-					<div className="container-wide max-w-5xl mx-auto">
+				<section className="py-section-sm bg-muted">
+					<div className="container-wide">
 						<div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-comfortable">
-							<h2 className="text-section-title text-foreground text-balance">
+							<h2 className="text-h1 text-foreground text-balance">
 								From the Blog
 							</h2>
 							<Link
 								href={`/blog/tag/${service.blogTag}`}
-								className="text-accent hover:underline inline-flex items-center gap-1"
+								className="text-accent-text hover:underline inline-flex items-center gap-1"
 							>
 								More posts on this topic
 								<ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -280,9 +263,9 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			)}
 
 			{/* Other services */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
-					<h2 className="text-section-title text-foreground mb-comfortable text-center text-balance">
+			<section className="py-section-sm">
+				<div className="container-content">
+					<h2 className="text-h1 text-foreground mb-comfortable text-center text-balance">
 						Other Services
 					</h2>
 					<div className="grid gap-6 sm:grid-cols-2">
@@ -290,9 +273,9 @@ export default async function ServicePage({ params }: ServicePageProps) {
 							<Link
 								key={other.slug}
 								href={`/services/${other.slug}`}
-								className="group rounded-xl border border-border bg-surface-raised p-8 hover:border-accent transition-colors"
+								className="group rounded-xl border border-border bg-card p-8 hover:border-accent transition-colors"
 							>
-								<h3 className="text-h4 text-foreground mb-2 group-hover:text-accent transition-colors">
+								<h3 className="text-h4 text-foreground mb-2 group-hover:text-accent-text transition-colors">
 									{other.title}
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed">
@@ -305,15 +288,15 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			</section>
 
 			{/* CTA */}
-			<section className="py-section px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+			<section className="py-section">
+				<div className="container-content">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Let&apos;s Talk About Your Site
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">

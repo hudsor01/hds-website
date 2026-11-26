@@ -207,22 +207,25 @@ test.describe('Secondary User Flows', () => {
 			// Tab to first interactive element
 			await page.keyboard.press('Tab')
 
-			// Check focus is visible
+			// Check focus is visible: the global :focus-visible rule draws a
+			// 2px solid outline. `outline` as a shorthand string is always
+			// non-empty (even "none"), so assert the resolved longhands.
 			const focusedElement = await page.evaluate(() => {
 				const el = document.activeElement
 				if (!el) {
-					return { outline: '', outlineColor: '', tagName: undefined }
+					return { outlineStyle: '', outlineWidth: '', tagName: undefined }
 				}
 				const styles = window.getComputedStyle(el)
 				return {
-					outline: styles.outline,
-					outlineColor: styles.outlineColor,
+					outlineStyle: styles.outlineStyle,
+					outlineWidth: styles.outlineWidth,
 					tagName: el.tagName
 				}
 			})
 
 			expect(focusedElement.tagName).toMatch(/A|BUTTON|INPUT/)
-			expect(focusedElement.outline || focusedElement.outlineColor).toBeTruthy()
+			expect(focusedElement.outlineStyle).toBe('solid')
+			expect(focusedElement.outlineWidth).toBe('2px')
 		})
 
 		test('should announce page changes to screen readers', async ({ page }) => {

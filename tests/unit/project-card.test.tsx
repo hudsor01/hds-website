@@ -77,7 +77,7 @@ describe('ProjectCard', () => {
 				/>
 			)
 			const box = container.querySelector('img')?.parentElement
-			expect(box?.className).toContain('aspect-[16/10]')
+			expect(box?.className).toContain('aspect-16/10')
 		} finally {
 			happyDOM.setURL(previousUrl)
 		}

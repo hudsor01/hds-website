@@ -23,7 +23,7 @@ const variantConfig = {
 	inline: { size: 'md' as const, className: '' },
 	sidebar: {
 		size: 'md' as const,
-		className: 'bg-surface-raised'
+		className: 'bg-card'
 	},
 	modal: { size: 'lg' as const, className: 'shadow-xl' },
 	section: { size: 'md' as const, className: '' },
@@ -183,12 +183,8 @@ function NewsletterSignupContent({
 	if (variant === 'section') {
 		return (
 			<div className="text-center">
-				<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-					Stay in the loop
-				</p>
-				<h2 className="text-section-title text-foreground mb-3 text-balance">
-					{title}
-				</h2>
+				<p className="text-eyebrow mb-3">Stay in the loop</p>
+				<h2 className="text-h1 text-foreground mb-3 text-balance">{title}</h2>
 				<p className="text-muted-foreground mb-6 max-w-xl mx-auto leading-relaxed">
 					{description}
 				</p>
@@ -422,7 +418,7 @@ export function NewsletterSignup({ dynamic, ...props }: NewsletterSignupProps) {
 			<QueryProvider>
 				<Suspense
 					fallback={
-						<div className="rounded-lg border border-border bg-card p-6 text-sm text-muted-foreground">
+						<div className="rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground">
 							Loading newsletter form...
 						</div>
 					}

@@ -17,8 +17,10 @@ interface StatCardProps {
 
 function StatCard({ label, value }: StatCardProps) {
 	return (
-		<div className="rounded-lg border border-border bg-surface-raised px-4 py-3">
-			<div className="text-2xl font-bold text-accent tabular-nums">{value}</div>
+		<div className="rounded-xl border border-border bg-card px-4 py-3">
+			<div className="text-2xl font-bold text-accent-text tabular-nums">
+				{value}
+			</div>
 			<div className="text-xs text-muted-foreground">{label}</div>
 		</div>
 	)
@@ -48,7 +50,7 @@ export default function WordCounterClient() {
 					id="word-counter-input"
 					value={text}
 					onChange={event => setText(event.target.value)}
-					className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-accent"
+					className="field"
 					rows={14}
 					placeholder="Type or paste your text to count words, characters, sentences and reading time."
 				/>

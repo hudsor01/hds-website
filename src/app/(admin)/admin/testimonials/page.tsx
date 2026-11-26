@@ -27,6 +27,7 @@ import { AdminSearchEmptyState } from '@/components/admin/AdminSearchEmptyState'
 import { PublishToggle } from '@/components/admin/PublishToggle'
 import { ResourceListPage } from '@/components/admin/ResourceListPage'
 import { SearchInput } from '@/components/admin/SearchInput'
+import { Button } from '@/components/ui/button'
 import {
 	Table,
 	TableBody,
@@ -142,20 +143,20 @@ async function TestimonialsList({ searchParams }: AdminTestimonialsPageProps) {
 												<div className="inline-flex items-center gap-2">
 													<form action={toggleTestimonialFeaturedAction}>
 														<input type="hidden" name="id" value={r.id} />
-														<button
+														<Button
 															type="submit"
+															variant="ghost"
+															size="icon-sm"
 															aria-label={`${r.featured ? 'Unfeature' : 'Feature'} testimonial from ${r.name}`}
 															aria-pressed={r.featured ?? false}
-															className="inline-flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:bg-surface-base hover:text-foreground transition-smooth"
 														>
 															<Star
-																size={16}
 																aria-hidden="true"
 																className={
 																	r.featured ? 'fill-current' : undefined
 																}
 															/>
-														</button>
+														</Button>
 													</form>
 													<PublishToggle
 														action={toggleTestimonialPublishedAction}
@@ -193,7 +194,7 @@ async function TestimonialsList({ searchParams }: AdminTestimonialsPageProps) {
 
 function RequestLinksCallout() {
 	return (
-		<div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-surface-raised px-4 py-3 text-sm">
+		<div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-card px-4 py-3 text-sm">
 			<p className="text-muted-foreground">
 				Clients submit reviews through private, single-use links. New reviews
 				stay unpublished until you publish them here.

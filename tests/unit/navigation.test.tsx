@@ -61,7 +61,7 @@ describe('NavbarLight Component', () => {
 		expect(nav).toBeInTheDocument()
 	})
 
-	it('should apply focus-ring on keyboard navigation', async () => {
+	it('should move focus to a link on keyboard navigation', async () => {
 		const { default: NavbarLight } = await import('@/components/layout/Navbar')
 		const user = userEvent.setup()
 		render(<NavbarLight />)
@@ -134,18 +134,17 @@ describe('Footer Component', () => {
 		expect(footer).toBeInTheDocument()
 	})
 
-	it('should use flex-between or flex-center layouts', async () => {
+	it('lays out with core flex utilities, not flex-center/flex-between', async () => {
 		const { default: Footer } = await import('@/components/layout/Footer')
 		const { container } = render(<Footer />)
 
 		const footer = container.querySelector('footer')
 		expect(footer).toBeInTheDocument()
 
-		// Check for flex utilities
-		const flexElements = container.querySelectorAll(
-			'.flex-between, .flex-center, .flex'
-		)
-		expect(flexElements.length).toBeGreaterThanOrEqual(0)
+		expect(container.querySelectorAll('.flex').length).toBeGreaterThan(0)
+		expect(
+			container.querySelectorAll('.flex-between, .flex-center')
+		).toHaveLength(0)
 	})
 
 	it('should display current year in copyright', async () => {
@@ -322,9 +321,9 @@ describe('Navbar Polish — COMP-04', () => {
 		const footer = container.querySelector('footer')
 		expect(footer).toBeInTheDocument()
 		// Inline style hack must be removed — footer uses design token class
-		// bg-surface-sunken is correct for light-first design (bg-background-dark was too harsh)
+		// bg-muted (the sunken surface) is correct for light-first design (bg-background-dark was too harsh)
 		const cls = footer?.className ?? ''
-		expect(cls).toContain('bg-surface-sunken')
+		expect(cls).toContain('bg-muted')
 		// Confirm no inline style override
 		expect(footer?.getAttribute('style')).toBeNull()
 	})

@@ -76,7 +76,7 @@ function statusClass(status: string | null): string {
 
 export function RecentLeadsPanel({ result }: RecentLeadsPanelProps) {
 	return (
-		<div className="rounded-xl border border-border bg-surface-raised p-6">
+		<div className="rounded-xl border border-border bg-card p-6">
 			<h2 className="text-sm font-semibold text-foreground mb-4">
 				Recent leads
 			</h2>

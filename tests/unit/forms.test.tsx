@@ -194,9 +194,8 @@ describe('ContactForm Component', () => {
 		renderWithQueryClient(<ContactForm />)
 
 		const nameInput = screen.getByLabelText(/first name/i)
-		// shadcn Input uses these standard classes
-		expect(nameInput).toHaveClass('rounded-md')
-		expect(nameInput).toHaveClass('border')
+		// Every form control shares the .field treatment (globals.css)
+		expect(nameInput).toHaveClass('field')
 	})
 
 	it('should render all textbox inputs', async () => {
@@ -247,67 +246,5 @@ describe('Form Validation Utilities', () => {
 
 		expect(sanitized).not.toContain('<script>')
 		expect(sanitized).toContain('Hello')
-	})
-})
-
-describe('Form Field Components', () => {
-	it('should render FloatingInput with proper attributes', async () => {
-		const { FloatingInput } = await import('@/components/forms/floating-field')
-		const mockOnChange = mock()
-
-		render(
-			<FloatingInput
-				name="testField"
-				value=""
-				onChange={mockOnChange}
-				placeholder="Test Field"
-				required
-			/>
-		)
-
-		const input = screen.getByRole('textbox', { name: /Test Field/i })
-		expect(input.hasAttribute('required')).toBe(true)
-		expect(input.getAttribute('name')).toBe('testField')
-	})
-
-	it('should render FloatingTextarea with proper attributes', async () => {
-		const { FloatingTextarea } = await import(
-			'@/components/forms/floating-field'
-		)
-		const mockOnChange = mock()
-
-		render(
-			<FloatingTextarea
-				name="message"
-				value=""
-				onChange={mockOnChange}
-				placeholder="Your Message"
-				rows={5}
-			/>
-		)
-
-		const textarea = screen.getByRole('textbox', { name: /Your Message/i })
-		expect(textarea.getAttribute('name')).toBe('message')
-		expect(textarea.getAttribute('rows')).toBe('5')
-	})
-
-	it('should call onChange handlers when typing', async () => {
-		const { FloatingInput } = await import('@/components/forms/floating-field')
-		const user = userEvent.setup()
-		const mockOnChange = mock()
-
-		render(
-			<FloatingInput
-				name="test"
-				value=""
-				onChange={mockOnChange}
-				placeholder="Test"
-			/>
-		)
-
-		const input = screen.getByRole('textbox', { name: /^Test$/i })
-		await user.type(input, 'Hello')
-
-		expect(mockOnChange).toHaveBeenCalled()
 	})
 })

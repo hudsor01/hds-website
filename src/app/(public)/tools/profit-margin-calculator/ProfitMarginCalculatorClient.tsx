@@ -33,7 +33,7 @@ function ResultRow({ label, value, emphasis }: ResultRowProps) {
 			<span
 				className={
 					emphasis
-						? 'text-lg font-bold text-accent tabular-nums'
+						? 'text-lg font-bold text-accent-text tabular-nums'
 						: 'text-sm font-semibold text-foreground tabular-nums'
 				}
 			>
@@ -131,7 +131,7 @@ export default function ProfitMarginCalculatorClient() {
 	)
 
 	const resultSlot = hasResult ? (
-		<div className="rounded-xl border border-border bg-surface-raised p-6">
+		<div className="rounded-xl border border-border bg-card p-6">
 			<ResultRow label="Profit" value={USD.format(result.profit)} emphasis />
 			<ResultRow label="Gross margin" value={pct(result.marginPercent)} />
 			<ResultRow label="Markup" value={pct(result.markupPercent)} />

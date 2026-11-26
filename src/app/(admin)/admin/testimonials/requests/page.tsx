@@ -63,7 +63,7 @@ async function RequestsList() {
 	const requests = result.data
 	if (requests.length === 0) {
 		return (
-			<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+			<div className="rounded-xl border border-border bg-card p-8 text-center">
 				<p className="text-sm text-muted-foreground">
 					No request links yet. Create one above and send it to a client.
 				</p>
@@ -159,7 +159,7 @@ export default function AdminTestimonialRequestsPage() {
 
 			<section
 				aria-labelledby="new-request-heading"
-				className="rounded-xl border border-border bg-surface-raised p-6 space-y-4"
+				className="rounded-xl border border-border bg-card p-6 space-y-4"
 			>
 				<h2
 					id="new-request-heading"

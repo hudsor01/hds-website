@@ -47,17 +47,17 @@ export function ProcessSteps() {
 			{PROCESS_STEPS.map((step, index) => (
 				<div
 					key={index}
-					className="group rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors text-center"
+					className="group rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors text-center"
 				>
 					<div className="mb-4 flex justify-center">
-						<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+						<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
 							<step.icon className="w-5 h-5 text-accent" />
 						</div>
 					</div>
-					<div className="text-accent font-bold text-sm mb-2 uppercase tracking-widest">
+					<div className="text-accent-text font-bold text-sm mb-2 uppercase tracking-widest">
 						{step.step}
 					</div>
-					<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent transition-colors">
+					<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent-text transition-colors">
 						{step.title}
 					</h3>
 					<p className="text-sm text-muted-foreground leading-relaxed">

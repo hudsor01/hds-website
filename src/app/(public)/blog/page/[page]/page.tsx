@@ -65,11 +65,9 @@ export default async function BlogListingPage({
 	return (
 		<div className="min-h-screen bg-background">
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						Practical Insights
-					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-eyebrow mb-3">Practical Insights</p>
+					<h1 className="text-page-title text-foreground text-balance">
 						Website Tips for Small Businesses
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
@@ -78,7 +76,7 @@ export default async function BlogListingPage({
 				</div>
 			</section>
 
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="flex flex-col lg:flex-row gap-10">
 						<div className="flex-1">

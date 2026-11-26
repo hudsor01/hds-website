@@ -1,549 +1,143 @@
-import { expect, test } from '@playwright/test'
+import { expect, type Page, test } from '@playwright/test'
 import { createTestLogger } from './test-logger'
 
 /**
- * Comprehensive Dark Mode Test Suite
+ * Dark Mode - Light Only
  *
- * SKIPPED: written TDD-first for a dark mode feature that is not wired up.
- * globals.css defines a `.dark` token block, but the app has no theme
- * toggle, no theme provider, and no `prefers-color-scheme` mapping - so
- * nothing ever applies the `.dark` class. These specs assert a toggle
- * button and class-based dark styling that do not exist at runtime.
- * Remove the skip hook below (and re-verify the oklch-aware contrast
- * math) when dark mode actually ships.
- *
- * Test Coverage (when enabled):
- * - Theme toggle functionality
- * - Theme persistence (localStorage)
- * - WCAG contrast requirements in dark mode
- * - System preference detection
- * - Color transitions
- * - All pages in dark mode
- * - Monochromatic OKLCH color validation
+ * The site is light only: globals.css has no dark palette, no `.dark`
+ * class and no `dark:` utilities, and `:root` sets `color-scheme: light`.
+ * These specs pin that contract under an OS dark preference, so a stray
+ * dark: utility, a `.dark` token block or a theme provider cannot bring
+ * back a half-dark page (one where a few controls turn dark on a light
+ * page) without failing here.
  */
 
-// File-level skip: dark mode is not implemented (see header above).
-test.beforeEach(() => {
-	test.skip(true, 'Dark mode toggle/provider not wired up yet')
-})
+const PAGES = [
+	{ name: 'home', path: '/' },
+	{ name: 'contact', path: '/contact' },
+	{ name: 'json-formatter', path: '/tools/json-formatter' }
+] as const
 
-test.describe('Dark Mode - Theme Toggle', () => {
-	test('should have a theme toggle button', async ({ page }, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
+interface ElementColors {
+	selector: string
+	color: string
+	backgroundColor: string
+	borderColor: string
+}
 
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		// Look for theme toggle button
-		const themeToggle = page.locator(
-			'button[aria-label*="theme" i], button[aria-label*="dark" i], button[aria-label*="light" i]'
+/** Computed color, background and border colors for every rendered element. */
+async function collectColors(page: Page): Promise<ElementColors[]> {
+	// nextjs-portal is the Next.js dev overlay. It only exists on the dev
+	// server the e2e suite runs, ships its own theme that follows the OS
+	// preference, and never reaches production, so it is not site CSS.
+	return page.evaluate(() =>
+		Array.from(document.querySelectorAll('body *:not(nextjs-portal)')).map(
+			(el, index) => {
+				const style = getComputedStyle(el)
+				const id = el.id ? `#${el.id}` : ''
+				return {
+					selector: `${index}:${el.tagName.toLowerCase()}${id}`,
+					color: style.color,
+					backgroundColor: style.backgroundColor,
+					borderColor: [
+						style.borderTopColor,
+						style.borderRightColor,
+						style.borderBottomColor,
+						style.borderLeftColor
+					].join(' ')
+				}
+			}
 		)
+	)
+}
 
-		logger.step('Checking for theme toggle button')
-		await expect(themeToggle).toBeVisible()
-
-		// Should have proper aria-label
-		const ariaLabel = await themeToggle.getAttribute('aria-label')
-		logger.analysis('theme toggle', 'aria-label', ariaLabel || 'missing')
-
-		expect(ariaLabel).toBeTruthy()
-	})
-
-	test('should toggle dark mode when button clicked', async ({
-		page
-	}, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
-
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		// Get initial theme
-		const initialTheme = await page.evaluate(() => {
-			return document.documentElement.classList.contains('dark')
-		})
-
-		logger.analysis('initial', 'dark mode active', String(initialTheme))
-
-		// Click theme toggle
-		const themeToggle = page.locator('button[aria-label*="theme" i]').first()
-		await themeToggle.click()
-
-		// Wait for transition
-		await page.waitForTimeout(300)
-
-		// Check theme changed
-		const newTheme = await page.evaluate(() => {
-			return document.documentElement.classList.contains('dark')
-		})
-
-		logger.analysis('after toggle', 'dark mode active', String(newTheme))
-
-		// Theme should have toggled
-		expect(newTheme).not.toBe(initialTheme)
-	})
-
-	test('should update aria-label after toggle', async ({ page }, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
-
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		const themeToggle = page.locator('button[aria-label*="theme" i]').first()
-
-		const initialLabel = await themeToggle.getAttribute('aria-label')
-		logger.analysis('initial', 'aria-label', initialLabel || '')
-
-		// Toggle theme
-		await themeToggle.click()
-		await page.waitForTimeout(300)
-
-		const newLabel = await themeToggle.getAttribute('aria-label')
-		logger.analysis('after toggle', 'aria-label', newLabel || '')
-
-		// Label should change to reflect new state
-		expect(newLabel).not.toBe(initialLabel)
-	})
-})
-
-test.describe('Dark Mode - Persistence', () => {
-	test('should persist theme preference in localStorage', async ({
-		page
-	}, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
-
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		// Toggle to dark mode
-		const themeToggle = page.locator('button[aria-label*="theme" i]').first()
-		await themeToggle.click()
-		await page.waitForTimeout(300)
-
-		// Check localStorage
-		const storedTheme = await page.evaluate(() => {
-			return (
-				localStorage.getItem('theme') || localStorage.getItem('color-scheme')
+async function settle(page: Page): Promise<void> {
+	await page.evaluate(
+		() =>
+			new Promise<void>(resolve =>
+				requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
 			)
-		})
-
-		logger.analysis('localStorage', 'stored theme', storedTheme || 'not found')
-
-		// Theme should be stored
-		expect(storedTheme).toBeTruthy()
-	})
-
-	test('should restore theme preference on page reload', async ({
-		page
-	}, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
-
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		// Set dark mode
-		await page.evaluate(() => {
-			localStorage.setItem('theme', 'dark')
-			document.documentElement.classList.add('dark')
-		})
-
-		logger.step('Reloading page')
-		await page.reload()
-		await page.waitForLoadState('networkidle')
-
-		// Check if dark mode is still active
-		const isDark = await page.evaluate(() => {
-			return document.documentElement.classList.contains('dark')
-		})
-
-		logger.analysis('after reload', 'dark mode active', String(isDark))
-
-		expect(isDark).toBe(true)
-	})
-
-	test('should restore theme preference on navigation', async ({
-		page
-	}, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
-
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		// Enable dark mode
-		const themeToggle = page.locator('button[aria-label*="theme" i]').first()
-		await themeToggle.click()
-		await page.waitForTimeout(300)
-
-		logger.step('Navigating to services page')
-		await page.goto('/services')
-		await page.waitForLoadState('networkidle')
-
-		// Dark mode should still be active
-		const isDark = await page.evaluate(() => {
-			return document.documentElement.classList.contains('dark')
-		})
-
-		logger.analysis('after navigation', 'dark mode active', String(isDark))
-
-		expect(isDark).toBe(true)
-	})
-})
-
-test.describe('Dark Mode - WCAG Contrast Requirements', () => {
-	test('should meet WCAG AA contrast ratio for body text', async ({
-		page
-	}, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
-
-		await page.emulateMedia({ colorScheme: 'dark' })
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		// Get body background and text colors
-		const colors = await page.evaluate(() => {
-			const body = document.body
-			const styles = window.getComputedStyle(body)
-
-			return {
-				background: styles.backgroundColor,
-				text: styles.color
-			}
-		})
-
-		logger.analysis('body', 'background', colors.background)
-		logger.analysis('body', 'text color', colors.text)
-
-		// Calculate contrast ratio
-		const contrastRatio = await page.evaluate(() => {
-			// Simplified contrast calculation
-			function getRGB(color: string): number[] {
-				const match = color.match(/\d+/g)
-				return match ? match.map(Number) : [0, 0, 0]
-			}
-
-			function getLuminance(rgb: number[]): number {
-				const [r, g, b] = rgb.map(val => {
-					const sRGB = val / 255
-					return sRGB <= 0.03928
-						? sRGB / 12.92
-						: ((sRGB + 0.055) / 1.055) ** 2.4
-				})
-				return 0.2126 * r + 0.7152 * g + 0.0722 * b
-			}
-
-			const body = document.body
-			const styles = window.getComputedStyle(body)
-			const bgRGB = getRGB(styles.backgroundColor)
-			const textRGB = getRGB(styles.color)
-
-			const bgLum = getLuminance(bgRGB)
-			const textLum = getLuminance(textRGB)
-
-			const lighter = Math.max(bgLum, textLum)
-			const darker = Math.min(bgLum, textLum)
-
-			return (lighter + 0.05) / (darker + 0.05)
-		})
-
-		logger.analysis('contrast', 'ratio', contrastRatio.toFixed(2))
-
-		// WCAG AA requires 4.5:1 for normal text
-		expect(contrastRatio).toBeGreaterThanOrEqual(4.5)
-	})
-
-	test('should meet WCAG AA contrast ratio for headings', async ({
-		page
-	}, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
-
-		await page.emulateMedia({ colorScheme: 'dark' })
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		const h1 = page.locator('h1').first()
-
-		if ((await h1.count()) > 0) {
-			const contrastRatio = await h1.evaluate(el => {
-				function getRGB(color: string): number[] {
-					const match = color.match(/\d+/g)
-					return match ? match.map(Number) : [0, 0, 0]
-				}
-
-				function getLuminance(rgb: number[]): number {
-					const [r, g, b] = rgb.map(val => {
-						const sRGB = val / 255
-						return sRGB <= 0.03928
-							? sRGB / 12.92
-							: ((sRGB + 0.055) / 1.055) ** 2.4
-					})
-					return 0.2126 * r + 0.7152 * g + 0.0722 * b
-				}
-
-				const styles = window.getComputedStyle(el)
-				const parent = el.parentElement
-				const parentStyles = parent ? window.getComputedStyle(parent) : styles
-
-				const bgRGB = getRGB(parentStyles.backgroundColor)
-				const textRGB = getRGB(styles.color)
-
-				const bgLum = getLuminance(bgRGB)
-				const textLum = getLuminance(textRGB)
-
-				const lighter = Math.max(bgLum, textLum)
-				const darker = Math.min(bgLum, textLum)
-
-				return (lighter + 0.05) / (darker + 0.05)
-			})
-
-			logger.analysis('h1 contrast', 'ratio', contrastRatio.toFixed(2))
-
-			// WCAG AA for large text (headings): 3:1
-			expect(contrastRatio).toBeGreaterThanOrEqual(3.0)
-		}
-	})
-
-	test('should meet contrast for interactive elements', async ({
-		page
-	}, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
-
-		await page.emulateMedia({ colorScheme: 'dark' })
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		// Find primary button
-		const button = page.locator('button, a[role="button"]').first()
-
-		if ((await button.count()) > 0) {
-			const contrastRatio = await button.evaluate(el => {
-				function getRGB(color: string): number[] {
-					const match = color.match(/\d+/g)
-					return match ? match.map(Number) : [0, 0, 0]
-				}
-
-				function getLuminance(rgb: number[]): number {
-					const [r, g, b] = rgb.map(val => {
-						const sRGB = val / 255
-						return sRGB <= 0.03928
-							? sRGB / 12.92
-							: ((sRGB + 0.055) / 1.055) ** 2.4
-					})
-					return 0.2126 * r + 0.7152 * g + 0.0722 * b
-				}
-
-				const styles = window.getComputedStyle(el)
-				const bgRGB = getRGB(styles.backgroundColor)
-				const textRGB = getRGB(styles.color)
-
-				const bgLum = getLuminance(bgRGB)
-				const textLum = getLuminance(textRGB)
-
-				const lighter = Math.max(bgLum, textLum)
-				const darker = Math.min(bgLum, textLum)
-
-				return (lighter + 0.05) / (darker + 0.05)
-			})
-
-			logger.analysis('button contrast', 'ratio', contrastRatio.toFixed(2))
-
-			expect(contrastRatio).toBeGreaterThanOrEqual(4.5)
-		}
-	})
-})
-
-test.describe('Dark Mode - System Preference Detection', () => {
-	test('should respect system dark mode preference', async ({
-		page
-	}, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
-
-		// Emulate system dark mode
-		await page.emulateMedia({ colorScheme: 'dark' })
-
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		// Check if dark mode is applied
-		const isDark = await page.evaluate(() => {
-			return document.documentElement.classList.contains('dark')
-		})
-
-		logger.analysis('system preference', 'dark mode', String(isDark))
-
-		// Should respect system preference if no localStorage override
-		// This test might pass or fail depending on implementation
-	})
-
-	test('should respect system light mode preference', async ({
-		page
-	}, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
-
-		// Emulate system light mode
-		await page.emulateMedia({ colorScheme: 'light' })
-
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		const isDark = await page.evaluate(() => {
-			return document.documentElement.classList.contains('dark')
-		})
-
-		logger.analysis(
-			'system preference',
-			'light mode (not dark)',
-			String(!isDark)
-		)
-	})
-})
-
-test.describe('Dark Mode - Color Values', () => {
-	test('should use dark OKLCH colors in dark mode', async ({
-		page
-	}, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
-
-		await page.emulateMedia({ colorScheme: 'dark' })
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		// Check CSS custom properties for dark mode
-		const darkColors = await page.evaluate(() => {
-			const root = document.documentElement
-			const styles = window.getComputedStyle(root)
-
-			return {
-				background: styles.getPropertyValue('--color-background-dark').trim(),
-				foreground: styles.getPropertyValue('--color-foreground-dark').trim(),
-				primary: styles.getPropertyValue('--color-primary-dark').trim()
-			}
-		})
-
-		logger.analysis('dark colors', 'background', darkColors.background)
-		logger.analysis('dark colors', 'foreground', darkColors.foreground)
-		logger.analysis('dark colors', 'primary', darkColors.primary)
-
-		// Should contain OKLCH values (browsers may convert to lab() format)
-		expect(darkColors.background).toMatch(/oklch|lab/)
-		expect(darkColors.foreground).toMatch(/oklch|lab/)
-	})
-
-	test('should have appropriate lightness values in dark mode', async ({
-		page
-	}, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
-
-		await page.emulateMedia({ colorScheme: 'dark' })
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		// Check background is dark (low lightness)
-		const _bgColor = await page.evaluate(() => {
-			return window.getComputedStyle(document.body).backgroundColor
-		})
-
-		// Parse RGB and check it's dark
-		const isDarkBackground = await page.evaluate(() => {
-			const bg = window.getComputedStyle(document.body).backgroundColor
-			const match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/)
-
-			if (match) {
-				const [, r, g, b] = match.map(Number)
-				const avg = (r + g + b) / 3
-				// Dark backgrounds should have average RGB < 50
-				return avg < 50
-			}
-
-			return false
-		})
-
-		logger.analysis('background', 'is dark', String(isDarkBackground))
-
-		expect(isDarkBackground).toBe(true)
-	})
-})
-
-test.describe('Dark Mode - All Pages', () => {
-	const pages = [
-		{ path: '/', name: 'Home' },
-		{ path: '/services', name: 'Services' },
-		{ path: '/showcase', name: 'Portfolio' },
-		{ path: '/contact', name: 'Contact' }
-	]
-
-	for (const pageDef of pages) {
-		test(`should render ${pageDef.name} properly in dark mode`, async ({
+	)
+}
+
+test.describe('Dark Mode - Light Only', () => {
+	for (const pageDef of PAGES) {
+		test(`${pageDef.name} renders light under an OS dark preference`, async ({
 			page
 		}, testInfo) => {
 			const logger = createTestLogger(testInfo.title)
 
 			await page.emulateMedia({ colorScheme: 'dark' })
+			logger.step(
+				`Navigating to ${pageDef.path} with prefers-color-scheme: dark`
+			)
 			await page.goto(pageDef.path)
 			await page.waitForLoadState('networkidle')
 
-			// Check dark mode is active
-			const isDark = await page.evaluate(() => {
+			const scheme = await page.evaluate(() => {
+				// Probe element painted with the bg-background / text-foreground
+				// utilities: body must resolve to the same colors.
+				const probe = document.createElement('div')
+				probe.className = 'bg-background text-foreground'
+				document.body.appendChild(probe)
+				const probeStyle = getComputedStyle(probe)
+				const result = {
+					htmlHasDark: document.documentElement.classList.contains('dark'),
+					darkElements: document.querySelectorAll('.dark').length,
+					colorScheme: getComputedStyle(document.documentElement).colorScheme,
+					bodyBackground: getComputedStyle(document.body).backgroundColor,
+					bodyColor: getComputedStyle(document.body).color,
+					probeBackground: probeStyle.backgroundColor,
+					probeColor: probeStyle.color
+				}
+				probe.remove()
+				return result
+			})
+			logger.analysis('document', 'scheme', scheme)
+
+			expect(scheme.htmlHasDark).toBe(false)
+			expect(scheme.darkElements).toBe(0)
+			expect(scheme.colorScheme).toBe('light')
+			expect(scheme.bodyBackground).not.toBe('rgba(0, 0, 0, 0)')
+			expect(scheme.bodyBackground).toBe(scheme.probeBackground)
+			expect(scheme.bodyColor).toBe(scheme.probeColor)
+
+			logger.complete('Page stays light under an OS dark preference')
+		})
+
+		test(`${pageDef.name} has no color changes between light and dark preference`, async ({
+			page
+		}, testInfo) => {
+			const logger = createTestLogger(testInfo.title)
+
+			await page.emulateMedia({ colorScheme: 'light' })
+			logger.step(`Navigating to ${pageDef.path}`)
+			await page.goto(pageDef.path)
+			await page.waitForLoadState('networkidle')
+			await settle(page)
+			const light = await collectColors(page)
+
+			// Same DOM, preference flipped: any difference is a style that
+			// responds to prefers-color-scheme.
+			logger.step('Switching the OS preference to dark')
+			await page.emulateMedia({ colorScheme: 'dark' })
+			await settle(page)
+			const dark = await collectColors(page)
+
+			expect(dark.length).toBe(light.length)
+			const diffs = dark.filter((element, i) => {
+				const before = light[i]
 				return (
-					document.documentElement.classList.contains('dark') ||
-					document.documentElement.getAttribute('data-theme') === 'dark'
+					before === undefined ||
+					element.color !== before.color ||
+					element.backgroundColor !== before.backgroundColor ||
+					element.borderColor !== before.borderColor
 				)
 			})
+			logger.verify('elements whose colors changed', diffs.length, 0)
+			expect(diffs).toEqual([])
 
-			logger.analysis(`${pageDef.name}`, 'dark mode active', String(isDark))
-
-			// Check background is dark
-			const bgColor = await page.evaluate(() => {
-				return window.getComputedStyle(document.body).backgroundColor
-			})
-
-			logger.analysis(`${pageDef.name}`, 'background-color', bgColor)
-
-			// Verify no bright backgrounds
-			const isBright = await page.evaluate(() => {
-				const bg = window.getComputedStyle(document.body).backgroundColor
-				const match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/)
-
-				if (match) {
-					const [, r, g, b] = match.map(Number)
-					const avg = (r + g + b) / 3
-					// Bright backgrounds have average RGB > 200
-					return avg > 200
-				}
-
-				return false
-			})
-
-			logger.analysis(
-				`${pageDef.name}`,
-				'has bright background',
-				String(isBright)
-			)
-
-			expect(isBright).toBe(false)
+			logger.complete('No element changes color under an OS dark preference')
 		})
 	}
-})
-
-test.describe('Dark Mode - Transitions', () => {
-	test('should have smooth color transition when toggling', async ({
-		page
-	}, testInfo) => {
-		const logger = createTestLogger(testInfo.title)
-
-		await page.goto('/')
-		await page.waitForLoadState('networkidle')
-
-		// Check for transition properties
-		const hasTransition = await page.evaluate(() => {
-			const body = document.body
-			const styles = window.getComputedStyle(body)
-			const transition =
-				styles.transition || styles.getPropertyValue('transition')
-
-			return transition.includes('color') || transition.includes('background')
-		})
-
-		logger.analysis('body', 'has color transition', String(hasTransition))
-
-		// Transitions improve UX but are not strictly required
-	})
 })

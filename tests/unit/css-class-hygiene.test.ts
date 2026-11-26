@@ -7,13 +7,15 @@
  * token patterns that have historically slipped past review:
  *
  *   - `*-texter` (typo for `*-text`) — saw 6 instances in PR #183
- *   - `*-dark` utilities outside the legitimate `grid-pattern-dark`
- *     custom @utility — `--color-*-dark` tokens were removed in PR #183
+ *   - `*-dark` utilities — `--color-*-dark` tokens were removed in PR #183
  *     since they were never consumed
+ *   - `dark:` variants — the site is light only, so globals.css has no dark
+ *     palette and any `dark:` utility would apply OS-dark overrides on top
+ *     of light tokens
  *
  * Implementation notes:
  *   - Uses match-level allowlisting (not line-level), so a line containing
- *     both a legitimate `grid-pattern-dark` and a buggy `hover:bg-foo-dark`
+ *     both an allowlisted `*-dark` class and a buggy `hover:bg-foo-dark`
  *     correctly reports only the second.
  *   - Class-name matching anchors on whitespace, quotes, or string boundaries
  *     (the only positions Tailwind utilities appear in real source). This
@@ -30,6 +32,7 @@ import { readFile } from 'node:fs/promises'
 import { Glob } from 'bun'
 
 const SRC_GLOB = 'src/**/*.{ts,tsx,css}'
+const GLOBALS_CSS = 'src/app/globals.css'
 const EXCLUDE_PATHS = [
 	'_generated/', // brand.ts is regenerated from globals.css
 	'.next/',
@@ -45,7 +48,8 @@ const CLASS_END = '(?=$|[\\s"\'`])'
 // Allowlist of legitimate `*-dark` matches (custom @utility classes that
 // happen to share the suffix). Compared against the captured class string,
 // not the surrounding line, so adjacent violations on the same line still fire.
-const DARK_ALLOWLIST = new Set(['grid-pattern-dark', 'dark:grid-pattern-dark'])
+// Empty since the grid-pattern variants collapsed into one `grid-pattern`.
+const DARK_ALLOWLIST = new Set<string>()
 
 /**
  * Build the regex that matches a whole Tailwind utility ending in `-${suffix}`,
@@ -59,6 +63,18 @@ function suffixPattern(suffix: string): RegExp {
 		'g'
 	)
 }
+
+/**
+ * Matches a whole utility carrying the `dark:` variant anywhere in its
+ * variant chain (`dark:bg-x`, `md:dark:bg-x`, `dark:hover:bg-x`,
+ * `dark:has-data-[state=checked]:bg-x`). Requires a non-space character
+ * after `dark:`, so prose such as "no dark: utilities" in comments does not
+ * match.
+ */
+const DARK_VARIANT_PATTERN = new RegExp(
+	`${CLASS_START}((?:[a-z0-9@_\\[\\]=&>*.-]+:)*dark:[^\\s"'\`]+)`,
+	'g'
+)
 
 interface Violation {
 	file: string
@@ -175,6 +191,34 @@ describe('CSS class hygiene', () => {
 		})
 	})
 
+	describe('DARK_VARIANT_PATTERN regex behavior', () => {
+		const captures = (input: string): string[] =>
+			// biome-ignore lint/style/noNonNullAssertion: capture group is required
+			[...input.matchAll(DARK_VARIANT_PATTERN)].map(m => m[1]!)
+
+		test('captures a bare dark: utility', () => {
+			expect(captures('"border dark:bg-input/30"')).toEqual([
+				'dark:bg-input/30'
+			])
+		})
+
+		test('captures dark: after and before other variants', () => {
+			expect(
+				captures(' md:dark:bg-x dark:hover:bg-y dark:aria-invalid:ring-z')
+			).toEqual(['md:dark:bg-x', 'dark:hover:bg-y', 'dark:aria-invalid:ring-z'])
+		})
+
+		test('captures dark: after an arbitrary data variant', () => {
+			expect(captures(' dark:has-data-[state=checked]:bg-primary/10')).toEqual([
+				'dark:has-data-[state=checked]:bg-primary/10'
+			])
+		})
+
+		test('ignores prose mentioning dark: in comments', () => {
+			expect(captures(' * no dark: utilities and no .dark block')).toEqual([])
+		})
+	})
+
 	test('no `-texter` suffix typos in src/ (intended: `-text`)', async () => {
 		const violations = await findMatches(suffixPattern('texter'))
 		if (violations.length > 0) {
@@ -188,18 +232,48 @@ describe('CSS class hygiene', () => {
 		expect(violations).toEqual([])
 	})
 
-	test('no broken `*-dark` utilities in src/ outside `grid-pattern-dark`', async () => {
+	test('no broken `*-dark` utilities in src/', async () => {
 		const matches = await findMatches(suffixPattern('dark'))
 		const violations = matches.filter(v => !DARK_ALLOWLIST.has(v.match))
 		if (violations.length > 0) {
 			throw new Error(
 				`Found ${violations.length} occurrence(s) of broken \`*-dark\` ` +
 					`utility. The --color-*-dark tokens were removed in PR #183 — ` +
-					`use the unsuffixed token (the .dark class redefines it for dark ` +
-					`mode) or the purpose-built --color-*-text shade.\n` +
+					`use the unsuffixed token or the purpose-built --color-*-text ` +
+					`shade.\n` +
 					`${formatViolations(violations)}`
 			)
 		}
 		expect(violations).toEqual([])
+	})
+
+	test('no `dark:` variants in src/ (the site is light only)', async () => {
+		const violations = await findMatches(DARK_VARIANT_PATTERN)
+		if (violations.length > 0) {
+			throw new Error(
+				`Found ${violations.length} \`dark:\` utility(ies). The site is ` +
+					`light only: there is no dark palette, so a dark: variant only ` +
+					`applies an override under an OS dark preference. Remove it.\n` +
+					`${formatViolations(violations)}`
+			)
+		}
+		expect(violations).toEqual([])
+	})
+
+	test('globals.css defines no dark palette or dark variant', async () => {
+		const css = await readFile(GLOBALS_CSS, 'utf8')
+		const darkRules = [
+			/^\s*\.dark\s*\{/,
+			/@custom-variant\s+dark\b/,
+			/prefers-color-scheme/
+		]
+		const offenders: string[] = []
+		css.split('\n').forEach((line, i) => {
+			if (darkRules.some(rule => rule.test(line))) {
+				offenders.push(`${GLOBALS_CSS}:${i + 1}  ${line.trim()}`)
+			}
+		})
+		expect(offenders).toEqual([])
+		expect(css).toMatch(/:root\s*\{[^}]*color-scheme:\s*light\s*;/)
 	})
 })

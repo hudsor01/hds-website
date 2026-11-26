@@ -182,9 +182,7 @@ interface SectionProps {
 function Section({ title, children }: SectionProps) {
 	return (
 		<fieldset className="space-y-content border-t border-border pt-6 first:border-t-0 first:pt-0">
-			<legend className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-				{title}
-			</legend>
+			<legend className="text-eyebrow text-muted-foreground">{title}</legend>
 			{children}
 		</fieldset>
 	)
@@ -207,10 +205,10 @@ function ModeToggle({ label, options, active, onChange }: ModeToggleProps) {
 					aria-pressed={active === index}
 					aria-label={`${label} in ${option === '%' ? 'percent' : 'dollars'}`}
 					onClick={() => onChange(index as 0 | 1)}
-					className={`px-2 py-1 text-xs rounded ${
+					className={`px-2 py-1 text-xs rounded-md border ${
 						active === index
-							? 'bg-accent text-accent-foreground'
-							: 'bg-muted text-muted-foreground'
+							? 'bg-accent text-accent-foreground border-accent-text'
+							: 'bg-muted text-muted-foreground border-transparent'
 					}`}
 				>
 					{option}
@@ -550,7 +548,7 @@ function MortgageCalculatorView({
 				</div>
 
 				<div className="grid gap-content md:grid-cols-2">
-					<div className="space-y-tight">
+					<div className="flex flex-col gap-tight">
 						<Label id="program-label" htmlFor="program">
 							Loan Type
 						</Label>
@@ -582,7 +580,7 @@ function MortgageCalculatorView({
 						</Select>
 					</div>
 
-					<div className="space-y-tight">
+					<div className="flex flex-col gap-tight">
 						<Label id="loanTerm-label" htmlFor="loanTerm">
 							Loan Term
 						</Label>
@@ -619,8 +617,8 @@ function MortgageCalculatorView({
 				)}
 
 				{program === 'va' && (
-					<div className="space-y-tight rounded-lg border border-border p-4">
-						<div className="space-y-tight">
+					<div className="space-y-tight rounded-xl border border-border p-4">
+						<div className="flex flex-col gap-tight">
 							<Label id="vaUse-label" htmlFor="vaUse">
 								VA Loan Use
 							</Label>

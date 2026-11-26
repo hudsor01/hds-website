@@ -16,10 +16,8 @@ export async function BlogArchive({ page }: BlogArchiveProps) {
 	return (
 		<>
 			<div className="mb-10">
-				<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-					All Articles
-				</p>
-				<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+				<p className="text-eyebrow mb-3">All Articles</p>
+				<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 					All Articles
 				</h2>
 				<p className="text-lead text-muted-foreground max-w-2xl">
@@ -29,7 +27,7 @@ export async function BlogArchive({ page }: BlogArchiveProps) {
 			</div>
 
 			{posts.length === 0 ? (
-				<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+				<div className="rounded-xl border border-border bg-card p-8 text-center">
 					<p className="text-sm text-muted-foreground leading-relaxed">
 						No articles found. Check back soon for new content!
 					</p>

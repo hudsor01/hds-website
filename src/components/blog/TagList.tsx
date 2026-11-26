@@ -28,21 +28,14 @@ export function TagList({ tags, activeSlug }: TagListProps) {
 						className={cn(
 							'flex items-center gap-1 text-sm px-3 py-1 border rounded-md transition-colors',
 							isActive
-								? 'text-accent-foreground bg-accent border-accent'
-								: 'text-accent border-accent/30 hover:text-accent-foreground hover:bg-accent'
+								? 'text-accent-foreground bg-accent border-accent-text'
+								: 'text-accent-text border-accent/30 hover:text-accent-foreground hover:bg-accent'
 						)}
 					>
 						<Tag className="w-4 h-4" />
 						{tag.name}
 						{typeof count === 'number' && (
-							<span
-								className={cn(
-									'tabular-nums text-xs',
-									isActive ? 'opacity-90' : 'opacity-70'
-								)}
-							>
-								({count})
-							</span>
+							<span className="tabular-nums text-xs">({count})</span>
 						)}
 					</Link>
 				)

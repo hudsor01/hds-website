@@ -94,17 +94,11 @@ interface ParsedToken {
 	hex: string
 }
 
-function parseThemeBlock(
-	css: string,
-	blockName: '@theme' | '.dark'
-): ParsedToken[] {
-	const header = `${blockName} {`
+function parseThemeBlock(css: string): ParsedToken[] {
+	const header = '@theme {'
 	const headerStart = css.indexOf(header)
 	if (headerStart === -1) {
-		if (blockName === '@theme') {
-			throw new Error('No @theme {} block found in globals.css')
-		}
-		return []
+		throw new Error('No @theme {} block found in globals.css')
 	}
 	const bodyStart = headerStart + header.length
 	let depth = 1
@@ -122,7 +116,7 @@ function parseThemeBlock(
 		}
 	}
 	if (blockEnd === -1) {
-		throw new Error(`Could not find closing brace for ${blockName} block`)
+		throw new Error('Could not find closing brace for @theme block')
 	}
 	const body = css.slice(bodyStart, blockEnd)
 
@@ -149,26 +143,22 @@ function parseThemeBlock(
 	return tokens
 }
 
-function emit(lightTokens: ParsedToken[]): string {
+function emit(tokens: ParsedToken[]): string {
 	const ts = new Date().toISOString()
 	const lines: string[] = [
 		'// AUTO-GENERATED FROM src/app/globals.css — DO NOT EDIT MANUALLY.',
 		'// Regenerate with: bun run brand:generate',
 		'//',
-		'// Source: src/app/globals.css @theme {} (light) and .dark {} (dark)',
+		'// Source: src/app/globals.css @theme {}',
 		'// Conversion: OKLCH -> sRGB hex (Bjorn Ottosson formulas, hand-rolled, no deps)',
 		`// Last generated: ${ts}`,
 		'',
 		'export const BRAND = {'
 	]
-	for (const t of lightTokens) {
+	for (const t of tokens) {
 		lines.push(`\t${t.jsName}: '${t.hex}', // ${t.cssName}`)
 	}
 	lines.push('} as const', '')
-	// BRAND_DARK + BrandColor / BrandColorDark types were emitted previously
-	// but never consumed. Reintroduce here only if a runtime consumer of the
-	// dark palette or a keyof-typed prop surfaces; the dark token mirror is
-	// already covered by the CSS variables under `.dark { ... }`.
 	return lines.join('\n')
 }
 
@@ -181,10 +171,9 @@ function stripTimestamp(content: string): string {
 
 function main(): void {
 	const css = readFileSync(SRC, 'utf8')
-	const lightTokens = parseThemeBlock(css, '@theme')
-	const darkTokens = parseThemeBlock(css, '.dark')
+	const tokens = parseThemeBlock(css)
 
-	const newContent = emit(lightTokens)
+	const newContent = emit(tokens)
 
 	let existing = ''
 	try {
@@ -193,7 +182,7 @@ function main(): void {
 		// not yet generated; that's fine
 	}
 
-	const summary = `${lightTokens.length} light + ${darkTokens.length} dark tokens`
+	const summary = `${tokens.length} tokens`
 
 	if (existing && stripTimestamp(existing) === stripTimestamp(newContent)) {
 		process.stdout.write(`brand.ts unchanged (${summary})\n`)

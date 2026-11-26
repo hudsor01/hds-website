@@ -22,7 +22,7 @@ async function TagsSection() {
 export function BlogSidebar() {
 	return (
 		<aside className="w-full lg:w-80 space-y-6">
-			<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+			<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 				<h2 className="text-h3 text-foreground mb-3 text-balance">
 					Curious what a site would cost?
 				</h2>
@@ -42,7 +42,7 @@ export function BlogSidebar() {
 				<TagsSection />
 			</Suspense>
 
-			<div className="rounded-xl border border-border bg-surface-raised p-8 text-center hover:border-border-strong transition-colors">
+			<div className="rounded-xl border border-border bg-card p-8 text-center hover:border-border-strong transition-colors">
 				<h2 className="text-h3 text-foreground mb-3 text-balance">
 					Ready for a better website?
 				</h2>

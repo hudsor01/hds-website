@@ -158,18 +158,16 @@ export default function WebsiteMigrationPage() {
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						Website Migration
-					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-eyebrow mb-3">Website Migration</p>
+					<h1 className="text-page-title text-foreground text-balance">
 						Switch Website Platforms Without Losing Your Domain, Rankings, or
 						Customers
 					</h1>
@@ -186,12 +184,7 @@ export default function WebsiteMigrationPage() {
 							</Link>
 						</Button>
 						{BUSINESS_INFO.phone && (
-							<Button
-								asChild
-								variant="outline"
-								size="xl"
-								className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-							>
+							<Button asChild variant="outline-strong" size="xl">
 								<a href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}>
 									<Phone className="w-4 h-4" />
 									{BUSINESS_INFO.phone}
@@ -203,13 +196,11 @@ export default function WebsiteMigrationPage() {
 			</section>
 
 			{/* What's at Risk */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							What&apos;s at Stake
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">What&apos;s at Stake</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							What Happens When You Leave Your Provider Without a Plan
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -223,9 +214,9 @@ export default function WebsiteMigrationPage() {
 						{risks.map(risk => (
 							<div
 								key={risk.title}
-								className="p-8 rounded-xl border border-border bg-surface-raised"
+								className="p-8 rounded-xl border border-border bg-card"
 							>
-								<div className="w-12 h-12 rounded-lg bg-destructive/10 border border-destructive/20 flex items-center justify-center mb-6">
+								<div className="w-12 h-12 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center justify-center mb-6">
 									<risk.Icon className="w-5 h-5 text-destructive" />
 								</div>
 								<h3 className="text-h3 text-foreground mb-3">{risk.title}</h3>
@@ -239,27 +230,25 @@ export default function WebsiteMigrationPage() {
 			</section>
 
 			{/* Comparison Table */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-3xl">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Side by Side
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">Side by Side</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Managed Platforms vs. Owning Your Website
 						</h2>
 					</div>
 
 					<div className="rounded-xl border border-border overflow-hidden">
 						{/* Header */}
-						<div className="grid grid-cols-3 bg-surface-raised border-b border-border">
+						<div className="grid grid-cols-3 bg-card border-b border-border">
 							<div className="px-6 py-4 text-sm font-semibold text-muted-foreground">
 								Feature
 							</div>
 							<div className="px-6 py-4 text-sm font-semibold text-muted-foreground text-center">
 								Managed Platform
 							</div>
-							<div className="px-6 py-4 text-sm font-semibold text-accent text-center">
+							<div className="px-6 py-4 text-sm font-semibold text-accent-text text-center">
 								Hudson Digital
 							</div>
 						</div>
@@ -269,7 +258,7 @@ export default function WebsiteMigrationPage() {
 							<div
 								key={row.feature}
 								className={`grid grid-cols-3 border-b border-border last:border-0 ${
-									index % 2 === 0 ? 'bg-background' : 'bg-surface-raised/50'
+									index % 2 === 0 ? 'bg-background' : 'bg-card/50'
 								}`}
 							>
 								<div className="px-6 py-4 text-sm font-medium text-foreground">
@@ -288,13 +277,11 @@ export default function WebsiteMigrationPage() {
 			</section>
 
 			{/* Migration Process */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-3xl">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							How It Works
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">How It Works</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Your Migration in 4 Steps
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -306,9 +293,12 @@ export default function WebsiteMigrationPage() {
 						{migrationSteps.map(step => (
 							<div
 								key={step.step}
-								className="flex gap-6 p-6 rounded-xl border border-border bg-surface-raised hover:border-border-strong transition-colors"
+								className="flex gap-6 p-6 rounded-xl border border-border bg-card hover:border-border-strong transition-colors"
 							>
-								<div className="text-3xl font-black text-accent/30 tabular-nums shrink-0">
+								<div
+									aria-hidden="true"
+									className="text-3xl font-black text-accent/30 tabular-nums shrink-0"
+								>
 									{step.step}
 								</div>
 								<div>
@@ -324,13 +314,11 @@ export default function WebsiteMigrationPage() {
 			</section>
 
 			{/* What You Get */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-3xl">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							After Migration
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">After Migration</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							What You Walk Away With
 						</h2>
 					</div>
@@ -358,7 +346,7 @@ export default function WebsiteMigrationPage() {
 			</section>
 
 			{/* Stats */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="grid sm:grid-cols-3 gap-px bg-border/30 rounded-2xl overflow-hidden">
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
@@ -366,7 +354,7 @@ export default function WebsiteMigrationPage() {
 							<div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
 								<Clock className="w-5 h-5 text-accent" />
 							</div>
-							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
+							<div className="text-4xl font-black text-accent-text mb-2 tabular-nums">
 								30 days
 							</div>
 							<div className="text-sm text-muted-foreground">
@@ -378,7 +366,7 @@ export default function WebsiteMigrationPage() {
 							<div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
 								<Zap className="w-5 h-5 text-accent" />
 							</div>
-							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
+							<div className="text-4xl font-black text-accent-text mb-2 tabular-nums">
 								1-4 wks
 							</div>
 							<div className="text-sm text-muted-foreground">
@@ -390,7 +378,7 @@ export default function WebsiteMigrationPage() {
 							<div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
 								<Shield className="w-5 h-5 text-accent" />
 							</div>
-							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
+							<div className="text-4xl font-black text-accent-text mb-2 tabular-nums">
 								$0/mo
 							</div>
 							<div className="text-sm text-muted-foreground">
@@ -402,17 +390,17 @@ export default function WebsiteMigrationPage() {
 			</section>
 
 			{/* CTA */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready to own your website{' '}
-								<span className="text-accent">for real?</span>
+								<span className="text-accent-text">for real?</span>
 							</h2>
 
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
@@ -430,12 +418,7 @@ export default function WebsiteMigrationPage() {
 								</Button>
 
 								{BUSINESS_INFO.phone && (
-									<Button
-										asChild
-										variant="outline"
-										size="xl"
-										className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-									>
+									<Button asChild variant="outline-strong" size="xl">
 										<a href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}>
 											<Phone className="w-5 h-5" />
 											Call {BUSINESS_INFO.phone}

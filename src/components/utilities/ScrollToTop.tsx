@@ -51,10 +51,9 @@ export default function ScrollToTop() {
 	}, []) // Empty deps - listener created once, avoids memory leak
 
 	const scrollToTop = () => {
-		window.scrollTo({
-			top: 0,
-			behavior: 'smooth'
-		})
+		// No `behavior`: the scroll follows <html>'s motion-safe:scroll-smooth,
+		// so it is instant for users who prefer reduced motion.
+		window.scrollTo({ top: 0 })
 	}
 
 	return (
@@ -65,7 +64,7 @@ export default function ScrollToTop() {
 					onClick={scrollToTop}
 					variant="default"
 					size="icon-lg"
-					className="fixed bottom-8 right-8 z-modal rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-smooth will-change-transform transform-gpu"
+					className="fixed bottom-8 right-8 z-nav rounded-full shadow-lg hover:shadow-xl motion-safe:hover:scale-110 transition-smooth"
 					aria-label="Scroll to top"
 				>
 					<ArrowUp className="w-6 h-6" />

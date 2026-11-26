@@ -179,7 +179,7 @@ function ResultCard({
 			{showResult ? (
 				resultSlot
 			) : columns === 'two' ? (
-				<div className="flex items-center justify-center min-h-[200px] py-12">
+				<div className="flex items-center justify-center min-h-50 py-12">
 					<p className="text-muted-foreground text-sm text-center">
 						{resultPlaceholder ?? 'Fill in the form to see results'}
 					</p>
@@ -217,7 +217,8 @@ export function ToolPageLayout({
 		<div className="min-h-screen bg-background">
 			<div
 				className={cn(
-					'container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 max-w-5xl mx-auto',
+					columns === 'two' ? 'container-wide' : 'container-content',
+					'pt-28 pb-16 sm:pt-32 sm:pb-20',
 					className
 				)}
 			>
@@ -258,7 +259,7 @@ export function ToolPageLayout({
 
 				{/* Header */}
 				<div className="mb-10">
-					<h1 className="mb-3 text-h1 text-foreground leading-tight">
+					<h1 className="mb-3 text-page-title text-foreground text-balance">
 						{title}
 					</h1>
 					<p className="max-w-2xl text-lead text-muted-foreground">
@@ -268,7 +269,7 @@ export function ToolPageLayout({
 
 				{/* Body */}
 				{columns === 'two' ? (
-					<div className="grid gap-8 lg:grid-cols-[3fr_2fr] items-start">
+					<div className="grid gap-8 lg:grid-cols-tool items-start">
 						<div>{formSlot}</div>
 						<ResultCard
 							actions={actions}

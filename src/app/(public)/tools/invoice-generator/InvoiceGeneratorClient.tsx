@@ -13,6 +13,7 @@ import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { DocumentDownloadPanel } from '@/components/tools/DocumentDownloadPanel'
 import { DraftActions } from '@/components/tools/DraftActions'
 import { TextAreaField } from '@/components/tools/TextAreaField'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useClientDefaults } from '@/hooks/use-client-defaults'
 import { useHydrated } from '@/hooks/use-hydrated'
@@ -59,8 +60,7 @@ const DEFAULT_TERMS: InvoicePaymentTerms = 'Net 30'
 const IRS_RECORDS_URL =
 	'https://www.irs.gov/businesses/small-businesses-self-employed/how-long-should-i-keep-records'
 
-const LINE_INPUT_CLASS =
-	'w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground'
+const LINE_INPUT_CLASS = 'field'
 
 const LINE_LABEL_CLASS = 'text-xs text-muted-foreground sm:sr-only'
 
@@ -285,7 +285,7 @@ export default function InvoiceGeneratorClient() {
 					</div>
 					<div className="flex justify-between gap-content">
 						<dt className="text-muted-foreground">Total</dt>
-						<dd className="font-bold text-accent">
+						<dd className="font-bold text-accent-text">
 							{formatCents(totals.totalCents)}
 						</dd>
 					</div>
@@ -299,9 +299,7 @@ export default function InvoiceGeneratorClient() {
 			<div className="space-y-sections">
 				{/* Your Business Info */}
 				<section className="space-y-content">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Your Business
-					</h2>
+					<h2 className="text-eyebrow text-muted-foreground">Your Business</h2>
 					<div className="grid gap-content sm:grid-cols-2">
 						<CalculatorInput
 							label="Business Name"
@@ -370,7 +368,7 @@ export default function InvoiceGeneratorClient() {
 
 				{/* Client Info */}
 				<section className="space-y-content border-t border-border pt-6">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					<h2 className="text-eyebrow text-muted-foreground">
 						Bill To (Client)
 					</h2>
 					<div className="grid gap-content sm:grid-cols-2">
@@ -433,7 +431,7 @@ export default function InvoiceGeneratorClient() {
 
 				{/* Invoice Details */}
 				<section className="space-y-content border-t border-border pt-6">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					<h2 className="text-eyebrow text-muted-foreground">
 						Invoice Details
 					</h2>
 					<div className="grid gap-content sm:grid-cols-2 lg:grid-cols-4">
@@ -463,7 +461,7 @@ export default function InvoiceGeneratorClient() {
 								name="paymentTerms"
 								value={invoiceData.paymentTerms}
 								onChange={e => handlePaymentTermsChange(e.target.value)}
-								className="w-full rounded-md border border-border bg-background px-4 py-2.5 text-foreground"
+								className="field"
 							>
 								{INVOICE_PAYMENT_TERMS.map(term => (
 									<option key={term} value={term}>
@@ -491,17 +489,17 @@ export default function InvoiceGeneratorClient() {
 				{/* Line Items */}
 				<section className="space-y-content border-t border-border pt-6">
 					<div className="flex items-center justify-between">
-						<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-							Line Items
-						</h2>
-						<button
+						<h2 className="text-eyebrow text-muted-foreground">Line Items</h2>
+						<Button
 							type="button"
+							variant="link"
+							size="sm"
+							className="px-0"
 							onClick={addLineItem}
-							className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 						>
-							<Plus className="w-4 h-4" aria-hidden="true" />
+							<Plus aria-hidden="true" />
 							Add Item
-						</button>
+						</Button>
 					</div>
 
 					{/* Column headings for sighted desktop users; inputs keep their own labels */}
@@ -600,15 +598,17 @@ export default function InvoiceGeneratorClient() {
 									</span>
 								</p>
 								<div className="sm:col-span-1 flex justify-end">
-									<button
+									<Button
 										type="button"
+										variant="ghost"
+										size="icon"
+										className="hover:text-destructive"
 										onClick={() => removeLineItem(item.id)}
 										disabled={invoiceData.lineItems.length === 1}
-										className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30 disabled:cursor-not-allowed"
 										aria-label={`Remove line item ${line}`}
 									>
-										<Trash2 className="w-4 h-4" aria-hidden="true" />
-									</button>
+										<Trash2 aria-hidden="true" />
+									</Button>
 								</div>
 							</div>
 						)
@@ -651,7 +651,7 @@ export default function InvoiceGeneratorClient() {
 										}))
 									}
 									placeholder="0"
-									className="w-24 rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground text-right"
+									className="field w-24 text-right"
 								/>
 							</div>
 							{invoiceData.taxRate > 0 && (
@@ -668,7 +668,7 @@ export default function InvoiceGeneratorClient() {
 								<span className="text-lg font-semibold text-foreground">
 									Total
 								</span>
-								<span className="text-xl font-bold text-accent">
+								<span className="text-xl font-bold text-accent-text">
 									{formatCents(totals.totalCents)}
 								</span>
 							</div>
@@ -701,13 +701,11 @@ export default function InvoiceGeneratorClient() {
 
 			{/* Educational Content */}
 			<div className="mt-heading space-y-content border-t border-border pt-8">
-				<h2 className="text-lg font-semibold text-foreground">
-					Invoice Best Practices
-				</h2>
+				<h2 className="text-h4 text-foreground">Invoice Best Practices</h2>
 
 				<div className="grid gap-content sm:grid-cols-2">
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Clear Payment Terms
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -717,7 +715,7 @@ export default function InvoiceGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Detailed Descriptions
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -727,7 +725,7 @@ export default function InvoiceGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Consistent Numbering
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -737,7 +735,7 @@ export default function InvoiceGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Keep Records
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -747,7 +745,7 @@ export default function InvoiceGeneratorClient() {
 								href={IRS_RECORDS_URL}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="text-accent underline underline-offset-2 hover:text-accent/80"
+								className="link-primary"
 							>
 								See how long the IRS says to keep records
 							</a>

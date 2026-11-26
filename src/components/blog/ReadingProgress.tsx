@@ -28,7 +28,7 @@ export function ReadingProgress() {
 
 	return (
 		<div
-			className="fixed inset-x-0 top-0 z-50 h-1 bg-transparent"
+			className="fixed inset-x-0 top-0 z-nav h-1 bg-transparent"
 			role="progressbar"
 			aria-label="Reading progress"
 			aria-valuenow={progress}
@@ -36,8 +36,8 @@ export function ReadingProgress() {
 			aria-valuemax={100}
 		>
 			<div
-				className="h-full bg-accent transition-[width] duration-150 ease-out"
-				style={{ width: `${progress}%` }}
+				className="h-full origin-left bg-accent transition-transform"
+				style={{ transform: `scaleX(${progress / 100})` }}
 			/>
 		</div>
 	)

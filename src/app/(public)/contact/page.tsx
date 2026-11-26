@@ -24,15 +24,15 @@ function ContactFormSkeleton() {
 	return (
 		<div className="space-y-4 animate-pulse" aria-hidden="true">
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div className="h-12 bg-muted rounded-lg" />
-				<div className="h-12 bg-muted rounded-lg" />
+				<div className="h-12 bg-muted rounded-md" />
+				<div className="h-12 bg-muted rounded-md" />
 			</div>
-			<div className="h-12 bg-muted rounded-lg" />
-			<div className="h-12 bg-muted rounded-lg" />
-			<div className="h-12 bg-muted rounded-lg" />
-			<div className="h-12 bg-muted rounded-lg" />
-			<div className="h-32 bg-muted rounded-lg" />
-			<div className="h-12 bg-muted rounded-lg border border-border" />
+			<div className="h-12 bg-muted rounded-md" />
+			<div className="h-12 bg-muted rounded-md" />
+			<div className="h-12 bg-muted rounded-md" />
+			<div className="h-12 bg-muted rounded-md" />
+			<div className="h-32 bg-muted rounded-md" />
+			<div className="h-12 bg-muted rounded-md border border-border" />
 		</div>
 	)
 }
@@ -40,7 +40,7 @@ function ContactFormSkeleton() {
 function ServiceMapSkeleton() {
 	return (
 		<div
-			className="aspect-[16/9] max-w-3xl mx-auto rounded-xl bg-muted animate-pulse"
+			className="aspect-video max-w-3xl mx-auto rounded-xl bg-muted animate-pulse"
 			aria-hidden="true"
 		/>
 	)
@@ -77,22 +77,20 @@ export default function ContactPage() {
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20">
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20">
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 						{/* LEFT: Form */}
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<div className="mb-8">
-								<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-									Free Website Plan
-								</p>
-								<h1 className="text-page-title text-foreground leading-tight text-balance">
+								<p className="text-eyebrow mb-3">Free Website Plan</p>
+								<h1 className="text-page-title text-foreground text-balance">
 									Get Your Free Website Plan
 								</h1>
 								<p className="mt-4 text-lead text-muted-foreground">
@@ -108,12 +106,14 @@ export default function ContactPage() {
 						{/* RIGHT: Contact Info + What Happens Next */}
 						<div className="space-y-8">
 							{/* What Happens Next card */}
-							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors space-y-6">
+							<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors space-y-6">
 								<h2 className="text-h3 text-foreground">What Happens Next?</h2>
 
 								<div className="flex items-start gap-4">
 									<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-										<span className="text-accent font-bold text-sm">1</span>
+										<span className="text-accent-text font-bold text-sm">
+											1
+										</span>
 									</div>
 									<div>
 										<p className="font-semibold text-foreground text-sm">
@@ -127,7 +127,9 @@ export default function ContactPage() {
 
 								<div className="flex items-start gap-4">
 									<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-										<span className="text-accent font-bold text-sm">2</span>
+										<span className="text-accent-text font-bold text-sm">
+											2
+										</span>
 									</div>
 									<div>
 										<p className="font-semibold text-foreground text-sm">
@@ -142,7 +144,9 @@ export default function ContactPage() {
 
 								<div className="flex items-start gap-4">
 									<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-										<span className="text-accent font-bold text-sm">3</span>
+										<span className="text-accent-text font-bold text-sm">
+											3
+										</span>
 									</div>
 									<div>
 										<p className="font-semibold text-foreground text-sm">
@@ -157,7 +161,7 @@ export default function ContactPage() {
 							</div>
 
 							{/* Contact Info */}
-							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors space-y-6">
+							<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors space-y-6">
 								<h2 className="text-h3 text-foreground">Get in Touch</h2>
 								<div className="space-y-4">
 									<div className="flex items-start gap-4">
@@ -173,7 +177,7 @@ export default function ContactPage() {
 											</p>
 											<a
 												href={`mailto:${BUSINESS_INFO.email}`}
-												className="text-xs text-muted-foreground hover:text-accent transition-colors"
+												className="text-xs text-muted-foreground hover:text-accent-text transition-colors"
 											>
 												{BUSINESS_INFO.email}
 											</a>
@@ -193,7 +197,7 @@ export default function ContactPage() {
 												</p>
 												<a
 													href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}
-													className="text-xs text-muted-foreground hover:text-accent transition-colors"
+													className="text-xs text-muted-foreground hover:text-accent-text transition-colors"
 												>
 													{BUSINESS_INFO.phone}
 												</a>
@@ -227,12 +231,10 @@ export default function ContactPage() {
 			</section>
 
 			{/* Service Area Section */}
-			<section className="py-section-sm px-4 sm:px-6 bg-surface-raised">
+			<section className="py-section-sm bg-card">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Service Area
-						</p>
+						<p className="text-eyebrow mb-3">Service Area</p>
 						{/* Brand positioning resolved in favor of the canonical
 						    LocalBusiness JSON-LD areaServed ("Dallas-Fort Worth
 						    Metroplex" in seo-utils.ts:61-99) and the canonical
@@ -241,7 +243,7 @@ export default function ContactPage() {
 						    flagged the prior "Nationwide" claim as conflicting with
 						    those signals and with the site's TX-headquartered
 						    address (1301 Cherry Hill Ln, Lewisville, TX 75067). */}
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Based in Dallas-Fort Worth. Working across the South.
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">

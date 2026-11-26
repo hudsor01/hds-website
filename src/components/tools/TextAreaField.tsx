@@ -29,7 +29,7 @@ export function TextAreaField({
 				name={id}
 				rows={rows}
 				aria-describedby={helpText ? `${id}-help` : undefined}
-				className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
+				className="field"
 				{...props}
 			/>
 			{helpText && (

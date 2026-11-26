@@ -24,13 +24,11 @@ async function FeaturedSection() {
 		return null
 	}
 	return (
-		<section className="py-section-sm px-4 sm:px-6">
+		<section className="py-section-sm">
 			<div className="container-wide">
 				<div className="text-center mb-10">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						Editor&apos;s Picks
-					</p>
-					<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+					<p className="text-eyebrow mb-3">Editor&apos;s Picks</p>
+					<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 						Featured Articles
 					</h2>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -60,7 +58,7 @@ function PostListSkeleton() {
 
 function FeaturedSkeleton() {
 	return (
-		<section className="py-section-sm px-4 sm:px-6">
+		<section className="py-section-sm">
 			<div className="container-wide">
 				<div
 					className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
@@ -80,11 +78,9 @@ export default function BlogPage() {
 		<div className="min-h-screen bg-background">
 			{/* Hero Section — static shell streams immediately. */}
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						Practical Insights
-					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-eyebrow mb-3">Practical Insights</p>
+					<h1 className="text-page-title text-foreground text-balance">
 						Website Tips for Small Businesses
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
@@ -100,7 +96,7 @@ export default function BlogPage() {
 			</Suspense>
 
 			{/* All Posts + Sidebar */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="flex flex-col lg:flex-row gap-10">
 						{/* Main Content */}

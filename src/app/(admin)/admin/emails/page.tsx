@@ -131,7 +131,7 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 					{EMAIL_STATUSES.map(s => (
 						<div
 							key={s}
-							className="rounded-xl border border-border bg-surface-raised p-4"
+							className="rounded-xl border border-border bg-card p-4"
 						>
 							<div className="text-xs uppercase tracking-wider text-muted-foreground">
 								{s}
@@ -158,7 +158,7 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 				<AdminErrorState resource="scheduled emails" />
 			) : list.data.rows.length === 0 ? (
 				q ? (
-					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+					<div className="rounded-xl border border-border bg-card p-8 text-center">
 						<p className="text-sm text-muted-foreground">
 							No emails matching <span className="font-mono">{q}</span>.
 						</p>
@@ -170,7 +170,7 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 						</Link>
 					</div>
 				) : (
-					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center text-sm text-muted-foreground">
+					<div className="rounded-xl border border-border bg-card p-8 text-center text-sm text-muted-foreground">
 						No scheduled emails.
 					</div>
 				)

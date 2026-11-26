@@ -22,11 +22,9 @@ export default function TermsPage() {
 		<div className="min-h-screen bg-background">
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						Legal
-					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-eyebrow mb-3">Legal</p>
+					<h1 className="text-page-title text-foreground text-balance">
 						Terms of Service
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
@@ -40,9 +38,9 @@ export default function TermsPage() {
 			</section>
 
 			{/* Content */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
-					<div className="rounded-xl border border-border bg-surface-raised p-8 sm:p-12 space-y-10">
+			<section className="py-section-sm">
+				<div className="container-content">
+					<div className="rounded-xl border border-border bg-card p-8 sm:p-12 space-y-10">
 						<section>
 							<h2 className="text-h3 text-foreground mb-4">
 								Agreement to Terms
@@ -204,10 +202,7 @@ export default function TermsPage() {
 							<div className="text-sm text-muted-foreground space-y-4 leading-relaxed">
 								<p>
 									Your use of this website is also governed by our{' '}
-									<a
-										href="/privacy"
-										className="text-accent hover:text-accent/80 transition-colors"
-									>
+									<a href="/privacy" className="link-primary">
 										Privacy Policy
 									</a>
 									, which is incorporated into these Terms of Service by
@@ -251,12 +246,12 @@ export default function TermsPage() {
 									If you have any questions about these Terms of Service, please
 									contact us:
 								</p>
-								<div className="rounded-lg bg-muted/30 p-4 space-y-2 border border-border">
+								<div className="rounded-xl bg-muted/30 p-4 space-y-2 border border-border">
 									<p>
 										<strong className="text-foreground">Email:</strong>{' '}
 										<a
 											href="mailto:hello@hudsondigitalsolutions.com"
-											className="text-accent hover:text-accent/80 transition-colors"
+											className="link-primary"
 										>
 											hello@hudsondigitalsolutions.com
 										</a>
@@ -265,7 +260,7 @@ export default function TermsPage() {
 										<strong className="text-foreground">Website:</strong>{' '}
 										<a
 											href="https://hudsondigitalsolutions.com"
-											className="text-accent hover:text-accent/80 transition-colors"
+											className="link-primary"
 										>
 											hudsondigitalsolutions.com
 										</a>

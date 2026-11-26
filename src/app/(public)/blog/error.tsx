@@ -28,7 +28,7 @@ export default function BlogError({ error, reset }: BlogErrorProps) {
 	}, [error])
 
 	return (
-		<div className="container-wide px-4 sm:px-6 py-section-sm text-center">
+		<div className="container-wide py-section-sm text-center">
 			<h2 className="text-h3 text-foreground mb-3">
 				Couldn't load the blog right now
 			</h2>

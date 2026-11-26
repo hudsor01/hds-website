@@ -13,7 +13,7 @@ interface CTASectionProps {
 /**
  * Closing CTA card used at the bottom of detail / case-study pages.
  * Title accepts ReactNode so callers can include accent spans
- * (e.g., the success-story page uses <span className="text-accent">…</span>).
+ * (e.g., the success-story page uses <span className="text-accent-text">…</span>).
  *
  * Icon: ArrowRight (w-5 h-5). Pre-consolidation the portfolio slug page
  * incorrectly used <ExternalLink> for a link that goes to /contact — an
@@ -28,15 +28,15 @@ export function CTASection({
 	ctaHref = '/contact'
 }: CTASectionProps) {
 	return (
-		<section className="py-section px-4 sm:px-6">
+		<section className="py-section">
 			<div className="container-wide">
-				<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+				<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 					<div
 						className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 						aria-hidden="true"
 					/>
 					<div className="relative z-10">
-						<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+						<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 							{title}
 						</h2>
 						<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">

@@ -1,11 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import { afterEach, describe, expect, it, mock } from 'bun:test'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-import {
-	FloatingInput,
-	FloatingTextarea
-} from '@/components/forms/floating-field'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -19,173 +15,6 @@ import { Textarea } from '@/components/ui/textarea'
 afterEach(() => {
 	cleanup()
 	mock.restore()
-})
-
-describe('FloatingInput Component', () => {
-	const mockOnChange = mock()
-	const mockOnBlur = mock()
-
-	beforeEach(() => {
-		mockOnChange.mockClear()
-		mockOnBlur.mockClear()
-	})
-
-	it('should render with correct semantic classes', () => {
-		render(
-			<FloatingInput
-				name="test"
-				value=""
-				onChange={mockOnChange}
-				placeholder="Test Input"
-			/>
-		)
-
-		const input = screen.getByRole('textbox', { name: /Test Input/i })
-		expect(input).toBeInTheDocument()
-		expect(input).toHaveClass('pt-4', 'pb-2')
-	})
-
-	it('should float label when focused', () => {
-		render(
-			<FloatingInput
-				name="test"
-				value=""
-				onChange={mockOnChange}
-				placeholder="Test Input"
-				id="test-input"
-			/>
-		)
-
-		const input = screen.getByRole('textbox', { name: /Test Input/i })
-		const label = screen.getByText('Test Input')
-
-		// Label should not be floated initially
-		expect(label).toHaveClass('top-3', 'text-sm')
-
-		// Focus input using fireEvent (avoids fake timer issues)
-		fireEvent.focus(input)
-		expect(label).toHaveClass('-top-2', 'text-xs')
-	})
-
-	it('should keep label floated when input has value', () => {
-		render(
-			<FloatingInput
-				name="test"
-				value="Some value"
-				onChange={mockOnChange}
-				placeholder="Test Input"
-			/>
-		)
-
-		const label = screen.getByText('Test Input')
-		expect(label).toHaveClass('-top-2', 'text-xs')
-	})
-
-	it('should call onChange when typing', () => {
-		render(
-			<FloatingInput
-				name="test"
-				value=""
-				onChange={mockOnChange}
-				placeholder="Test Input"
-			/>
-		)
-
-		const input = screen.getByRole('textbox', { name: /Test Input/i })
-		fireEvent.change(input, { target: { value: 'Hello' } })
-
-		expect(mockOnChange).toHaveBeenCalled()
-	})
-
-	it('should show required indicator when required', () => {
-		render(
-			<FloatingInput
-				name="test"
-				value=""
-				onChange={mockOnChange}
-				placeholder="Required Field"
-				required
-			/>
-		)
-
-		expect(screen.getByText('*')).toBeInTheDocument()
-		expect(screen.getByText('*')).toHaveClass('text-destructive')
-	})
-
-	it('should be disabled when disabled prop is true', () => {
-		render(
-			<FloatingInput
-				name="test"
-				value=""
-				onChange={mockOnChange}
-				placeholder="Disabled Input"
-				disabled
-			/>
-		)
-
-		const input = screen.getByRole('textbox', { name: /Disabled Input/i })
-		expect(input).toBeDisabled()
-		expect(input).toHaveClass(
-			'disabled:cursor-not-allowed',
-			'disabled:opacity-50'
-		)
-	})
-
-	it('should call onBlur when focus is lost', () => {
-		render(
-			<FloatingInput
-				name="test"
-				value=""
-				onChange={mockOnChange}
-				onBlur={mockOnBlur}
-				placeholder="Test Input"
-			/>
-		)
-
-		const input = screen.getByRole('textbox', { name: /Test Input/i })
-		fireEvent.focus(input)
-		fireEvent.blur(input)
-
-		expect(mockOnBlur).toHaveBeenCalled()
-	})
-})
-
-describe('FloatingTextarea Component', () => {
-	const mockOnChange = mock()
-
-	beforeEach(() => {
-		mockOnChange.mockClear()
-	})
-
-	it('should render with semantic tokens', () => {
-		render(
-			<FloatingTextarea
-				name="message"
-				value=""
-				onChange={mockOnChange}
-				placeholder="Your Message"
-			/>
-		)
-
-		const textarea = screen.getByRole('textbox', { name: /Your Message/i })
-		expect(textarea).toBeInTheDocument()
-		expect(textarea).toHaveClass('resize-none')
-	})
-
-	it('should respect rows prop', () => {
-		render(
-			<FloatingTextarea
-				name="message"
-				value=""
-				onChange={mockOnChange}
-				placeholder="Your Message"
-				rows={6}
-			/>
-		)
-
-		const textarea = screen.getByRole('textbox', { name: /Your Message/i })
-		expect(textarea).toHaveAttribute('rows', '6')
-	})
 })
 
 describe('Button Component', () => {
@@ -228,7 +57,7 @@ describe('Button Component', () => {
 
 		rerender(<Button size="lg">Large</Button>)
 		button = screen.getByRole('button')
-		expect(button).toHaveClass('h-10')
+		expect(button).toHaveClass('h-12')
 	})
 
 	it('should be disabled when disabled prop is true', () => {
@@ -394,10 +223,10 @@ describe('Button Polish — COMP-01', () => {
 		expect(button?.className ?? '').toContain('shadow-sm')
 	})
 
-	it('default variant has active:bg-primary/70 class', () => {
+	it('default variant has active:bg-primary/85 class', () => {
 		const { container } = render(<Button variant="default">Test</Button>)
 		const button = container.querySelector('button')
-		expect(button?.className ?? '').toContain('active:bg-primary/70')
+		expect(button?.className ?? '').toContain('active:bg-primary/85')
 	})
 
 	it('accent variant has shadow-sm class', () => {
@@ -424,40 +253,33 @@ describe('Button Polish — COMP-01', () => {
 })
 
 describe('Input Polish — COMP-02', () => {
-	it('input has aria-invalid:border-destructive class', () => {
+	// Border, fill, size and the invalid state live in the .field component
+	// class (globals.css), shared by every primitive and native control.
+	it('input uses the shared field treatment', () => {
 		const { container } = render(<Input />)
 		const input = container.querySelector('input')
-		expect(input?.className ?? '').toContain('aria-invalid:border-destructive')
+		expect(input).toHaveClass('field')
 	})
 
-	it('input has aria-invalid:ring-destructive/20 class', () => {
+	it('input carries no per-primitive border, fill or ring utilities', () => {
 		const { container } = render(<Input />)
-		const input = container.querySelector('input')
-		expect(input?.className ?? '').toContain('aria-invalid:ring-destructive/20')
+		const cls = container.querySelector('input')?.className ?? ''
+		expect(cls).not.toContain('border-input')
+		expect(cls).not.toMatch(/(^|\s)bg-/)
+		expect(cls).not.toContain('ring')
 	})
 
-	it('input uses bg-surface-sunken (not bg-background) for depth', () => {
-		const { container } = render(<Input />)
-		const input = container.querySelector('input')
-		const cls = input?.className ?? ''
-		expect(cls).toContain('bg-surface-sunken')
-		expect(cls).not.toContain('bg-background')
-	})
-
-	it('textarea already has aria-invalid:border-destructive (parity check)', () => {
+	it('textarea shares the field treatment (parity check)', () => {
 		const { container } = render(<Textarea />)
-		const textarea = container.querySelector('textarea')
-		expect(textarea?.className ?? '').toContain(
-			'aria-invalid:border-destructive'
-		)
+		expect(container.querySelector('textarea')).toHaveClass('field')
 	})
 })
 
 describe('Card Surface — COMP-03', () => {
-	it('default card variant has bg-surface-raised class', () => {
+	it('default card variant has bg-card class', () => {
 		const { container } = render(<Card>Content</Card>)
 		const card = container.firstChild as HTMLElement
-		expect(card?.className ?? '').toContain('bg-surface-raised')
+		expect(card?.className ?? '').toContain('bg-card')
 	})
 
 	it('default card variant has shadow-sm (not shadow-xs)', () => {
@@ -478,6 +300,6 @@ describe('Card Surface — COMP-03', () => {
 		const { container } = render(<Card variant="glass">Content</Card>)
 		const card = container.firstChild as HTMLElement
 		expect(card?.className ?? '').toContain('glass-card')
-		expect(card?.className ?? '').not.toContain('bg-surface-raised')
+		expect(card?.className ?? '').not.toContain('border-border-subtle')
 	})
 })

@@ -13,6 +13,7 @@ import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { DocumentDownloadPanel } from '@/components/tools/DocumentDownloadPanel'
 import { DraftActions } from '@/components/tools/DraftActions'
 import { TextAreaField } from '@/components/tools/TextAreaField'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useClientDefaults } from '@/hooks/use-client-defaults'
 import { useHydrated } from '@/hooks/use-hydrated'
@@ -48,8 +49,7 @@ const proposalDraft = createLocalStorageDraft(
 
 const VALIDITY_DAYS = 30
 
-const ROW_INPUT_CLASS =
-	'w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground'
+const ROW_INPUT_CLASS = 'field'
 
 const createPricingItem = (): ProposalPricingItem => ({
 	id: crypto.randomUUID(),
@@ -290,7 +290,7 @@ export default function ProposalGeneratorClient() {
 					</div>
 					<div className="flex justify-between gap-content">
 						<dt className="text-muted-foreground">Total</dt>
-						<dd className="font-bold text-accent">
+						<dd className="font-bold text-accent-text">
 							{formatCents(pricing.totalCents)}
 						</dd>
 					</div>
@@ -303,9 +303,7 @@ export default function ProposalGeneratorClient() {
 		<div className="space-y-sections">
 			{/* Your Business Info */}
 			<section className="space-y-content">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-					Your Business
-				</h2>
+				<h2 className="text-eyebrow text-muted-foreground">Your Business</h2>
 				<div className="grid gap-content sm:grid-cols-2">
 					<CalculatorInput
 						label="Business Name"
@@ -381,7 +379,7 @@ export default function ProposalGeneratorClient() {
 
 			{/* Client Info */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+				<h2 className="text-eyebrow text-muted-foreground">
 					Client Information
 				</h2>
 				<div className="grid gap-content sm:grid-cols-3">
@@ -413,9 +411,7 @@ export default function ProposalGeneratorClient() {
 
 			{/* Project Info */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-					Project Details
-				</h2>
+				<h2 className="text-eyebrow text-muted-foreground">Project Details</h2>
 				<div className="grid gap-content sm:grid-cols-3">
 					<CalculatorInput
 						label="Project Name"
@@ -455,17 +451,17 @@ export default function ProposalGeneratorClient() {
 			{/* Scope of Work */}
 			<section className="space-y-content border-t border-border pt-6">
 				<div className="flex items-center justify-between">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Scope of Work
-					</h2>
-					<button
+					<h2 className="text-eyebrow text-muted-foreground">Scope of Work</h2>
+					<Button
 						type="button"
+						variant="link"
+						size="sm"
+						className="px-0"
 						onClick={addScopeItem}
-						className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 					>
-						<Plus className="w-4 h-4" aria-hidden="true" />
+						<Plus aria-hidden="true" />
 						Add Item
-					</button>
+					</Button>
 				</div>
 				{proposalData.scopeItems.map((item, index) => {
 					const number = index + 1
@@ -482,17 +478,19 @@ export default function ProposalGeneratorClient() {
 								value={item}
 								onChange={e => handleScopeItemChange(index, e.target.value)}
 								placeholder={`Scope item ${number}...`}
-								className="flex-1 rounded-md border border-border bg-background px-4 py-2 text-sm text-foreground"
+								className="field flex-1"
 							/>
-							<button
+							<Button
 								type="button"
+								variant="ghost"
+								size="icon"
+								className="hover:text-destructive"
 								onClick={() => removeScopeItem(index)}
 								disabled={proposalData.scopeItems.length === 1}
-								className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
 								aria-label={`Remove scope item ${number}`}
 							>
-								<Trash2 className="w-4 h-4" aria-hidden="true" />
-							</button>
+								<Trash2 aria-hidden="true" />
+							</Button>
 						</div>
 					)
 				})}
@@ -501,17 +499,19 @@ export default function ProposalGeneratorClient() {
 			{/* Timeline / Milestones */}
 			<section className="space-y-content border-t border-border pt-6">
 				<div className="flex items-center justify-between">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					<h2 className="text-eyebrow text-muted-foreground">
 						Timeline / Milestones
 					</h2>
-					<button
+					<Button
 						type="button"
+						variant="link"
+						size="sm"
+						className="px-0"
 						onClick={addMilestone}
-						className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 					>
-						<Plus className="w-4 h-4" aria-hidden="true" />
+						<Plus aria-hidden="true" />
 						Add Phase
-					</button>
+					</Button>
 				</div>
 				{proposalData.milestones.map((milestone, index) => {
 					const number = index + 1
@@ -583,15 +583,17 @@ export default function ProposalGeneratorClient() {
 								/>
 							</div>
 							<div className="flex justify-end sm:col-span-1">
-								<button
+								<Button
 									type="button"
+									variant="ghost"
+									size="icon"
+									className="hover:text-destructive"
 									onClick={() => removeMilestone(milestone.id)}
 									disabled={proposalData.milestones.length === 1}
-									className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
 									aria-label={`Remove milestone ${number}`}
 								>
-									<Trash2 className="w-4 h-4" aria-hidden="true" />
-								</button>
+									<Trash2 aria-hidden="true" />
+								</Button>
 							</div>
 						</div>
 					)
@@ -601,17 +603,17 @@ export default function ProposalGeneratorClient() {
 			{/* Pricing */}
 			<section className="space-y-content border-t border-border pt-6">
 				<div className="flex items-center justify-between">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Pricing
-					</h2>
-					<button
+					<h2 className="text-eyebrow text-muted-foreground">Pricing</h2>
+					<Button
 						type="button"
+						variant="link"
+						size="sm"
+						className="px-0"
 						onClick={addPricingItem}
-						className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 					>
-						<Plus className="w-4 h-4" aria-hidden="true" />
+						<Plus aria-hidden="true" />
 						Add Item
-					</button>
+					</Button>
 				</div>
 				{proposalData.pricingItems.map((item, index) => {
 					const number = index + 1
@@ -631,7 +633,7 @@ export default function ProposalGeneratorClient() {
 									handlePricingChange(item.id, { description: e.target.value })
 								}
 								placeholder="Service or deliverable..."
-								className="flex-1 min-w-0 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+								className="field flex-1 min-w-0"
 							/>
 							<label htmlFor={`pricing-price-${item.id}`} className="sr-only">
 								Pricing item {number} price in dollars
@@ -649,24 +651,26 @@ export default function ProposalGeneratorClient() {
 									})
 								}
 								placeholder="0.00"
-								className="w-28 sm:w-32 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground text-right"
+								className="field w-28 sm:w-32 text-right"
 							/>
-							<button
+							<Button
 								type="button"
+								variant="ghost"
+								size="icon"
+								className="hover:text-destructive"
 								onClick={() => removePricingItem(item.id)}
 								disabled={proposalData.pricingItems.length === 1}
-								className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
 								aria-label={`Remove pricing item ${number}`}
 							>
-								<Trash2 className="w-4 h-4" aria-hidden="true" />
-							</button>
+								<Trash2 aria-hidden="true" />
+							</Button>
 						</div>
 					)
 				})}
 				<div className="flex justify-end pt-4 border-t border-border">
 					<p className="text-right">
 						<span className="text-sm text-muted-foreground mr-4">Total:</span>
-						<span className="text-xl font-bold text-accent">
+						<span className="text-xl font-bold text-accent-text">
 							{formatCents(pricing.totalCents)}
 						</span>
 					</p>
@@ -683,7 +687,7 @@ export default function ProposalGeneratorClient() {
 
 			{/* Terms */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+				<h2 className="text-eyebrow text-muted-foreground">
 					Terms &amp; Conditions
 				</h2>
 				<TextAreaField
@@ -703,12 +707,12 @@ export default function ProposalGeneratorClient() {
 			/>
 
 			{/* Educational Content */}
-			<div className="mt-heading space-y-content border-t border-border pt-8">
-				<h2 className="text-lg font-semibold text-foreground">Proposal Tips</h2>
+			<div className="space-y-content border-t border-border pt-8">
+				<h2 className="text-h4 text-foreground">Proposal Tips</h2>
 
 				<div className="grid gap-content sm:grid-cols-2">
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Clear Scope
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -718,7 +722,7 @@ export default function ProposalGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Value-Based Pricing
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -728,7 +732,7 @@ export default function ProposalGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Realistic Timeline
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -738,7 +742,7 @@ export default function ProposalGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Expiration Date
 						</h3>
 						<p className="text-sm text-muted-foreground">

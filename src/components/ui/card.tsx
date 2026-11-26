@@ -1,20 +1,19 @@
 'use client'
 
 import { cva } from 'class-variance-authority'
-import { ArrowRight, MessageCircle, Star, X } from 'lucide-react'
+import { ArrowRight, MessageCircle, Star } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ComponentType, HTMLAttributes, Ref, SVGProps } from 'react'
 import { Icon } from '@/components/utilities/Icon'
 import { cn } from '@/lib/utils'
-import { Button } from './button'
 
 const cardVariants = cva(
 	'rounded-xl border bg-card text-card-foreground transition-smooth',
 	{
 		variants: {
 			variant: {
-				default: 'border-border-subtle bg-surface-raised shadow-sm',
+				default: 'border-border-subtle shadow-sm',
 				glass: 'glass-card',
 				glassLight: 'glass-card-light',
 				glassSection: 'glass-card-light',
@@ -28,7 +27,7 @@ const cardVariants = cva(
 				none: ''
 			},
 			hover: {
-				true: 'card-hover-glow hover-lift',
+				true: 'card-hover-glow',
 				false: ''
 			}
 		},
@@ -62,20 +61,6 @@ interface ServiceCardProps extends Omit<BaseCardProps, 'variant'> {
 	gradient?: string
 	/** Detail page the title links to. */
 	href?: string
-}
-
-// Pricing Card props
-interface PricingCardProps extends Omit<BaseCardProps, 'variant'> {
-	variant: 'pricing'
-	name: string
-	price: string
-	description: string
-	features: string[]
-	notIncluded?: string[]
-	popular?: boolean
-	cta: string
-	href: string
-	roi?: string
 }
 
 // Project Card props
@@ -113,7 +98,6 @@ interface TestimonialCardProps extends Omit<BaseCardProps, 'variant' | 'id'> {
 type CardProps =
 	| BaseCardProps
 	| ServiceCardProps
-	| PricingCardProps
 	| ProjectCardProps
 	| TestimonialCardProps
 
@@ -147,7 +131,7 @@ function Card(props: CardProps) {
 						<div
 							className={cn(
 								'p-3 rounded-xl border border-current/30',
-								'hover-lift transition-smooth will-change-transform',
+								'hover-lift transition-smooth',
 								gradient
 							)}
 						>
@@ -157,7 +141,7 @@ function Card(props: CardProps) {
 							{href ? (
 								<Link
 									href={href}
-									className="hover:text-accent transition-colors"
+									className="hover:text-accent-text transition-colors"
 								>
 									{title}
 								</Link>
@@ -175,6 +159,7 @@ function Card(props: CardProps) {
 						{features.map((feature, index) => (
 							<li key={index} className="flex items-start space-x-3">
 								<svg
+									aria-hidden="true"
 									className="w-5 h-5 text-accent mt-0.5 shrink-0"
 									fill="currentColor"
 									viewBox="0 0 20 20"
@@ -189,116 +174,6 @@ function Card(props: CardProps) {
 							</li>
 						))}
 					</ul>
-				</div>
-			</div>
-		)
-	}
-
-	// Pricing Card
-	if ('variant' in props && props.variant === 'pricing') {
-		const {
-			name,
-			price,
-			description,
-			features,
-			notIncluded = [],
-			popular = false,
-			cta,
-			href,
-			roi
-		} = props as PricingCardProps
-
-		return (
-			<div ref={ref} className={cn('relative', className)}>
-				{/* Popular Label */}
-				{popular && (
-					<div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-						<div className="px-3 py-1 text-xs font-bold text-accent-foreground bg-accent rounded-md shadow-lg">
-							MOST POPULAR
-						</div>
-					</div>
-				)}
-
-				{/* Card Container */}
-				<div
-					className={cn(
-						cardVariants({ variant: 'glassLight', size: 'lg', hover: true }),
-						'group h-full flex flex-col',
-						popular && 'border-accent/50 shadow-xl'
-					)}
-				>
-					{/* Header Section */}
-					<div className="text-center mb-comfortable">
-						<h3 className="text-h4 text-foreground mb-subheading text-balance group-hover:text-accent transition-colors">
-							{name}
-						</h3>
-						<div className="text-section-title font-black text-accent mb-subheading">
-							{price}
-						</div>
-						<div className="typography">
-							<p className="text-muted-foreground leading-relaxed text-pretty">
-								{description}
-							</p>
-						</div>
-					</div>
-
-					{/* ROI Badge */}
-					{roi && (
-						<div className="mb-card-content p-button bg-success-text/10 border border-success-text/30 rounded-lg">
-							<p className="text-xs font-bold text-success-text text-center">
-								{roi}
-							</p>
-						</div>
-					)}
-
-					{/* Features & Exclusions */}
-					<div className="space-y-content mb-comfortable flex-grow">
-						{/* Included Features */}
-						<div>
-							<h4 className="text-eyebrow text-muted-foreground mb-subheading">
-								What&apos;s Included
-							</h4>
-							<ul className="space-y-tight">
-								{features.map((feature, idx) => (
-									<li key={idx} className="flex items-start gap-content">
-										<div className="w-2 h-2 rounded-full bg-muted mt-2 shrink-0" />
-										<span className="text-xs text-muted-foreground">
-											{feature}
-										</span>
-									</li>
-								))}
-							</ul>
-						</div>
-
-						{/* Not Included */}
-						{notIncluded.length > 0 && (
-							<div>
-								<h4 className="text-eyebrow text-muted-foreground mb-subheading mt-card-content">
-									Not Included
-								</h4>
-								<ul className="space-y-tight">
-									{notIncluded.map((item, idx) => (
-										<li key={idx} className="flex items-start gap-content">
-											<X className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-											<span className="text-sm text-muted-foreground">
-												{item}
-											</span>
-										</li>
-									))}
-								</ul>
-							</div>
-						)}
-					</div>
-
-					{/* CTA Button */}
-					<Button
-						asChild
-						variant={popular ? 'default' : 'secondary'}
-						size="lg"
-						className="w-full font-bold"
-					>
-						<Link href={href}>{cta}</Link>
-					</Button>
 				</div>
 			</div>
 		)
@@ -336,7 +211,7 @@ function Card(props: CardProps) {
 					<div
 						className={cn(
 							'relative w-full overflow-hidden bg-muted',
-							featured ? 'aspect-[16/10]' : 'aspect-video'
+							featured ? 'aspect-16/10' : 'aspect-video'
 						)}
 					>
 						{/* Explicit width/height (every showcase screenshot is
@@ -358,7 +233,7 @@ function Card(props: CardProps) {
 						/>
 						{/* Overlay pills: eyebrow + showcase type + featured */}
 						<div className="absolute top-3 left-3 right-3 flex items-center gap-2 flex-wrap">
-							<span className="px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-widest text-accent-text bg-card/90 border border-border">
+							<span className="px-2 py-0.5 rounded-full text-eyebrow bg-card/90 border border-border">
 								{category}
 							</span>
 							{showcaseType && (
@@ -382,15 +257,13 @@ function Card(props: CardProps) {
 					{/* Category row: badges + featured tag (suppressed when image overlay carries them) */}
 					{!hasImage && (
 						<div className="flex items-center gap-2 flex-wrap">
-							<span className="text-xs font-semibold uppercase tracking-widest text-accent">
-								{category}
-							</span>
+							<span className="text-eyebrow">{category}</span>
 							{showcaseType && (
 								<span
 									className={cn(
 										'px-2 py-0.5 rounded-full text-xs font-semibold border',
 										showcaseType === 'detailed'
-											? 'bg-accent/10 text-accent border-accent/20'
+											? 'bg-accent/10 text-accent-text border-accent/20'
 											: 'bg-muted text-muted-foreground border-border'
 									)}
 								>
@@ -406,7 +279,7 @@ function Card(props: CardProps) {
 					)}
 
 					{/* Title */}
-					<h3 className="text-xl lg:text-2xl font-black text-foreground leading-tight group-hover:text-accent transition-colors">
+					<h3 className="text-xl lg:text-2xl font-black text-foreground leading-tight group-hover:text-accent-text transition-colors">
 						{title}
 					</h3>
 
@@ -446,7 +319,7 @@ function Card(props: CardProps) {
 					)}
 
 					{/* View link hint — visible on hover */}
-					<div className="flex items-center gap-1.5 text-sm font-semibold text-accent opacity-0 group-hover:opacity-100 transition-opacity">
+					<div className="flex items-center gap-1.5 text-sm font-semibold text-accent-text opacity-0 group-hover:opacity-100 transition-opacity">
 						View Project
 						<ArrowRight className="w-4 h-4" aria-hidden="true" />
 					</div>
@@ -464,8 +337,14 @@ function Card(props: CardProps) {
 				    externalLink was set - and every showcase row has one - so the
 				    list never linked to any detail page, orphaning them (and the
 				    followed richardwhudsonjr.com link they carry) from internal
-				    PageRank. Users reach the live site from the detail page. */}
-				<Link href={`/showcase/${slug}`} aria-label={`View project: ${title}`}>
+				    PageRank. Users reach the live site from the detail page.
+				    The link is a block with the card radius: an inline <a>
+				    around block content paints no focus outline. */}
+				<Link
+					href={`/showcase/${slug}`}
+					aria-label={`View project: ${title}`}
+					className="block h-full rounded-xl"
+				>
 					{cardContent}
 				</Link>
 			</div>
@@ -531,10 +410,10 @@ function Card(props: CardProps) {
 				{/* Client Info */}
 				<div className="border-t border-border pt-6 flex items-center gap-3">
 					<div
-						className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex-center shrink-0"
+						className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0"
 						aria-hidden="true"
 					>
-						<span className="text-accent font-bold text-sm">
+						<span className="text-accent-text font-bold text-sm">
 							{name
 								.split(' ')
 								.filter(Boolean)
@@ -550,7 +429,7 @@ function Card(props: CardProps) {
 							{role} at {company}
 						</div>
 						{service && (
-							<div className="text-xs text-accent mt-2">{service}</div>
+							<div className="text-xs text-accent-text mt-2">{service}</div>
 						)}
 					</div>
 				</div>
@@ -587,10 +466,7 @@ function CardTitle({
 }: HTMLAttributes<HTMLHeadingElement>) {
 	return (
 		<h3
-			className={cn(
-				'text-2xl font-semibold leading-none tracking-tight',
-				className
-			)}
+			className={cn('text-lg font-semibold text-foreground', className)}
 			{...props}
 		/>
 	)

@@ -58,18 +58,16 @@ export default async function TestimonialsPage() {
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						Client Reviews
-					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-eyebrow mb-3">Client Reviews</p>
+					<h1 className="text-page-title text-foreground text-balance">
 						What Clients Say
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
@@ -80,14 +78,14 @@ export default async function TestimonialsPage() {
 			</section>
 
 			{/* Reviews */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					{testimonials.length > 0 ? (
 						<ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 							{testimonials.map(testimonial => (
 								<li
 									key={testimonial.id}
-									className="rounded-xl border border-border bg-surface-raised p-8 flex flex-col"
+									className="rounded-xl border border-border bg-card p-8 flex flex-col"
 								>
 									{testimonial.rating !== null && (
 										<div className="mb-4">
@@ -119,7 +117,7 @@ export default async function TestimonialsPage() {
 							))}
 						</ul>
 					) : (
-						<div className="max-w-2xl mx-auto rounded-xl border border-border bg-surface-raised p-10 text-center">
+						<div className="max-w-2xl mx-auto rounded-xl border border-border bg-card p-10 text-center">
 							<h2 className="text-h3 text-foreground mb-3">
 								Reviews Are On the Way
 							</h2>
@@ -138,10 +136,7 @@ export default async function TestimonialsPage() {
 							</div>
 							<p className="text-sm text-muted-foreground mt-6">
 								Worked with me?{' '}
-								<Link
-									href="/contact"
-									className="text-accent-text underline-offset-4 hover:underline"
-								>
+								<Link href="/contact" className="link-primary">
 									Ask me for a review link.
 								</Link>
 							</p>
@@ -151,17 +146,17 @@ export default async function TestimonialsPage() {
 			</section>
 
 			{/* CTA Section */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready for a website that{' '}
-								<span className="text-accent">brings in work?</span>
+								<span className="text-accent-text">brings in work?</span>
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
 								Book a free 30-minute website plan call. You get the timeline
@@ -174,12 +169,7 @@ export default async function TestimonialsPage() {
 										<ArrowRight className="w-5 h-5" aria-hidden="true" />
 									</Link>
 								</Button>
-								<Button
-									asChild
-									variant="outline"
-									size="xl"
-									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-								>
+								<Button asChild variant="outline-strong" size="xl">
 									<Link href="/showcase">View Showcase</Link>
 								</Button>
 							</div>

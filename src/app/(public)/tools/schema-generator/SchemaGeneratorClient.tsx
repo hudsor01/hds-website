@@ -246,7 +246,7 @@ export default function SchemaGeneratorClient() {
 							}
 						}}
 						aria-describedby={`${typeFieldId}-help`}
-						className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+						className="field"
 					>
 						{BUSINESS_TYPES.map(option => (
 							<option key={option.value} value={option.value}>
@@ -425,9 +425,9 @@ export default function SchemaGeneratorClient() {
 						return (
 							<label
 								key={day}
-								className={`cursor-pointer rounded-md border px-2.5 py-1 text-xs transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background ${
+								className={`cursor-pointer rounded-md border px-2.5 py-1 text-xs transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ring ${
 									checked
-										? 'border-accent bg-accent/10 text-accent'
+										? 'border-accent-text bg-accent/10 text-accent-text'
 										: 'border-border text-muted-foreground hover:text-foreground'
 								}`}
 							>
@@ -484,7 +484,7 @@ export default function SchemaGeneratorClient() {
 					value={areaServed}
 					onChange={event => setAreaServed(event.target.value)}
 					aria-describedby={`${areaFieldId}-help`}
-					className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-accent"
+					className="field"
 					rows={3}
 					placeholder={'Dallas\nPlano\nIrving'}
 				/>
@@ -509,7 +509,7 @@ export default function SchemaGeneratorClient() {
 					value={socials}
 					onChange={event => setSocials(event.target.value)}
 					aria-describedby={`${socialsFieldId}-help`}
-					className="w-full rounded-md border border-border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-accent"
+					className="field font-mono"
 					rows={4}
 					placeholder={
 						'https://facebook.com/yourbusiness\nhttps://instagram.com/yourbusiness'
@@ -534,7 +534,7 @@ export default function SchemaGeneratorClient() {
 					type="checkbox"
 					checked={includeScriptTag}
 					onChange={event => setIncludeScriptTag(event.target.checked)}
-					className="rounded border-border text-accent focus:ring-accent"
+					className="size-4 accent-primary"
 				/>
 				Wrap in a &lt;script&gt; tag (paste straight into your page head)
 			</label>

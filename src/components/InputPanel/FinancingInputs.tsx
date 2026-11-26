@@ -14,7 +14,6 @@ import {
 	MAX_INTEREST_RATE,
 	type TtlFieldErrors
 } from '@/lib/ttl-calculator/calculator'
-import { cn } from '@/lib/utils'
 import type { VehicleInputs } from '@/types/ttl-types'
 
 const LOAN_TERMS = [24, 36, 48, 60, 72, 84] as const
@@ -33,7 +32,9 @@ export function FinancingInputs({
 	const rateError = fieldErrors.interestRate
 	return (
 		<Card size="sm" className="rounded-none">
-			<h3 className="text-lg font-medium mb-3">Financing Information</h3>
+			<h3 className="mb-3 text-lg font-semibold text-foreground">
+				Financing Information
+			</h3>
 
 			<div className="grid grid-cols-2 gap-content">
 				<div className="space-y-tight">
@@ -48,7 +49,6 @@ export function FinancingInputs({
 						value={vehicleInput.interestRate}
 						onChange={e => updateInput('interestRate', Number(e.target.value))}
 						placeholder="0.0"
-						className={cn(rateError && 'border-destructive border-2')}
 						aria-invalid={rateError ? true : undefined}
 						aria-describedby={rateError ? 'interestRate-error' : undefined}
 					/>

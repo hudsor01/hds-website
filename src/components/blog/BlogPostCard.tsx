@@ -33,18 +33,18 @@ export function BlogPostCard({
 				<Card
 					variant="glass"
 					size="none"
-					className="overflow-hidden hover:ring-2 hover:ring-accent/50 transition-all"
+					className="overflow-hidden hover:ring-2 hover:ring-accent/50"
 				>
 					{post.feature_image && (
 						<div
-							className={`relative ${featured ? 'aspect-[2/1]' : 'aspect-video'}`}
+							className={`relative ${featured ? 'aspect-2/1' : 'aspect-video'}`}
 						>
 							<Image
 								src={post.feature_image}
 								alt={post.title}
 								fill
 								priority={priority}
-								className="object-cover group-hover:scale-105 transition-transform duration-500"
+								className="object-cover motion-safe:group-hover:scale-105 transition-transform duration-slow"
 								sizes={
 									featured
 										? '(max-width: 768px) 100vw, 66vw'
@@ -55,12 +55,12 @@ export function BlogPostCard({
 					)}
 					<div className="card-padding">
 						{post.tags?.[0] && (
-							<span className="inline-block text-sm text-accent font-medium mb-subheading">
+							<span className="inline-block text-sm text-accent-text font-medium mb-subheading">
 								{post.tags[0].name}
 							</span>
 						)}
 						<h3
-							className={`font-bold text-foreground mb-subheading group-hover:text-accent transition-colors ${featured ? 'text-2xl' : 'text-xl'}`}
+							className={`font-bold text-foreground mb-subheading group-hover:text-accent-text transition-colors ${featured ? 'text-2xl' : 'text-xl'}`}
 						>
 							{post.title}
 						</h3>

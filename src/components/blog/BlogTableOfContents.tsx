@@ -47,7 +47,8 @@ export function BlogTableOfContents({ items }: BlogTableOfContentsProps) {
 		if (!el) {
 			return
 		}
-		el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+		// No `behavior`: follows <html>'s motion-safe:scroll-smooth.
+		el.scrollIntoView({ block: 'start' })
 		setActiveId(id)
 		history.replaceState(null, '', `#${id}`)
 	}
@@ -70,7 +71,7 @@ export function BlogTableOfContents({ items }: BlogTableOfContentsProps) {
 								aria-current={active ? 'location' : undefined}
 								className={`-ml-px block border-l-2 pl-3 transition-colors ${
 									active
-										? 'border-accent text-accent font-medium'
+										? 'border-accent-text text-accent-text font-medium'
 										: 'border-transparent text-muted-foreground hover:text-foreground hover:border-border-strong'
 								}`}
 							>

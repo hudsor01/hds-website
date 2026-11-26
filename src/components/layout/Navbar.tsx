@@ -61,22 +61,22 @@ const Navbar = memo(function Navbar() {
 		cn(
 			'px-3 py-1.5 text-sm font-medium rounded-md transition-smooth',
 			pathname === href
-				? 'text-accent bg-accent/10'
+				? 'text-accent-text bg-accent/10'
 				: 'text-muted-foreground hover:text-foreground hover:bg-muted'
 		)
 
 	return (
 		<nav
-			className="fixed top-0 left-0 right-0 z-modal bg-background/95 backdrop-blur-xl border-b border-border/40"
+			className="fixed top-0 left-0 right-0 z-nav bg-background/95 backdrop-blur-xl border-b border-border/40"
 			aria-label="Main navigation"
 		>
-			<div className="container-wide sm:px-6 lg:px-8">
+			<div className="container-wide">
 				<div className="flex items-center h-14">
 					{/* Left — Logo */}
 					<div className="flex-1 flex items-center">
 						<Link
 							href={ROUTES.HOME}
-							className="flex items-center gap-2.5 focus-ring rounded-lg"
+							className="flex items-center gap-2.5 rounded-md"
 							aria-label="Hudson Digital Solutions - Home"
 						>
 							<Rocket className="w-5 h-5 text-accent shrink-0" />
@@ -129,7 +129,7 @@ const Navbar = memo(function Navbar() {
 						{/* Mobile menu button */}
 						<button
 							type="button"
-							className="md:hidden p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-smooth focus-ring"
+							className="md:hidden p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-smooth"
 							onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
 							aria-expanded={mobileMenuOpen}
 							aria-controls="mobile-menu"
@@ -160,7 +160,7 @@ const Navbar = memo(function Navbar() {
 								className={cn(
 									'block px-3 py-2 rounded-md text-sm font-medium transition-smooth',
 									pathname === item.href
-										? 'bg-accent/10 text-accent'
+										? 'bg-accent/10 text-accent-text'
 										: 'text-muted-foreground hover:bg-muted hover:text-foreground'
 								)}
 								aria-current={pathname === item.href ? 'page' : undefined}

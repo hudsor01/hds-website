@@ -12,6 +12,7 @@
  * Server Action call itself) runs on the server via the form action seam.
  */
 import { Trash2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 interface DeleteButtonProps {
 	// Server Action. React types this as a function that receives FormData and
@@ -31,18 +32,19 @@ export function DeleteButton({
 	return (
 		<form action={action}>
 			<input type="hidden" name="id" value={id} />
-			<button
+			<Button
 				type="submit"
+				variant="destructive"
+				size="sm"
 				onClick={e => {
 					if (!window.confirm(confirmMessage)) {
 						e.preventDefault()
 					}
 				}}
-				className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-destructive border border-destructive/40 hover:bg-destructive/10 transition-smooth"
 			>
-				<Trash2 size={16} aria-hidden="true" />
+				<Trash2 aria-hidden="true" />
 				{label}
-			</button>
+			</Button>
 		</form>
 	)
 }

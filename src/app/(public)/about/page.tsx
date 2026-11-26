@@ -57,18 +57,16 @@ export default function AboutPage() {
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						About Me
-					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-eyebrow mb-3">About Me</p>
+					<h1 className="text-page-title text-foreground text-balance">
 						Built Around Your Business
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
@@ -80,13 +78,11 @@ export default function AboutPage() {
 			</section>
 
 			{/* Story Section */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							My Story
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">My Story</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							The Experience Behind Your Website
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -97,7 +93,7 @@ export default function AboutPage() {
 
 					<div className="grid lg:grid-cols-2 gap-12 items-start">
 						{/* Story Content */}
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<h3 className="text-h3 text-foreground mb-4">
 								Nearly a Decade in Revenue Operations First
 							</h3>
@@ -110,9 +106,9 @@ export default function AboutPage() {
 								</p>
 								<p>
 									Working that close to the{' '}
-									<strong className="text-accent">numbers</strong> taught me
-									something most agencies miss:{' '}
-									<strong className="text-info">
+									<strong className="text-accent-text">numbers</strong> taught
+									me something most agencies miss:{' '}
+									<strong className="text-info-text">
 										websites do not fail on bad code. They fail because nobody
 										built them to bring in customers. They were built to look
 										nice
@@ -121,9 +117,11 @@ export default function AboutPage() {
 								</p>
 								<p>
 									So my clients see{' '}
-									<strong className="text-accent">measurable results</strong> in
-									months, not years. I do not launch a{' '}
-									<Link href="/services" className="link-primary font-semibold">
+									<strong className="text-accent-text">
+										measurable results
+									</strong>{' '}
+									in months, not years. I do not launch a{' '}
+									<Link href="/services" className="link-primary">
 										professional website
 									</Link>{' '}
 									and walk away. Every page gets measured against one question:{' '}
@@ -145,9 +143,9 @@ export default function AboutPage() {
 
 						{/* Mission & Vision Cards */}
 						<div className="space-y-6">
-							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+							<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 								<div className="flex items-center gap-4 mb-4">
-									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+									<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
 										<Rocket className="w-5 h-5 text-accent" />
 									</div>
 									<h3 className="text-h3 text-foreground">My Mission</h3>
@@ -160,9 +158,9 @@ export default function AboutPage() {
 								</p>
 							</div>
 
-							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+							<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 								<div className="flex items-center gap-4 mb-4">
-									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+									<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
 										<Eye className="w-5 h-5 text-accent" />
 									</div>
 									<h3 className="text-h3 text-foreground">My Guarantee</h3>
@@ -183,13 +181,11 @@ export default function AboutPage() {
 			</section>
 
 			{/* Expertise Section */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							My Toolkit
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">My Toolkit</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							What I Build With
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -199,8 +195,8 @@ export default function AboutPage() {
 					</div>
 
 					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<Code2 className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">Development</h3>
@@ -212,8 +208,8 @@ export default function AboutPage() {
 							</ul>
 						</div>
 
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<BarChart3 className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">Analytics</h3>
@@ -225,8 +221,8 @@ export default function AboutPage() {
 							</ul>
 						</div>
 
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<Zap className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">
@@ -240,8 +236,8 @@ export default function AboutPage() {
 							</ul>
 						</div>
 
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<ShieldCheck className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">Security</h3>
@@ -257,13 +253,11 @@ export default function AboutPage() {
 			</section>
 
 			{/* The Founder Section */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							The Founder
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">The Founder</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							The Builder Behind the Work
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -273,7 +267,7 @@ export default function AboutPage() {
 						</p>
 					</div>
 
-					<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+					<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 						<div className="flex flex-col items-center mb-8">
 							<Image
 								src="/images/founder.jpg"
@@ -293,16 +287,18 @@ export default function AboutPage() {
 						<div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
 							<p className="text-base">
 								Before I built for clients, I spent nearly a decade in{' '}
-								<strong className="text-accent">revenue operations</strong> at
-								established companies. Salesforce, Power BI, Workato, HubSpot.
-								Close enough to the numbers to see exactly which sites{' '}
-								<strong className="text-accent">brought in customers</strong>{' '}
+								<strong className="text-accent-text">revenue operations</strong>{' '}
+								at established companies. Salesforce, Power BI, Workato,
+								HubSpot. Close enough to the numbers to see exactly which sites{' '}
+								<strong className="text-accent-text">
+									brought in customers
+								</strong>{' '}
 								and which just looked nice.
 							</p>
 
 							<p className="text-base">
 								Same job, same lesson every time:{' '}
-								<strong className="text-info">
+								<strong className="text-info-text">
 									most websites fail not on the technology but because nobody
 									built them to bring in customers
 								</strong>
@@ -315,7 +311,7 @@ export default function AboutPage() {
 								I kept seeing great DFW businesses with glowing reviews and no
 								website, or one so dated it was costing them customers. That is
 								the gap I fill. Hudson Digital Solutions exists to fix it:{' '}
-								<strong className="text-accent">
+								<strong className="text-accent-text">
 									a professional website, built around how your business
 									actually works
 								</strong>
@@ -329,7 +325,7 @@ export default function AboutPage() {
 
 							<div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-border">
 								<div className="text-center">
-									<div className="text-3xl font-black text-accent mb-1">
+									<div className="text-3xl font-black text-accent-text mb-1">
 										2,200%
 									</div>
 									<div className="text-sm text-muted-foreground">
@@ -337,7 +333,7 @@ export default function AboutPage() {
 									</div>
 								</div>
 								<div className="text-center">
-									<div className="text-3xl font-black text-accent mb-1">
+									<div className="text-3xl font-black text-accent-text mb-1">
 										95%
 									</div>
 									<div className="text-sm text-muted-foreground">
@@ -345,7 +341,7 @@ export default function AboutPage() {
 									</div>
 								</div>
 								<div className="text-center">
-									<div className="text-3xl font-black text-accent mb-1">
+									<div className="text-3xl font-black text-accent-text mb-1">
 										$3.7M
 									</div>
 									<div className="text-sm text-muted-foreground">
@@ -359,13 +355,11 @@ export default function AboutPage() {
 			</section>
 
 			{/* Core Values */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							My Principles
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">My Principles</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							How I Work
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -374,8 +368,8 @@ export default function AboutPage() {
 					</div>
 
 					<div className="grid md:grid-cols-3 gap-6">
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<Lightbulb className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">
@@ -387,8 +381,8 @@ export default function AboutPage() {
 							</p>
 						</div>
 
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<BarChart3 className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">Data Driven</h3>
@@ -399,8 +393,8 @@ export default function AboutPage() {
 							</p>
 						</div>
 
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<Settings className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">
@@ -417,17 +411,17 @@ export default function AboutPage() {
 			</section>
 
 			{/* Call to Action */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready to build{' '}
-								<span className="text-accent">
+								<span className="text-accent-text">
 									the website you&apos;ve earned?
 								</span>
 							</h2>
@@ -446,22 +440,12 @@ export default function AboutPage() {
 									</Link>
 								</Button>
 
-								<Button
-									asChild
-									variant="outline"
-									size="xl"
-									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-								>
+								<Button asChild variant="outline-strong" size="xl">
 									<Link href="/services">View Services</Link>
 								</Button>
 
 								{BUSINESS_INFO.phone && (
-									<Button
-										asChild
-										variant="outline"
-										size="xl"
-										className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-									>
+									<Button asChild variant="outline-strong" size="xl">
 										<a href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}>
 											<Phone className="w-5 h-5" />
 											{BUSINESS_INFO.phone}

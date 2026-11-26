@@ -12,7 +12,7 @@ This test suite follows strict **Test-Driven Development (TDD)** principles for 
 e2e/
 ├── mobile-responsiveness.spec.ts      # Mobile viewport tests
 ├── visual-regression.spec.ts          # Screenshot comparisons
-├── dark-mode-comprehensive.spec.ts    # Dark mode functionality
+├── dark-mode-comprehensive.spec.ts    # Light only under an OS dark preference
 ├── cross-browser.spec.ts              # Cross-browser compatibility
 └── test-logger.ts                     # Test logging utility
 
@@ -106,7 +106,8 @@ bun run test:e2e:fast --grep "mobile-responsiveness"
 
 #### Modes Tested
 - Light mode (desktop + mobile)
-- Dark mode (desktop + mobile)
+- OS dark preference (desktop + mobile); the site is light only, so these
+  baselines match the light rendering
 
 ### Key Tests
 
@@ -135,7 +136,6 @@ test('should use only monochromatic OKLCH colors', async ({ page }) => {
 - ❌ Baseline screenshots don't exist
 - ❌ Visual differences in components
 - ❌ OKLCH color values not applied
-- ❌ Dark mode not consistent across pages
 
 ### Running Tests
 
@@ -152,82 +152,31 @@ bun run test:update-snapshots --grep "home-light-desktop"
 
 ---
 
-## 3. Dark Mode Tests
+## 3. Dark Mode Tests (light only)
 
 **File:** `e2e/dark-mode-comprehensive.spec.ts`
 
+The site is light only: `globals.css` has no dark palette, no `.dark` class
+and no `dark:` utilities, and `:root` sets `color-scheme: light`. The spec pins
+that contract under `prefers-color-scheme: dark` on `/`, `/contact` and
+`/tools/json-formatter`.
+
 ### Test Coverage
+- `<html>` has no `.dark` class and nothing on the page carries `.dark`
+- Computed `color-scheme` is `light`
+- `body` background and color equal a `bg-background text-foreground` probe
+  (and the background is not transparent)
+- Flipping the OS preference from light to dark on the same DOM changes no
+  element's color, background or border color
 
-#### Functionality
-- Theme toggle button
-- Theme persistence (localStorage)
-- System preference detection
-- Color transitions
-
-#### Accessibility
-- WCAG AA contrast ratios
-- Body text: 4.5:1 minimum
-- Headings: 3:1 minimum
-- Interactive elements: 4.5:1 minimum
-
-#### Color Validation
-- OKLCH dark mode colors
-- Appropriate lightness values
-- Monochromatic palette
-
-### Key Tests
-
-```typescript
-// Test 1: Theme toggle
-test('should toggle dark mode when button clicked', async ({ page }) => {
-  const initialTheme = await page.evaluate(() =>
-    document.documentElement.classList.contains('dark')
-  );
-  await themeToggle.click();
-  const newTheme = await page.evaluate(() =>
-    document.documentElement.classList.contains('dark')
-  );
-  expect(newTheme).not.toBe(initialTheme);
-});
-
-// Test 2: WCAG contrast
-test('should meet WCAG AA contrast ratio for body text', async ({ page }) => {
-  await page.emulateMedia({ colorScheme: 'dark' });
-  const contrastRatio = await page.evaluate(() => {
-    // Calculate contrast ratio
-    return calculateContrast(bgColor, textColor);
-  });
-  expect(contrastRatio).toBeGreaterThanOrEqual(4.5);
-});
-
-// Test 3: Persistence
-test('should persist theme preference in localStorage', async ({ page }) => {
-  await themeToggle.click();
-  const storedTheme = await page.evaluate(() =>
-    localStorage.getItem('theme')
-  );
-  expect(storedTheme).toBeTruthy();
-});
-```
-
-### Expected Failures (RED Phase)
-- ❌ Theme toggle button not implemented
-- ❌ localStorage persistence not working
-- ❌ Contrast ratios below WCAG standards
-- ❌ Dark mode colors not applied
-- ❌ System preference not detected
+`tests/unit/css-class-hygiene.test.ts` backs this at the source level: it fails
+on any `dark:` utility in `src/` and on a `.dark` block, `@custom-variant dark`
+or `prefers-color-scheme` rule in `globals.css`.
 
 ### Running Tests
 
 ```bash
-# All dark mode tests
 bun run test:e2e --grep "Dark Mode"
-
-# Just contrast tests
-bun run test:e2e --grep "WCAG Contrast"
-
-# Just persistence
-bun run test:e2e --grep "Persistence"
 ```
 
 ---

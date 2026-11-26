@@ -35,19 +35,17 @@ export default function FaqClient() {
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						FAQ
-					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
-						Frequently Asked <span className="text-accent">Questions</span>
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-eyebrow mb-3">FAQ</p>
+					<h1 className="text-page-title text-foreground text-balance">
+						Frequently Asked <span className="text-accent-text">Questions</span>
 					</h1>
 
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-8">
@@ -73,8 +71,8 @@ export default function FaqClient() {
 			</section>
 
 			{/* FAQ Categories */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
+			<section className="py-section-sm">
+				<div className="container-content">
 					{filteredFaqs.length === 0 ? (
 						<div className="text-center py-12" aria-live="polite" role="status">
 							<p className="text-sm text-muted-foreground leading-relaxed">
@@ -94,9 +92,12 @@ export default function FaqClient() {
 											<AccordionItem
 												key={qIndex}
 												value={`${catIndex}-${qIndex}`}
-												className="rounded-xl border border-border bg-surface-raised overflow-hidden border-none"
+												className="rounded-xl bg-card border-none"
 											>
-												<AccordionTrigger className="px-6 py-4 text-left hover:bg-muted/30 hover:no-underline">
+												{/* The item does not clip (no overflow-hidden), so the
+												    trigger's focus outline stays visible; the trigger
+												    takes the card radius so its hover fill fits. */}
+												<AccordionTrigger className="rounded-xl px-6 py-4 text-left hover:bg-muted/30 hover:no-underline data-[state=open]:rounded-b-none">
 													<span className="text-base font-semibold text-foreground pr-8">
 														{faq.question}
 													</span>
@@ -117,15 +118,15 @@ export default function FaqClient() {
 			</section>
 
 			{/* CTA */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Still Have Questions?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">

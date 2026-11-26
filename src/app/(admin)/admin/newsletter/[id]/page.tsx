@@ -23,6 +23,7 @@ import { Suspense } from 'react'
 import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
+import { Button } from '@/components/ui/button'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
 import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import { getSubscriberById } from '@/lib/admin/newsletter-queries'
@@ -67,9 +68,6 @@ interface SubscriberDetailPageProps {
 	params: Promise<{ id: string }>
 }
 
-const ACTION_BTN_CLASS =
-	'inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-text border border-border bg-surface-raised hover:bg-surface-base transition-smooth'
-
 async function SubscriberLoader({ params }: SubscriberDetailPageProps) {
 	const { id } = await params
 	if (id === BUILD_PLACEHOLDER_ID) {
@@ -109,7 +107,7 @@ async function SubscriberLoader({ params }: SubscriberDetailPageProps) {
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Subscription</h2>
-				<dl className="rounded-xl border border-border bg-surface-raised p-4 mt-2 grid grid-cols-[max-content_1fr] gap-x-6 gap-y-2 text-sm">
+				<dl className="rounded-xl border border-border bg-card p-4 mt-2 grid grid-cols-[max-content_1fr] gap-x-6 gap-y-2 text-sm">
 					<dt className="text-muted-foreground">Source</dt>
 					<dd className="text-foreground">{row.source ?? '-'}</dd>
 
@@ -143,20 +141,20 @@ async function SubscriberLoader({ params }: SubscriberDetailPageProps) {
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Actions</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					{row.status === 'active' ? (
 						<form action={unsubscribeForm}>
 							<input type="hidden" name="id" value={row.id} />
-							<button type="submit" className={ACTION_BTN_CLASS}>
+							<Button type="submit" variant="outline" size="sm">
 								Unsubscribe
-							</button>
+							</Button>
 						</form>
 					) : row.status === 'unsubscribed' ? (
 						<form action={resubscribeForm}>
 							<input type="hidden" name="id" value={row.id} />
-							<button type="submit" className={ACTION_BTN_CLASS}>
+							<Button type="submit" variant="outline" size="sm">
 								Re-subscribe
-							</button>
+							</Button>
 						</form>
 					) : (
 						<p className="text-sm text-muted-foreground">
@@ -168,7 +166,7 @@ async function SubscriberLoader({ params }: SubscriberDetailPageProps) {
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Danger</h2>
-				<div className="rounded-xl border border-destructive/40 bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-destructive/40 bg-card p-4 mt-2">
 					<DeleteButton
 						action={deleteSubscriberAction}
 						id={row.id}

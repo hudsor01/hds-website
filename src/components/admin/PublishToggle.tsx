@@ -13,6 +13,7 @@
  * presentational and mirrors the existing Sidebar lucide-react usage.
  */
 import { Eye, EyeOff } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 interface PublishToggleProps {
 	action: (formData: FormData) => void | Promise<void>
@@ -32,13 +33,14 @@ export function PublishToggle({
 	return (
 		<form action={action}>
 			<input type="hidden" name="id" value={id} />
-			<button
+			<Button
 				type="submit"
+				variant="ghost"
+				size="icon-sm"
 				aria-label={`${next} ${resourceLabel}`}
-				className="inline-flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:bg-surface-base hover:text-foreground transition-smooth"
 			>
-				<Icon size={16} aria-hidden="true" />
-			</button>
+				<Icon aria-hidden="true" />
+			</Button>
 		</form>
 	)
 }

@@ -198,7 +198,7 @@ function CostEstimatorView({
 			noValidate
 		>
 			{/* Website Type */}
-			<div className="space-y-tight">
+			<div className="flex flex-col gap-tight">
 				<Label id="websiteType-label" htmlFor="websiteType">
 					Website Type *
 				</Label>
@@ -247,7 +247,7 @@ function CostEstimatorView({
 					{FEATURES.map(feature => (
 						<label
 							key={feature.value}
-							className="relative flex cursor-pointer items-start rounded-lg border border-border p-4 hover:bg-muted"
+							className="relative flex cursor-pointer items-start rounded-xl border border-border p-4 hover:bg-muted"
 						>
 							<div className="flex h-5 items-center">
 								<Checkbox
@@ -269,7 +269,7 @@ function CostEstimatorView({
 			</fieldset>
 
 			{/* Design Complexity */}
-			<div className="space-y-tight">
+			<div className="flex flex-col gap-tight">
 				<Label id="designComplexity-label" htmlFor="designComplexity">
 					Design Complexity
 				</Label>
@@ -300,7 +300,7 @@ function CostEstimatorView({
 			</div>
 
 			{/* Timeline */}
-			<div className="space-y-tight">
+			<div className="flex flex-col gap-tight">
 				<Label id="timeline-label" htmlFor="timeline">
 					Project Timeline
 				</Label>
@@ -388,7 +388,7 @@ function CostEstimatorView({
 				will take. You get the timeline and a real price on that call.
 			</p>
 			<Card size="sm" className="bg-muted">
-				<h3 className="mb-subheading text-base font-semibold text-foreground">
+				<h3 className="mb-subheading text-lg font-semibold text-foreground">
 					What published guides say
 				</h3>
 				<ul className="list-disc space-y-tight pl-5 text-sm text-muted-foreground">
@@ -402,7 +402,7 @@ function CostEstimatorView({
 						href={CLUTCH_URL}
 						target="_blank"
 						rel="noopener noreferrer"
-						className="underline"
+						className="link-primary"
 					>
 						Clutch, How to Create a Budget for a New Website
 					</a>{' '}

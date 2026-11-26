@@ -19,7 +19,7 @@ type TopPagesTableProps = {
 
 export function TopPagesTable({ result }: TopPagesTableProps) {
 	return (
-		<div className="rounded-xl border border-border bg-surface-raised p-6">
+		<div className="rounded-xl border border-border bg-card p-6">
 			<h2 className="text-sm font-semibold text-foreground mb-4">
 				Top pages (last 30 days)
 			</h2>
@@ -56,7 +56,7 @@ export function TopPagesTable({ result }: TopPagesTableProps) {
 					<tbody>
 						{result.data.map(row => (
 							<tr key={row.pathname}>
-								<td className="py-2 text-foreground truncate max-w-[20rem]">
+								<td className="py-2 text-foreground truncate max-w-xs">
 									{row.pathname}
 								</td>
 								<td className="py-2 text-right font-mono text-foreground tabular-nums">

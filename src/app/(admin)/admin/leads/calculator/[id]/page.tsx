@@ -21,6 +21,7 @@ import { Suspense } from 'react'
 import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
+import { Button } from '@/components/ui/button'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
 import { getCalculatorLeadById } from '@/lib/admin/calculator-leads-queries'
 import { routeDetailResult } from '@/lib/admin/detail-result-routing'
@@ -170,7 +171,7 @@ async function CalculatorLeadDetail({
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Lead</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					{leadEntries.length === 0 ? (
 						<p className="text-sm text-muted-foreground">No extra lead info.</p>
 					) : (
@@ -187,7 +188,7 @@ async function CalculatorLeadDetail({
 				<h2 className="text-lg font-semibold text-foreground">
 					Calculator inputs
 				</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					<pre className="text-xs overflow-x-auto text-foreground">
 						{JSON.stringify(row.inputs, null, 2)}
 					</pre>
@@ -198,7 +199,7 @@ async function CalculatorLeadDetail({
 				<h2 className="text-lg font-semibold text-foreground">
 					Calculator results
 				</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					<pre className="text-xs overflow-x-auto text-foreground">
 						{JSON.stringify(row.results, null, 2)}
 					</pre>
@@ -207,7 +208,7 @@ async function CalculatorLeadDetail({
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Conversion</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2 space-y-4">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2 space-y-4">
 					<dl>
 						<DefinitionRow
 							label="Contacted"
@@ -228,12 +229,9 @@ async function CalculatorLeadDetail({
 						{!row.contacted ? (
 							<form action={markCalculatorLeadContactedForm}>
 								<input type="hidden" name="id" value={row.id} />
-								<button
-									type="submit"
-									className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-text border border-border bg-surface-raised hover:bg-surface-base transition-smooth"
-								>
+								<Button type="submit" variant="outline" size="sm">
 									Mark contacted
-								</button>
+								</Button>
 							</form>
 						) : !row.converted ? (
 							<form
@@ -249,15 +247,12 @@ async function CalculatorLeadDetail({
 										min="0"
 										step="0.01"
 										required
-										className="w-32 rounded-md border border-border bg-surface-base p-2 text-sm text-foreground"
+										className="field w-32"
 									/>
 								</label>
-								<button
-									type="submit"
-									className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-text border border-border bg-surface-raised hover:bg-surface-base transition-smooth"
-								>
+								<Button type="submit" variant="outline" size="sm">
 									Mark converted
-								</button>
+								</Button>
 							</form>
 						) : (
 							<p className="text-sm text-muted-foreground">
@@ -270,7 +265,7 @@ async function CalculatorLeadDetail({
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Attribution</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					{attributionEntries.length === 0 ? (
 						<p className="text-sm text-muted-foreground">
 							No attribution captured.
@@ -287,7 +282,7 @@ async function CalculatorLeadDetail({
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Danger</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					<DeleteButton
 						action={deleteCalculatorLeadAction}
 						id={row.id}

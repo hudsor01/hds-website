@@ -1,6 +1,5 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { cn } from '@/lib/utils'
 
 interface FormFieldProps {
 	label: string
@@ -37,7 +36,7 @@ export function FormField({
 				type={type}
 				value={value}
 				onChange={e => onChange(e.target.value)}
-				className={cn(error && 'border-destructive border-2', className)}
+				className={className}
 				placeholder={placeholder}
 				aria-invalid={!!error}
 				step={step}

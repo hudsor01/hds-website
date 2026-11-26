@@ -38,9 +38,7 @@ export function InputPanel({
 				<div className="flex items-center gap-tight">
 					<Calculator className="w-5 h-5 text-accent" />
 					{/* CardTitle is always an h3; this section sits right under the H1 */}
-					<h2 className="text-2xl font-semibold leading-none tracking-tight">
-						Vehicle Information
-					</h2>
+					<h2 className="text-h4 text-foreground">Vehicle Information</h2>
 				</div>
 			</CardHeader>
 			<CardContent className="space-y-content">

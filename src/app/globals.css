@@ -1,4 +1,7 @@
-@import 'tailwindcss';
+/* Class detection scans src/ only (path is relative to this file). The
+ * repo root also holds planning docs, test fixtures, reports and coverage
+ * output whose quoted class names would otherwise ship as dead CSS. */
+@import 'tailwindcss' source('..');
 
 @theme {
 	/* Base surfaces */
@@ -25,41 +28,45 @@
 	/* Accent - Warm Amber */
 	--color-accent: oklch(0.72 0.16 55);
 	--color-accent-foreground: oklch(0.2 0.03 65);
-	/* Darker variant for accent text on light backgrounds. The standard
-	 * --color-accent at 0.72 lightness only hits ~3:1 contrast on
-	 * --color-background, which fails WCAG 1.4.3 for non-large text. Use
-	 * --color-accent-text wherever the accent is used as small/medium
-	 * non-bold body or label copy. ~5:1 contrast. */
+	/* --color-accent is for fills, decorative borders and decorative icons
+	 * only. It is 2.49:1 on --color-background, so it fails WCAG 1.4.3 even
+	 * for large text. Any accent-coloured text uses --color-accent-text
+	 * (6.03:1 on background, 5.53:1 on muted), and so does the border or
+	 * ring that marks a selected or current item (WCAG 1.4.11, 3:1). */
 	--color-accent-text: oklch(0.5 0.16 55);
 
-	/* Semantic colors */
-	--color-destructive: oklch(0.55 0.2 25);
+	/* Semantic colors. Destructive and success fills carry light text
+	 * (the button variants): >= 4.5:1 at rest, at the /90 hover and the
+	 * /85 press (WCAG 1.4.3). */
+	--color-destructive: oklch(0.52 0.2 25);
 	--color-destructive-foreground: oklch(0.98 0.005 25);
 	--color-destructive-light: oklch(0.96 0.03 25);
 	--color-destructive-muted: oklch(0.92 0.06 25);
 	--color-destructive-text: oklch(0.5 0.18 25);
 
-	--color-success: oklch(0.6 0.16 150);
+	--color-success: oklch(0.46 0.13 150);
 	--color-success-foreground: oklch(0.985 0.005 150);
 	--color-success-light: oklch(0.95 0.05 150);
 	--color-success-muted: oklch(0.9 0.08 150);
 	--color-success-text: oklch(0.4 0.12 150);
 
+	/* Never as text (1.81:1 on background): warning text uses
+	 * --color-warning-text. */
 	--color-warning: oklch(0.8 0.14 80);
-	--color-warning-foreground: oklch(0.18 0.02 80);
 	--color-warning-light: oklch(0.96 0.05 80);
 	--color-warning-muted: oklch(0.92 0.08 80);
 	--color-warning-text: oklch(0.5 0.12 80);
 
-	--color-info: oklch(0.62 0.14 245);
-	--color-info-foreground: oklch(0.985 0.005 245);
+	--color-info: oklch(0.5 0.12 245);
 	--color-info-light: oklch(0.96 0.03 245);
 	--color-info-muted: oklch(0.92 0.06 245);
 	--color-info-text: oklch(0.45 0.12 245);
 
 	/* Borders & inputs */
 	--color-border: oklch(0.88 0.015 255);
-	--color-input: oklch(0.96 0.008 90);
+	/* Field boundary (.field). >= 3:1 against background (3.78), card
+	 * (3.89) and the muted field fill (3.47), per WCAG 1.4.11. */
+	--color-input: oklch(0.6 0.02 255);
 	--color-ring: oklch(0.55 0.15 255);
 
 	/* Sidebar */
@@ -70,63 +77,82 @@
 	--color-sidebar-accent: oklch(0.92 0.03 65);
 	--color-sidebar-accent-foreground: oklch(0.3 0.04 65);
 	--color-sidebar-border: oklch(0.9 0.01 255);
-	--color-sidebar-ring: oklch(0.45 0.1 255);
 
-	/* Text hierarchy */
-	--color-text-inverted: oklch(0.98 0.002 90);
-	--color-text-primary: oklch(0.145 0.015 260);
-	--color-text-secondary: oklch(0.4 0.025 260);
-	--color-text-muted: oklch(0.5 0.02 260);
+	/* Modal scrim behind dialogs and the calculator share sheet. */
+	--color-overlay: oklch(0.15 0.02 260 / 0.85);
 
-	/* Overlays */
-	--color-bg-overlay: oklch(0.15 0.02 260 / 0.85);
-
-	/* Surface elevation (light) — dark variants live in the .dark block */
-	--color-surface-base: oklch(0.985 0.002 90);
-	--color-surface-raised: oklch(0.995 0.001 90);
-	--color-surface-elevated: oklch(1 0 0);
-	--color-surface-overlay: oklch(0.97 0.005 255);
-	--color-surface-sunken: oklch(0.955 0.008 90);
-
-	/* Semantic border tokens (light) — dark variants live in the .dark block */
+	/* Semantic border tokens */
 	--color-border-subtle: oklch(0.93 0.01 255);
 	--color-border-strong: oklch(0.75 0.02 255);
 
-	/* Radius */
-	--radius: 0.625rem;
+	/* Spacing roles. Theme tokens, not one-off @utility blocks, so every
+	 * spacing utility and axis exists (gap-x-content, pt-comfortable,
+	 * mt-content-block, space-y-tight ...). */
+	--spacing-tight: 0.5rem;
+	--spacing-subheading: 0.5rem;
+	--spacing-content: 1rem;
+	--spacing-heading: 1rem;
+	--spacing-card-content: 1.25rem;
+	--spacing-comfortable: 1.5rem;
+	--spacing-content-block: 2rem;
+	--spacing-sections: 3rem;
+	--spacing-section-sm: 3rem;
+	--spacing-section: 5rem;
 
-	/* Type scale — fluid via clamp(), mobile-first */
-	--font-size-xs: clamp(0.75rem, 1.5vw, 0.875rem);
-	--font-size-sm: clamp(0.875rem, 1.8vw, 1rem);
-	--font-size-base: clamp(1rem, 2vw, 1.125rem);
-	--font-size-lg: clamp(1.125rem, 2.5vw, 1.25rem);
-	--font-size-xl: clamp(1.25rem, 3vw, 1.5rem);
-	--font-size-2xl: clamp(1.5rem, 3.5vw, 1.875rem);
-	--font-size-3xl: clamp(1.875rem, 4vw, 2.25rem);
-	--font-size-4xl: clamp(2.25rem, 5vw, 3rem);
-	--font-size-hero: clamp(2.5rem, 6vw, 4rem);
+	/* Named layout columns: lg:grid-cols-article (post body + table of
+	 * contents rail) and lg:grid-cols-tool (tool inputs + results). */
+	--grid-template-columns-article: minmax(0, 1fr) 15rem;
+	--grid-template-columns-tool: 3fr 2fr;
 
-	/* Font weights */
-	--font-weight-normal: 400;
-	--font-weight-medium: 500;
-	--font-weight-semibold: 600;
-	--font-weight-bold: 700;
-	--font-weight-heading: 700;
-	--font-weight-black: 900;
+	/* Radius: three steps. md (6px) for controls (buttons, fields, chips,
+	 * menu items, kbd, skeleton lines), xl (12px) for cards, panels,
+	 * tiles and images, 2xl (16px) for large feature surfaces. `initial`
+	 * removes every other step, so bare rounded, rounded-sm and rounded-lg
+	 * build no CSS and the utility-class test rejects them. rounded-full
+	 * and rounded-none are static and unaffected. */
+	--radius-*: initial;
+	--radius-md: 0.375rem;
+	--radius-xl: 0.75rem;
+	--radius-2xl: 1rem;
 
-	/* Line heights */
-	--line-height-tight: 1.1;
-	--line-height-snug: 1.25;
-	--line-height-normal: 1.5;
-	--line-height-relaxed: 1.625;
-	--line-height-hero: 1.1;
-
-	/* Letter spacing */
-	--tracking-tight: -0.025em;
-	--tracking-normal: 0em;
-	--tracking-wide: 0.025em;
-	--tracking-widest: 0.1em;
-	--tracking-heading: -0.02em;
+	/* Type scale. One scale: Tailwind's fixed --text-xs .. --text-9xl
+	 * (with --text-base) are the body and UI sizes. The role steps below
+	 * extend the same --text-* namespace with fluid sizes and generate the
+	 * heading API (text-page-title, text-h1 .. text-h4, text-lead). Each
+	 * step owns its line-height, tracking and weight: never add leading-*,
+	 * tracking-* or font-weight utilities to an element that uses one.
+	 * Each fluid size is clamp(min, a rem + b vw, max) with the middle term
+	 * on the line through min at a 390px viewport and max at 1280px. The
+	 * rem part keeps the size following browser zoom and the user's font
+	 * size (WCAG 1.4.4); a bare vw term never grows with either. */
+	--text-page-title: clamp(2.5rem, 1.8424rem + 2.697vw, 4rem);
+	--text-page-title--line-height: 1.1;
+	--text-page-title--letter-spacing: var(--tracking-tight);
+	--text-page-title--font-weight: var(--font-weight-black);
+	--text-h1: clamp(2.25rem, 1.921rem + 1.349vw, 3rem);
+	--text-h1--line-height: var(--leading-tight);
+	--text-h1--letter-spacing: var(--tracking-tight);
+	--text-h1--font-weight: var(--font-weight-semibold);
+	--text-h2: clamp(1.875rem, 1.71rem + 0.675vw, 2.25rem);
+	--text-h2--line-height: var(--leading-tight);
+	--text-h2--letter-spacing: var(--tracking-tight);
+	--text-h2--font-weight: var(--font-weight-semibold);
+	--text-h3: clamp(1.5rem, 1.335rem + 0.675vw, 1.875rem);
+	--text-h3--line-height: var(--leading-tight);
+	--text-h3--letter-spacing: var(--tracking-tight);
+	--text-h3--font-weight: var(--font-weight-semibold);
+	/* Semibold like every step above it: a text-h4 section heading is
+	 * never lighter than the text-lg font-semibold item h3 under it. */
+	--text-h4: clamp(1.25rem, 1.14rem + 0.45vw, 1.5rem);
+	--text-h4--line-height: var(--leading-normal);
+	--text-h4--font-weight: var(--font-weight-semibold);
+	--text-lead: clamp(1.125rem, 1.07rem + 0.225vw, 1.25rem);
+	--text-lead--line-height: var(--leading-relaxed);
+	/* Long-form prose (.typography): body and opening standfirst. */
+	--text-prose: 1.0625rem;
+	--text-prose--line-height: 1.8;
+	--text-prose-lead: 1.2rem;
+	--text-prose-lead--line-height: 1.7;
 
 	/* Shadow scale */
 	--shadow-xs: 0 1px 2px oklch(0 0 0 / 0.04);
@@ -134,102 +160,73 @@
 	--shadow-md: 0 4px 12px oklch(0 0 0 / 0.08), 0 2px 4px oklch(0 0 0 / 0.04);
 	--shadow-lg: 0 8px 24px oklch(0 0 0 / 0.1), 0 4px 8px oklch(0 0 0 / 0.06);
 	--shadow-xl: 0 20px 40px oklch(0 0 0 / 0.12), 0 8px 16px oklch(0 0 0 / 0.08);
-	--shadow-glow: 0 0 30px oklch(from var(--color-primary) l c h / 0.2);
-	--shadow-glow-accent: 0 0 20px oklch(from var(--color-accent) l c h / 0.25);
+	--shadow-glow: 0 0 30px
+		color-mix(in oklab, var(--color-primary) 20%, transparent);
+	--shadow-glow-accent: 0 0 20px
+		color-mix(in oklab, var(--color-accent) 25%, transparent);
+
+	/* Motion: three durations (duration-fast / -base / -slow), one easing
+	 * (Tailwind's ease-in-out, also the transition-* default) and one hover
+	 * lift. Plain transition-* utilities run at fast; transition-smooth at
+	 * base; slow is for large image zooms. Never a bare duration-N. */
+	--transition-duration-fast: 150ms;
+	--transition-duration-base: 300ms;
+	--transition-duration-slow: 500ms;
+	--default-transition-duration: var(--transition-duration-fast);
+	--default-transition-timing-function: var(--ease-in-out);
+	--lift-offset: calc(var(--spacing) * -1);
+
+	/* Radix accordion open/close (ui/accordion.tsx). Radix sets
+	 * --radix-accordion-content-height on the content element. */
+	--animate-accordion-down: accordion-down var(--transition-duration-fast)
+		var(--ease-in-out);
+	--animate-accordion-up: accordion-up var(--transition-duration-fast)
+		var(--ease-in-out);
+
+	@keyframes accordion-down {
+		from {
+			height: 0;
+		}
+		to {
+			height: var(--radix-accordion-content-height);
+		}
+	}
+	@keyframes accordion-up {
+		from {
+			height: var(--radix-accordion-content-height);
+		}
+		to {
+			height: 0;
+		}
+	}
 }
 
-/* Font family tokens. Tailwind v4 requires `@theme inline` when token
- * values reference runtime CSS variables (e.g. next/font output) so the
- * generated utilities (`font-sans`, `font-display`, `font-mono`) inline
- * the runtime var directly instead of looping through `--font-sans` at
- * `:root` (where the runtime var is undefined). See:
- * https://tailwindcss.com/docs/theme#referencing-other-variables */
-@theme inline {
+/* Font family tokens. next/font puts its source variables
+ * (--font-hanken-grotesk ...) on <html> (fonts.ts), so these resolve at
+ * :root: preflight's html font-family, the h1-h6 and code base rules and
+ * the font-sans / font-display / font-mono utilities all read them. */
+@theme {
 	--font-sans: var(--font-hanken-grotesk), system-ui, sans-serif;
 	--font-display: var(--font-roboto-serif), Georgia, serif;
 	--font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
 :root {
+	/* Light only. There is no dark palette, no .dark class and no
+	 * dark: utilities: the site renders the same under an OS dark
+	 * preference, and native controls and scrollbars stay light. */
 	color-scheme: light;
-}
 
-.dark {
-	color-scheme: dark;
-
-	/* Base surfaces */
-	--color-background: oklch(0.12 0.015 260);
-	--color-foreground: oklch(0.94 0.008 90);
-	--color-card: oklch(0.16 0.018 260);
-	--color-card-foreground: oklch(0.94 0.008 90);
-	--color-popover: oklch(0.16 0.018 260);
-	--color-popover-foreground: oklch(0.94 0.008 90);
-
-	/* Primary - Slate Blue (dark) */
-	--color-primary: oklch(0.72 0.13 255);
-	--color-primary-foreground: oklch(0.12 0.015 260);
-
-	/* Secondary (dark) */
-	--color-secondary: oklch(0.22 0.02 260);
-	--color-secondary-foreground: oklch(0.92 0.008 90);
-
-	/* Muted (dark) */
-	--color-muted: oklch(0.2 0.015 260);
-	--color-muted-foreground: oklch(0.85 0.015 90);
-
-	/* Accent - Warm Amber (dark) */
-	--color-accent: oklch(0.78 0.13 65);
-	--color-accent-foreground: oklch(0.15 0.02 65);
-	/* Light tint of accent works for small text on dark backgrounds; the
-	 * usage rule is the same as light mode (small/medium non-bold copy
-	 * uses --color-accent-text instead of --color-accent). */
-	--color-accent-text: oklch(0.85 0.13 65);
-
-	/* Semantic colors (dark) */
-	--color-destructive: oklch(0.65 0.18 25);
-	--color-destructive-foreground: oklch(0.98 0.005 25);
-
-	/* Borders & inputs (dark) */
-	--color-border: oklch(0.28 0.02 260);
-	--color-input: oklch(0.18 0.015 260);
-	--color-ring: oklch(0.72 0.13 255);
-
-	/* Overlays (dark) */
-	--color-bg-overlay: oklch(0.08 0.01 260 / 0.85);
-
-	/* Text hierarchy (dark) */
-	--color-text-inverted: oklch(0.15 0.015 260);
-	--color-text-primary: oklch(0.94 0.008 90);
-	--color-text-secondary: oklch(0.78 0.012 90);
-	--color-text-muted: oklch(0.65 0.01 90);
-
-	/* Surface elevation (dark) */
-	--color-surface-base: oklch(0.12 0.015 260);
-	--color-surface-raised: oklch(0.16 0.018 260);
-	--color-surface-elevated: oklch(0.2 0.022 260);
-	--color-surface-overlay: oklch(0.14 0.016 260);
-	--color-surface-sunken: oklch(0.1 0.012 260);
-
-	/* Semantic border tokens (dark) */
-	--color-border-subtle: oklch(0.22 0.015 260);
-	--color-border-strong: oklch(0.38 0.025 260);
-
-	/* Status color overrides (dark) — light/muted become dark tints, text becomes bright */
-	--color-destructive-light: oklch(0.22 0.06 25);
-	--color-destructive-muted: oklch(0.2 0.05 25);
-	--color-destructive-text: oklch(0.72 0.16 25);
-
-	--color-success-light: oklch(0.22 0.07 150);
-	--color-success-muted: oklch(0.2 0.06 150);
-	--color-success-text: oklch(0.68 0.14 150);
-
-	--color-warning-light: oklch(0.26 0.07 80);
-	--color-warning-muted: oklch(0.23 0.06 80);
-	--color-warning-text: oklch(0.76 0.13 80);
-
-	--color-info-light: oklch(0.22 0.06 245);
-	--color-info-muted: oklch(0.2 0.05 245);
-	--color-info-text: oklch(0.68 0.13 245);
+	/* The one page gutter: 16px on phones, 24px from sm, 32px from lg.
+	 * Only the container utilities read it, so the navbar, heroes,
+	 * sections and footer share one content edge. */
+	--page-gutter: --spacing(4);
+	@variant sm {
+		--page-gutter: --spacing(6);
+	}
+	@variant lg {
+		--page-gutter: --spacing(8);
+	}
 }
 
 /* Base styles */
@@ -252,20 +249,9 @@ html {
 	scrollbar-gutter: stable;
 }
 
-/* `@theme inline` inlines font tokens into Tailwind utility classes at
- * build time but does NOT emit `--font-sans` (etc.) as runtime custom
- * properties on `:root`. Bare `var(--font-sans)` consumers (body rule
- * below, h1-h6 in @layer base, code in @layer base) therefore need the
- * var defined at a cascade level where `--font-hanken-grotesk` etc.
- * are visible — `<body>` is where next/font puts those variables, so
- * we assign here. */
 body {
-	--font-sans: var(--font-hanken-grotesk), system-ui, sans-serif;
-	--font-display: var(--font-roboto-serif), Georgia, serif;
-	--font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
-	background: var(--background);
-	color: var(--foreground);
-	font-family: var(--font-sans);
+	background-color: var(--color-background);
+	color: var(--color-foreground);
 }
 
 /* `@layer base` so utility classes like `font-sans` (emitted to
@@ -287,11 +273,29 @@ body {
 	pre {
 		font-family: var(--font-mono);
 	}
-}
 
-*:focus-visible {
-	outline: 2px solid var(--primary);
-	outline-offset: 2px;
+	/* Tailwind v4 preflight draws a border with no colour utility in
+	 * currentColor (near-black here). Default every border to the
+	 * border token instead, so a bare `border` / `border-t` divider
+	 * matches the cards; a colour utility still overrides it. */
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-border);
+	}
+
+	/* The one keyboard focus treatment for every focusable element
+	 * (WCAG 2.4.7). Layered so it never beats a utility: composite
+	 * widgets (cmdk input and items, select items) that move a
+	 * highlight instead of focus opt out with `outline-hidden`, and
+	 * invalid controls switch it to destructive (.field, and the
+	 * aria-invalid: utilities on buttons). */
+	:focus-visible {
+		outline: 2px solid var(--color-ring);
+		outline-offset: 2px;
+	}
 }
 
 /* `:user-invalid` fires only after the user has interacted with a
@@ -299,13 +303,40 @@ body {
  * validation (Chrome / Firefox / Safari support since 2023). Cheap
  * persistent inline error indicator for the audit-reported "no
  * required-field highlights" complaint (#245). The `:focus` carve-out
- * keeps the active field's primary focus ring instead of stacking
- * red + primary outlines while the user types. */
+ * keeps the active field's focus outline instead of stacking a red
+ * border under it while the user types. */
 input:user-invalid:not(:focus),
 textarea:user-invalid:not(:focus),
 select:user-invalid:not(:focus) {
-	border-color: var(--destructive);
-	box-shadow: 0 0 0 1px var(--destructive);
+	border-color: var(--color-destructive);
+	box-shadow: 0 0 0 1px var(--color-destructive);
+}
+
+/* Sonner toasts themed from the tokens (L6). The site is light only, so
+ * the Toaster keeps Sonner's default light theme and these map its
+ * variables onto ours. Sonner appends its own unlayered <style> after
+ * this sheet; the leading :root (0,3,0) outranks its
+ * [data-sonner-toaster][data-sonner-theme] rules (0,2,0) whatever the
+ * order. Status pairs are the -light fill, -muted border and -text
+ * colour (text on fill 5.4:1 to 7.7:1). */
+:root [data-sonner-toaster][data-sonner-theme='light'] {
+	--normal-bg: var(--color-popover);
+	--normal-border: var(--color-border);
+	--normal-text: var(--color-popover-foreground);
+	--success-bg: var(--color-success-light);
+	--success-border: var(--color-success-muted);
+	--success-text: var(--color-success-text);
+	--info-bg: var(--color-info-light);
+	--info-border: var(--color-info-muted);
+	--info-text: var(--color-info-text);
+	--warning-bg: var(--color-warning-light);
+	--warning-border: var(--color-warning-muted);
+	--warning-text: var(--color-warning-text);
+	--error-bg: var(--color-destructive-light);
+	--error-border: var(--color-destructive-muted);
+	--error-text: var(--color-destructive-text);
+	--border-radius: var(--radius-xl);
+	font-family: var(--font-sans);
 }
 
 /* WCAG 2.5.8 minimum touch targets — scoped to standalone interactive
@@ -320,41 +351,23 @@ button,
 	min-height: 44px;
 }
 
-.sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border: 0;
-}
-
-/* Reduced motion. The duration squash kills timed animations, but a
- * `transform: translateY(...)` on hover is a position shift that still
- * fires instantly — same visual jolt, just faster. Suppress the transform
- * itself on `.hover-lift` and `.card-hover-glow` (and on every hovered
- * element with a translate) so motion-sensitive users see no movement.
- * WCAG 2.3.3. */
+/* Reduced motion (WCAG 2.3.3). Movement is opt-in at the source: the
+ * hover lift sits under prefers-reduced-motion: no-preference, transforms
+ * in markup use motion-safe:, and smooth scrolling is motion-safe on
+ * <html>. This block squashes whatever is left: timed transitions,
+ * keyframe animations (one iteration, so spinners do not loop) and
+ * smooth scrolling anywhere else. */
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
 	*::after {
 		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
 		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
 	}
-	.hover-lift:hover,
-	.card-hover-glow:hover {
-		transform: none !important;
-	}
-	/* Looping decorative carets and idle indicators get hard-stopped
-	 * (rather than just shortened to 0.01ms) so the animation never
-	 * re-fires and CPU work for offscreen pulses is zero. Audit #269
-	 * called out the blink as the most noticeable remaining offender
-	 * after the Showcase H1 typewriter was removed (#243). */
-	.animate-blink,
+	/* Idle pulses are hard-stopped at full opacity rather than frozen at
+	 * whatever frame the single iteration ends on. */
 	.animate-pulse {
 		animation: none !important;
 		opacity: 1 !important;
@@ -364,416 +377,198 @@ button,
 /* Utilities used in components */
 @layer components {
 	.glass-card {
-		background: oklch(from var(--card) l c h / 0.9);
+		background: color-mix(in oklab, var(--color-card) 90%, transparent);
 		backdrop-filter: blur(24px) saturate(1.2);
-		border: 1px solid oklch(from var(--border) l c h / 0.5);
-		border-radius: 1rem;
+		border: 1px solid color-mix(in oklab, var(--color-border) 50%, transparent);
+		border-radius: var(--radius-2xl);
 	}
 
 	.glass-card-light {
-		background: oklch(from var(--card) l c h / 0.6);
+		background: color-mix(in oklab, var(--color-card) 60%, transparent);
 		backdrop-filter: blur(16px);
-		border: 1px solid oklch(from var(--border) l c h / 0.4);
-		border-radius: 1rem;
+		border: 1px solid color-mix(in oklab, var(--color-border) 40%, transparent);
+		border-radius: var(--radius-2xl);
 	}
 
-	/* Grid background patterns (use existing --border token) */
-	.grid-pattern {
-		background-image:
-			linear-gradient(
-				oklch(from var(--border) l c h / 0.4) 1px,
-				transparent 1px
-			),
-			linear-gradient(
-				90deg,
-				oklch(from var(--border) l c h / 0.4) 1px,
-				transparent 1px
-			);
-		background-size: 32px 32px;
-	}
-	.grid-pattern-light {
-		background-image:
-			linear-gradient(
-				oklch(from var(--border) l c h / 0.25) 1px,
-				transparent 1px
-			),
-			linear-gradient(
-				90deg,
-				oklch(from var(--border) l c h / 0.25) 1px,
-				transparent 1px
-			);
-		background-size: 40px 40px;
-	}
-	.grid-pattern-subtle {
-		background-image:
-			linear-gradient(
-				oklch(from var(--border) l c h / 0.15) 1px,
-				transparent 1px
-			),
-			linear-gradient(
-				90deg,
-				oklch(from var(--border) l c h / 0.15) 1px,
-				transparent 1px
-			);
-		background-size: 48px 48px;
-	}
-	.grid-pattern-minimal {
-		background-image:
-			linear-gradient(
-				oklch(from var(--border) l c h / 0.08) 1px,
-				transparent 1px
-			),
-			linear-gradient(
-				90deg,
-				oklch(from var(--border) l c h / 0.08) 1px,
-				transparent 1px
-			);
-		background-size: 64px 64px;
-	}
-
-	/* Dark-mode optimised grid — 18% opacity so lines are visible on dark bg */
-	.grid-pattern-dark {
-		background-image:
-			linear-gradient(
-				oklch(from var(--color-border) l c h / 0.18) 1px,
-				transparent 1px
-			),
-			linear-gradient(
-				90deg,
-				oklch(from var(--color-border) l c h / 0.18) 1px,
-				transparent 1px
-			);
-		background-size: 52px 52px;
-	}
-
-	/* Radial amber spotlight — for hero and CTA dark sections */
+	/* Radial amber spotlight behind hero and CTA sections (decorative) */
 	.hero-spotlight {
 		background: radial-gradient(
 			ellipse 80% 55% at 50% 0%,
-			oklch(from var(--color-accent) l c h / 0.1),
+			color-mix(in oklab, var(--color-accent) 10%, transparent),
 			transparent 65%
 		);
 	}
 
-	.container-narrow {
-		max-width: 42rem;
-		margin-inline: auto;
-		padding-inline: 1rem;
-	}
-	.container-wide {
-		max-width: 80rem;
-		margin-inline: auto;
-		padding-inline: 1rem;
-	}
-
-	.flex-center {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-	.flex-between {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-
+	/* Hover lift: one offset (--lift-offset), base duration, and only when
+	 * the user allows motion. card-hover-glow adds the glow shadow. */
 	.hover-lift {
-		transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+		transition: translate var(--transition-duration-base) var(--ease-in-out);
 	}
-	.hover-lift:hover {
-		transform: translateY(-3px);
-	}
-
 	.card-hover-glow {
-		transition: all 0.5s;
+		transition:
+			box-shadow var(--transition-duration-base) var(--ease-in-out),
+			translate var(--transition-duration-base) var(--ease-in-out);
 	}
 	.card-hover-glow:hover {
 		box-shadow: var(--shadow-xl), var(--shadow-glow);
-		transform: translateY(-4px);
 	}
-
-	.transition-smooth {
-		transition: all 0.3s ease-in-out;
-	}
-
-	.page-padding-x {
-		padding-inline: 1rem;
-	}
-	@media (min-width: 640px) {
-		.page-padding-x {
-			padding-inline: 1.5rem;
-		}
-	}
-	@media (min-width: 1024px) {
-		.page-padding-x {
-			padding-inline: 2rem;
+	@media (prefers-reduced-motion: no-preference) {
+		.hover-lift:hover,
+		.card-hover-glow:hover {
+			translate: 0 var(--lift-offset);
 		}
 	}
 
-	.text-page-title {
-		font-size: var(--font-size-hero);
-		line-height: var(--line-height-hero);
-		letter-spacing: var(--tracking-heading);
-		font-weight: var(--font-weight-black);
-	}
-	.text-section-title {
-		font-size: var(--font-size-4xl);
-		line-height: var(--line-height-snug);
-		letter-spacing: var(--tracking-heading);
-		font-weight: var(--font-weight-semibold);
-	}
+	/* Small uppercase label: a kicker above a title or a form-group
+	 * heading. Sets its own family so it looks the same on a <p> and on an
+	 * <h2> (headings default to the display face). Accent-text by default
+	 * (6.03:1, plain accent fails as text); a color utility on the element
+	 * (text-muted-foreground on form groups) overrides it. */
 	.text-eyebrow {
-		font-size: var(--font-size-xs);
+		color: var(--color-accent-text);
+		font-family: var(--font-sans);
+		font-size: var(--text-xs);
+		line-height: var(--text-xs--line-height);
 		font-weight: var(--font-weight-semibold);
 		letter-spacing: var(--tracking-widest);
-		line-height: var(--line-height-normal);
 		text-transform: uppercase;
 	}
-	.text-hero-subtitle {
-		font-size: var(--font-size-xl);
-		font-weight: var(--font-weight-normal);
-		line-height: var(--line-height-relaxed);
-		letter-spacing: var(--tracking-normal);
-	}
-	.text-h1 {
-		font-size: var(--font-size-4xl);
-		font-weight: var(--font-weight-bold);
-		line-height: var(--line-height-snug);
-		letter-spacing: var(--tracking-heading);
-	}
-	.text-h2 {
-		font-size: var(--font-size-3xl);
-		font-weight: var(--font-weight-semibold);
-		line-height: var(--line-height-snug);
-		letter-spacing: var(--tracking-heading);
-	}
-	.text-h3 {
-		font-size: var(--font-size-2xl);
-		font-weight: var(--font-weight-semibold);
-		line-height: var(--line-height-normal);
-		letter-spacing: var(--tracking-tight);
-	}
-	.text-h4 {
-		font-size: var(--font-size-xl);
-		font-weight: var(--font-weight-medium);
-		line-height: var(--line-height-normal);
-		letter-spacing: var(--tracking-normal);
-	}
-	.text-lead {
-		font-size: var(--font-size-lg);
-		font-weight: var(--font-weight-normal);
-		line-height: var(--line-height-relaxed);
-		letter-spacing: var(--tracking-normal);
-	}
-	.text-caption {
-		font-size: var(--font-size-xs);
-		font-weight: var(--font-weight-normal);
-		line-height: var(--line-height-normal);
-		letter-spacing: var(--tracking-normal);
-	}
 
-	.link-primary {
-		color: var(--primary);
-		text-decoration: underline;
-		text-decoration-color: oklch(from var(--primary) l c h / 0.3);
+	/* The one treatment for every text input, select and textarea, native
+	 * or primitive. Focus comes from the base :focus-visible outline, so
+	 * there is no ring here. 16px text stops iOS zooming on focus, and the
+	 * 44px minimum matches the button touch target. A component class, so
+	 * layout utilities on the element (w-auto, flex-1, font-mono, min-h-*,
+	 * pl-7) still win. */
+	.field {
+		width: 100%;
+		min-height: calc(var(--spacing) * 11);
+		padding-block: calc(var(--spacing) * 2);
+		padding-inline: calc(var(--spacing) * 3);
+		border: 1px solid var(--color-input);
+		border-radius: var(--radius-md);
+		background-color: var(--color-muted);
+		color: var(--color-foreground);
+		font-size: var(--text-base);
+		line-height: var(--text-base--line-height);
 	}
-
-	.link-accent {
-		color: var(--accent);
-		text-decoration: underline;
-		text-decoration-color: oklch(from var(--accent) l c h / 0.3);
+	.field::placeholder,
+	.field[data-placeholder] {
+		color: var(--color-muted-foreground);
 	}
-
-	.surface-overlay {
-		background-color: oklch(from var(--foreground) l c h / 0.04);
+	.field:disabled {
+		cursor: not-allowed;
+		opacity: 0.5;
 	}
-
-	/* Explicit focus marker for elements that opt into focus-ring styling.
-	 * Globally `*:focus-visible` (above) gives every focusable element an
-	 * outline; this class re-asserts that contract in markup so the focus
-	 * intent is visible at the call site. Uses var(--primary) to match
-	 * the global rule's colour exactly — keeps the focus visual uniform
-	 * across opt-in and default elements. */
-	.focus-ring:focus-visible {
-		outline: 2px solid var(--primary);
-		outline-offset: 2px;
-		border-radius: 0.375rem;
+	.field[aria-invalid='true'] {
+		border-color: var(--color-destructive);
+	}
+	.field[aria-invalid='true']:focus-visible {
+		outline-color: var(--color-destructive);
 	}
 }
 
-/* Spacing utilities */
-@utility section-spacing {
-	padding-block: 6rem;
+/* Page containers. Two widths, one gutter (--page-gutter): wide (80rem)
+ * for multi-column layouts and the site chrome, content (56rem) for a
+ * reading measure. Sections carry no horizontal padding of their own;
+ * the container inside them does. */
+@utility container-wide {
+	width: 100%;
+	max-width: var(--container-7xl);
+	margin-inline: auto;
+	padding-inline: var(--page-gutter);
 }
-@utility gap-tight {
-	gap: 0.5rem;
-}
-@utility gap-content {
-	gap: 1rem;
-}
-@utility gap-comfortable {
-	gap: 1.5rem;
-}
-@utility gap-sections {
-	gap: 3rem;
+@utility container-content {
+	width: 100%;
+	max-width: var(--container-4xl);
+	margin-inline: auto;
+	padding-inline: var(--page-gutter);
 }
 
-/* Section padding */
-@utility py-section {
-	padding-block: 5rem;
+/* Hero grid background: --color-border lines at 15%, 3rem cells. Set
+ * --grid-size on the element to change the cell. The alpha stays a
+ * literal so Tailwind's no-color-mix fallback keeps it (with a var()
+ * percentage the fallback drops to a solid border-color line). */
+@utility grid-pattern {
+	--grid-line: color-mix(in oklab, var(--color-border) 15%, transparent);
+	background-image:
+		linear-gradient(var(--grid-line) 1px, transparent 1px),
+		linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+	background-size: var(--grid-size, 3rem) var(--grid-size, 3rem);
 }
-@utility py-section-sm {
-	padding-block: 3rem;
+
+/* The one multi-property transition (base duration, one easing). The
+ * properties are listed, never `all`, so layout properties and the focus
+ * outline never animate. */
+@utility transition-smooth {
+	transition-property:
+		color, background-color, border-color, text-decoration-color, fill,
+		stroke, opacity, box-shadow, transform, translate, scale, rotate, filter,
+		backdrop-filter;
+	transition-duration: var(--transition-duration-base);
+	transition-timing-function: var(--ease-in-out);
 }
 
 /* Card padding sizes */
 @utility card-padding-sm {
-	padding: 1rem;
+	padding: --spacing(4);
 }
 @utility card-padding {
-	padding: 1.5rem;
+	padding: --spacing(6);
 }
 @utility card-padding-lg {
-	padding: 2rem;
+	padding: --spacing(8);
 }
 
-/* Margin bottom scale */
-@utility mb-subheading {
-	margin-bottom: 0.5rem;
-}
-@utility mb-heading {
-	margin-bottom: 1rem;
-}
-@utility mb-comfortable {
-	margin-bottom: 1.5rem;
-}
-@utility mb-content-block {
-	margin-bottom: 2rem;
-}
-@utility mb-card-content {
-	margin-bottom: 1.25rem;
-}
-
-/* Margin top scale */
-@utility mt-heading {
-	margin-top: 1rem;
-}
-@utility mt-card-content {
-	margin-top: 1.25rem;
-}
-
-/* Padding */
-@utility p-button {
-	padding: 0.625rem 1rem;
-}
-
-/* Vertical spacing stacks */
-@utility space-y-tight {
-	& > :not(:first-child) {
-		margin-top: 0.5rem;
-	}
-}
-@utility space-y-content {
-	& > :not(:first-child) {
-		margin-top: 1rem;
-	}
-}
-@utility space-y-comfortable {
-	& > :not(:first-child) {
-		margin-top: 1.5rem;
-	}
-}
-@utility space-y-sections {
-	& > :not(:first-child) {
-		margin-top: 3rem;
-	}
-}
-
-/* Z-index scale */
-@utility z-sticky {
-	z-index: 40;
-}
-@utility z-fixed {
-	z-index: 50;
-}
+/* Z-index scale, three steps. z-nav: fixed page chrome (navbar,
+ * reading progress, scroll-to-top). z-modal: everything that must cover
+ * the chrome (dialogs and their scrim, the TTL share sheet, popovers).
+ * z-skip-link: the first Tab stop on every page, above all of it
+ * (WCAG 2.4.11). Equal steps stack in DOM order. */
 @utility z-nav {
 	z-index: 60;
 }
 @utility z-modal {
 	z-index: 70;
 }
-
-/* Animation */
-@keyframes blob {
-	0% {
-		transform: translate(0, 0) scale(1);
-	}
-	33% {
-		transform: translate(30px, -50px) scale(1.1);
-	}
-	66% {
-		transform: translate(-20px, 20px) scale(0.9);
-	}
-	100% {
-		transform: translate(0, 0) scale(1);
-	}
-}
-.animate-blob {
-	animation: blob 7s infinite;
-}
-.animation-delay-2000 {
-	animation-delay: 2s;
-}
-
-@keyframes blink {
-	0%,
-	100% {
-		opacity: 1;
-	}
-	50% {
-		opacity: 0;
-	}
-}
-.animate-blink {
-	animation: blink 0.8s step-end infinite;
+@utility z-skip-link {
+	z-index: 80;
 }
 
 /* Dialog */
 @layer components {
 	.dialog-overlay {
-		background-color: var(--color-bg-overlay);
+		background-color: var(--color-overlay);
 		position: fixed;
 		inset: 0;
-		z-index: 50;
 	}
 	.dialog-content {
-		background-color: var(--color-surface-elevated);
-		color: var(--color-foreground);
+		background-color: var(--color-popover);
+		color: var(--color-popover-foreground);
 		border: 1px solid var(--color-border);
-		border-radius: 0.75rem;
-		box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-		padding: 1.5rem;
+		border-radius: var(--radius-xl);
+		box-shadow: var(--shadow-xl);
+		padding: --spacing(6);
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
+		gap: --spacing(4);
 		position: fixed;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
 		width: 90vw;
-		max-width: 28rem;
-		z-index: 51;
+		max-width: var(--container-md);
 	}
 	.dialog-close-button {
 		position: absolute;
-		top: 1rem;
-		right: 1rem;
+		top: --spacing(4);
+		right: --spacing(4);
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: 1.75rem;
-		height: 1.75rem;
-		border-radius: 0.375rem;
+		width: --spacing(7);
+		height: --spacing(7);
+		border-radius: var(--radius-md);
 		color: var(--color-foreground);
 		cursor: pointer;
 	}
@@ -782,88 +577,102 @@ button,
 /* Typography component */
 @layer components {
 	.typography {
-		font-size: 1.0625rem;
-		line-height: 1.8;
-		color: var(--foreground);
+		font-size: var(--text-prose);
+		line-height: var(--text-prose--line-height);
+		color: var(--color-foreground);
 	}
+	/* Prose headings reuse the heading API steps one level down: the page
+	 * H1 sits outside the article, so a Markdown h2 reads as text-h3. */
 	.typography h1 {
-		font-size: var(--font-size-3xl);
-		font-weight: var(--font-weight-bold);
-		line-height: var(--line-height-snug);
-		letter-spacing: var(--tracking-heading);
-		margin-bottom: 1rem;
+		font-size: var(--text-h2);
+		line-height: var(--text-h2--line-height);
+		letter-spacing: var(--text-h2--letter-spacing);
+		font-weight: var(--text-h2--font-weight);
+		margin-bottom: --spacing(4);
 	}
 	/* Headings get generous top space so each section breathes. */
 	.typography h2 {
-		font-size: var(--font-size-2xl);
-		font-weight: var(--font-weight-semibold);
-		line-height: var(--line-height-snug);
-		letter-spacing: var(--tracking-heading);
-		margin-top: 3rem;
-		margin-bottom: 1rem;
-		padding-bottom: 0.5rem;
-		border-bottom: 1px solid var(--border-subtle, var(--border));
+		font-size: var(--text-h3);
+		line-height: var(--text-h3--line-height);
+		letter-spacing: var(--text-h3--letter-spacing);
+		font-weight: var(--text-h3--font-weight);
+		margin-top: --spacing(12);
+		margin-bottom: --spacing(4);
+		padding-bottom: --spacing(2);
+		border-bottom: 1px solid var(--color-border-subtle);
 	}
 	.typography h3 {
-		font-size: var(--font-size-xl);
-		font-weight: var(--font-weight-semibold);
-		line-height: var(--line-height-normal);
-		margin-top: 2rem;
-		margin-bottom: 0.75rem;
+		font-size: var(--text-h4);
+		line-height: var(--text-h4--line-height);
+		font-weight: var(--text-h4--font-weight);
+		margin-top: --spacing(8);
+		margin-bottom: --spacing(3);
 	}
 	.typography h2 + h3 {
-		margin-top: 1rem;
+		margin-top: --spacing(4);
 	}
 	.typography p {
-		margin-bottom: 1.4rem;
+		margin-bottom: --spacing(6);
 		text-wrap: pretty;
 	}
 	/* Lead-in: the opening paragraph reads larger, like an editorial standfirst. */
 	.typography > p:first-of-type {
-		font-size: 1.2rem;
-		line-height: 1.7;
-		color: var(--muted-foreground);
+		font-size: var(--text-prose-lead);
+		line-height: var(--text-prose-lead--line-height);
+		color: var(--color-muted-foreground);
 	}
 	.typography strong {
 		font-weight: var(--font-weight-semibold);
-		color: var(--foreground);
+		color: var(--color-foreground);
 	}
+	/* The one in-text link (L5): a link inside a sentence, in prose or in
+	 * body copy, is always underlined (WCAG 1.4.1: colour is never the only
+	 * cue). .link-primary carries it outside .typography. Standalone links
+	 * (back links, "View all" arrows) are not in-text and keep their own
+	 * hover:underline treatment. Hover text uses accent-text: plain accent
+	 * is 2.49:1 on the page. */
+	.link-primary,
 	.typography a {
-		color: var(--primary);
-		text-decoration: underline;
-		text-decoration-color: color-mix(in oklab, var(--primary) 35%, transparent);
-		text-underline-offset: 3px;
+		color: var(--color-primary);
+		text-decoration-line: underline;
+		text-decoration-color: color-mix(
+			in oklab,
+			var(--color-primary) 35%,
+			transparent
+		);
 		text-decoration-thickness: 2px;
-		transition:
-			color 0.15s ease,
-			text-decoration-color 0.15s ease;
+		text-underline-offset: 3px;
+		transition-property: color, text-decoration-color;
+		transition-duration: var(--default-transition-duration);
+		transition-timing-function: var(--default-transition-timing-function);
 	}
+	.link-primary:hover,
 	.typography a:hover {
-		color: var(--accent);
-		text-decoration-color: var(--accent);
+		color: var(--color-accent-text);
+		text-decoration-color: var(--color-accent);
 	}
 	/* Generic list rules first (lower specificity before the ul>li rules
 	   below, to satisfy no-descending-specificity). */
 	.typography ul,
 	.typography ol {
-		padding-left: 1.5rem;
-		margin-block: 1.4rem;
+		padding-left: --spacing(6);
+		margin-block: --spacing(6);
 	}
 	.typography li {
-		padding-left: 0.25rem;
+		padding-left: --spacing(1);
 	}
 	.typography li + li {
-		margin-top: 0.5rem;
+		margin-top: --spacing(2);
 	}
 	.typography ul {
 		list-style: none;
-		padding-left: 1.75rem;
+		padding-left: --spacing(7);
 	}
 	.typography ol {
 		list-style: decimal;
 	}
 	.typography ol > li::marker {
-		color: var(--accent-text, var(--accent));
+		color: var(--color-accent-text);
 		font-weight: var(--font-weight-semibold);
 	}
 	/* Brand-colored custom bullets. */
@@ -873,139 +682,91 @@ button,
 	.typography ul > li::before {
 		content: '';
 		position: absolute;
-		left: -1.25rem;
+		left: calc(--spacing(5) * -1);
 		top: 0.7em;
-		width: 0.4rem;
-		height: 0.4rem;
-		border-radius: 9999px;
-		background: var(--accent);
+		width: --spacing(1.5);
+		height: --spacing(1.5);
+		border-radius: 50%;
+		background: var(--color-accent);
 	}
 	/* Blockquote as a soft callout card, not just an italic indent. */
 	.typography blockquote {
-		margin-block: 1.75rem;
-		padding: 1rem 1.5rem;
-		border-left: 4px solid var(--accent);
-		border-radius: 0.5rem;
-		background: color-mix(in oklab, var(--accent) 7%, var(--card));
-		color: var(--foreground);
-		font-size: 1.125rem;
+		margin-block: --spacing(7);
+		padding: --spacing(4) --spacing(6);
+		border-left: 4px solid var(--color-accent);
+		border-radius: var(--radius-md);
+		background: color-mix(in oklab, var(--color-accent) 7%, var(--color-card));
+		color: var(--color-foreground);
+		font-size: var(--text-lg);
 	}
 	.typography blockquote p:last-child {
 		margin-bottom: 0;
 	}
 	.typography code {
-		padding: 0.15rem 0.4rem;
-		background: var(--secondary);
-		border-radius: 0.375rem;
+		padding: --spacing(0.5) --spacing(1.5);
+		background: var(--color-secondary);
+		border-radius: var(--radius-md);
 		font-family: var(--font-mono);
 		font-size: 0.875em;
 	}
 	/* Fenced code blocks (pre) were unstyled before. */
 	.typography pre {
-		margin-block: 1.5rem;
-		padding: 1.25rem 1.5rem;
-		background: var(--surface-sunken, var(--secondary));
-		border: 1px solid var(--border-subtle, var(--border));
-		border-radius: 0.75rem;
+		margin-block: --spacing(6);
+		padding: --spacing(5) --spacing(6);
+		background: var(--color-muted);
+		border: 1px solid var(--color-border-subtle);
+		border-radius: var(--radius-xl);
 		overflow-x: auto;
 		line-height: 1.6;
 	}
 	.typography pre code {
 		padding: 0;
 		background: transparent;
-		font-size: 0.9rem;
+		font-size: var(--text-sm);
 	}
 	.typography img {
-		margin-block: 1.75rem;
-		border-radius: 0.75rem;
-		border: 1px solid var(--border-subtle, var(--border));
+		margin-block: --spacing(7);
+		border-radius: var(--radius-xl);
+		border: 1px solid var(--color-border-subtle);
 	}
 	.typography hr {
-		margin-block: 2.5rem;
+		margin-block: --spacing(10);
 		border: 0;
-		border-top: 1px solid var(--border-subtle, var(--border));
+		border-top: 1px solid var(--color-border-subtle);
 	}
 	/* Scroll-margin so in-page anchor jumps (table of contents) clear the
 	   sticky navbar, per the shadcn typography reference. */
 	.typography :is(h1, h2, h3, h4) {
-		scroll-margin-top: 6rem;
+		scroll-margin-top: --spacing(24);
 		text-wrap: balance;
 	}
 	/* Tables (comparison posts). The sanitizer now allows table tags, so style
 	   them as a bordered, zebra-striped block instead of raw rows. */
 	.typography table {
 		width: 100%;
-		margin-block: 1.75rem;
+		margin-block: --spacing(7);
 		border-collapse: collapse;
-		font-size: 0.95rem;
+		font-size: var(--text-sm);
 	}
 	.typography thead {
-		background: var(--surface-sunken, var(--secondary));
+		background: var(--color-muted);
 	}
 	.typography th,
 	.typography td {
-		padding: 0.625rem 0.875rem;
-		border: 1px solid var(--border-subtle, var(--border));
+		padding: --spacing(2.5) --spacing(3.5);
+		border: 1px solid var(--color-border-subtle);
 		text-align: left;
 		vertical-align: top;
 	}
 	.typography th {
 		font-weight: var(--font-weight-semibold);
-		color: var(--foreground);
+		color: var(--color-foreground);
 	}
 	.typography tbody tr:nth-child(even) {
-		background: color-mix(in oklab, var(--secondary) 50%, transparent);
+		background: color-mix(in oklab, var(--color-secondary) 50%, transparent);
 	}
 	/* Don't let the last element add trailing space before the author card. */
 	.typography > *:last-child {
 		margin-bottom: 0;
-	}
-}
-
-/* Responsive text */
-@layer components {
-	.text-responsive-sm {
-		font-size: var(--font-size-sm);
-	}
-	.text-responsive-lg {
-		font-size: var(--font-size-lg);
-	}
-	.text-responsive-xl {
-		font-size: var(--font-size-xl);
-	}
-	.text-responsive-2xl {
-		font-size: var(--font-size-2xl);
-	}
-	.text-responsive-3xl {
-		font-size: var(--font-size-3xl);
-	}
-}
-
-/* Grid layouts */
-@layer components {
-	.grid-3 {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 2rem;
-	}
-	@media (min-width: 768px) {
-		.grid-3 {
-			grid-template-columns: repeat(3, 1fr);
-		}
-	}
-	.grid-4 {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 2rem;
-	}
-	@media (min-width: 640px) {
-		.grid-4 {
-			grid-template-columns: repeat(2, 1fr);
-		}
-	}
-	@media (min-width: 1024px) {
-		.grid-4 {
-			grid-template-columns: repeat(4, 1fr);
-		}
 	}
 }

@@ -90,21 +90,21 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center max-w-4xl mx-auto">
-					<div className="flex items-center justify-center gap-2 mb-4 text-accent">
+				<div className="relative z-10 container-content pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<div className="flex items-center justify-center gap-2 mb-4 text-accent-text">
 						<MapPin className="h-4 w-4" aria-hidden="true" />
-						<span className="text-xs font-semibold uppercase tracking-widest">
+						<span className="text-eyebrow">
 							{location.city}, {location.stateCode}
 						</span>
 					</div>
-					<h1 className="text-page-title text-foreground leading-tight text-balance mb-6">
+					<h1 className="text-page-title text-foreground text-balance mb-6">
 						{location.tagline}
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -114,13 +114,11 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			</section>
 
 			{/* Services */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
+			<section className="py-section-sm">
+				<div className="container-content">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							What I Offer
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">What I Offer</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							What I Build in {location.city}
 						</h2>
 					</div>
@@ -128,7 +126,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 						{location.features.map(feature => (
 							<div
 								key={feature.title}
-								className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors"
+								className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors"
 							>
 								<h3 className="text-h3 text-foreground mb-3">
 									{feature.title}
@@ -143,13 +141,11 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			</section>
 
 			{/* Areas Served */}
-			<section className="py-section-sm px-4 sm:px-6 bg-surface-sunken">
-				<div className="container-wide max-w-4xl mx-auto">
+			<section className="py-section-sm bg-muted">
+				<div className="container-content">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Coverage
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">Coverage</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Areas I Serve in {location.city}
 						</h2>
 					</div>
@@ -171,15 +167,15 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			</section>
 
 			{/* CTA */}
-			<section className="py-section px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+			<section className="py-section">
+				<div className="container-content">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready to Grow Your {location.city} Business?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">

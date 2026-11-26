@@ -251,7 +251,7 @@ export default function ContractGeneratorClient() {
 
 			{/* Template Selection */}
 			<section className="space-y-content">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+				<h2 className="text-eyebrow text-muted-foreground">
 					Select Contract Type
 				</h2>
 				<div className="grid gap-3 sm:grid-cols-3">
@@ -263,9 +263,9 @@ export default function ContractGeneratorClient() {
 								type="button"
 								aria-pressed={selected}
 								onClick={() => handleTemplateChange(template.value)}
-								className={`p-4 rounded-lg border text-left transition-colors ${
+								className={`p-4 rounded-xl border text-left transition-colors ${
 									selected
-										? 'border-accent bg-accent/10'
+										? 'border-accent-text bg-accent/10'
 										: 'border-border hover:border-accent hover:bg-muted/50'
 								}`}
 							>
@@ -283,7 +283,7 @@ export default function ContractGeneratorClient() {
 
 			{/* Provider / Your Info */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+				<h2 className="text-eyebrow text-muted-foreground">
 					{isNda ? 'Party A (You)' : `${roles.provider} (You)`}
 				</h2>
 				<div className="grid gap-content sm:grid-cols-2">
@@ -369,7 +369,7 @@ export default function ContractGeneratorClient() {
 
 			{/* Client Info */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+				<h2 className="text-eyebrow text-muted-foreground">
 					{isNda ? 'Party B' : roles.client}
 				</h2>
 				<div className="grid gap-content sm:grid-cols-2">
@@ -442,9 +442,7 @@ export default function ContractGeneratorClient() {
 
 			{/* Contract Details */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-					Contract Dates
-				</h2>
+				<h2 className="text-eyebrow text-muted-foreground">Contract Dates</h2>
 				<div className="grid gap-content sm:grid-cols-2">
 					<CalculatorInput
 						label="Effective Date"
@@ -472,7 +470,7 @@ export default function ContractGeneratorClient() {
 			{/* Terms: not shown for NDA */}
 			{!isNda && (
 				<section className="space-y-content border-t border-border pt-6">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					<h2 className="text-eyebrow text-muted-foreground">
 						Work and Payment
 					</h2>
 					<div className="space-y-content">
@@ -537,7 +535,7 @@ export default function ContractGeneratorClient() {
 			{/* Purpose for NDA */}
 			{isNda && (
 				<section className="space-y-content border-t border-border pt-6">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					<h2 className="text-eyebrow text-muted-foreground">
 						Purpose of Disclosure
 					</h2>
 					<TextAreaField
@@ -552,9 +550,7 @@ export default function ContractGeneratorClient() {
 
 			{/* Disputes */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-					Disputes
-				</h2>
+				<h2 className="text-eyebrow text-muted-foreground">Disputes</h2>
 				<CalculatorInput
 					label="County for Lawsuits (Optional)"
 					id="venueCounty"
@@ -568,7 +564,7 @@ export default function ContractGeneratorClient() {
 
 			{/* Custom Clauses */}
 			<section className="space-y-content border-t border-border pt-6">
-				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+				<h2 className="text-eyebrow text-muted-foreground">
 					Additional Terms (Optional)
 				</h2>
 				<TextAreaField
@@ -583,18 +579,18 @@ export default function ContractGeneratorClient() {
 
 			{/* Every clause, on screen, before download */}
 			<section className="space-y-content border-t border-border pt-6">
-				<details className="group rounded-lg border border-border bg-surface-raised">
+				<details className="group rounded-xl border border-border bg-card">
 					<summary className="cursor-pointer list-none px-4 py-3 font-semibold text-foreground">
 						<span className="flex items-center justify-between gap-content">
 							<span>What this contract says ({clauses.length} sections)</span>
 							<span
-								className="text-sm font-normal text-accent group-open:hidden"
+								className="text-sm font-normal text-accent-text group-open:hidden"
 								aria-hidden="true"
 							>
 								Show
 							</span>
 							<span
-								className="hidden text-sm font-normal text-accent group-open:inline"
+								className="hidden text-sm font-normal text-accent-text group-open:inline"
 								aria-hidden="true"
 							>
 								Hide
@@ -654,12 +650,12 @@ export default function ContractGeneratorClient() {
 			/>
 
 			{/* Educational Content */}
-			<div className="mt-heading space-y-content border-t border-border pt-8">
-				<h2 className="text-lg font-semibold text-foreground">Contract Tips</h2>
+			<div className="space-y-content border-t border-border pt-8">
+				<h2 className="text-h4 text-foreground">Contract Tips</h2>
 
 				<div className="grid gap-content sm:grid-cols-2">
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Be Specific
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -669,7 +665,7 @@ export default function ContractGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Payment Terms
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -679,7 +675,7 @@ export default function ContractGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Legal Review
 						</h3>
 						<p className="text-sm text-muted-foreground">
@@ -689,7 +685,7 @@ export default function ContractGeneratorClient() {
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground">
+						<h3 className="mb-subheading text-lg font-semibold text-foreground">
 							Keep Copies
 						</h3>
 						<p className="text-sm text-muted-foreground">

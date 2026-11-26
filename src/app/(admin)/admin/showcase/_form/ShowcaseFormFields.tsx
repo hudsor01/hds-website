@@ -18,8 +18,7 @@ import { ImageUploadField } from '@/components/admin/ImageUploadField'
 import { slugify } from '@/lib/admin/slugify'
 import type { ShowcaseFormShape } from './useShowcaseForm'
 
-const INPUT_CLS =
-	'w-full px-3 py-2 rounded-md border border-border bg-background text-foreground'
+const INPUT_CLS = 'field'
 const TEXTAREA_CLS = INPUT_CLS
 
 interface ShowcaseFormFieldsProps {
@@ -514,7 +513,7 @@ function CheckboxField({ form, name, label }: SharedFieldProps) {
 					<input
 						id={String(name)}
 						type="checkbox"
-						className="h-4 w-4 rounded border-border"
+						className="size-4 accent-primary"
 						checked={field.state.value ?? false}
 						onChange={e => field.handleChange(e.target.checked)}
 						onBlur={field.handleBlur}

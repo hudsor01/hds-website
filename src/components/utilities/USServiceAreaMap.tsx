@@ -36,8 +36,8 @@ export function USServiceAreaMap({ className }: USServiceAreaMapProps) {
 							d={d}
 							fill={
 								PRIMARY_STATES.has(id)
-									? 'oklch(from var(--color-accent) l c h / 0.35)'
-									: 'oklch(from var(--color-muted) l c h / 0.8)'
+									? 'color-mix(in oklab, var(--color-accent) 35%, transparent)'
+									: 'color-mix(in oklab, var(--color-muted) 80%, transparent)'
 							}
 						/>
 					))}
@@ -47,7 +47,7 @@ export function USServiceAreaMap({ className }: USServiceAreaMapProps) {
 						cx={DFW_MARKER.cx}
 						cy={DFW_MARKER.cy}
 						r={12}
-						fill="oklch(from var(--color-accent) l c h / 0.2)"
+						fill="color-mix(in oklab, var(--color-accent) 20%, transparent)"
 					/>
 					<circle
 						cx={DFW_MARKER.cx}

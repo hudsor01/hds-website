@@ -25,12 +25,12 @@ export async function generateStaticParams() {
 // Brand tokens from globals.css (oklch) converted to hex, since Satori cannot
 // read CSS variables or oklch. Keep in sync with @theme in src/app/globals.css.
 const C = {
-	background: '#ffffff', // --color-surface-elevated (matches the logo's white)
+	background: '#ffffff', // pure white, matches the logo's white
 	foreground: '#070a10', // --color-foreground (title)
 	accent: '#ef852e', // --color-accent (dash)
 	accentText: '#a44100', // --color-accent-text (eyebrow, legible)
 	primaryDeep: '#002561', // --color-primary-deep (footer band)
-	inverted: '#fafaf9', // --color-text-inverted (footer text)
+	inverted: '#fafaf9', // --color-primary-foreground (footer text)
 	footerMuted: 'rgba(250,250,249,0.66)'
 }
 

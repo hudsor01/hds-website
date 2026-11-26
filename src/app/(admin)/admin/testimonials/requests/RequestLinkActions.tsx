@@ -11,6 +11,7 @@
  */
 import { Copy, Mail } from 'lucide-react'
 import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
 
 interface RequestLinkActionsProps {
 	token: string
@@ -31,9 +32,6 @@ export async function copyRequestLink(token: string): Promise<void> {
 	}
 }
 
-const BUTTON_CLS =
-	'inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-sm font-medium text-accent-text hover:bg-surface-base transition-smooth'
-
 export function RequestLinkActions({
 	token,
 	clientName,
@@ -47,25 +45,27 @@ export function RequestLinkActions({
 
 	return (
 		<div className="inline-flex items-center gap-1">
-			<button
+			<Button
 				type="button"
+				variant="ghost"
+				size="sm"
 				onClick={() => void copyRequestLink(token)}
-				className={BUTTON_CLS}
 				aria-label={`Copy review link for ${clientName}`}
 			>
-				<Copy size={14} aria-hidden="true" />
+				<Copy aria-hidden="true" />
 				Copy link
-			</button>
+			</Button>
 			{clientEmail ? (
-				<button
+				<Button
 					type="button"
+					variant="ghost"
+					size="sm"
 					onClick={openEmail}
-					className={BUTTON_CLS}
 					aria-label={`Email review link to ${clientName}`}
 				>
-					<Mail size={14} aria-hidden="true" />
+					<Mail aria-hidden="true" />
 					Email
-				</button>
+				</Button>
 			) : null}
 		</div>
 	)

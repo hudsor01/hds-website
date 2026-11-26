@@ -183,7 +183,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 			<JsonLd data={blogPostingSchema} />
 			<JsonLd data={breadcrumbSchema} />
 
-			<div className="container-wide px-4 sm:px-6 py-8">
+			<div className="container-wide py-8">
 				<Breadcrumb className="mx-auto max-w-5xl">
 					<BreadcrumbList>
 						<BreadcrumbItem>
@@ -230,7 +230,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 											<Link
 												key={tag.id}
 												href={`/blog/tag/${tag.slug}`}
-												className="flex flex-center gap-1 text-sm text-accent bg-accent/10 hover:bg-accent/20 px-3 py-1 rounded-full transition-colors"
+												className="flex items-center justify-center gap-1 text-sm text-accent-text bg-accent/10 hover:bg-accent/20 px-3 py-1 rounded-full transition-colors"
 											>
 												<Tag className="w-4 h-4" />
 												{tag.name}
@@ -240,7 +240,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 								)}
 
 								{/* Title */}
-								<h1 className="text-page-title text-foreground leading-tight text-balance mb-content-block">
+								<h1 className="text-page-title text-foreground text-balance mb-content-block">
 									{post.title}
 								</h1>
 
@@ -253,18 +253,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
 								{/* Meta */}
 								<div className="flex flex-wrap gap-comfortable text-muted-foreground">
-									<div className="flex flex-center gap-tight">
+									<div className="flex items-center justify-center gap-tight">
 										<Calendar className="w-5 h-5" />
 										<time dateTime={post.published_at}>
 											{formatCalendarDate(post.published_at, 'long')}
 										</time>
 									</div>
-									<div className="flex flex-center gap-tight">
+									<div className="flex items-center justify-center gap-tight">
 										<Clock className="w-5 h-5" />
 										<span>{post.reading_time} min read</span>
 									</div>
 									{post.author && (
-										<div className="flex flex-center gap-tight">
+										<div className="flex items-center justify-center gap-tight">
 											{post.author.profile_image && (
 												<Image
 													src={post.author.profile_image}
@@ -302,13 +302,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
 				{/* Article Content + sticky table of contents */}
 				<div className="container-wide py-8">
-					<div className="mx-auto max-w-5xl lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12">
+					<div className="mx-auto max-w-5xl lg:grid lg:grid-cols-article lg:gap-12">
 						<div className="min-w-0 max-w-3xl">
 							<BlogPostContent html={contentHtml} />
 						</div>
 						{toc.length >= 2 && (
 							<aside className="hidden lg:block">
-								<div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto">
+								{/* -m-1 p-1 keeps the layout but gives link focus rings
+								    (2px outline, 2px offset) room inside the scroller,
+								    which would otherwise clip their sides. */}
+								<div className="sticky top-24 -m-1 max-h-[calc(100vh-7rem)] overflow-y-auto p-1">
 									<BlogTableOfContents items={toc} />
 								</div>
 							</aside>
@@ -319,10 +322,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 				{/* Related service */}
 				<div className="container-wide py-8">
 					<div className="mx-auto max-w-5xl">
-						<aside className="max-w-3xl rounded-xl border border-border bg-surface-raised p-8">
-							<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">
-								Related Service
-							</p>
+						<aside className="max-w-3xl rounded-xl border border-border bg-card p-8">
+							<p className="text-eyebrow mb-2">Related Service</p>
 							<h2 className="text-h4 text-foreground mb-2">
 								{relatedService.title}
 							</h2>
@@ -331,7 +332,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 							</p>
 							<Link
 								href={`/services/${relatedService.slug}`}
-								className="inline-flex items-center gap-1 text-accent hover:underline"
+								className="inline-flex items-center gap-1 text-accent-text hover:underline"
 							>
 								See how it works
 								<ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -356,15 +357,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 			{relatedPosts.length > 0 && <RelatedPosts posts={relatedPosts} />}
 
 			{/* CTA Section */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready for the website your business has earned?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">

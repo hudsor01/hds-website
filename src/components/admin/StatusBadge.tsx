@@ -24,26 +24,26 @@ export interface StatusBadgeProps {
 const STATUS_CLASSES: Record<string, string> = {
 	// leads
 	new: 'text-info-text bg-info-light border-border',
-	contacted: 'text-accent-text bg-surface-base border-border',
+	contacted: 'text-accent-text bg-background border-border',
 	qualified: 'text-success-text bg-success-light border-border',
 	won: 'text-success-text bg-success-light border-success-text',
-	closed: 'text-muted-foreground bg-surface-raised border-border',
+	closed: 'text-muted-foreground bg-card border-border',
 	// newsletter
 	active: 'text-success-text bg-success-light border-border',
-	unsubscribed: 'text-muted-foreground bg-surface-raised border-border',
+	unsubscribed: 'text-muted-foreground bg-card border-border',
 	bounced: 'text-destructive-text bg-destructive-light border-border',
 	// emails
 	pending: 'text-warning-text bg-warning-light border-border',
 	sent: 'text-success-text bg-success-light border-border',
 	failed: 'text-destructive-text bg-destructive-light border-border',
-	cancelled: 'text-muted-foreground bg-surface-raised border-border',
+	cancelled: 'text-muted-foreground bg-card border-border',
 	// calculator-lead quality (treated as status for badge purposes)
 	hot: 'text-destructive-text bg-destructive-light border-border',
 	warm: 'text-warning-text bg-warning-light border-border',
-	cold: 'text-muted-foreground bg-surface-raised border-border'
+	cold: 'text-muted-foreground bg-card border-border'
 }
 
-const DEFAULT_CLASS = 'text-muted-foreground bg-surface-raised border-border'
+const DEFAULT_CLASS = 'text-muted-foreground bg-card border-border'
 
 export function StatusBadge({ status }: StatusBadgeProps) {
 	const key = status ?? ''

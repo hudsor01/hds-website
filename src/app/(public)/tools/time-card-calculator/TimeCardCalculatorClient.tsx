@@ -10,6 +10,7 @@ import { Plus, X } from 'lucide-react'
 import { useId, useMemo, useRef, useState } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
+import { Button } from '@/components/ui/button'
 import {
 	calculateTimecard,
 	type EntryError,
@@ -174,7 +175,7 @@ export default function TimeCardCalculatorClient() {
 					return (
 						<div
 							key={row.id}
-							className="rounded-lg border border-border bg-surface-raised p-3"
+							className="rounded-xl border border-border bg-card p-3"
 						>
 							<div className="flex items-center justify-between mb-2">
 								<span className="text-xs font-medium text-muted-foreground">
@@ -184,14 +185,16 @@ export default function TimeCardCalculatorClient() {
 										: ''}
 								</span>
 								{rows.length > 1 && (
-									<button
+									<Button
 										type="button"
+										variant="ghost"
+										size="icon"
+										className="hover:text-destructive-text"
 										onClick={() => removeRow(row.id)}
-										className="text-muted-foreground hover:text-destructive-text"
 										aria-label={`Remove day ${index + 1}`}
 									>
-										<X className="h-4 w-4" aria-hidden="true" />
-									</button>
+										<X aria-hidden="true" />
+									</Button>
 								)}
 							</div>
 							<div className="grid grid-cols-3 gap-2">
@@ -239,7 +242,7 @@ export default function TimeCardCalculatorClient() {
 									onChange={event =>
 										updateRow(row.id, { overnight: event.target.checked })
 									}
-									className="rounded border-border text-accent focus:ring-accent"
+									className="size-4 accent-primary"
 								/>
 								Overnight shift (clock-out is the next day)
 							</label>
@@ -255,15 +258,17 @@ export default function TimeCardCalculatorClient() {
 						</div>
 					)
 				})}
-				<button
+				<Button
 					type="button"
+					variant="link"
+					size="sm"
+					className="px-0"
 					onClick={addRow}
 					disabled={atMaxDays}
-					className="flex items-center gap-tight text-sm text-accent hover:text-accent/80 disabled:cursor-not-allowed disabled:text-muted-foreground"
 				>
-					<Plus className="h-4 w-4" aria-hidden="true" />
+					<Plus aria-hidden="true" />
 					Add a day
-				</button>
+				</Button>
 				{atMaxDays && (
 					<p className="text-xs text-muted-foreground">
 						{MAX_WORKWEEK_DAYS} days is one full workweek. Start a new card for
@@ -312,10 +317,10 @@ export default function TimeCardCalculatorClient() {
 
 	const resultSlot =
 		hasResult && result ? (
-			<div className="rounded-xl border border-border bg-surface-raised p-6 space-y-3">
+			<div className="rounded-xl border border-border bg-card p-6 space-y-3">
 				<div>
 					<div className="text-xs text-muted-foreground">Total hours</div>
-					<div className="text-3xl font-bold text-accent tabular-nums">
+					<div className="text-3xl font-bold text-accent-text tabular-nums">
 						{fmtHours(result.totalMinutes)}
 					</div>
 				</div>

@@ -9,6 +9,7 @@ import { AlertCircle, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import { useId, useState } from 'react'
 import type { ToolAction } from '@/components/layout/ToolPageLayout'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
+import { Button } from '@/components/ui/button'
 import { trackEvent } from '@/lib/analytics'
 import {
 	formatJson,
@@ -134,12 +135,11 @@ export default function JsonFormatterClient() {
 		}
 	]
 
-	const borderClass =
-		status?.kind === 'error'
-			? 'border-destructive'
-			: status?.kind === 'valid'
-				? 'border-success'
-				: 'border-border'
+	// An error border comes from .field[aria-invalid] (set below).
+	const fieldClass =
+		status?.kind === 'valid'
+			? 'field font-mono border-success'
+			: 'field font-mono'
 
 	const formSlot = (
 		<div className="space-y-comfortable">
@@ -155,7 +155,7 @@ export default function JsonFormatterClient() {
 						<button
 							type="button"
 							onClick={loadSample}
-							className="text-xs text-accent hover:text-accent/80"
+							className="text-xs text-accent-text hover:underline underline-offset-4"
 						>
 							Load Sample
 						</button>
@@ -174,7 +174,7 @@ export default function JsonFormatterClient() {
 					onChange={e => changeInput(e.target.value)}
 					aria-describedby={status ? statusId : undefined}
 					aria-invalid={status?.kind === 'error' ? true : undefined}
-					className={`w-full rounded-md border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-accent ${borderClass}`}
+					className={fieldClass}
 					rows={10}
 					placeholder='{"key": "value"}'
 					spellCheck={false}
@@ -213,7 +213,7 @@ export default function JsonFormatterClient() {
 						id={indentId}
 						value={indent}
 						onChange={e => changeIndent(e.target.value as JsonIndent)}
-						className="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
+						className="field w-auto"
 					>
 						{INDENT_OPTIONS.map(option => (
 							<option key={option.value} value={option.value}>
@@ -225,30 +225,30 @@ export default function JsonFormatterClient() {
 			</div>
 
 			<div className="grid grid-cols-3 gap-3">
-				<button
+				<Button
 					type="button"
+					variant="accent"
 					onClick={() => run('format')}
 					disabled={!inputJson.trim()}
-					className="rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80 focus:outline-hidden focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					Format
-				</button>
-				<button
+				</Button>
+				<Button
 					type="button"
+					variant="outline"
 					onClick={() => run('minify')}
 					disabled={!inputJson.trim()}
-					className="rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					Minify
-				</button>
-				<button
+				</Button>
+				<Button
 					type="button"
+					variant="outline"
 					onClick={validate}
 					disabled={!inputJson.trim()}
-					className="rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					Validate
-				</button>
+				</Button>
 			</div>
 		</div>
 	)

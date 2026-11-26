@@ -43,14 +43,14 @@ function FreeMockupFormSkeleton() {
 	return (
 		<div className="space-y-4 animate-pulse" aria-hidden="true">
 			<div className="grid grid-cols-2 gap-4">
-				<div className="h-12 bg-muted rounded-lg" />
-				<div className="h-12 bg-muted rounded-lg" />
+				<div className="h-12 bg-muted rounded-md" />
+				<div className="h-12 bg-muted rounded-md" />
 			</div>
-			<div className="h-12 bg-muted rounded-lg" />
-			<div className="h-12 bg-muted rounded-lg" />
-			<div className="h-12 bg-muted rounded-lg" />
-			<div className="h-12 bg-muted rounded-lg" />
-			<div className="h-12 bg-muted rounded-lg border border-border" />
+			<div className="h-12 bg-muted rounded-md" />
+			<div className="h-12 bg-muted rounded-md" />
+			<div className="h-12 bg-muted rounded-md" />
+			<div className="h-12 bg-muted rounded-md" />
+			<div className="h-12 bg-muted rounded-md border border-border" />
 		</div>
 	)
 }
@@ -68,7 +68,7 @@ export default function FreeMockupPage() {
 			{/* Slim brand header: logo + click-to-call, no nav so the only path
 			    forward is the form. */}
 			<header className="border-b border-border">
-				<div className="container-wide px-4 sm:px-6 flex items-center justify-between h-16">
+				<div className="container-wide flex items-center justify-between h-16">
 					<Link href={ROUTES.HOME} aria-label="Hudson Digital Solutions home">
 						<Image
 							src="/HDS-Logo.webp"
@@ -81,7 +81,7 @@ export default function FreeMockupPage() {
 					</Link>
 					<a
 						href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}
-						className="flex items-center gap-2 text-sm text-muted-foreground hover:text-accent transition-colors"
+						className="flex items-center gap-2 text-sm text-muted-foreground hover:text-accent-text transition-colors"
 					>
 						<Phone className="h-4 w-4" aria-hidden="true" />
 						<span>{BUSINESS_INFO.phone}</span>
@@ -91,17 +91,15 @@ export default function FreeMockupPage() {
 
 			<section className="relative overflow-hidden">
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-16 pb-20">
+				<div className="relative z-10 container-wide pt-16 pb-20">
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 						{/* LEFT: the offer */}
 						<div>
-							<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-								Free Website Mockup
-							</p>
-							<h1 className="text-page-title text-foreground leading-tight text-balance">
+							<p className="text-eyebrow mb-3">Free Website Mockup</p>
+							<h1 className="text-page-title text-foreground text-balance">
 								See your new website before you pay anything.
 							</h1>
 							<p className="mt-4 text-lead text-muted-foreground">
@@ -128,7 +126,7 @@ export default function FreeMockupPage() {
 								{STEPS.map((step, index) => (
 									<div key={step.title} className="flex items-start gap-4">
 										<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-											<span className="text-accent font-bold text-sm">
+											<span className="text-accent-text font-bold text-sm">
 												{index + 1}
 											</span>
 										</div>
@@ -146,7 +144,7 @@ export default function FreeMockupPage() {
 						</div>
 
 						{/* RIGHT: the form (sticky on desktop so it stays in view) */}
-						<div className="rounded-xl border border-border bg-surface-raised p-6 sm:p-8 lg:sticky lg:top-8">
+						<div className="rounded-xl border border-border bg-card p-6 sm:p-8 lg:sticky lg:top-8">
 							<h2 className="text-h3 text-foreground">
 								Request your free mockup
 							</h2>
@@ -161,7 +159,7 @@ export default function FreeMockupPage() {
 
 			{/* Minimal legal footer, no marketing nav. */}
 			<footer className="border-t border-border">
-				<div className="container-wide px-4 sm:px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-muted-foreground">
+				<div className="container-wide py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-muted-foreground">
 					<span>
 						{`© ${CURRENT_YEAR} Hudson Digital Solutions. All rights reserved.`}
 					</span>

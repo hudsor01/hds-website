@@ -58,7 +58,7 @@ function LoadingFallback() {
 	return (
 		<div className="min-h-screen bg-background">
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<div
 						className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent"
 						aria-hidden="true"
@@ -86,7 +86,7 @@ function StatusPanel({ tone, title, children }: StatusPanelProps) {
 	return (
 		<div className="min-h-screen bg-background">
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<div
 						className={`w-16 h-16 mx-auto mb-content-block rounded-full flex items-center justify-center ${
 							tone === 'success' ? 'bg-success-muted' : 'bg-warning-muted'
@@ -99,7 +99,7 @@ function StatusPanel({ tone, title, children }: StatusPanelProps) {
 							aria-hidden="true"
 						/>
 					</div>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+					<h1 className="text-page-title text-foreground text-balance">
 						{title}
 					</h1>
 					<div className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
@@ -113,10 +113,7 @@ function StatusPanel({ tone, title, children }: StatusPanelProps) {
 
 function ContactLink({ children }: { children: ReactNode }) {
 	return (
-		<Link
-			href="/contact"
-			className="text-accent-text underline-offset-4 hover:underline"
-		>
+		<Link href="/contact" className="link-primary">
 			{children}
 		</Link>
 	)
@@ -169,11 +166,9 @@ async function TokenContent({ token }: { token: string }) {
 	return (
 		<div className="min-h-screen bg-background">
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						Client Feedback
-					</p>
-					<h1 className="text-page-title text-foreground leading-tight text-balance">
+				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-eyebrow mb-3">Client Feedback</p>
+					<h1 className="text-page-title text-foreground text-balance">
 						Thank You, {request.client_name}!
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
@@ -184,10 +179,10 @@ async function TokenContent({ token }: { token: string }) {
 				</div>
 			</section>
 
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="max-w-2xl mx-auto">
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<TestimonialForm
 								token={token}
 								defaultName={request.client_name}
@@ -199,10 +194,7 @@ async function TokenContent({ token }: { token: string }) {
 								By submitting, you agree that your name, role, company and
 								testimonial may be published on hudsondigitalsolutions.com. Your
 								review stays unpublished until I approve it. See the{' '}
-								<Link
-									href="/privacy"
-									className="text-accent-text underline-offset-4 hover:underline"
-								>
+								<Link href="/privacy" className="link-primary">
 									privacy policy
 								</Link>{' '}
 								for how I handle your information.
@@ -211,7 +203,7 @@ async function TokenContent({ token }: { token: string }) {
 								Changed your mind later? Email{' '}
 								<a
 									href={`mailto:${BUSINESS_INFO.email}`}
-									className="text-accent-text underline-offset-4 hover:underline"
+									className="link-primary"
 								>
 									{BUSINESS_INFO.email}
 								</a>{' '}

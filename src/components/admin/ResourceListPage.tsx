@@ -16,6 +16,7 @@
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
+import { Button } from '@/components/ui/button'
 
 interface ResourceListPageProps {
 	title: string
@@ -38,16 +39,15 @@ export function ResourceListPage({
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
 				<h1 className="text-2xl font-semibold text-foreground">{title}</h1>
-				<Link
-					href={newHref}
-					className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-text border border-border bg-surface-raised hover:bg-surface-base transition-smooth"
-				>
-					<Plus size={16} aria-hidden="true" />
-					{newLabel}
-				</Link>
+				<Button asChild variant="outline" size="sm">
+					<Link href={newHref}>
+						<Plus aria-hidden="true" />
+						{newLabel}
+					</Link>
+				</Button>
 			</div>
 			{isEmpty ? (
-				<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+				<div className="rounded-xl border border-border bg-card p-8 text-center">
 					<p className="text-sm text-muted-foreground">{emptyMessage}</p>
 					<Link
 						href={newHref}

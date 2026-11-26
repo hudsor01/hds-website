@@ -40,10 +40,10 @@ export default function NotFound() {
 			<NavbarLight />
 			<main
 				id="main-content"
-				className="min-h-screen pt-14 bg-background flex items-center justify-center px-4 sm:px-6 relative overflow-hidden"
+				className="min-h-screen pt-14 bg-background flex items-center justify-center relative overflow-hidden"
 			>
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div
@@ -51,16 +51,16 @@ export default function NotFound() {
 					aria-hidden="true"
 				/>
 
-				<div className="relative z-10 container-narrow text-center">
+				<div className="relative z-10 container-content text-center">
 					<div className="mb-10">
-						<h1 className="text-8xl lg:text-9xl font-black text-accent mb-4">
+						<h1 className="text-8xl lg:text-9xl font-black text-accent-text mb-4">
 							404
 						</h1>
 						<div className="w-32 h-1 bg-border mx-auto rounded-full"></div>
 					</div>
 
 					<div className="mb-10">
-						<h2 className="text-section-title text-foreground mb-4 text-balance">
+						<h2 className="text-h1 text-foreground mb-4 text-balance">
 							Page Not Found
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-xl mx-auto">
@@ -77,12 +77,7 @@ export default function NotFound() {
 								Return Home
 							</Link>
 						</Button>
-						<Button
-							asChild
-							variant="outline"
-							size="xl"
-							className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-						>
+						<Button asChild variant="outline-strong" size="xl">
 							<Link href="/contact">
 								<MessageSquare className="w-5 h-5" />
 								Get Help

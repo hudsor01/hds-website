@@ -32,10 +32,7 @@ export default function SignUpPage() {
 			<SignUpForm />
 			<p className="mt-6 text-sm text-muted-foreground text-center">
 				Already have an account?{' '}
-				<Link
-					href="/auth/sign-in"
-					className="font-medium text-accent-text hover:underline"
-				>
+				<Link href="/auth/sign-in" className="link-primary">
 					Sign in.
 				</Link>
 			</p>

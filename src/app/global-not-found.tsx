@@ -1,13 +1,12 @@
 import Link from 'next/link'
+import { buttonVariants } from '@/components/ui/button-variants'
 import { fontVariables } from './fonts'
 import './globals.css'
 
 export default function GlobalNotFound() {
 	return (
-		<html lang="en">
-			<body
-				className={`${fontVariables} antialiased min-h-screen flex items-center justify-center p-6 font-sans bg-background text-foreground`}
-			>
+		<html lang="en" className={fontVariables}>
+			<body className="antialiased min-h-screen flex items-center justify-center p-6 font-sans bg-background text-foreground">
 				<div className="max-w-2xl w-full text-center">
 					<div className="w-32 h-32 mx-auto mb-8 bg-muted rounded-full flex items-center justify-center text-5xl text-muted-foreground">
 						404
@@ -23,22 +22,22 @@ export default function GlobalNotFound() {
 					</p>
 
 					<div className="flex gap-4 justify-center flex-wrap">
-						<Link
-							href="/"
-							className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold inline-block no-underline"
-						>
+						<Link href="/" className={buttonVariants({ size: 'lg' })}>
 							Go Home
 						</Link>
 
 						<Link
 							href="/contact"
-							className="px-6 py-3 bg-transparent text-primary rounded-lg font-semibold inline-block border-2 border-primary no-underline"
+							className={buttonVariants({
+								variant: 'outline-strong',
+								size: 'lg'
+							})}
 						>
 							Contact
 						</Link>
 					</div>
 
-					<div className="mt-12 p-6 bg-muted rounded-lg border border-border">
+					<div className="mt-12 p-6 bg-muted rounded-xl border border-border">
 						<h2 className="text-lg font-semibold mb-4 text-foreground">
 							Popular Pages
 						</h2>

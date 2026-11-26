@@ -53,9 +53,9 @@ export function AccountMenu({ email }: AccountMenuProps) {
 		<details className="relative group">
 			<summary
 				aria-label="Account menu"
-				className="cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden inline-flex items-center gap-2 rounded-md border border-border bg-surface-raised px-3 py-1.5 text-sm font-medium text-foreground hover:bg-surface-sunken transition-smooth"
+				className="cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted transition-smooth"
 			>
-				<span className="max-w-[12rem] truncate">{email}</span>
+				<span className="max-w-48 truncate">{email}</span>
 				<svg
 					width="12"
 					height="12"
@@ -73,7 +73,7 @@ export function AccountMenu({ email }: AccountMenuProps) {
 					/>
 				</svg>
 			</summary>
-			<div className="absolute right-0 mt-2 w-64 rounded-md border border-border bg-surface-raised p-2 shadow-lg z-modal">
+			<div className="absolute right-0 mt-2 w-64 rounded-md border border-border bg-card p-2 shadow-lg z-modal">
 				<div className="px-2 py-1.5 text-xs text-muted-foreground">
 					Signed in as
 				</div>
@@ -86,7 +86,7 @@ export function AccountMenu({ email }: AccountMenuProps) {
 					onClick={handleSignOut}
 					disabled={isSigningOut}
 					aria-busy={isSigningOut}
-					className="w-full text-left px-2 py-1.5 text-sm rounded text-foreground hover:bg-surface-sunken focus-visible:bg-surface-sunken disabled:opacity-50 disabled:cursor-not-allowed transition-smooth"
+					className="w-full text-left px-2 py-1.5 text-sm rounded-md text-foreground hover:bg-muted focus-visible:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-smooth"
 				>
 					{isSigningOut ? 'Signing out...' : 'Sign out'}
 				</button>

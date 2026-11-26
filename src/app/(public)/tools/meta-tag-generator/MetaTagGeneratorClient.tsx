@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import type { ToolAction } from '@/components/layout/ToolPageLayout'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
 import { logger } from '@/lib/logger'
@@ -139,9 +140,7 @@ export default function MetaTagGeneratorClient() {
 			<form onSubmit={handleSubmit} className="space-y-comfortable" noValidate>
 				{/* Required Fields */}
 				<div className="space-y-content">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Required
-					</h2>
+					<h2 className="text-eyebrow text-muted-foreground">Required</h2>
 
 					<CalculatorInput
 						label="Page title"
@@ -166,7 +165,7 @@ export default function MetaTagGeneratorClient() {
 							name="pageDescription"
 							value={inputs.description}
 							onChange={e => handleInputChange('description', e.target.value)}
-							className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-hidden focus:ring-1 focus:ring-accent"
+							className="field"
 							rows={3}
 							required
 							aria-invalid={errors.description ? true : undefined}
@@ -202,9 +201,7 @@ export default function MetaTagGeneratorClient() {
 
 				{/* Optional Fields */}
 				<div className="space-y-content border-t border-border pt-6">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Optional
-					</h2>
+					<h2 className="text-eyebrow text-muted-foreground">Optional</h2>
 
 					<div className="grid gap-content md:grid-cols-2">
 						<CalculatorInput
@@ -280,19 +277,16 @@ export default function MetaTagGeneratorClient() {
 							type="checkbox"
 							checked={includeDocumentBasics}
 							onChange={e => setIncludeDocumentBasics(e.target.checked)}
-							className="rounded border-border text-accent focus:ring-accent"
+							className="size-4 accent-primary"
 						/>
 						Include charset and viewport lines (once per page, only if your
 						template lacks them)
 					</label>
 				</div>
 
-				<button
-					type="submit"
-					className="w-full rounded-md bg-accent px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-accent/80 focus:outline-hidden focus:ring-2 focus:ring-accent"
-				>
+				<Button type="submit" variant="accent" size="lg" className="w-full">
 					Generate meta tags
-				</button>
+				</Button>
 			</form>
 
 			{/* Educational Content */}
@@ -300,10 +294,7 @@ export default function MetaTagGeneratorClient() {
 				aria-labelledby={`${baseId}-tips`}
 				className="space-y-content border-t border-border pt-8"
 			>
-				<h2
-					id={`${baseId}-tips`}
-					className="text-lg font-semibold text-foreground"
-				>
+				<h2 id={`${baseId}-tips`} className="text-h4 text-foreground">
 					What the sources say
 				</h2>
 
@@ -366,7 +357,7 @@ export default function MetaTagGeneratorClient() {
 							onKeyDown={handleTabKeyDown}
 							className={`flex items-center gap-tight px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
 								selected
-									? 'border-accent text-accent'
+									? 'border-accent-text text-accent-text'
 									: 'border-transparent text-muted-foreground hover:text-foreground'
 							}`}
 						>
@@ -383,7 +374,7 @@ export default function MetaTagGeneratorClient() {
 					id={panelId('code')}
 					aria-labelledby={tabId('code')}
 				>
-					<pre className="rounded-lg bg-background p-4 overflow-x-auto">
+					<pre className="rounded-xl bg-background p-4 overflow-x-auto">
 						<code className="text-sm text-foreground whitespace-pre-wrap break-all">
 							{result.html}
 						</code>
@@ -398,7 +389,7 @@ export default function MetaTagGeneratorClient() {
 				>
 					{/* Google Preview */}
 					<div>
-						<h3 className="text-sm font-semibold text-muted-foreground mb-3">
+						<h3 className="text-eyebrow text-muted-foreground mb-3">
 							Search result preview (approximate)
 						</h3>
 						<Card size="sm">
@@ -416,16 +407,16 @@ export default function MetaTagGeneratorClient() {
 
 					{/* Social Preview */}
 					<div>
-						<h3 className="text-sm font-semibold text-muted-foreground mb-3">
+						<h3 className="text-eyebrow text-muted-foreground mb-3">
 							Social share preview (approximate)
 						</h3>
-						<div className="rounded-lg border border-border overflow-hidden max-w-md">
+						<div className="rounded-xl border border-border overflow-hidden max-w-md">
 							{result.imageUrl && !imageFailed ? (
 								// biome-ignore lint/performance/noImgElement: arbitrary user-supplied image URL; next/image needs a configured remote host.
 								<img
 									src={result.imageUrl}
 									alt={inputs.imageAlt.trim() || 'Share image preview'}
-									className="h-48 w-full object-cover bg-surface-raised"
+									className="h-48 w-full object-cover bg-card"
 									onError={() => setImageFailed(true)}
 								/>
 							) : (
@@ -437,7 +428,7 @@ export default function MetaTagGeneratorClient() {
 									</span>
 								</div>
 							)}
-							<Card size="sm" className="bg-surface-raised">
+							<Card size="sm" className="bg-card">
 								<p className="text-xs text-muted-foreground uppercase mb-1">
 									{inputs.siteName.trim() ||
 										previewHostname(inputs.pageUrl, 'example.com')}
@@ -492,13 +483,15 @@ interface TipCardProps {
 function TipCard({ title, href, source, children }: TipCardProps) {
 	return (
 		<Card size="sm">
-			<h3 className="mb-subheading font-semibold text-foreground">{title}</h3>
+			<h3 className="mb-subheading text-lg font-semibold text-foreground">
+				{title}
+			</h3>
 			<p className="text-sm text-muted-foreground">{children}</p>
 			<a
 				href={href}
 				target="_blank"
 				rel="noopener noreferrer"
-				className="mt-2 inline-flex items-center gap-1 text-sm text-accent hover:underline"
+				className="mt-2 inline-flex items-center gap-1 text-sm text-accent-text hover:underline"
 			>
 				Source: {source}
 				<span className="sr-only"> (opens in a new tab)</span>

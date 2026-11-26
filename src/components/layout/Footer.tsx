@@ -70,7 +70,7 @@ const socialLinks = [
 export default function Footer() {
 	return (
 		<footer
-			className="relative mt-auto bg-surface-sunken"
+			className="relative mt-auto bg-muted"
 			role="contentinfo"
 			aria-label="Site footer"
 		>
@@ -78,7 +78,7 @@ export default function Footer() {
 			<div className="absolute top-0 left-0 right-0 h-px bg-muted/50" />
 
 			<div className="relative">
-				<div className="container-wide sm:px-6 lg:px-8 pt-12 pb-6">
+				<div className="container-wide pt-12 pb-6">
 					<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-sections mb-8">
 						{/* Brand Section */}
 						<div className="md:col-span-1">
@@ -87,7 +87,7 @@ export default function Footer() {
 									<Rocket className="w-7 h-7 text-accent" />
 									<p className="text-h4 font-display text-foreground">HDS</p>
 								</div>
-								<p className="text-accent text-xs font-semibold mb-subheading">
+								<p className="text-accent-text text-xs font-semibold mb-subheading">
 									Websites built like revenue systems for DFW small businesses.
 								</p>
 								<p className="text-xs text-muted-foreground">
@@ -125,10 +125,10 @@ export default function Footer() {
 										<li key={link.name}>
 											<Link
 												href={link.href}
-												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group focus-ring rounded"
+												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group rounded-md"
 											>
 												<span>{link.name}</span>
-												<span className="absolute bottom-0 left-0 w-0 h-px bg-accent transition-smooth group-hover:w-full" />
+												<span className="absolute bottom-0 left-0 w-full h-px origin-left scale-x-0 bg-accent transition-smooth group-hover:scale-x-100" />
 											</Link>
 										</li>
 									))}
@@ -147,10 +147,10 @@ export default function Footer() {
 										<li key={link.name}>
 											<Link
 												href={link.href}
-												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group focus-ring rounded"
+												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group rounded-md"
 											>
 												<span>{link.name}</span>
-												<span className="absolute bottom-0 left-0 w-0 h-px bg-accent transition-smooth group-hover:w-full" />
+												<span className="absolute bottom-0 left-0 w-full h-px origin-left scale-x-0 bg-accent transition-smooth group-hover:scale-x-100" />
 											</Link>
 										</li>
 									))}
@@ -169,10 +169,10 @@ export default function Footer() {
 										<li key={link.name}>
 											<Link
 												href={link.href}
-												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group focus-ring rounded"
+												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group rounded-md"
 											>
 												<span>{link.name}</span>
-												<span className="absolute bottom-0 left-0 w-0 h-px bg-accent transition-smooth group-hover:w-full" />
+												<span className="absolute bottom-0 left-0 w-full h-px origin-left scale-x-0 bg-accent transition-smooth group-hover:scale-x-100" />
 											</Link>
 										</li>
 									))}
@@ -203,7 +203,7 @@ export default function Footer() {
 								    "…com" out of the rounded chip (audit #244). */}
 								<a
 									href={`mailto:${BUSINESS_INFO.email}`}
-									className="flex-center gap-tight w-full min-w-0 px-4 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
+									className="flex items-center justify-center gap-tight w-full min-w-0 px-4 py-3 rounded-md border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth"
 								>
 									<Mail className="h-4 w-4 shrink-0" />
 									<span
@@ -217,7 +217,7 @@ export default function Footer() {
 								{BUSINESS_INFO.phone && (
 									<a
 										href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}
-										className="flex-center gap-tight w-full min-w-0 px-4 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
+										className="flex items-center justify-center gap-tight w-full min-w-0 px-4 py-3 rounded-md border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth"
 									>
 										<Phone className="h-4 w-4 shrink-0" />
 										<span className="text-xs truncate">
@@ -230,7 +230,7 @@ export default function Footer() {
 					</div>
 
 					{/* Bottom Section */}
-					<div className="border-t border-white/10 pt-8">
+					<div className="border-t border-border pt-8">
 						{/* `flex-wrap` so the three rows (copyright / socials / legal)
 						    can drop to a second line below ~md instead of clipping
 						    "Terms o…" off the right edge (audit #244). */}
@@ -249,13 +249,10 @@ export default function Footer() {
 										target="_blank"
 										rel="noopener noreferrer"
 										className={cn(
-											'p-2.5 rounded-lg',
-											'glass-card-light',
-											'border border-white/10',
-											'text-muted-foreground hover:text-accent',
-											'hover:bg-card/10 hover:border-accent/50',
-											'transition-smooth group',
-											'focus-ring'
+											'p-2.5 rounded-md border border-border',
+											'text-muted-foreground hover:text-accent-text',
+											'hover:bg-accent/5 hover:border-accent/50',
+											'transition-smooth group'
 										)}
 										aria-label={`Follow me on ${social.name} (opens in new tab)`}
 									>
@@ -268,14 +265,14 @@ export default function Footer() {
 							<div className="flex items-center gap-content text-xs text-muted-foreground">
 								<Link
 									href={ROUTES.PRIVACY}
-									className="hover:text-foreground transition-smooth focus-ring rounded px-1"
+									className="hover:text-foreground transition-smooth rounded-md px-1"
 								>
 									Privacy Policy
 								</Link>
-								<span className="text-muted-foreground/50">/</span>
+								<span aria-hidden="true">/</span>
 								<Link
 									href={ROUTES.TERMS}
-									className="hover:text-foreground transition-smooth focus-ring rounded px-1"
+									className="hover:text-foreground transition-smooth rounded-md px-1"
 								>
 									Terms of Service
 								</Link>

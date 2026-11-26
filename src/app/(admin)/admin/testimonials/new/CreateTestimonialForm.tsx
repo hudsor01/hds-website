@@ -45,8 +45,7 @@ const DEFAULTS: FormShape = {
 	published: false
 }
 
-const INPUT_CLS =
-	'w-full px-3 py-2 rounded-md border border-border bg-background text-foreground'
+const INPUT_CLS = 'field'
 const TEXTAREA_CLS = INPUT_CLS
 
 export function CreateTestimonialForm() {
@@ -275,7 +274,7 @@ export function CreateTestimonialForm() {
 						<input
 							id="featured"
 							type="checkbox"
-							className="h-4 w-4 rounded border-border"
+							className="size-4 accent-primary"
 							checked={Boolean(field.state.value)}
 							onChange={e => field.handleChange(e.target.checked)}
 							onBlur={field.handleBlur}
@@ -293,7 +292,7 @@ export function CreateTestimonialForm() {
 						<input
 							id="published"
 							type="checkbox"
-							className="h-4 w-4 rounded border-border"
+							className="size-4 accent-primary"
 							checked={Boolean(field.state.value)}
 							onChange={e => field.handleChange(e.target.checked)}
 							onBlur={field.handleBlur}

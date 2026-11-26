@@ -114,7 +114,7 @@ async function NewsletterList({ searchParams }: AdminNewsletterPageProps) {
 			<SearchInput placeholder="Search subscribers" />
 			{rows.length === 0 ? (
 				q ? (
-					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+					<div className="rounded-xl border border-border bg-card p-8 text-center">
 						<p className="text-sm text-muted-foreground">
 							No subscribers matching <span className="font-mono">{q}</span>.
 						</p>

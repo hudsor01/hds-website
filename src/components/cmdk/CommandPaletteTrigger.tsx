@@ -39,19 +39,19 @@ export default function CommandPaletteTrigger() {
 				'hidden lg:inline-flex items-center gap-2 px-3 py-1.5 rounded-md',
 				'text-xs text-muted-foreground',
 				'border border-border hover:text-foreground hover:bg-muted',
-				'transition-smooth focus-ring'
+				'transition-smooth'
 			)}
 		>
 			<Search className="h-3.5 w-3.5" aria-hidden="true" />
 			<span>Search</span>
 			<span
-				className="flex items-center gap-1 ml-1 text-[10px] font-mono opacity-80"
+				className="flex items-center gap-1 ml-1 text-xs font-mono"
 				aria-hidden="true"
 			>
-				<kbd className="px-1.5 py-0.5 rounded border border-border bg-muted/50">
+				<kbd className="px-1.5 py-0.5 rounded-md border border-border bg-muted/50">
 					{modifier}
 				</kbd>
-				<kbd className="px-1.5 py-0.5 rounded border border-border bg-muted/50">
+				<kbd className="px-1.5 py-0.5 rounded-md border border-border bg-muted/50">
 					K
 				</kbd>
 			</span>

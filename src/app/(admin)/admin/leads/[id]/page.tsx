@@ -27,6 +27,7 @@ import { Suspense } from 'react'
 import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
+import { Button } from '@/components/ui/button'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
 import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import { getLeadById } from '@/lib/admin/leads-queries'
@@ -59,9 +60,8 @@ interface AdminLeadDetailPageProps {
 
 const STATUS_BTN_BASE =
 	'inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium border border-border transition-smooth'
-const STATUS_BTN_INACTIVE =
-	'text-muted-foreground bg-surface-raised hover:bg-surface-base'
-const STATUS_BTN_ACTIVE = 'text-foreground bg-surface-base'
+const STATUS_BTN_INACTIVE = 'text-muted-foreground bg-card hover:bg-background'
+const STATUS_BTN_ACTIVE = 'text-foreground bg-background'
 
 async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 	const { id } = await params
@@ -108,7 +108,7 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Contact info</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					<dl className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 text-sm">
 						{lead.phone && (
 							<div>
@@ -140,7 +140,7 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 									Metadata
 								</dt>
 								<dd>
-									<pre className="text-xs overflow-x-auto rounded-md bg-surface-base p-3 text-foreground">
+									<pre className="text-xs overflow-x-auto rounded-md bg-background p-3 text-foreground">
 										{JSON.stringify(lead.metadata, null, 2)}
 									</pre>
 								</dd>
@@ -152,7 +152,7 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Status</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					<div className="flex flex-wrap items-center gap-2">
 						{LEAD_STATUSES.map(s => {
 							const isActive = lead.status === s
@@ -179,7 +179,7 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Revenue</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2 space-y-3">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2 space-y-3">
 					{lead.dealValue ? (
 						<dl className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 text-sm">
 							<div>
@@ -221,7 +221,7 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 								min="0"
 								required
 								defaultValue={lead.dealValue ?? ''}
-								className="rounded-md border border-border bg-surface-base px-3 py-1.5 text-sm text-foreground"
+								className="field w-auto"
 							/>
 						</label>
 						<button
@@ -244,7 +244,7 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Touchpoints</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					{attribution.length === 0 ? (
 						<p className="text-sm text-muted-foreground">
 							No touchpoints recorded.
@@ -254,7 +254,7 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 							{attribution.map(t => (
 								<li
 									key={t.id}
-									className="rounded-md border border-border bg-surface-base p-3"
+									className="rounded-md border border-border bg-background p-3"
 								>
 									<dl className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 text-sm">
 										<div>
@@ -327,7 +327,7 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Notes</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2 space-y-4">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2 space-y-4">
 					<form action={addLeadNoteAction} className="space-y-2">
 						<input type="hidden" name="leadId" value={lead.id} />
 						<label htmlFor="add-note-content" className="sr-only">
@@ -339,15 +339,12 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 							rows={3}
 							maxLength={4000}
 							required
-							className="w-full rounded-md border border-border bg-surface-base p-2 text-sm text-foreground"
+							className="field"
 							placeholder="Type a note about this lead..."
 						/>
-						<button
-							type="submit"
-							className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-text border border-border bg-surface-raised hover:bg-surface-base transition-smooth"
-						>
+						<Button type="submit" variant="outline" size="sm">
 							Add note
-						</button>
+						</Button>
 					</form>
 					{notes.length === 0 ? (
 						<p className="text-sm text-muted-foreground">No notes yet.</p>
@@ -356,7 +353,7 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 							{notes.map(n => (
 								<li
 									key={n.id}
-									className="rounded-md border border-border bg-surface-base p-3"
+									className="rounded-md border border-border bg-background p-3"
 								>
 									<p className="whitespace-pre-wrap text-sm text-foreground">
 										{n.content}
@@ -389,7 +386,7 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Danger</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					<DeleteButton
 						action={deleteLeadAction}
 						id={lead.id}

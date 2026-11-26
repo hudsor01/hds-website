@@ -73,7 +73,7 @@ export default function ToolsCatalog() {
 			</div>
 
 			{noResults ? (
-				<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+				<div className="rounded-xl border border-border bg-card p-8 text-center">
 					<p className="text-sm text-muted-foreground">
 						No tools match &ldquo;{trimmed}&rdquo;. Try a broader keyword like
 						&ldquo;invoice&rdquo;, &ldquo;ROI&rdquo;, or &ldquo;JSON&rdquo;.
@@ -106,7 +106,7 @@ export default function ToolsCatalog() {
 									hover={true}
 									className="group flex flex-col"
 								>
-									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
+									<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
 										<tool.Icon className="h-5 w-5 text-accent" />
 									</div>
 
@@ -130,7 +130,7 @@ export default function ToolsCatalog() {
 
 									<Link
 										href={tool.href}
-										className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
+										className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text hover:underline underline-offset-4 transition-colors"
 									>
 										{tool.cta}
 										<ArrowRight className="h-4 w-4" />

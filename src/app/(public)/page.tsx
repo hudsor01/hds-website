@@ -93,7 +93,7 @@ export default function HomePage() {
 			{/* ── HERO ──────────────────────────────────────────── */}
 			<section className="relative overflow-hidden bg-background">
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div
@@ -101,11 +101,11 @@ export default function HomePage() {
 					aria-hidden="true"
 				/>
 
-				<div className="relative z-10 container-wide px-4 sm:px-6 lg:px-8 pt-28 pb-16 sm:pt-32 sm:pb-20">
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20">
 					<div className="grid lg:grid-cols-5 gap-12 xl:gap-16 items-center">
 						{/* Left — headline + CTAs */}
 						<div className="lg:col-span-3 flex flex-col gap-8">
-							<h1 className="text-page-title text-foreground leading-tight text-balance">
+							<h1 className="text-page-title text-foreground text-balance">
 								You earned the reviews. Now you need the website to match.
 							</h1>
 
@@ -124,12 +124,7 @@ export default function HomePage() {
 										<ArrowRight className="w-4 h-4" />
 									</Link>
 								</Button>
-								<Button
-									asChild
-									variant="outline"
-									size="xl"
-									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-								>
+								<Button asChild variant="outline-strong" size="xl">
 									<Link href={ROUTES.SHOWCASE}>See Recent Work</Link>
 								</Button>
 							</div>
@@ -167,12 +162,12 @@ export default function HomePage() {
 
 						{/* Right — what your website does */}
 						<div className="lg:col-span-2">
-							<div className="rounded-2xl border border-border/60 bg-surface-raised/40 backdrop-blur-sm overflow-hidden">
+							<div className="rounded-2xl border border-border/60 bg-card/40 backdrop-blur-sm overflow-hidden">
 								{/* Header */}
 								<div className="px-5 py-4 border-b border-border/60">
 									<div className="flex items-center gap-2 mb-1">
 										<Zap className="w-3.5 h-3.5 text-accent shrink-0" />
-										<span className="text-xs font-semibold text-foreground uppercase tracking-widest">
+										<span className="text-eyebrow text-foreground">
 											What Your Website Does For You
 										</span>
 									</div>
@@ -192,7 +187,12 @@ export default function HomePage() {
 											<span className="text-muted-foreground">
 												{item.trigger}
 											</span>
-											<span className="text-muted-foreground/40 mx-1.5">→</span>
+											<span
+												className="text-muted-foreground mx-1.5"
+												aria-hidden="true"
+											>
+												→
+											</span>
 											<span className="text-foreground font-medium">
 												{item.outcome}
 											</span>
@@ -206,13 +206,11 @@ export default function HomePage() {
 			</section>
 
 			{/* ── SOLUTIONS ─────────────────────────────────────── */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							What You Get
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">What You Get</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							A Website That Earns Its Keep
 						</h2>
 					</div>
@@ -221,11 +219,11 @@ export default function HomePage() {
 						{solutions.map(solution => (
 							<div
 								key={solution.title}
-								className="group flex flex-col p-8 rounded-xl bg-surface-raised border border-border hover:border-border-strong transition-colors"
+								className="group flex flex-col p-8 rounded-xl bg-card border border-border hover:border-border-strong transition-colors"
 							>
 								{/* Icon + stat row */}
 								<div className="flex items-start justify-between mb-6">
-									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+									<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
 										<solution.Icon className="w-5 h-5 text-accent" />
 									</div>
 									<div className="text-right">
@@ -247,7 +245,7 @@ export default function HomePage() {
 
 								<Link
 									href={solution.ctaHref}
-									className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
+									className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text hover:underline underline-offset-4 transition-colors"
 								>
 									{solution.ctaLabel}
 									<ArrowRight className="w-4 h-4" />
@@ -265,13 +263,11 @@ export default function HomePage() {
 			</section>
 
 			{/* ── FREE TOOLS ──────────────────────────────────────── */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Try For Free
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">Try For Free</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Free Business Tools
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -287,14 +283,14 @@ export default function HomePage() {
 								<div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
 									<TrendingUp className="w-7 h-7 text-accent" />
 								</div>
-								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent transition-colors">
+								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent-text transition-colors">
 									ROI Calculator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
 									See how much business you&apos;re leaving on the table with a
 									website that doesn&apos;t turn visitors into customers.
 								</p>
-								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
+								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent-text">
 									Try Calculator
 									<ArrowRight className="w-4 h-4" />
 								</div>
@@ -307,14 +303,14 @@ export default function HomePage() {
 								<div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
 									<Calculator className="w-7 h-7 text-accent" />
 								</div>
-								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent transition-colors">
+								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent-text transition-colors">
 									Website Cost Estimator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
 									See what a site with the pages and features you need typically
 									costs. A ballpark to plan with, not a quote.
 								</p>
-								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
+								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent-text">
 									See the Range
 									<ArrowRight className="w-4 h-4" />
 								</div>
@@ -330,14 +326,14 @@ export default function HomePage() {
 								<div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
 									<Zap className="w-7 h-7 text-accent" />
 								</div>
-								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent transition-colors">
+								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent-text transition-colors">
 									Site Speed Revenue Calculator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
 									Run a real mobile PageSpeed test, then see what a faster site
 									could be worth at a conversion lift you choose.
 								</p>
-								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
+								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent-text">
 									Analyze Site
 									<ArrowRight className="w-4 h-4" />
 								</div>
@@ -348,7 +344,7 @@ export default function HomePage() {
 					<div className="text-center mt-10">
 						<Link
 							href="/tools"
-							className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
+							className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text hover:underline underline-offset-4 transition-colors"
 						>
 							View all tools
 							<ArrowRight className="w-4 h-4" />
@@ -358,22 +354,20 @@ export default function HomePage() {
 			</section>
 
 			{/* ── CLOSING CTA ────────────────────────────────────── */}
-			<section className="relative py-section px-4 sm:px-6 bg-surface-raised overflow-hidden">
+			<section className="relative py-section bg-card overflow-hidden">
 				{/* Soft radial accent for depth — pure CSS, no extra DOM weight */}
 				<div
 					aria-hidden="true"
-					className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklch,var(--color-accent)_12%,transparent),transparent_70%)]"
+					className="hero-spotlight pointer-events-none absolute inset-0"
 				/>
-				<div className="relative max-w-3xl mx-auto">
+				<div className="relative container-content">
 					<div className="text-center">
 						<div className="inline-flex items-center gap-3 mb-4">
 							<span aria-hidden="true" className="h-px w-8 bg-accent/40" />
-							<p className="text-xs font-semibold uppercase tracking-widest text-accent">
-								Let&apos;s talk
-							</p>
+							<p className="text-eyebrow">Let&apos;s talk</p>
 							<span aria-hidden="true" className="h-px w-8 bg-accent/40" />
 						</div>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Ready to give your business the website it&apos;s earned?
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
@@ -392,12 +386,7 @@ export default function HomePage() {
 									<ArrowRight className="w-4 h-4" />
 								</Link>
 							</Button>
-							<Button
-								asChild
-								variant="outline"
-								size="xl"
-								className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-							>
+							<Button asChild variant="outline-strong" size="xl">
 								<Link href={ROUTES.SHOWCASE}>View Showcase</Link>
 							</Button>
 						</div>
@@ -431,7 +420,7 @@ export default function HomePage() {
 						className="mt-10 flex items-center gap-3 max-w-xs mx-auto"
 					>
 						<span className="h-px flex-1 bg-border/60" />
-						<span className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+						<span className="text-xs uppercase tracking-wider text-muted-foreground">
 							or
 						</span>
 						<span className="h-px flex-1 bg-border/60" />

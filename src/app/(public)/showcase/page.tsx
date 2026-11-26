@@ -40,7 +40,7 @@ async function ShowcaseProjects() {
 	return (
 		<>
 			{/* Stats Section */}
-			<section className="pt-12 px-4 sm:px-6">
+			<section className="pt-12">
 				<div className="container-wide">
 					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
 						{[
@@ -60,7 +60,7 @@ async function ShowcaseProjects() {
 								className="bg-background px-8 py-10 text-center relative overflow-hidden"
 							>
 								<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
-								<div className="text-4xl lg:text-5xl font-black text-accent mb-2 font-sans tabular-nums">
+								<div className="text-4xl lg:text-5xl font-black text-accent-text mb-2 font-sans tabular-nums">
 									{stat.value}
 								</div>
 								<div className="text-sm text-muted-foreground">
@@ -73,16 +73,14 @@ async function ShowcaseProjects() {
 			</section>
 
 			{/* Showcase Projects */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
 					{/* Section header */}
 					<div className="text-center mb-12">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							Featured
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						<p className="text-eyebrow mb-3">Featured</p>
+						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Real projects.{' '}
-							<span className="text-accent">One thing in common.</span>
+							<span className="text-accent-text">One thing in common.</span>
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 							I built each site around how the business actually makes money,
@@ -143,9 +141,9 @@ async function ShowcaseProjects() {
 			</section>
 
 			{/* Inline CTA Section */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="py-section-sm">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-14 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-14 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"
@@ -181,7 +179,7 @@ export default function ShowcasePage() {
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
-					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div
@@ -189,10 +187,8 @@ export default function ShowcasePage() {
 					aria-hidden="true"
 				/>
 
-				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-						Showcase
-					</p>
+				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-eyebrow mb-3">Showcase</p>
 					{/* The visible heading used to be driven by a looping
 						    typewriter animation (~30 chars, 80ms per char, 2s pause)
 						    that left the H1 mid-state for several seconds — users
@@ -200,7 +196,7 @@ export default function ShowcasePage() {
 						    and one early audit even misread it as a missing logo
 						    (audit #243). Static now; the brand "personality" was
 						    costing us comprehension. */}
-					<h1 className="text-page-title text-foreground leading-tight">
+					<h1 className="text-page-title text-foreground text-balance">
 						Real Projects. Real Results.
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
@@ -216,12 +212,7 @@ export default function ShowcasePage() {
 							</Link>
 						</Button>
 
-						<Button
-							asChild
-							variant="outline"
-							size="xl"
-							className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-						>
+						<Button asChild variant="outline-strong" size="xl">
 							<Link href="/services">
 								View Services
 								<ArrowRight className="w-5 h-5" aria-hidden="true" />
@@ -234,7 +225,7 @@ export default function ShowcasePage() {
 			{/* Dynamic content with Suspense */}
 			<Suspense
 				fallback={
-					<div className="container-wide py-section-sm px-4 text-center">
+					<div className="container-wide py-section-sm text-center">
 						<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent" />
 						<p className="text-sm text-muted-foreground mt-4 leading-relaxed">
 							Loading projects...
@@ -246,9 +237,9 @@ export default function ShowcasePage() {
 			</Suspense>
 
 			{/* CTA Section */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"
@@ -258,9 +249,9 @@ export default function ShowcasePage() {
 								    header and the inline CTA, so all three are h2. This one
 								    renders in the static shell, ahead of the streamed
 								    projects in server HTML, so an h3 here read as h1 > h3. */}
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+							<h2 className="text-h1 text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready to be the{' '}
-								<span className="text-accent">next one on this page?</span>
+								<span className="text-accent-text">next one on this page?</span>
 							</h2>
 
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
@@ -276,12 +267,7 @@ export default function ShowcasePage() {
 									</Link>
 								</Button>
 
-								<Button
-									asChild
-									variant="outline"
-									size="xl"
-									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-								>
+								<Button asChild variant="outline-strong" size="xl">
 									<Link href="/services">
 										View Services
 										<ArrowRight className="w-5 h-5" aria-hidden="true" />

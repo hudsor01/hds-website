@@ -217,41 +217,6 @@ describe('ErrorBoundary Component', () => {
 })
 
 describe('BackgroundPattern Component', () => {
-	it('should render ambient shapes', () => {
-		const { container } = render(
-			<div className="relative">
-				<div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-20 rounded-full blur-3xl opacity-20 animate-blob" />
-				<div className="absolute -bottom-40 -left-40 w-80 h-80 bg-muted/20 rounded-full blur-3xl opacity-20 animate-blob animation-delay-2000" />
-			</div>
-		)
-
-		const shapes = container.querySelectorAll('.animate-blob')
-		expect(shapes.length).toBe(2)
-	})
-
-	it('should apply proper animation delays', () => {
-		const { container } = render(
-			<div className="animate-blob animation-delay-2000" />
-		)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('animation-delay-2000')
-	})
-
-	it('should apply surface overlay backgrounds', () => {
-		const { container } = render(<div className="surface-overlay" />)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('surface-overlay')
-	})
-
-	it('should render grid pattern overlay', () => {
-		const { container } = render(<div className="grid-pattern" />)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('grid-pattern')
-	})
-
 	it('should apply blur effects correctly', () => {
 		const { container } = render(<div className="blur-3xl" />)
 
@@ -297,49 +262,6 @@ describe('Glass Morphism Components', () => {
 	})
 })
 
-describe('Layout Utility Classes', () => {
-	it('should apply flex-center correctly', () => {
-		const { container } = render(
-			<div className="flex-center">
-				<span>Centered</span>
-			</div>
-		)
-
-		const element = container.firstChild as HTMLElement
-		expect(element).toHaveClass('flex-center')
-		// Computed styles aren't available in happy-dom, just verify class is applied
-	})
-
-	it('should apply flex-between correctly', () => {
-		const { container } = render(
-			<div className="flex-between">
-				<span>Left</span>
-				<span>Right</span>
-			</div>
-		)
-
-		const element = container.firstChild as HTMLElement
-		expect(element).toHaveClass('flex-between')
-		// Computed styles aren't available in happy-dom, just verify class is applied
-	})
-
-	it('should apply container-wide correctly', () => {
-		const { container } = render(<div className="container-wide">Content</div>)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('container-wide')
-	})
-
-	it('should apply container-narrow correctly', () => {
-		const { container } = render(
-			<div className="container-narrow">Content</div>
-		)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('container-narrow')
-	})
-})
-
 describe('Transition and Animation Utilities', () => {
 	it('should apply transition-smooth', () => {
 		const { container } = render(
@@ -349,13 +271,6 @@ describe('Transition and Animation Utilities', () => {
 		const button = container.firstChild as HTMLElement
 		expect(button).toHaveClass('transition-smooth')
 		// Computed styles aren't available in happy-dom, just verify class is applied
-	})
-
-	it('should apply focus-ring on focus', () => {
-		const { container } = render(<button className="focus-ring">Button</button>)
-
-		const button = container.firstChild
-		expect(button).toHaveClass('focus-ring')
 	})
 
 	it('should apply hover-lift effect', () => {
@@ -386,13 +301,6 @@ describe('Typography Utilities', () => {
 
 		const heading = container.firstChild
 		expect(heading).toHaveClass('text-clamp-xl')
-	})
-
-	it('should apply responsive text sizing', () => {
-		const { container } = render(<p className="text-responsive-md">Text</p>)
-
-		const text = container.firstChild
-		expect(text).toHaveClass('text-responsive-md')
 	})
 
 	it('should apply accent text styling', () => {
@@ -535,26 +443,5 @@ describe('Grid Pattern Utilities', () => {
 
 		const element = container.firstChild
 		expect(element).toHaveClass('grid-pattern')
-	})
-
-	it('should apply grid-pattern-light variant', () => {
-		const { container } = render(<div className="grid-pattern-light" />)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('grid-pattern-light')
-	})
-
-	it('should apply grid-pattern-subtle variant', () => {
-		const { container } = render(<div className="grid-pattern-subtle" />)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('grid-pattern-subtle')
-	})
-
-	it('should apply grid-pattern-minimal variant', () => {
-		const { container } = render(<div className="grid-pattern-minimal" />)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('grid-pattern-minimal')
 	})
 })

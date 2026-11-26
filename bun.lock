@@ -61,6 +61,7 @@
         "marked": "18.2.1",
         "next": "16.4.6",
         "playwright": "1.65.1",
+        "postcss": "8.5.32",
         "react": "19.3.1",
         "react-dom": "19.3.1",
         "tailwindcss": "4.3.5",

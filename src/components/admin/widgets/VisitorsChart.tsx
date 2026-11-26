@@ -40,7 +40,7 @@ function formatTick(value: string): string {
 
 export function VisitorsChart({ result }: VisitorsChartProps) {
 	return (
-		<div className="rounded-xl border border-border bg-surface-raised p-6">
+		<div className="rounded-xl border border-border bg-card p-6">
 			<h2 className="text-sm font-semibold text-foreground mb-4">
 				Visitors (last 30 days)
 			</h2>
@@ -74,9 +74,9 @@ export function VisitorsChart({ result }: VisitorsChartProps) {
 							/>
 							<Tooltip
 								contentStyle={{
-									background: 'var(--color-surface-raised)',
+									background: 'var(--color-card)',
 									border: '1px solid var(--color-border)',
-									borderRadius: '0.5rem'
+									borderRadius: 'var(--radius-md)'
 								}}
 							/>
 							<Line

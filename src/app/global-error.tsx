@@ -2,7 +2,9 @@
 
 import * as Sentry from '@sentry/nextjs'
 import { useEffect } from 'react'
+import { Button } from '@/components/ui/button'
 import { BUSINESS_INFO } from '@/lib/constants/business'
+import { fontVariables } from './fonts'
 import './globals.css'
 
 export default function GlobalError({
@@ -18,7 +20,7 @@ export default function GlobalError({
 	}, [error])
 
 	return (
-		<html lang="en">
+		<html lang="en" className={fontVariables}>
 			<body className="min-h-screen flex items-center justify-center p-6 font-sans bg-background text-foreground">
 				<div className="max-w-md w-full text-center">
 					<div className="w-16 h-16 mx-auto mb-6 bg-destructive-light rounded-full flex items-center justify-center">
@@ -56,30 +58,27 @@ export default function GlobalError({
 					)}
 
 					<div className="flex gap-3 justify-center flex-wrap">
-						<button
-							type="button"
-							onClick={reset}
-							className="px-6 py-3 bg-primary text-primary-foreground rounded-lg text-base font-medium cursor-pointer border-0"
-						>
+						<Button type="button" size="lg" onClick={reset}>
 							Try again
-						</button>
-						<button
+						</Button>
+						<Button
 							type="button"
+							variant="secondary"
+							size="lg"
 							onClick={() => {
 								window.location.href = '/'
 							}}
-							className="px-6 py-3 bg-border text-foreground rounded-lg text-base font-medium cursor-pointer border-0"
 						>
 							Go home
-						</button>
+						</Button>
 					</div>
 
-					<div className="mt-8 p-4 bg-muted rounded-lg">
+					<div className="mt-8 p-4 bg-muted rounded-xl">
 						<p className="text-sm text-muted-foreground">
 							If this issue persists, please contact{' '}
 							<a
 								href={`mailto:${BUSINESS_INFO.email}`}
-								className="text-primary underline"
+								className="link-primary"
 							>
 								support
 							</a>
