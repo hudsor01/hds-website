@@ -76,7 +76,7 @@ export function VisitorsChart({ result }: VisitorsChartProps) {
 								contentStyle={{
 									background: 'var(--color-card)',
 									border: '1px solid var(--color-border)',
-									borderRadius: '0.5rem'
+									borderRadius: 'var(--radius-md)'
 								}}
 							/>
 							<Line

@@ -17,19 +17,19 @@ export function BlogPostCardSkeleton() {
 			<div className="flex flex-1 flex-col p-6">
 				{/* Title (two lines) */}
 				<div className="mb-3 space-y-2">
-					<div className="h-5 w-11/12 rounded bg-muted/40 animate-pulse" />
-					<div className="h-5 w-2/3 rounded bg-muted/40 animate-pulse" />
+					<div className="h-5 w-11/12 rounded-md bg-muted/40 animate-pulse" />
+					<div className="h-5 w-2/3 rounded-md bg-muted/40 animate-pulse" />
 				</div>
 				{/* Excerpt (three lines) */}
 				<div className="mb-4 space-y-2">
-					<div className="h-3 w-full rounded bg-muted/30 animate-pulse" />
-					<div className="h-3 w-full rounded bg-muted/30 animate-pulse" />
-					<div className="h-3 w-4/5 rounded bg-muted/30 animate-pulse" />
+					<div className="h-3 w-full rounded-md bg-muted/30 animate-pulse" />
+					<div className="h-3 w-full rounded-md bg-muted/30 animate-pulse" />
+					<div className="h-3 w-4/5 rounded-md bg-muted/30 animate-pulse" />
 				</div>
 				{/* Meta row (date + reading time) */}
 				<div className="mt-auto flex items-center gap-4">
-					<div className="h-3 w-20 rounded bg-muted/30 animate-pulse" />
-					<div className="h-3 w-14 rounded bg-muted/30 animate-pulse" />
+					<div className="h-3 w-20 rounded-md bg-muted/30 animate-pulse" />
+					<div className="h-3 w-14 rounded-md bg-muted/30 animate-pulse" />
 				</div>
 			</div>
 		</article>

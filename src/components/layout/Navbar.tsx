@@ -76,7 +76,7 @@ const Navbar = memo(function Navbar() {
 					<div className="flex-1 flex items-center">
 						<Link
 							href={ROUTES.HOME}
-							className="flex items-center gap-2.5 rounded-lg"
+							className="flex items-center gap-2.5 rounded-md"
 							aria-label="Hudson Digital Solutions - Home"
 						>
 							<Rocket className="w-5 h-5 text-accent shrink-0" />

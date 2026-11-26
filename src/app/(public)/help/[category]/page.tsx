@@ -177,7 +177,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 										<div className="flex items-start gap-4">
 											<div
 												aria-hidden="true"
-												className="size-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0"
+												className="size-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0"
 											>
 												<FileText className="size-5" />
 											</div>

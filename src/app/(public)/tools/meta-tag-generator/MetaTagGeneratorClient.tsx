@@ -374,7 +374,7 @@ export default function MetaTagGeneratorClient() {
 					id={panelId('code')}
 					aria-labelledby={tabId('code')}
 				>
-					<pre className="rounded-lg bg-background p-4 overflow-x-auto">
+					<pre className="rounded-xl bg-background p-4 overflow-x-auto">
 						<code className="text-sm text-foreground whitespace-pre-wrap break-all">
 							{result.html}
 						</code>
@@ -410,7 +410,7 @@ export default function MetaTagGeneratorClient() {
 						<h3 className="text-eyebrow text-muted-foreground mb-3">
 							Social share preview (approximate)
 						</h3>
-						<div className="rounded-lg border border-border overflow-hidden max-w-md">
+						<div className="rounded-xl border border-border overflow-hidden max-w-md">
 							{result.imageUrl && !imageFailed ? (
 								// biome-ignore lint/performance/noImgElement: arbitrary user-supplied image URL; next/image needs a configured remote host.
 								<img

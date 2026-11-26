@@ -222,7 +222,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 									),
 									// Code styles
 									code: ({ children }) => (
-										<code className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono">
+										<code className="bg-muted px-1.5 py-0.5 rounded-md text-sm font-mono">
 											{children}
 										</code>
 									),

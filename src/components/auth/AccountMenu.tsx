@@ -86,7 +86,7 @@ export function AccountMenu({ email }: AccountMenuProps) {
 					onClick={handleSignOut}
 					disabled={isSigningOut}
 					aria-busy={isSigningOut}
-					className="w-full text-left px-2 py-1.5 text-sm rounded text-foreground hover:bg-muted focus-visible:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-smooth"
+					className="w-full text-left px-2 py-1.5 text-sm rounded-md text-foreground hover:bg-muted focus-visible:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-smooth"
 				>
 					{isSigningOut ? 'Signing out...' : 'Sign out'}
 				</button>

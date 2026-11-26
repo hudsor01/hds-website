@@ -9,8 +9,8 @@ export default function HelpLoading() {
 			<div className="container-wide py-section-sm">
 				{/* Header Skeleton */}
 				<div className="text-center mb-12 animate-pulse">
-					<div className="h-12 bg-muted rounded-lg w-48 mx-auto mb-heading" />
-					<div className="h-6 bg-muted rounded-lg w-80 mx-auto" />
+					<div className="h-12 bg-muted rounded-md w-48 mx-auto mb-heading" />
+					<div className="h-6 bg-muted rounded-md w-80 mx-auto" />
 				</div>
 
 				{/* Categories Grid Skeleton */}
@@ -21,10 +21,10 @@ export default function HelpLoading() {
 							className="rounded-xl border border-border bg-card p-8 animate-pulse"
 						>
 							<div className="space-y-content">
-								<div className="h-10 w-10 bg-muted rounded-lg" />
-								<div className="h-6 bg-muted rounded w-32" />
-								<div className="h-4 bg-muted rounded w-full" />
-								<div className="h-4 bg-muted rounded w-3/4" />
+								<div className="h-10 w-10 bg-muted rounded-xl" />
+								<div className="h-6 bg-muted rounded-md w-32" />
+								<div className="h-4 bg-muted rounded-md w-full" />
+								<div className="h-4 bg-muted rounded-md w-3/4" />
 							</div>
 						</div>
 					))}

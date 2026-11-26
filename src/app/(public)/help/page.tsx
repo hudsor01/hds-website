@@ -102,7 +102,7 @@ export default async function HelpCenterPage() {
 									<div className="flex items-start gap-4">
 										<div
 											aria-hidden="true"
-											className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0"
+											className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0"
 										>
 											{ICON_MAP[category.icon] || (
 												<HelpCircle className="size-6" />

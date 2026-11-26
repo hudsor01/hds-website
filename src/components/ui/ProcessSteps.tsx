@@ -50,7 +50,7 @@ export function ProcessSteps() {
 					className="group rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors text-center"
 				>
 					<div className="mb-4 flex justify-center">
-						<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+						<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
 							<step.icon className="w-5 h-5 text-accent" />
 						</div>
 					</div>

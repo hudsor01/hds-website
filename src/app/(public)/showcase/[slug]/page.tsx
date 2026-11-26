@@ -308,7 +308,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 								<div className="rounded-xl border border-border bg-card p-8">
 									{item.testimonialVideoUrl && (
 										<div className="mb-content-block">
-											<div className="aspect-video rounded-lg overflow-hidden bg-muted">
+											<div className="aspect-video rounded-xl overflow-hidden bg-muted">
 												<iframe
 													src={item.testimonialVideoUrl.replace(
 														'watch?v=',

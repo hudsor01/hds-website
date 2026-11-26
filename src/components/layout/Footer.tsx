@@ -125,7 +125,7 @@ export default function Footer() {
 										<li key={link.name}>
 											<Link
 												href={link.href}
-												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group rounded"
+												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group rounded-md"
 											>
 												<span>{link.name}</span>
 												<span className="absolute bottom-0 left-0 w-0 h-px bg-accent transition-smooth group-hover:w-full" />
@@ -147,7 +147,7 @@ export default function Footer() {
 										<li key={link.name}>
 											<Link
 												href={link.href}
-												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group rounded"
+												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group rounded-md"
 											>
 												<span>{link.name}</span>
 												<span className="absolute bottom-0 left-0 w-0 h-px bg-accent transition-smooth group-hover:w-full" />
@@ -169,7 +169,7 @@ export default function Footer() {
 										<li key={link.name}>
 											<Link
 												href={link.href}
-												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group rounded"
+												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group rounded-md"
 											>
 												<span>{link.name}</span>
 												<span className="absolute bottom-0 left-0 w-0 h-px bg-accent transition-smooth group-hover:w-full" />
@@ -203,7 +203,7 @@ export default function Footer() {
 								    "…com" out of the rounded chip (audit #244). */}
 								<a
 									href={`mailto:${BUSINESS_INFO.email}`}
-									className="flex-center gap-tight w-full min-w-0 px-4 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth"
+									className="flex-center gap-tight w-full min-w-0 px-4 py-3 rounded-md border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth"
 								>
 									<Mail className="h-4 w-4 shrink-0" />
 									<span
@@ -217,7 +217,7 @@ export default function Footer() {
 								{BUSINESS_INFO.phone && (
 									<a
 										href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}
-										className="flex-center gap-tight w-full min-w-0 px-4 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth"
+										className="flex-center gap-tight w-full min-w-0 px-4 py-3 rounded-md border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth"
 									>
 										<Phone className="h-4 w-4 shrink-0" />
 										<span className="text-xs truncate">
@@ -249,7 +249,7 @@ export default function Footer() {
 										target="_blank"
 										rel="noopener noreferrer"
 										className={cn(
-											'p-2.5 rounded-lg',
+											'p-2.5 rounded-md',
 											'glass-card-light',
 											'border border-white/10',
 											'text-muted-foreground hover:text-accent-text',
@@ -267,14 +267,14 @@ export default function Footer() {
 							<div className="flex items-center gap-content text-xs text-muted-foreground">
 								<Link
 									href={ROUTES.PRIVACY}
-									className="hover:text-foreground transition-smooth rounded px-1"
+									className="hover:text-foreground transition-smooth rounded-md px-1"
 								>
 									Privacy Policy
 								</Link>
 								<span aria-hidden="true">/</span>
 								<Link
 									href={ROUTES.TERMS}
-									className="hover:text-foreground transition-smooth rounded px-1"
+									className="hover:text-foreground transition-smooth rounded-md px-1"
 								>
 									Terms of Service
 								</Link>

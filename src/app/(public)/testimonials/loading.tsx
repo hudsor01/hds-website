@@ -9,9 +9,9 @@ export default function TestimonialsLoading() {
 			{/* Hero Skeleton */}
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center animate-pulse">
-					<div className="h-4 bg-muted rounded w-32 mx-auto mb-3" />
-					<div className="h-12 bg-muted rounded-lg w-64 mx-auto mb-6" />
-					<div className="h-6 bg-muted rounded-lg w-96 mx-auto" />
+					<div className="h-4 bg-muted rounded-md w-32 mx-auto mb-3" />
+					<div className="h-12 bg-muted rounded-md w-64 mx-auto mb-6" />
+					<div className="h-6 bg-muted rounded-md w-96 mx-auto" />
 				</div>
 			</section>
 
@@ -27,18 +27,18 @@ export default function TestimonialsLoading() {
 								<div className="space-y-4">
 									<div className="flex gap-1">
 										{[...Array(5)].map((__, j) => (
-											<div key={j} className="h-5 w-5 bg-muted rounded" />
+											<div key={j} className="h-5 w-5 bg-muted rounded-md" />
 										))}
 									</div>
 									<div className="h-6 bg-muted rounded-full w-28" />
 									<div className="space-y-2">
-										<div className="h-4 bg-muted rounded w-full" />
-										<div className="h-4 bg-muted rounded w-5/6" />
-										<div className="h-4 bg-muted rounded w-4/6" />
+										<div className="h-4 bg-muted rounded-md w-full" />
+										<div className="h-4 bg-muted rounded-md w-5/6" />
+										<div className="h-4 bg-muted rounded-md w-4/6" />
 									</div>
 									<div className="border-t border-border pt-4 space-y-2">
-										<div className="h-4 bg-muted rounded w-32" />
-										<div className="h-3 bg-muted rounded w-24" />
+										<div className="h-4 bg-muted rounded-md w-32" />
+										<div className="h-3 bg-muted rounded-md w-24" />
 									</div>
 								</div>
 							</div>

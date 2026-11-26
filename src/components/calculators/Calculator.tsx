@@ -278,7 +278,7 @@ export function Calculator() {
 					onClick={() => setShowShareModal(false)}
 				>
 					<div
-						className="bg-card rounded-lg shadow-xl p-6 max-w-md w-full mx-4"
+						className="bg-card rounded-xl shadow-xl p-6 max-w-md w-full mx-4"
 						onClick={e => e.stopPropagation()}
 					>
 						<div className="flex items-center gap-3 mb-4">

@@ -238,7 +238,7 @@ export function ResultsPanel({
 					</div>
 				)}
 
-				<div className="rounded-lg border bg-secondary/10 p-3 text-xs text-muted-foreground">
+				<div className="rounded-xl border bg-secondary/10 p-3 text-xs text-muted-foreground">
 					<p>
 						<strong>Note:</strong> This calculator provides estimates based on
 						Texas state fees and regulations. Actual fees may vary by county and

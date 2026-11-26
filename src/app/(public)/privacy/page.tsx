@@ -290,7 +290,7 @@ export default function PrivacyPage() {
 									If you have any questions about this privacy policy or our
 									privacy practices, please contact us:
 								</p>
-								<div className="rounded-lg bg-muted/30 p-4 space-y-2 border border-border">
+								<div className="rounded-xl bg-muted/30 p-4 space-y-2 border border-border">
 									<p>
 										<strong className="text-foreground">Email:</strong>{' '}
 										<a

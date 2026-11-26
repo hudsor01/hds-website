@@ -245,7 +245,7 @@ function Card(props: CardProps) {
 
 					{/* ROI Badge */}
 					{roi && (
-						<div className="mb-card-content p-button bg-success-text/10 border border-success-text/30 rounded-lg">
+						<div className="mb-card-content p-button bg-success-text/10 border border-success-text/30 rounded-xl">
 							<p className="text-xs font-bold text-success-text text-center">
 								{roi}
 							</p>

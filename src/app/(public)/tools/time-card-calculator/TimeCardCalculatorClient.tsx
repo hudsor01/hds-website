@@ -175,7 +175,7 @@ export default function TimeCardCalculatorClient() {
 					return (
 						<div
 							key={row.id}
-							className="rounded-lg border border-border bg-card p-3"
+							className="rounded-xl border border-border bg-card p-3"
 						>
 							<div className="flex items-center justify-between mb-2">
 								<span className="text-xs font-medium text-muted-foreground">

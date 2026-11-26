@@ -17,7 +17,7 @@ interface StatCardProps {
 
 function StatCard({ label, value }: StatCardProps) {
 	return (
-		<div className="rounded-lg border border-border bg-card px-4 py-3">
+		<div className="rounded-xl border border-border bg-card px-4 py-3">
 			<div className="text-2xl font-bold text-accent-text tabular-nums">
 				{value}
 			</div>

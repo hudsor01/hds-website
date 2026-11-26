@@ -43,14 +43,14 @@ function FreeMockupFormSkeleton() {
 	return (
 		<div className="space-y-4 animate-pulse" aria-hidden="true">
 			<div className="grid grid-cols-2 gap-4">
-				<div className="h-12 bg-muted rounded-lg" />
-				<div className="h-12 bg-muted rounded-lg" />
+				<div className="h-12 bg-muted rounded-md" />
+				<div className="h-12 bg-muted rounded-md" />
 			</div>
-			<div className="h-12 bg-muted rounded-lg" />
-			<div className="h-12 bg-muted rounded-lg" />
-			<div className="h-12 bg-muted rounded-lg" />
-			<div className="h-12 bg-muted rounded-lg" />
-			<div className="h-12 bg-muted rounded-lg border border-border" />
+			<div className="h-12 bg-muted rounded-md" />
+			<div className="h-12 bg-muted rounded-md" />
+			<div className="h-12 bg-muted rounded-md" />
+			<div className="h-12 bg-muted rounded-md" />
+			<div className="h-12 bg-muted rounded-md border border-border" />
 		</div>
 	)
 }

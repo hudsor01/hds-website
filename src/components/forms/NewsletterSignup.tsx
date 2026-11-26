@@ -420,7 +420,7 @@ export function NewsletterSignup({ dynamic, ...props }: NewsletterSignupProps) {
 			<QueryProvider>
 				<Suspense
 					fallback={
-						<div className="rounded-lg border border-border bg-card p-6 text-sm text-muted-foreground">
+						<div className="rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground">
 							Loading newsletter form...
 						</div>
 					}

@@ -149,7 +149,7 @@ export default function AboutPage() {
 						<div className="space-y-6">
 							<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 								<div className="flex items-center gap-4 mb-4">
-									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+									<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
 										<Rocket className="w-5 h-5 text-accent" />
 									</div>
 									<h3 className="text-h3 text-foreground">My Mission</h3>
@@ -164,7 +164,7 @@ export default function AboutPage() {
 
 							<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 								<div className="flex items-center gap-4 mb-4">
-									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+									<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
 										<Eye className="w-5 h-5 text-accent" />
 									</div>
 									<h3 className="text-h3 text-foreground">My Guarantee</h3>
@@ -202,7 +202,7 @@ export default function AboutPage() {
 
 					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
 						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<Code2 className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">Development</h3>
@@ -215,7 +215,7 @@ export default function AboutPage() {
 						</div>
 
 						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<BarChart3 className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">Analytics</h3>
@@ -228,7 +228,7 @@ export default function AboutPage() {
 						</div>
 
 						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<Zap className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">
@@ -243,7 +243,7 @@ export default function AboutPage() {
 						</div>
 
 						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<ShieldCheck className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">Security</h3>
@@ -379,7 +379,7 @@ export default function AboutPage() {
 
 					<div className="grid md:grid-cols-3 gap-6">
 						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<Lightbulb className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">
@@ -392,7 +392,7 @@ export default function AboutPage() {
 						</div>
 
 						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<BarChart3 className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">Data Driven</h3>
@@ -404,7 +404,7 @@ export default function AboutPage() {
 						</div>
 
 						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
-							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
+							<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<Settings className="w-5 h-5 text-accent" />
 							</div>
 							<h3 className="text-h3 text-foreground mb-3">

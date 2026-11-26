@@ -48,10 +48,10 @@ export default function CommandPaletteTrigger() {
 				className="flex items-center gap-1 ml-1 text-xs font-mono opacity-80"
 				aria-hidden="true"
 			>
-				<kbd className="px-1.5 py-0.5 rounded border border-border bg-muted/50">
+				<kbd className="px-1.5 py-0.5 rounded-md border border-border bg-muted/50">
 					{modifier}
 				</kbd>
-				<kbd className="px-1.5 py-0.5 rounded border border-border bg-muted/50">
+				<kbd className="px-1.5 py-0.5 rounded-md border border-border bg-muted/50">
 					K
 				</kbd>
 			</span>

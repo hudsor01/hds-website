@@ -89,7 +89,7 @@ export function WebVitalsCards({ result }: WebVitalsCardsProps) {
 					return (
 						<div
 							key={name}
-							className="rounded-lg border border-border-subtle bg-background p-4"
+							className="rounded-xl border border-border-subtle bg-background p-4"
 						>
 							<p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
 								{name}

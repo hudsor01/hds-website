@@ -225,7 +225,7 @@ export default function HomePage() {
 							>
 								{/* Icon + stat row */}
 								<div className="flex items-start justify-between mb-6">
-									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+									<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
 										<solution.Icon className="w-5 h-5 text-accent" />
 									</div>
 									<div className="text-right">

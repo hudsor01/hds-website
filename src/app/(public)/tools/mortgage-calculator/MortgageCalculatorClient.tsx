@@ -205,7 +205,7 @@ function ModeToggle({ label, options, active, onChange }: ModeToggleProps) {
 					aria-pressed={active === index}
 					aria-label={`${label} in ${option === '%' ? 'percent' : 'dollars'}`}
 					onClick={() => onChange(index as 0 | 1)}
-					className={`px-2 py-1 text-xs rounded ${
+					className={`px-2 py-1 text-xs rounded-md ${
 						active === index
 							? 'bg-accent text-accent-foreground'
 							: 'bg-muted text-muted-foreground'
@@ -617,7 +617,7 @@ function MortgageCalculatorView({
 				)}
 
 				{program === 'va' && (
-					<div className="space-y-tight rounded-lg border border-border p-4">
+					<div className="space-y-tight rounded-xl border border-border p-4">
 						<div className="flex flex-col gap-tight">
 							<Label id="vaUse-label" htmlFor="vaUse">
 								VA Loan Use

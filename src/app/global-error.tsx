@@ -72,7 +72,7 @@ export default function GlobalError({
 						</Button>
 					</div>
 
-					<div className="mt-8 p-4 bg-muted rounded-lg">
+					<div className="mt-8 p-4 bg-muted rounded-xl">
 						<p className="text-sm text-muted-foreground">
 							If this issue persists, please contact{' '}
 							<a

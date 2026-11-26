@@ -100,8 +100,16 @@
 	--spacing-section-sm: 3rem;
 	--spacing-section: 5rem;
 
-	/* Radius */
-	--radius: 0.625rem;
+	/* Radius: three steps. md (6px) for controls (buttons, fields, chips,
+	 * menu items, kbd, skeleton lines), xl (12px) for cards, panels,
+	 * tiles and images, 2xl (16px) for large feature surfaces. `initial`
+	 * removes every other step, so bare rounded, rounded-sm and rounded-lg
+	 * build no CSS and the utility-class test rejects them. rounded-full
+	 * and rounded-none are static and unaffected. */
+	--radius-*: initial;
+	--radius-md: 0.375rem;
+	--radius-xl: 0.75rem;
+	--radius-2xl: 1rem;
 
 	/* Type scale. One scale: Tailwind's fixed --text-xs .. --text-9xl
 	 * (with --text-base) are the body and UI sizes. The role steps below
@@ -341,14 +349,14 @@ button,
 		background: color-mix(in oklab, var(--color-card) 90%, transparent);
 		backdrop-filter: blur(24px) saturate(1.2);
 		border: 1px solid color-mix(in oklab, var(--color-border) 50%, transparent);
-		border-radius: 1rem;
+		border-radius: var(--radius-2xl);
 	}
 
 	.glass-card-light {
 		background: color-mix(in oklab, var(--color-card) 60%, transparent);
 		backdrop-filter: blur(16px);
 		border: 1px solid color-mix(in oklab, var(--color-border) 40%, transparent);
-		border-radius: 1rem;
+		border-radius: var(--radius-2xl);
 	}
 
 	/* Radial amber spotlight behind hero and CTA sections (decorative) */
@@ -567,8 +575,8 @@ button,
 		background-color: var(--color-popover);
 		color: var(--color-foreground);
 		border: 1px solid var(--color-border);
-		border-radius: 0.75rem;
-		box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+		border-radius: var(--radius-xl);
+		box-shadow: var(--shadow-xl);
 		padding: 1.5rem;
 		display: flex;
 		flex-direction: column;
@@ -590,7 +598,7 @@ button,
 		justify-content: center;
 		width: 1.75rem;
 		height: 1.75rem;
-		border-radius: 0.375rem;
+		border-radius: var(--radius-md);
 		color: var(--color-foreground);
 		cursor: pointer;
 	}
@@ -701,7 +709,7 @@ button,
 		top: 0.7em;
 		width: 0.4rem;
 		height: 0.4rem;
-		border-radius: 9999px;
+		border-radius: 50%;
 		background: var(--color-accent);
 	}
 	/* Blockquote as a soft callout card, not just an italic indent. */
@@ -709,7 +717,7 @@ button,
 		margin-block: 1.75rem;
 		padding: 1rem 1.5rem;
 		border-left: 4px solid var(--color-accent);
-		border-radius: 0.5rem;
+		border-radius: var(--radius-md);
 		background: color-mix(in oklab, var(--color-accent) 7%, var(--color-card));
 		color: var(--color-foreground);
 		font-size: var(--text-lg);
@@ -720,7 +728,7 @@ button,
 	.typography code {
 		padding: 0.15rem 0.4rem;
 		background: var(--color-secondary);
-		border-radius: 0.375rem;
+		border-radius: var(--radius-md);
 		font-family: var(--font-mono);
 		font-size: 0.875em;
 	}
@@ -730,7 +738,7 @@ button,
 		padding: 1.25rem 1.5rem;
 		background: var(--color-muted);
 		border: 1px solid var(--color-border-subtle);
-		border-radius: 0.75rem;
+		border-radius: var(--radius-xl);
 		overflow-x: auto;
 		line-height: 1.6;
 	}
@@ -741,7 +749,7 @@ button,
 	}
 	.typography img {
 		margin-block: 1.75rem;
-		border-radius: 0.75rem;
+		border-radius: var(--radius-xl);
 		border: 1px solid var(--color-border-subtle);
 	}
 	.typography hr {

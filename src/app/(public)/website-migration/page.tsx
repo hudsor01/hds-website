@@ -220,7 +220,7 @@ export default function WebsiteMigrationPage() {
 								key={risk.title}
 								className="p-8 rounded-xl border border-border bg-card"
 							>
-								<div className="w-12 h-12 rounded-lg bg-destructive/10 border border-destructive/20 flex items-center justify-center mb-6">
+								<div className="w-12 h-12 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center justify-center mb-6">
 									<risk.Icon className="w-5 h-5 text-destructive" />
 								</div>
 								<h3 className="text-h3 text-foreground mb-3">{risk.title}</h3>

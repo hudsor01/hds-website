@@ -106,7 +106,7 @@ export default function ToolsCatalog() {
 									hover={true}
 									className="group flex flex-col"
 								>
-									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
+									<div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
 										<tool.Icon className="h-5 w-5 text-accent" />
 									</div>
 

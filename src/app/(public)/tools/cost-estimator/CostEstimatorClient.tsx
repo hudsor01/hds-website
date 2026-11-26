@@ -247,7 +247,7 @@ function CostEstimatorView({
 					{FEATURES.map(feature => (
 						<label
 							key={feature.value}
-							className="relative flex cursor-pointer items-start rounded-lg border border-border p-4 hover:bg-muted"
+							className="relative flex cursor-pointer items-start rounded-xl border border-border p-4 hover:bg-muted"
 						>
 							<div className="flex h-5 items-center">
 								<Checkbox

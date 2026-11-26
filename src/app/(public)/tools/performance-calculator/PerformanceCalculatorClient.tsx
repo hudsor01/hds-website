@@ -438,7 +438,7 @@ export default function PerformanceCalculatorClient() {
 					{OPTIMIZATION_TIPS.map(tip => (
 						<div
 							key={tip.title}
-							className="flex items-start gap-3 rounded-lg border border-border p-3"
+							className="flex items-start gap-3 rounded-xl border border-border p-3"
 						>
 							<Check
 								className="h-5 w-5 shrink-0 text-accent"

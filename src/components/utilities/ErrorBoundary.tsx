@@ -125,12 +125,12 @@ export function DefaultErrorFallback({
 					</p>
 
 					{errorObj && (
-						<details className="text-left mb-content-block bg-overlay/30 rounded-lg border border-destructive/20">
+						<details className="text-left mb-content-block bg-overlay/30 rounded-xl border border-destructive/20">
 							<summary className="text-destructive-text cursor-pointer mb-subheading flex-between">
 								<span>Error Details</span>
 								<button
 									onClick={copyErrorDetails}
-									className="ml-2 p-1 hover:bg-destructive/20 rounded transition-colors"
+									className="ml-2 p-1 hover:bg-destructive/20 rounded-md transition-colors"
 									title="Copy error details"
 								>
 									{copied ? (
@@ -251,7 +251,7 @@ export function ComponentErrorBoundary({
 	return (
 		<ErrorBoundary
 			fallback={({ resetErrorBoundary }) => (
-				<div className="bg-warning/10 border border-warning/30 rounded-lg">
+				<div className="bg-warning/10 border border-warning/30 rounded-xl">
 					<p className="text-sm text-warning-text">Failed to load {name}</p>
 					<button
 						onClick={resetErrorBoundary}

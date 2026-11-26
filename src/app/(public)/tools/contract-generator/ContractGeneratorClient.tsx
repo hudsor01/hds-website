@@ -263,7 +263,7 @@ export default function ContractGeneratorClient() {
 								type="button"
 								aria-pressed={selected}
 								onClick={() => handleTemplateChange(template.value)}
-								className={`p-4 rounded-lg border text-left transition-colors ${
+								className={`p-4 rounded-xl border text-left transition-colors ${
 									selected
 										? 'border-accent bg-accent/10'
 										: 'border-border hover:border-accent hover:bg-muted/50'
@@ -579,7 +579,7 @@ export default function ContractGeneratorClient() {
 
 			{/* Every clause, on screen, before download */}
 			<section className="space-y-content border-t border-border pt-6">
-				<details className="group rounded-lg border border-border bg-card">
+				<details className="group rounded-xl border border-border bg-card">
 					<summary className="cursor-pointer list-none px-4 py-3 font-semibold text-foreground">
 						<span className="flex items-center justify-between gap-content">
 							<span>What this contract says ({clauses.length} sections)</span>

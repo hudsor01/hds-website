@@ -8,7 +8,7 @@ export default function Loading() {
 		<div className="min-h-screen bg-background flex items-center justify-center">
 			<div className="animate-pulse text-center">
 				<div className="h-12 w-12 mx-auto mb-4 rounded-full bg-muted" />
-				<div className="h-4 bg-muted rounded w-32 mx-auto" />
+				<div className="h-4 bg-muted rounded-md w-32 mx-auto" />
 			</div>
 		</div>
 	)

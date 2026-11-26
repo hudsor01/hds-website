@@ -39,7 +39,7 @@ export default function GlobalNotFound() {
 						</Link>
 					</div>
 
-					<div className="mt-12 p-6 bg-muted rounded-lg border border-border">
+					<div className="mt-12 p-6 bg-muted rounded-xl border border-border">
 						<h2 className="text-lg font-semibold mb-4 text-foreground">
 							Popular Pages
 						</h2>
