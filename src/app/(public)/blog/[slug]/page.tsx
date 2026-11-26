@@ -308,7 +308,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 						</div>
 						{toc.length >= 2 && (
 							<aside className="hidden lg:block">
-								<div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto">
+								{/* -m-1 p-1 keeps the layout but gives link focus rings
+								    (2px outline, 2px offset) room inside the scroller,
+								    which would otherwise clip their sides. */}
+								<div className="sticky top-24 -m-1 max-h-[calc(100vh-7rem)] overflow-y-auto p-1">
 									<BlogTableOfContents items={toc} />
 								</div>
 							</aside>
