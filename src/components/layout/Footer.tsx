@@ -128,7 +128,7 @@ export default function Footer() {
 												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group rounded-md"
 											>
 												<span>{link.name}</span>
-												<span className="absolute bottom-0 left-0 w-0 h-px bg-accent transition-smooth group-hover:w-full" />
+												<span className="absolute bottom-0 left-0 w-full h-px origin-left scale-x-0 bg-accent transition-smooth group-hover:scale-x-100" />
 											</Link>
 										</li>
 									))}
@@ -150,7 +150,7 @@ export default function Footer() {
 												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group rounded-md"
 											>
 												<span>{link.name}</span>
-												<span className="absolute bottom-0 left-0 w-0 h-px bg-accent transition-smooth group-hover:w-full" />
+												<span className="absolute bottom-0 left-0 w-full h-px origin-left scale-x-0 bg-accent transition-smooth group-hover:scale-x-100" />
 											</Link>
 										</li>
 									))}
@@ -172,7 +172,7 @@ export default function Footer() {
 												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group rounded-md"
 											>
 												<span>{link.name}</span>
-												<span className="absolute bottom-0 left-0 w-0 h-px bg-accent transition-smooth group-hover:w-full" />
+												<span className="absolute bottom-0 left-0 w-full h-px origin-left scale-x-0 bg-accent transition-smooth group-hover:scale-x-100" />
 											</Link>
 										</li>
 									))}

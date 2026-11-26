@@ -47,7 +47,8 @@ export function BlogTableOfContents({ items }: BlogTableOfContentsProps) {
 		if (!el) {
 			return
 		}
-		el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+		// No `behavior`: follows <html>'s motion-safe:scroll-smooth.
+		el.scrollIntoView({ block: 'start' })
 		setActiveId(id)
 		history.replaceState(null, '', `#${id}`)
 	}

@@ -33,7 +33,7 @@ export function BlogPostCard({
 				<Card
 					variant="glass"
 					size="none"
-					className="overflow-hidden hover:ring-2 hover:ring-accent/50 transition-all"
+					className="overflow-hidden hover:ring-2 hover:ring-accent/50"
 				>
 					{post.feature_image && (
 						<div
@@ -44,7 +44,7 @@ export function BlogPostCard({
 								alt={post.title}
 								fill
 								priority={priority}
-								className="object-cover group-hover:scale-105 transition-transform duration-500"
+								className="object-cover motion-safe:group-hover:scale-105 transition-transform duration-slow"
 								sizes={
 									featured
 										? '(max-width: 768px) 100vw, 66vw'

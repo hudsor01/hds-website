@@ -184,7 +184,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 											<div className="flex-1 min-w-0">
 												<h2 className="font-semibold text-foreground group-hover:text-accent-text transition-colors flex items-center gap-tight">
 													{article.title}
-													<ArrowRight className="size-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0" />
+													<ArrowRight className="size-4 opacity-0 motion-safe:-translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-[opacity,translate] shrink-0" />
 												</h2>
 												{article.excerpt && (
 													<p className="text-sm text-muted-foreground mt-1 line-clamp-2">

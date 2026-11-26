@@ -90,7 +90,11 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang="en" className="scroll-smooth" data-scroll-behavior="smooth">
+		<html
+			lang="en"
+			className="motion-safe:scroll-smooth"
+			data-scroll-behavior="smooth"
+		>
 			<head>
 				{/* Critical mobile-first meta tags */}
 				<meta name="mobile-web-app-capable" content="yes" />

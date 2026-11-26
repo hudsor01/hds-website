@@ -177,7 +177,7 @@ export function TestimonialForm({ token, defaultName }: TestimonialFormProps) {
 							onMouseLeave={() => setHoveredRating(null)}
 							variant="ghost"
 							size="icon"
-							className="hover:scale-110"
+							className="motion-safe:hover:scale-110"
 							aria-label={starLabel(star)}
 							aria-pressed={rating === star}
 						>

@@ -28,8 +28,8 @@ export function UploadProgressBar({ value, label }: UploadProgressBarProps) {
 			className="h-1.5 w-full overflow-hidden rounded-full bg-muted"
 		>
 			<div
-				className="h-full bg-accent-text transition-[width] duration-150 ease-out"
-				style={{ width: `${clamped}%` }}
+				className="h-full origin-left bg-accent-text transition-transform"
+				style={{ transform: `scaleX(${clamped / 100})` }}
 			/>
 		</div>
 	)

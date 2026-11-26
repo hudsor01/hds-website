@@ -28,7 +28,7 @@ const cardVariants = cva(
 				none: ''
 			},
 			hover: {
-				true: 'card-hover-glow hover-lift',
+				true: 'card-hover-glow',
 				false: ''
 			}
 		},
@@ -147,7 +147,7 @@ function Card(props: CardProps) {
 						<div
 							className={cn(
 								'p-3 rounded-xl border border-current/30',
-								'hover-lift transition-smooth will-change-transform',
+								'hover-lift transition-smooth',
 								gradient
 							)}
 						>

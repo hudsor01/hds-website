@@ -36,8 +36,8 @@ export function ReadingProgress() {
 			aria-valuemax={100}
 		>
 			<div
-				className="h-full bg-accent transition-[width] duration-150 ease-out"
-				style={{ width: `${progress}%` }}
+				className="h-full origin-left bg-accent transition-transform"
+				style={{ transform: `scaleX(${progress / 100})` }}
 			/>
 		</div>
 	)

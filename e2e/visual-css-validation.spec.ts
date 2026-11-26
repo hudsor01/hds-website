@@ -11,7 +11,7 @@ import { expect, test } from '@playwright/test'
  *
  * Test Coverage:
  * - Color system and OKLCH rendering
- * - Tailwind utility classes (text-balance, will-change)
+ * - Tailwind utility classes (text-balance, explicit transitions)
  * - Layout utilities (flex-center, glass-card, gradient-text)
  * - Responsive design breakpoints
  */
@@ -46,18 +46,40 @@ test.describe('Tailwind Utility Classes', () => {
 		}
 	})
 
-	test('should apply will-change-transform for performance', async ({
-		page
-	}) => {
-		await page.goto('/')
+	test('transitions name their properties, never all', async ({ page }) => {
+		await page.goto('/tools')
 
-		// Check that performance-optimized elements have will-change
-		const optimizedElements = page.locator('.will-change-transform')
-		const count = await optimizedElements.count()
+		// An element with a running transition must list its properties:
+		// `all` animates layout and the focus outline (39.2 M6). Elements
+		// with a 0s duration are the browser default and do not count.
+		const offenders = await page.evaluate(() =>
+			[...document.querySelectorAll('body *')]
+				.filter(el => {
+					const style = window.getComputedStyle(el)
+					const animates = style.transitionDuration
+						.split(',')
+						.some(d => Number.parseFloat(d) > 0)
+					const all = style.transitionProperty
+						.split(',')
+						.some(p => p.trim() === 'all')
+					return animates && all
+				})
+				.map(el => `${el.tagName.toLowerCase()}.${el.getAttribute('class')}`)
+		)
+		expect(offenders).toEqual([])
+	})
 
-		// Should have at least some elements with will-change
-		// (buttons, cards with hover effects, etc.)
-		expect(count).toBeGreaterThanOrEqual(0) // Changed to >= 0 as it's optional optimization
+	test('card hover lift is off under reduced motion', async ({ page }) => {
+		await page.emulateMedia({ reducedMotion: 'reduce' })
+		await page.goto('/tools')
+
+		const card = page.locator('.card-hover-glow').first()
+		await card.hover()
+		await page.waitForTimeout(400)
+		const translate = await card.evaluate(
+			el => window.getComputedStyle(el).translate
+		)
+		expect(translate).toBe('none')
 	})
 })
 

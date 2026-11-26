@@ -111,7 +111,7 @@ export default async function HelpCenterPage() {
 										<div className="flex-1">
 											<h3 className="font-semibold text-foreground group-hover:text-accent-text transition-colors flex items-center gap-2">
 												{category.name}
-												<ArrowRight className="size-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+												<ArrowRight className="size-4 opacity-0 motion-safe:-translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-[opacity,translate]" />
 											</h3>
 											<p className="text-sm text-muted-foreground mt-1 leading-relaxed">
 												{category.description}
