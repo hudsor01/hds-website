@@ -213,6 +213,37 @@
 	--font-sans: var(--font-hanken-grotesk), system-ui, sans-serif;
 	--font-display: var(--font-roboto-serif), Georgia, serif;
 	--font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+	/* Preflight's html and code rules read these four with a `normal`
+	 * fallback, and Tailwind's theme leaves them unset unless a
+	 * --font-sans--font-feature-settings style token exists. Setting the
+	 * fallback value changes nothing and gives each a value at :root. */
+	--default-font-feature-settings: normal;
+	--default-font-variation-settings: normal;
+	--default-mono-font-feature-settings: normal;
+	--default-mono-font-variation-settings: normal;
+}
+
+/* Custom properties that Radix sets on its elements at runtime. Each is
+ * registered so it also has a value at :root; the initial value is what
+ * an unset reference already computed to (height and min-width `auto`),
+ * so nothing changes before Radix measures. The select pair inherits:
+ * Radix sets it on the content and the viewport inside reads it. The
+ * accordion height is set and read on the content element itself. */
+@property --radix-select-trigger-width {
+	syntax: '<length> | auto';
+	inherits: true;
+	initial-value: auto;
+}
+@property --radix-select-trigger-height {
+	syntax: '<length> | auto';
+	inherits: true;
+	initial-value: auto;
+}
+@property --radix-accordion-content-height {
+	syntax: '<length> | auto';
+	inherits: false;
+	initial-value: auto;
 }
 
 :root {
@@ -492,13 +523,28 @@ button,
 /* Hero grid background: --color-border lines at 15%, 3rem cells. Set
  * --grid-size on the element to change the cell. The alpha stays a
  * literal so Tailwind's no-color-mix fallback keeps it (with a var()
- * percentage the fallback drops to a solid border-color line). */
+ * percentage the fallback drops to a solid border-color line).
+ * Both properties are registered so they have a value at :root, and
+ * neither inherits: they belong to the element with the class. --grid-size
+ * uses the universal syntax because a typed <length> initial value cannot
+ * be in rem (not computationally independent), and 3rem must follow the
+ * user's font size. */
+@property --grid-line {
+	syntax: '<color>';
+	inherits: false;
+	initial-value: transparent;
+}
+@property --grid-size {
+	syntax: '*';
+	inherits: false;
+	initial-value: 3rem;
+}
 @utility grid-pattern {
 	--grid-line: color-mix(in oklab, var(--color-border) 15%, transparent);
 	background-image:
 		linear-gradient(var(--grid-line) 1px, transparent 1px),
 		linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-	background-size: var(--grid-size, 3rem) var(--grid-size, 3rem);
+	background-size: var(--grid-size) var(--grid-size);
 }
 
 /* The one multi-property transition (base duration, one easing). The

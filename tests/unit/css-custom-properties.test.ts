@@ -9,6 +9,7 @@
  *
  * Definitions come from:
  *   - every `--x:` in src/app/globals.css (`@theme` tokens, `:root`, rules)
+ *     and every `@property --x` there with an `initial-value`
  *   - Tailwind's own theme (node_modules/tailwindcss/theme.css)
  *   - next/font `variable` names in src/app/fonts.ts
  *   - inline `style={{ '--x': ... }}` keys and `[--x:...]` arbitrary
@@ -27,6 +28,16 @@
  * same rule is checked again on the compiled stylesheet, built by the
  * same PostCSS plugin and class scan as `next build`, which is what the
  * audit measured on the live site.
+ *
+ * The compiled check is stricter and matches the audit's console probe
+ * (39.2 audit section 7): every `var(--x` it reads, fallback or not and
+ * `--tw-*` aside, must have a value at :root. That is a declaration in a
+ * :root/html rule outside any condition (the @theme output, the :root
+ * block), a next/font variable (set on <html>), or an `@property`
+ * registration with an `initial-value`. A name set only on an element
+ * (`.grid-pattern { --grid-line }`, Radix's inline styles) must be
+ * registered, so it reads the same everywhere and never computes to an
+ * empty value.
  */
 
 import { describe, expect, test } from 'bun:test'
@@ -34,7 +45,7 @@ import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import tailwindcss from '@tailwindcss/postcss'
 import { Glob } from 'bun'
-import postcss, { type Root, type Rule } from 'postcss'
+import postcss, { type AtRule, type Root, type Rule } from 'postcss'
 
 const GLOBALS_CSS = 'src/app/globals.css'
 const TAILWIND_THEME = 'node_modules/tailwindcss/theme.css'
@@ -42,9 +53,11 @@ const FONTS = 'src/app/fonts.ts'
 const SRC_GLOB = 'src/**/*.{ts,tsx}'
 const EXCLUDE_PATHS = ['_generated/']
 const RUNTIME_PREFIXES = [/^--tw-/, /^--radix-/]
-// In the compiled stylesheet every --tw-* name Tailwind reads is registered
-// (@property) or has a fallback, so only Radix's runtime names stay exempt.
-const COMPILED_RUNTIME_PREFIXES = [/^--radix-/]
+// Tailwind's per-utility state (--tw-*): the audit probe skips it too.
+const COMPILED_EXEMPT_PREFIXES = [/^--tw-/]
+// Every `var(--x`, with or without a fallback (what the audit probe reads).
+const ANY_VAR_REFERENCE = /var\(\s*(--[\w-]+)/g
+const ROOT_SELECTORS = new Set([':root', 'html'])
 
 interface Reference {
 	file: string
@@ -65,6 +78,13 @@ function lineOf(source: string, index: number): number {
 
 function collectDefinitions(source: string, into: Set<string>): void {
 	for (const m of source.matchAll(/(?<![\w-])(--[\w-]+)\s*:/g)) {
+		// biome-ignore lint/style/noNonNullAssertion: group 1 is required
+		into.add(m[1]!)
+	}
+	// A registration with an initial-value defines the name everywhere.
+	for (const m of source.matchAll(
+		/@property\s+(--[\w-]+)\s*\{[^}]*\binitial-value\s*:/g
+	)) {
 		// biome-ignore lint/style/noNonNullAssertion: group 1 is required
 		into.add(m[1]!)
 	}
@@ -115,22 +135,80 @@ function undefinedIn<T extends { name: string }>(
 	)
 }
 
-function report(lines: string[], where: string): void {
+const DEFAULT_ADVICE =
+	'Use the --color-* (or other @theme) token name, and keep tokens that ' +
+	'rules read in a plain @theme block (not inline or reference).'
+
+function report(lines: string[], where: string, advice = DEFAULT_ADVICE): void {
 	if (lines.length > 0) {
 		throw new Error(
 			`Found ${lines.length} var() reference(s) to a custom property ` +
-				`${where}. The declaration silently computes to unset. Use the ` +
-				`--color-* (or other @theme) token name, and keep tokens that ` +
-				`rules read in a plain @theme block (not inline or reference).\n` +
+				`${where}. The declaration silently computes to unset. ${advice}\n` +
 				lines.map(line => `  ${line}`).join('\n')
 		)
 	}
 }
 
+/** A :root or html rule that applies everywhere (inside @layer at most). */
+function isUnconditionalRoot(rule: Rule): boolean {
+	if (!rule.selectors.some(s => ROOT_SELECTORS.has(s.trim()))) {
+		return false
+	}
+	for (let p = rule.parent; p && p.type !== 'root'; p = p.parent) {
+		if (p.type !== 'atrule' || (p as AtRule).name !== 'layer') {
+			return false
+		}
+	}
+	return true
+}
+
+/**
+ * Names with a value on <html> in every state: unconditional :root/html
+ * declarations and @property registrations with an initial-value.
+ */
+function rootDefined(root: Root): Set<string> {
+	const names = new Set<string>()
+	root.walkAtRules('property', rule => {
+		if (
+			rule.nodes?.some(
+				node => node.type === 'decl' && node.prop === 'initial-value'
+			)
+		) {
+			names.add(rule.params.trim())
+		}
+	})
+	root.walkRules(rule => {
+		if (!isUnconditionalRoot(rule)) {
+			return
+		}
+		for (const node of rule.nodes) {
+			if (node.type === 'decl' && node.prop.startsWith('--')) {
+				names.add(node.prop)
+			}
+		}
+	})
+	return names
+}
+
+/** Every `var(--x` in a compiled stylesheet, fallback or not. */
+function compiledReferences(root: Root): { name: string; where: string }[] {
+	const refs: { name: string; where: string }[] = []
+	root.walkDecls(decl => {
+		const rule = decl.parent?.type === 'rule' ? (decl.parent as Rule) : null
+		for (const m of decl.value.matchAll(ANY_VAR_REFERENCE)) {
+			refs.push({
+				// biome-ignore lint/style/noNonNullAssertion: group 1 is required
+				name: m[1]!,
+				where: `${rule?.selector ?? '(at-rule)'} { ${decl.prop} }`
+			})
+		}
+	})
+	return refs
+}
+
 interface Scan {
+	// Includes names set on elements from TSX (style={{ '--x': v }}, [--x:v]).
 	defs: Set<string>
-	// Names set on elements from TSX (style={{ '--x': v }}, [--x:v]).
-	inline: Set<string>
 	refs: Reference[]
 }
 
@@ -167,7 +245,7 @@ async function scan(): Promise<Scan> {
 	for (const name of inline) {
 		defs.add(name)
 	}
-	return { defs, inline, refs }
+	return { defs, refs }
 }
 
 describe('CSS custom properties', () => {
@@ -189,33 +267,44 @@ describe('CSS custom properties', () => {
 		expect(undefinedRefs).toEqual([])
 	})
 
-	test('the compiled stylesheet defines every var() it reads', async () => {
+	test('every var() the compiled stylesheet reads has a value at :root', async () => {
 		const root = await compileGlobals()
-		const defs = new Set([...(await fontVariables()), ...(await scan()).inline])
-		const refs: { name: string; where: string }[] = []
-		root.walkAtRules('property', rule => {
-			defs.add(rule.params.trim())
-		})
-		root.walkDecls(decl => {
-			if (decl.prop.startsWith('--')) {
-				defs.add(decl.prop)
-			}
-			const rule = decl.parent?.type === 'rule' ? (decl.parent as Rule) : null
-			for (const ref of collectReferences('', decl.value)) {
-				refs.push({
-					name: ref.name,
-					where: `${rule?.selector ?? '(at-rule)'} { ${decl.prop} }`
-				})
-			}
-		})
-		expect(defs.has('--color-primary')).toBe(true)
+		const atRoot = rootDefined(root)
+		for (const name of await fontVariables()) {
+			atRoot.add(name)
+		}
+		const refs = compiledReferences(root)
+		expect(atRoot.has('--color-primary')).toBe(true)
 		expect(refs.length).toBeGreaterThan(100)
 
-		const undefinedRefs = undefinedIn(refs, defs, COMPILED_RUNTIME_PREFIXES)
+		const missing = undefinedIn(refs, atRoot, COMPILED_EXEMPT_PREFIXES)
 		report(
-			undefinedRefs.map(r => `${r.where}  ${r.name}`),
-			'that the compiled stylesheet never emits'
+			missing.map(r => `${r.where}  ${r.name}`),
+			'with no value at :root',
+			'Declare it in @theme or :root, or register it with @property ' +
+				'and an initial-value that matches the unset behaviour.'
 		)
-		expect(undefinedRefs).toEqual([])
+		expect(missing).toEqual([])
+	})
+
+	test('the :root check accepts only unconditional root values and registrations', () => {
+		const sample = postcss.parse(`
+			:root, :host { --a: 1px; }
+			@layer theme { :root { --b: 1px; } }
+			@media (width >= 40rem) { :root { --c: 1px; } }
+			@property --f { syntax: '*'; inherits: false; initial-value: 1px; }
+			@property --g { syntax: '*'; inherits: false; }
+			.x {
+				--d: 1px;
+				margin: var(--a) var(--b) var(--c) var(--d);
+				padding: var(--e, 1px) var(--f) var(--g) var(--tw-h);
+			}
+		`)
+		const missing = undefinedIn(
+			compiledReferences(sample),
+			rootDefined(sample),
+			COMPILED_EXEMPT_PREFIXES
+		).map(r => r.name)
+		expect(missing).toEqual(['--c', '--d', '--e', '--g'])
 	})
 })
