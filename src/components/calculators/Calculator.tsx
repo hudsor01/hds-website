@@ -206,7 +206,9 @@ export function Calculator() {
 	}
 
 	return (
-		<main className="min-h-screen bg-background">
+		// A <div>, not <main>: the (public) layout already renders the page's
+		// single <main id="main-content"> landmark.
+		<div className="min-h-screen bg-background">
 			<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20">
 				{/* Header */}
 				<div className="mb-10">
@@ -372,6 +374,6 @@ export function Calculator() {
 					</div>
 				</div>
 			)}
-		</main>
+		</div>
 	)
 }
