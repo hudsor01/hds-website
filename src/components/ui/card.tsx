@@ -359,7 +359,7 @@ function Card(props: CardProps) {
 						/>
 						{/* Overlay pills: eyebrow + showcase type + featured */}
 						<div className="absolute top-3 left-3 right-3 flex items-center gap-2 flex-wrap">
-							<span className="px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-widest text-accent-text bg-card/90 border border-border">
+							<span className="px-2 py-0.5 rounded-full text-eyebrow bg-card/90 border border-border">
 								{category}
 							</span>
 							{showcaseType && (
@@ -383,9 +383,7 @@ function Card(props: CardProps) {
 					{/* Category row: badges + featured tag (suppressed when image overlay carries them) */}
 					{!hasImage && (
 						<div className="flex items-center gap-2 flex-wrap">
-							<span className="text-xs font-semibold uppercase tracking-widest text-accent-text">
-								{category}
-							</span>
+							<span className="text-eyebrow">{category}</span>
 							{showcaseType && (
 								<span
 									className={cn(

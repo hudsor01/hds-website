@@ -217,27 +217,6 @@ describe('ErrorBoundary Component', () => {
 })
 
 describe('BackgroundPattern Component', () => {
-	it('should render ambient shapes', () => {
-		const { container } = render(
-			<div className="relative">
-				<div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-20 rounded-full blur-3xl opacity-20 animate-blob" />
-				<div className="absolute -bottom-40 -left-40 w-80 h-80 bg-muted/20 rounded-full blur-3xl opacity-20 animate-blob animation-delay-2000" />
-			</div>
-		)
-
-		const shapes = container.querySelectorAll('.animate-blob')
-		expect(shapes.length).toBe(2)
-	})
-
-	it('should apply proper animation delays', () => {
-		const { container } = render(
-			<div className="animate-blob animation-delay-2000" />
-		)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('animation-delay-2000')
-	})
-
 	it('should apply blur effects correctly', () => {
 		const { container } = render(<div className="blur-3xl" />)
 

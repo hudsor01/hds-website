@@ -77,9 +77,7 @@ async function ShowcaseProjects() {
 				<div className="container-wide">
 					{/* Section header */}
 					<div className="text-center mb-12">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							Featured
-						</p>
+						<p className="text-eyebrow mb-3">Featured</p>
 						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Real projects.{' '}
 							<span className="text-accent-text">One thing in common.</span>
@@ -190,9 +188,7 @@ export default function ShowcasePage() {
 				/>
 
 				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-						Showcase
-					</p>
+					<p className="text-eyebrow mb-3">Showcase</p>
 					{/* The visible heading used to be driven by a looping
 						    typewriter animation (~30 chars, 80ms per char, 2s pause)
 						    that left the H1 mid-state for several seconds — users

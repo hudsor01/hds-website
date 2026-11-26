@@ -27,9 +27,7 @@ async function FeaturedSection() {
 		<section className="py-section-sm">
 			<div className="container-wide">
 				<div className="text-center mb-10">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-						Editor&apos;s Picks
-					</p>
+					<p className="text-eyebrow mb-3">Editor&apos;s Picks</p>
 					<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 						Featured Articles
 					</h2>
@@ -81,9 +79,7 @@ export default function BlogPage() {
 			{/* Hero Section — static shell streams immediately. */}
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-						Practical Insights
-					</p>
+					<p className="text-eyebrow mb-3">Practical Insights</p>
 					<h1 className="text-page-title text-foreground text-balance">
 						Website Tips for Small Businesses
 					</h1>

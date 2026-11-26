@@ -170,9 +170,7 @@ async function TokenContent({ token }: { token: string }) {
 		<div className="min-h-screen bg-background">
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-						Client Feedback
-					</p>
+					<p className="text-eyebrow mb-3">Client Feedback</p>
 					<h1 className="text-page-title text-foreground text-balance">
 						Thank You, {request.client_name}!
 					</h1>

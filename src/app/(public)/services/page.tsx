@@ -61,9 +61,7 @@ export default function ServicesPage() {
 					aria-hidden="true"
 				/>
 				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-						What I Do
-					</p>
+					<p className="text-eyebrow mb-3">What I Do</p>
 					<h1 className="text-page-title text-foreground text-balance">
 						Websites Built for Small Businesses
 					</h1>
@@ -90,9 +88,7 @@ export default function ServicesPage() {
 			<section id="services-list" className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							What I Build
-						</p>
+						<p className="text-eyebrow mb-3">What I Build</p>
 						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							A Website, Done Right
 						</h2>
@@ -108,9 +104,7 @@ export default function ServicesPage() {
 			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							Track Record
-						</p>
+						<p className="text-eyebrow mb-3">Track Record</p>
 						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Proven Results
 						</h2>
@@ -145,9 +139,7 @@ export default function ServicesPage() {
 			<section id="process" className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							How It Works
-						</p>
+						<p className="text-eyebrow mb-3">How It Works</p>
 						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							My Process
 						</h2>

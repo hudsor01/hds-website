@@ -71,9 +71,7 @@ export default async function TagPage({ params }: TagPageProps) {
 			{/* Header */}
 			<section className="relative bg-background py-section-sm overflow-hidden">
 				<div className="relative container-wide text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-						Tag
-					</p>
+					<p className="text-eyebrow mb-3">Tag</p>
 					<h1 className="text-page-title text-foreground text-balance mb-heading">
 						{tag.name}
 					</h1>

@@ -129,9 +129,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 							{ICON_MAP[categoryInfo.icon] || <HelpCircle className="size-8" />}
 						</div>
 						<div>
-							<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-2">
-								Help Center
-							</p>
+							<p className="text-eyebrow mb-2">Help Center</p>
 							<h1 className="text-page-title text-foreground text-balance">
 								{categoryInfo.name}
 							</h1>

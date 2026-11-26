@@ -137,9 +137,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 					</Breadcrumb>
 
 					<div className="text-center">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							{service.title}
-						</p>
+						<p className="text-eyebrow mb-3">{service.title}</p>
 						<h1 className="text-page-title text-foreground text-balance mb-6">
 							<Headline text={service.headline} />
 						</h1>
@@ -181,9 +179,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			<section id="included" className="py-section-sm bg-muted scroll-mt-24">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							What You Get
-						</p>
+						<p className="text-eyebrow mb-3">What You Get</p>
 						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							What&apos;s Included
 						</h2>
@@ -216,9 +212,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			<section className="py-section-sm">
 				<div className="container-content">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							Questions
-						</p>
+						<p className="text-eyebrow mb-3">Questions</p>
 						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Common Questions
 						</h2>

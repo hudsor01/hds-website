@@ -34,9 +34,7 @@ export default function LocationsPage() {
 					aria-hidden="true"
 				/>
 				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-						Service Locations
-					</p>
+					<p className="text-eyebrow mb-3">Service Locations</p>
 					<h1 className="text-page-title text-foreground text-balance">
 						Web Design Across Dallas-Fort Worth
 					</h1>

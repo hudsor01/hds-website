@@ -98,9 +98,7 @@ export default function FreeMockupPage() {
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 						{/* LEFT: the offer */}
 						<div>
-							<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-								Free Website Mockup
-							</p>
+							<p className="text-eyebrow mb-3">Free Website Mockup</p>
 							<h1 className="text-page-title text-foreground text-balance">
 								See your new website before you pay anything.
 							</h1>

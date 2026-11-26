@@ -302,18 +302,6 @@ button,
 	min-height: 44px;
 }
 
-.sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border: 0;
-}
-
 /* Reduced motion (WCAG 2.3.3). Movement is opt-in at the source: the
  * hover lift sits under prefers-reduced-motion: no-preference, transforms
  * in markup use motion-safe:, and smooth scrolling is motion-safe on
@@ -384,9 +372,11 @@ button,
 
 	/* Small uppercase label: a kicker above a title or a form-group
 	 * heading. Sets its own family so it looks the same on a <p> and on an
-	 * <h2> (headings default to the display face). Color comes from the
-	 * call site. */
+	 * <h2> (headings default to the display face). Accent-text by default
+	 * (6.03:1, plain accent fails as text); a color utility on the element
+	 * (text-muted-foreground on form groups) overrides it. */
 	.text-eyebrow {
+		color: var(--color-accent-text);
 		font-family: var(--font-sans);
 		font-size: var(--text-xs);
 		line-height: var(--text-xs--line-height);
@@ -480,12 +470,6 @@ button,
 	transition-timing-function: var(--ease-in-out);
 }
 
-/* Spacing utilities. The role scale (gap-*, m*-*, p*-*, space-y-*) comes
- * from the --spacing-* theme tokens; only multi-value shorthands live here. */
-@utility section-spacing {
-	padding-block: 6rem;
-}
-
 /* Card padding sizes */
 @utility card-padding-sm {
 	padding: 1rem;
@@ -503,52 +487,8 @@ button,
 }
 
 /* Z-index scale */
-@utility z-sticky {
-	z-index: 40;
-}
-@utility z-fixed {
-	z-index: 50;
-}
-@utility z-nav {
-	z-index: 60;
-}
 @utility z-modal {
 	z-index: 70;
-}
-
-/* Animation */
-@keyframes blob {
-	0% {
-		transform: translate(0, 0) scale(1);
-	}
-	33% {
-		transform: translate(30px, -50px) scale(1.1);
-	}
-	66% {
-		transform: translate(-20px, 20px) scale(0.9);
-	}
-	100% {
-		transform: translate(0, 0) scale(1);
-	}
-}
-.animate-blob {
-	animation: blob 7s infinite;
-}
-.animation-delay-2000 {
-	animation-delay: 2s;
-}
-
-@keyframes blink {
-	0%,
-	100% {
-		opacity: 1;
-	}
-	50% {
-		opacity: 0;
-	}
-}
-.animate-blink {
-	animation: blink 0.8s step-end infinite;
 }
 
 /* Dialog */
@@ -561,7 +501,7 @@ button,
 	}
 	.dialog-content {
 		background-color: var(--color-popover);
-		color: var(--color-foreground);
+		color: var(--color-popover-foreground);
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius-xl);
 		box-shadow: var(--shadow-xl);

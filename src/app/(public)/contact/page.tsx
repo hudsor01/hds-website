@@ -89,9 +89,7 @@ export default function ContactPage() {
 						{/* LEFT: Form */}
 						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<div className="mb-8">
-								<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-									Free Website Plan
-								</p>
+								<p className="text-eyebrow mb-3">Free Website Plan</p>
 								<h1 className="text-page-title text-foreground text-balance">
 									Get Your Free Website Plan
 								</h1>
@@ -236,9 +234,7 @@ export default function ContactPage() {
 			<section className="py-section-sm bg-card">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							Service Area
-						</p>
+						<p className="text-eyebrow mb-3">Service Area</p>
 						{/* Brand positioning resolved in favor of the canonical
 						    LocalBusiness JSON-LD areaServed ("Dallas-Fort Worth
 						    Metroplex" in seo-utils.ts:61-99) and the canonical

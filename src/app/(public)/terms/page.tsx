@@ -23,9 +23,7 @@ export default function TermsPage() {
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-						Legal
-					</p>
+					<p className="text-eyebrow mb-3">Legal</p>
 					<h1 className="text-page-title text-foreground text-balance">
 						Terms of Service
 					</h1>

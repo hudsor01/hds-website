@@ -94,11 +94,11 @@ test.describe('Mobile Responsiveness - Viewport Tests', () => {
 						expect(bodyFontSize).toBeGreaterThanOrEqual(16)
 					}
 
-					// Check body paragraph readability. Exclude `.text-xs`
-					// eyebrow/label text (12px decorative kickers like
+					// Check body paragraph readability. Exclude `.text-eyebrow` and
+					// `.text-xs` label text (12px decorative kickers like
 					// "Professional Services") - those are not body copy and
 					// 12px uppercase labels are an accepted pattern.
-					const paragraphs = page.locator('p:not(.text-xs)')
+					const paragraphs = page.locator('p:not(.text-xs):not(.text-eyebrow)')
 					const count = await paragraphs.count()
 
 					if (count > 0) {

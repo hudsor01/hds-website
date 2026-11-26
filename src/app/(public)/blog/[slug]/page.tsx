@@ -320,9 +320,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 				<div className="container-wide py-8">
 					<div className="mx-auto max-w-5xl">
 						<aside className="max-w-3xl rounded-xl border border-border bg-card p-8">
-							<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-2">
-								Related Service
-							</p>
+							<p className="text-eyebrow mb-2">Related Service</p>
 							<h2 className="text-h4 text-foreground mb-2">
 								{relatedService.title}
 							</h2>

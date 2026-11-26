@@ -167,7 +167,7 @@ export default function HomePage() {
 								<div className="px-5 py-4 border-b border-border/60">
 									<div className="flex items-center gap-2 mb-1">
 										<Zap className="w-3.5 h-3.5 text-accent shrink-0" />
-										<span className="text-xs font-semibold text-foreground uppercase tracking-widest">
+										<span className="text-eyebrow text-foreground">
 											What Your Website Does For You
 										</span>
 									</div>
@@ -209,9 +209,7 @@ export default function HomePage() {
 			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							What You Get
-						</p>
+						<p className="text-eyebrow mb-3">What You Get</p>
 						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							A Website That Earns Its Keep
 						</h2>
@@ -268,9 +266,7 @@ export default function HomePage() {
 			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							Try For Free
-						</p>
+						<p className="text-eyebrow mb-3">Try For Free</p>
 						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Free Business Tools
 						</h2>
@@ -368,9 +364,7 @@ export default function HomePage() {
 					<div className="text-center">
 						<div className="inline-flex items-center gap-3 mb-4">
 							<span aria-hidden="true" className="h-px w-8 bg-accent/40" />
-							<p className="text-xs font-semibold uppercase tracking-widest text-accent-text">
-								Let&apos;s talk
-							</p>
+							<p className="text-eyebrow">Let&apos;s talk</p>
 							<span aria-hidden="true" className="h-px w-8 bg-accent/40" />
 						</div>
 						<h2 className="text-h1 text-foreground mb-comfortable text-balance">

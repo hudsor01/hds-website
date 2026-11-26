@@ -100,7 +100,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 				<div className="relative z-10 container-content pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<div className="flex items-center justify-center gap-2 mb-4 text-accent-text">
 						<MapPin className="h-4 w-4" aria-hidden="true" />
-						<span className="text-xs font-semibold uppercase tracking-widest">
+						<span className="text-eyebrow">
 							{location.city}, {location.stateCode}
 						</span>
 					</div>
@@ -117,9 +117,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			<section className="py-section-sm">
 				<div className="container-content">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							What I Offer
-						</p>
+						<p className="text-eyebrow mb-3">What I Offer</p>
 						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							What I Build in {location.city}
 						</h2>
@@ -146,9 +144,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			<section className="py-section-sm bg-muted">
 				<div className="container-content">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							Coverage
-						</p>
+						<p className="text-eyebrow mb-3">Coverage</p>
 						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Areas I Serve in {location.city}
 						</h2>

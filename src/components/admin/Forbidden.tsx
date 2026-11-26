@@ -21,9 +21,7 @@ export function Forbidden({ email, role }: ForbiddenProps) {
 	return (
 		<div className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center bg-background p-6">
 			<div className="w-full max-w-md rounded-xl border border-border bg-card p-8 shadow-sm">
-				<p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">
-					403
-				</p>
+				<p className="text-eyebrow text-muted-foreground mb-2">403</p>
 				<h1 className="text-2xl font-semibold text-foreground mb-3">
 					Not authorized
 				</h1>

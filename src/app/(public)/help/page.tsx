@@ -66,9 +66,7 @@ export default async function HelpCenterPage() {
 					aria-hidden="true"
 				/>
 				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-						Help Center
-					</p>
+					<p className="text-eyebrow mb-3">Help Center</p>
 					<h1 className="text-page-title text-foreground text-balance">
 						How can I help?
 					</h1>
@@ -83,9 +81,7 @@ export default async function HelpCenterPage() {
 			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							Browse Topics
-						</p>
+						<p className="text-eyebrow mb-3">Browse Topics</p>
 						<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 							Browse by Category
 						</h2>
