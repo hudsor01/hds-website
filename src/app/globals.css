@@ -34,16 +34,16 @@
 	 * (6.03:1 on background, 5.53:1 on muted). */
 	--color-accent-text: oklch(0.5 0.16 55);
 
-	/* Semantic colors */
-	--color-destructive: oklch(0.55 0.2 25);
+	/* Semantic colors. Destructive and success fills carry light text
+	 * (the button variants): >= 4.5:1 at rest, at the /90 hover and the
+	 * /85 press (WCAG 1.4.3). */
+	--color-destructive: oklch(0.52 0.2 25);
 	--color-destructive-foreground: oklch(0.98 0.005 25);
 	--color-destructive-light: oklch(0.96 0.03 25);
 	--color-destructive-muted: oklch(0.92 0.06 25);
 	--color-destructive-text: oklch(0.5 0.18 25);
 
-	/* Success and info fills carry white text: 5.9:1 and 5.7:1, and
-	 * still >= 4.5:1 at the /90 hover (WCAG 1.4.3). */
-	--color-success: oklch(0.48 0.13 150);
+	--color-success: oklch(0.46 0.13 150);
 	--color-success-foreground: oklch(0.985 0.005 150);
 	--color-success-light: oklch(0.95 0.05 150);
 	--color-success-muted: oklch(0.9 0.08 150);

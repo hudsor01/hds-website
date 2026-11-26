@@ -39,6 +39,7 @@ const SRC_GLOB = 'src/**/*.{ts,tsx}'
 const TSX_GLOB = 'src/**/*.tsx'
 const EXCLUDE_PATHS = ['_generated/']
 const PRIMITIVES_DIR = 'src/components/ui/'
+const BUTTON_VARIANTS = 'src/components/ui/button-variants.ts'
 
 const CLASS_START = '(?:^|[\\s"\'`{])'
 const CLASS_END = '(?=$|[\\s"\'`}])'
@@ -159,6 +160,20 @@ function luminance(hex: string): number {
 	return 0.2126 * channel(1) + 0.7152 * channel(3) + 0.0722 * channel(5)
 }
 
+/** `top` at `alpha` over the opaque `under`, composited in sRGB. */
+function blend(top: string, under: string, alpha: number): string {
+	const channel = (hex: string, i: number) =>
+		Number.parseInt(hex.slice(i, i + 2), 16)
+	let out = '#'
+	for (const i of [1, 3, 5]) {
+		const v = Math.round(
+			channel(top, i) * alpha + channel(under, i) * (1 - alpha)
+		)
+		out += v.toString(16).padStart(2, '0')
+	}
+	return out
+}
+
 function contrast(a: string, b: string): number {
 	const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x)
 	return ((hi ?? 0) + 0.05) / ((lo ?? 0) + 0.05)
@@ -244,6 +259,44 @@ describe('contrast-safe palette', () => {
 				)
 			}
 		}
+		expect(failures).toEqual([])
+	})
+
+	test('filled buttons keep 4.5:1 when hovered and pressed', async () => {
+		const colors = await themeColors()
+		const source = await readFile(BUTTON_VARIANTS, 'utf8')
+		const failures: string[] = []
+		let checked = 0
+		// A variant whose label is its fill's -foreground pair, e.g.
+		// 'bg-success text-success-foreground ... hover:bg-success/90'.
+		for (const m of source.matchAll(
+			/'bg-([a-z]+) text-\1-foreground([^']*)'/g
+		)) {
+			const [, fill, rest] = m
+			const fg = colors.get(`${fill}-foreground`)
+			const bg = colors.get(`${fill}`)
+			if (!(fill && rest && fg && bg)) {
+				continue
+			}
+			for (const state of rest.matchAll(
+				new RegExp(`\\b(hover|active):bg-${fill}/(\\d+)\\b`, 'g')
+			)) {
+				for (const surface of ['background', 'card']) {
+					const under = colors.get(surface)
+					if (!under) {
+						continue
+					}
+					checked++
+					const ratio = contrast(fg, blend(bg, under, Number(state[2]) / 100))
+					if (ratio < 4.5) {
+						failures.push(
+							`${state[1]}:bg-${fill}/${state[2]} on ${surface}: ${ratio.toFixed(2)} < 4.5`
+						)
+					}
+				}
+			}
+		}
+		expect(checked).toBeGreaterThan(0)
 		expect(failures).toEqual([])
 	})
 })

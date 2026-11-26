@@ -27,7 +27,10 @@ import type * as React from 'react'
  * 44px minimum height (the same touch target the global `button` rule
  * gives a native <button>, so an `asChild` link renders the same box).
  * Text steps 14 / 14 / 16 / 18px; padding is fixed per size, with or
- * without an icon. Focus is the global :focus-visible outline.
+ * without an icon. Focus is the global :focus-visible outline. Fills
+ * that carry light text (default, destructive, success) only lighten
+ * to /90 on hover and /85 when pressed, so the label keeps 4.5:1 in
+ * every state (WCAG 1.4.3).
  */
 export const buttonVariants = cva(
 	"inline-flex min-h-11 shrink-0 items-center justify-center gap-tight whitespace-nowrap rounded-md text-sm font-semibold transition-smooth disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:focus-visible:outline-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
@@ -35,11 +38,11 @@ export const buttonVariants = cva(
 		variants: {
 			variant: {
 				default:
-					'bg-primary text-primary-foreground shadow-sm hover:bg-primary/80 active:bg-primary/70',
+					'bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:bg-primary/85',
 				destructive:
-					'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/80 active:bg-destructive/75',
+					'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 active:bg-destructive/85',
 				success:
-					'bg-success text-success-foreground shadow-sm hover:bg-success/90 active:bg-success/80',
+					'bg-success text-success-foreground shadow-sm hover:bg-success/90 active:bg-success/85',
 				accent:
 					'bg-accent text-accent-foreground shadow-sm hover:bg-accent/85 active:bg-accent/75',
 				outline:
