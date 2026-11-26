@@ -120,29 +120,33 @@
 	 * extend the same --text-* namespace with fluid sizes and generate the
 	 * heading API (text-page-title, text-h1 .. text-h4, text-lead). Each
 	 * step owns its line-height, tracking and weight: never add leading-*,
-	 * tracking-* or font-weight utilities to an element that uses one. */
-	--text-page-title: clamp(2.5rem, 6vw, 4rem);
+	 * tracking-* or font-weight utilities to an element that uses one.
+	 * Each fluid size is clamp(min, a rem + b vw, max) with the middle term
+	 * on the line through min at a 390px viewport and max at 1280px. The
+	 * rem part keeps the size following browser zoom and the user's font
+	 * size (WCAG 1.4.4); a bare vw term never grows with either. */
+	--text-page-title: clamp(2.5rem, 1.8424rem + 2.697vw, 4rem);
 	--text-page-title--line-height: 1.1;
 	--text-page-title--letter-spacing: var(--tracking-tight);
 	--text-page-title--font-weight: var(--font-weight-black);
-	--text-h1: clamp(2.25rem, 5vw, 3rem);
+	--text-h1: clamp(2.25rem, 1.921rem + 1.349vw, 3rem);
 	--text-h1--line-height: var(--leading-tight);
 	--text-h1--letter-spacing: var(--tracking-tight);
 	--text-h1--font-weight: var(--font-weight-semibold);
-	--text-h2: clamp(1.875rem, 4vw, 2.25rem);
+	--text-h2: clamp(1.875rem, 1.71rem + 0.675vw, 2.25rem);
 	--text-h2--line-height: var(--leading-tight);
 	--text-h2--letter-spacing: var(--tracking-tight);
 	--text-h2--font-weight: var(--font-weight-semibold);
-	--text-h3: clamp(1.5rem, 3.5vw, 1.875rem);
+	--text-h3: clamp(1.5rem, 1.335rem + 0.675vw, 1.875rem);
 	--text-h3--line-height: var(--leading-tight);
 	--text-h3--letter-spacing: var(--tracking-tight);
 	--text-h3--font-weight: var(--font-weight-semibold);
 	/* Semibold like every step above it: a text-h4 section heading is
 	 * never lighter than the text-lg font-semibold item h3 under it. */
-	--text-h4: clamp(1.25rem, 3vw, 1.5rem);
+	--text-h4: clamp(1.25rem, 1.14rem + 0.45vw, 1.5rem);
 	--text-h4--line-height: var(--leading-normal);
 	--text-h4--font-weight: var(--font-weight-semibold);
-	--text-lead: clamp(1.125rem, 2.5vw, 1.25rem);
+	--text-lead: clamp(1.125rem, 1.07rem + 0.225vw, 1.25rem);
 	--text-lead--line-height: var(--leading-relaxed);
 	/* Long-form prose (.typography): body and opening standfirst. */
 	--text-prose: 1.0625rem;

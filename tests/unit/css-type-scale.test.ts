@@ -11,6 +11,10 @@
  *     utility (a stray leading-tight made the page-title line-height dead).
  *   - No arbitrary font sizes (text-[10px]): every size is a scale step,
  *     and nothing renders under the 12px text-xs floor.
+ *   - Every fluid step is clamp(min, a rem + b vw, max): the rem part makes
+ *     the size follow browser zoom and the user's font size (WCAG 1.4.4),
+ *     and the middle term is the line through min at a 390px viewport and
+ *     max at 1280px, so the endpoints the design was drawn at hold.
  */
 
 import { describe, expect, test } from 'bun:test'
@@ -32,6 +36,15 @@ const ROLE_STEPS = [
 	'prose',
 	'prose-lead'
 ] as const
+
+// Fluid steps and the viewports their clamp endpoints are pinned to.
+const FLUID_STEPS = ['page-title', 'h1', 'h2', 'h3', 'h4', 'lead'] as const
+const MIN_VIEWPORT = 390
+const MAX_VIEWPORT = 1280
+const ROOT_PX = 16
+// clamp(2.5rem, 1.8424rem + 2.697vw, 4rem)
+const FLUID_CLAMP =
+	/^clamp\(\s*([\d.]+)rem\s*,\s*([\d.]+)rem\s*\+\s*([\d.]+)vw\s*,\s*([\d.]+)rem\s*\)$/
 
 // Classes that own size, line-height, tracking and weight.
 const HEADING_CLASS = /^text-(?:page-title|h[1-4]|lead|eyebrow)$/
@@ -116,6 +129,40 @@ describe('one type scale', () => {
 			)
 			.map(m => `--text-${m[1]}: ${m[2]}`)
 		expect(light).toEqual([])
+	})
+
+	test('fluid steps scale with zoom and hit min at 390px, max at 1280px', async () => {
+		const css = await readFile(GLOBALS_CSS, 'utf8')
+		const failures: string[] = []
+		for (const step of FLUID_STEPS) {
+			const decl = css.match(new RegExp(`--text-${step}:\\s*([^;]+);`))?.[1]
+			const m = decl?.trim().match(FLUID_CLAMP)
+			if (!m) {
+				failures.push(
+					`--text-${step}: ${decl ?? '(missing)'} is not clamp(min, a rem + b vw, max)`
+				)
+				continue
+			}
+			const [min, rem, vw, max] = m.slice(1).map(v => Number(v) * ROOT_PX)
+			const preferred = (width: number) =>
+				(rem ?? 0) + ((vw ?? 0) / ROOT_PX) * (width / 100)
+			const size = (width: number) =>
+				Math.min(max ?? 0, Math.max(min ?? 0, preferred(width)))
+			// On the line (within 0.01px) and clamped to the exact endpoint.
+			const atMin = preferred(MIN_VIEWPORT)
+			const atMax = preferred(MAX_VIEWPORT)
+			if (Math.abs(atMin - (min ?? 0)) > 0.01 || size(MIN_VIEWPORT) !== min) {
+				failures.push(
+					`--text-${step} at ${MIN_VIEWPORT}px: ${atMin.toFixed(3)}px, want ${min}px`
+				)
+			}
+			if (Math.abs(atMax - (max ?? 0)) > 0.01 || size(MAX_VIEWPORT) !== max) {
+				failures.push(
+					`--text-${step} at ${MAX_VIEWPORT}px: ${atMax.toFixed(3)}px, want ${max}px`
+				)
+			}
+		}
+		expect(failures).toEqual([])
 	})
 
 	test('globals.css has no parallel scale or hand-written heading rules', async () => {
