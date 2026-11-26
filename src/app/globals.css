@@ -124,7 +124,11 @@
 	 * Each fluid size is clamp(min, a rem + b vw, max) with the middle term
 	 * on the line through min at a 390px viewport and max at 1280px. The
 	 * rem part keeps the size following browser zoom and the user's font
-	 * size (WCAG 1.4.4); a bare vw term never grows with either. */
+	 * size (WCAG 1.4.4); a bare vw term never grows with either. Zoom also
+	 * shrinks the CSS viewport, so a fluid heading is under 2x at the 200%
+	 * step on wide windows. WCAG 1.4.4 asks only that text can reach 200%
+	 * by some zoom level, so keep max <= 2.5 x min: every step then reaches
+	 * 2x within the browser's 500% zoom. */
 	--text-page-title: clamp(2.5rem, 1.8424rem + 2.697vw, 4rem);
 	--text-page-title--line-height: 1.1;
 	--text-page-title--letter-spacing: var(--tracking-tight);

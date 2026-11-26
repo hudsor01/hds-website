@@ -15,11 +15,26 @@
  *     the size follow browser zoom and the user's font size (WCAG 1.4.4),
  *     and the middle term is the line through min at a 390px viewport and
  *     max at 1280px, so the endpoints the design was drawn at hold.
+ *   - Every fluid size in the compiled stylesheet reaches 2x its 100% size
+ *     at some browser zoom step (WCAG 1.4.4). Zoom also narrows the CSS
+ *     viewport, so on a wide window a fluid heading is under 2x at exactly
+ *     200%; 1.4.4 only asks that text "can be resized ... up to 200
+ *     percent" by at least one user-agent mechanism, and "It is not
+ *     required to achieve 200% text enlargement while remaining inside a
+ *     specific breakpoint"
+ *     (https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html).
+ *     Gate: max <= 2.5 x min, which guarantees 2x by 500% zoom
+ *     (https://www.smashingmagazine.com/2023/11/addressing-accessibility-concerns-fluid-type/),
+ *     plus a simulation of every window from 320 to 3840px against
+ *     Chrome's zoom steps.
  */
 
 import { describe, expect, test } from 'bun:test'
 import { readFile } from 'node:fs/promises'
+import { resolve } from 'node:path'
+import tailwindcss from '@tailwindcss/postcss'
 import { Glob } from 'bun'
+import postcss from 'postcss'
 import { cn } from '@/lib/utils'
 
 const SRC_GLOB = 'src/**/*.{ts,tsx}'
@@ -45,6 +60,16 @@ const ROOT_PX = 16
 // clamp(2.5rem, 1.8424rem + 2.697vw, 4rem)
 const FLUID_CLAMP =
 	/^clamp\(\s*([\d.]+)rem\s*,\s*([\d.]+)rem\s*\+\s*([\d.]+)vw\s*,\s*([\d.]+)rem\s*\)$/
+
+// WCAG 1.4.4 zoom reach. Barvian's bound: with max <= 2.5 x min a clamp
+// always reaches 2x within 500% zoom.
+const MAX_FLUID_RATIO = 2.5
+// Chrome's preset zoom steps from 100% up (its maximum is 500%).
+const ZOOM_STEPS = [1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5] as const
+// Window widths in device-independent px: a small phone to a 4K desktop.
+const MIN_WINDOW = 320
+const MAX_WINDOW = 3840
+const TARGET_ENLARGEMENT = 2
 
 // Classes that own size, line-height, tracking and weight.
 const HEADING_CLASS = /^text-(?:page-title|h[1-4]|lead|eyebrow)$/
@@ -81,6 +106,73 @@ function lineOf(content: string, index: number): number {
 
 function format(violations: Violation[]): string {
 	return violations.map(v => `  ${v.file}:${v.line}  ${v.match}`).join('\n')
+}
+
+interface FluidSize {
+	name: string
+	value: string
+	// px at a 16px root
+	min: number
+	rem: number
+	vwPerCss: number
+	max: number
+}
+
+// Every font size in the stylesheet the browser gets that depends on the
+// viewport: --text-* tokens and font-size declarations with a vw term.
+// Built by the same PostCSS plugin and class scan as `next build`.
+async function compiledFluidSizes(): Promise<{
+	sizes: FluidSize[]
+	unparsed: string[]
+}> {
+	const from = resolve(GLOBALS_CSS)
+	const { root } = await postcss([tailwindcss()]).process(
+		await readFile(from, 'utf8'),
+		{ from }
+	)
+	const sizes: FluidSize[] = []
+	const unparsed: string[] = []
+	root.walkDecls(decl => {
+		const isSize =
+			decl.prop === 'font-size' ||
+			(decl.prop.startsWith('--text-') && !decl.prop.includes('--', 2))
+		if (!isSize || !/vw\b/.test(decl.value)) {
+			return
+		}
+		const m = decl.value.trim().match(FLUID_CLAMP)
+		if (!m) {
+			unparsed.push(`${decl.prop}: ${decl.value}`)
+			return
+		}
+		const [min, rem, vw, max] = m.slice(1).map(Number)
+		sizes.push({
+			name: decl.prop,
+			value: decl.value,
+			min: (min ?? 0) * ROOT_PX,
+			rem: (rem ?? 0) * ROOT_PX,
+			vwPerCss: (vw ?? 0) / 100,
+			max: (max ?? 0) * ROOT_PX
+		})
+	})
+	return { sizes, unparsed }
+}
+
+/** CSS px of a fluid size at a CSS viewport `width`. */
+function sizeAt(size: FluidSize, width: number): number {
+	return Math.min(
+		size.max,
+		Math.max(size.min, size.rem + size.vwPerCss * width)
+	)
+}
+
+/**
+ * Best enlargement over the zoom steps for a window `window` device px
+ * wide. At zoom z the CSS viewport is window / z and each CSS px renders
+ * as z device px, so the rendered size is z * sizeAt(window / z).
+ */
+function bestEnlargement(size: FluidSize, window: number): number {
+	const base = sizeAt(size, window)
+	return Math.max(...ZOOM_STEPS.map(z => (z * sizeAt(size, window / z)) / base))
 }
 
 /** The utility without its variant chain: `md:leading-tight` -> `leading-tight`. */
@@ -163,6 +255,61 @@ describe('one type scale', () => {
 			}
 		}
 		expect(failures).toEqual([])
+	})
+
+	describe('WCAG 1.4.4: every fluid size can reach 2x by browser zoom', () => {
+		test('compiled fluid sizes are all clamp(min, a rem + b vw, max)', async () => {
+			const { sizes, unparsed } = await compiledFluidSizes()
+			expect(unparsed).toEqual([])
+			expect(sizes.map(s => s.name).sort()).toEqual(
+				FLUID_STEPS.map(step => `--text-${step}`).sort()
+			)
+		})
+
+		test(`max <= ${MAX_FLUID_RATIO} x min (2x within 500% zoom)`, async () => {
+			const { sizes } = await compiledFluidSizes()
+			const failures = sizes
+				.filter(s => s.max > MAX_FLUID_RATIO * s.min)
+				.map(
+					s => `${s.name}: ${s.value} has max/min ${(s.max / s.min).toFixed(3)}`
+				)
+			expect(failures).toEqual([])
+		})
+
+		test(`every window from ${MIN_WINDOW} to ${MAX_WINDOW}px reaches 2x at a Chrome zoom step`, async () => {
+			const { sizes } = await compiledFluidSizes()
+			const failures: string[] = []
+			for (const size of sizes) {
+				let worst = { window: 0, ratio: Number.POSITIVE_INFINITY }
+				for (let window = MIN_WINDOW; window <= MAX_WINDOW; window++) {
+					const ratio = bestEnlargement(size, window)
+					if (ratio < worst.ratio) {
+						worst = { window, ratio }
+					}
+				}
+				// 1e-9 absorbs float error where the min clamp gives exactly 2x.
+				if (worst.ratio < TARGET_ENLARGEMENT - 1e-9) {
+					failures.push(
+						`${size.name}: at most ${worst.ratio.toFixed(3)}x on a ${worst.window}px window`
+					)
+				}
+			}
+			expect(failures).toEqual([])
+		})
+
+		test('the simulation catches a size that never reaches 2x', () => {
+			// 16px phone, 64px desktop (4x): a 1280px window tops out at 1.25x.
+			const steep: FluidSize = {
+				name: '--text-steep',
+				value: 'clamp(1rem, -0.3146rem + 5.393vw, 4rem)',
+				min: 16,
+				rem: -0.3146 * ROOT_PX,
+				vwPerCss: 0.05393,
+				max: 64
+			}
+			expect(bestEnlargement(steep, MIN_WINDOW)).toBe(5)
+			expect(bestEnlargement(steep, MAX_VIEWPORT)).toBeLessThan(2)
+		})
 	})
 
 	test('globals.css has no parallel scale or hand-written heading rules', async () => {
