@@ -179,7 +179,7 @@ function ResultCard({
 			{showResult ? (
 				resultSlot
 			) : columns === 'two' ? (
-				<div className="flex items-center justify-center min-h-[200px] py-12">
+				<div className="flex items-center justify-center min-h-50 py-12">
 					<p className="text-muted-foreground text-sm text-center">
 						{resultPlaceholder ?? 'Fill in the form to see results'}
 					</p>
@@ -269,7 +269,7 @@ export function ToolPageLayout({
 
 				{/* Body */}
 				{columns === 'two' ? (
-					<div className="grid gap-8 lg:grid-cols-[3fr_2fr] items-start">
+					<div className="grid gap-8 lg:grid-cols-tool items-start">
 						<div>{formSlot}</div>
 						<ResultCard
 							actions={actions}

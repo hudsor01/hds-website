@@ -230,7 +230,7 @@ export default function Footer() {
 					</div>
 
 					{/* Bottom Section */}
-					<div className="border-t border-white/10 pt-8">
+					<div className="border-t border-border pt-8">
 						{/* `flex-wrap` so the three rows (copyright / socials / legal)
 						    can drop to a second line below ~md instead of clipping
 						    "Terms o…" off the right edge (audit #244). */}
@@ -249,11 +249,9 @@ export default function Footer() {
 										target="_blank"
 										rel="noopener noreferrer"
 										className={cn(
-											'p-2.5 rounded-md',
-											'glass-card-light',
-											'border border-white/10',
+											'p-2.5 rounded-md border border-border',
 											'text-muted-foreground hover:text-accent-text',
-											'hover:bg-card/10 hover:border-accent/50',
+											'hover:bg-accent/5 hover:border-accent/50',
 											'transition-smooth group'
 										)}
 										aria-label={`Follow me on ${social.name} (opens in new tab)`}

@@ -55,7 +55,7 @@ export function AccountMenu({ email }: AccountMenuProps) {
 				aria-label="Account menu"
 				className="cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted transition-smooth"
 			>
-				<span className="max-w-[12rem] truncate">{email}</span>
+				<span className="max-w-48 truncate">{email}</span>
 				<svg
 					width="12"
 					height="12"

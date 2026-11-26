@@ -302,7 +302,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
 				{/* Article Content + sticky table of contents */}
 				<div className="container-wide py-8">
-					<div className="mx-auto max-w-5xl lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12">
+					<div className="mx-auto max-w-5xl lg:grid lg:grid-cols-article lg:gap-12">
 						<div className="min-w-0 max-w-3xl">
 							<BlogPostContent html={contentHtml} />
 						</div>

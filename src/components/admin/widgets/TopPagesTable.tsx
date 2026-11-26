@@ -56,7 +56,7 @@ export function TopPagesTable({ result }: TopPagesTableProps) {
 					<tbody>
 						{result.data.map(row => (
 							<tr key={row.pathname}>
-								<td className="py-2 text-foreground truncate max-w-[20rem]">
+								<td className="py-2 text-foreground truncate max-w-xs">
 									{row.pathname}
 								</td>
 								<td className="py-2 text-right font-mono text-foreground tabular-nums">

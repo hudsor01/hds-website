@@ -40,7 +40,7 @@ function ContactFormSkeleton() {
 function ServiceMapSkeleton() {
 	return (
 		<div
-			className="aspect-[16/9] max-w-3xl mx-auto rounded-xl bg-muted animate-pulse"
+			className="aspect-video max-w-3xl mx-auto rounded-xl bg-muted animate-pulse"
 			aria-hidden="true"
 		/>
 	)

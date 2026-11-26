@@ -358,7 +358,7 @@ export default function HomePage() {
 				{/* Soft radial accent for depth — pure CSS, no extra DOM weight */}
 				<div
 					aria-hidden="true"
-					className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklch,var(--color-accent)_12%,transparent),transparent_70%)]"
+					className="hero-spotlight pointer-events-none absolute inset-0"
 				/>
 				<div className="relative container-content">
 					<div className="text-center">

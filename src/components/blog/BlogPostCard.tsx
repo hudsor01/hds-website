@@ -37,7 +37,7 @@ export function BlogPostCard({
 				>
 					{post.feature_image && (
 						<div
-							className={`relative ${featured ? 'aspect-[2/1]' : 'aspect-video'}`}
+							className={`relative ${featured ? 'aspect-2/1' : 'aspect-video'}`}
 						>
 							<Image
 								src={post.feature_image}
