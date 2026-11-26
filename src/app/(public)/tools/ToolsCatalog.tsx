@@ -131,13 +131,14 @@ export default function ToolsCatalog() {
 									{/* Stretched link: the ::after overlay spans the whole
 									    card, so a click anywhere on it follows this one link
 									    (no nested interactives, no block content inside <a>).
-									    The card, not the CTA text, carries the focus ring. */}
+									    The card, not the CTA text, carries the focus ring where
+									    :has() exists; without it the link keeps the base outline. */}
 									<Link
 										href={tool.href}
-										className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text underline-offset-4 transition-colors group-hover:underline focus-visible:underline focus-visible:outline-none after:absolute after:inset-0 after:rounded-xl"
+										className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text underline-offset-4 transition-colors group-hover:underline focus-visible:underline supports-[selector(:has(*))]:focus-visible:outline-none after:absolute after:inset-0 after:rounded-xl"
 									>
 										{tool.cta}
-										<span className="sr-only">, {tool.title}</span>
+										<span className="sr-only"> for {tool.title}</span>
 										<ArrowRight
 											aria-hidden="true"
 											className="h-4 w-4 transition-smooth motion-safe:group-hover:translate-x-1"
