@@ -56,7 +56,6 @@ export default function FaqClient() {
 					{/* Search */}
 					<div className="max-w-2xl mx-auto">
 						<div className="relative">
-							<Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
 							<Input
 								type="text"
 								placeholder="Search FAQs..."
@@ -64,6 +63,11 @@ export default function FaqClient() {
 								value={searchQuery}
 								onChange={e => setSearchQuery(e.target.value)}
 								className="pl-12"
+							/>
+							{/* After the input so it paints above the input's background. */}
+							<Search
+								aria-hidden="true"
+								className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground"
 							/>
 						</div>
 					</div>

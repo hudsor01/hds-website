@@ -27,17 +27,21 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> &
 function Input({ className, variant, type, ref, ...props }: InputProps) {
 	return (
 		<div className="relative">
-			{variant === 'currency' && (
-				<span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-					$
-				</span>
-			)}
 			<input
 				type={type}
 				className={cn(inputVariants({ variant }), className)}
 				ref={ref}
 				{...props}
 			/>
+			{/* After the input so it paints above the input's background. */}
+			{variant === 'currency' && (
+				<span
+					aria-hidden="true"
+					className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+				>
+					$
+				</span>
+			)}
 		</div>
 	)
 }
