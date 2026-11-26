@@ -35,14 +35,7 @@ export function TagList({ tags, activeSlug }: TagListProps) {
 						<Tag className="w-4 h-4" />
 						{tag.name}
 						{typeof count === 'number' && (
-							<span
-								className={cn(
-									'tabular-nums text-xs',
-									isActive ? 'opacity-90' : 'opacity-70'
-								)}
-							>
-								({count})
-							</span>
+							<span className="tabular-nums text-xs">({count})</span>
 						)}
 					</Link>
 				)
