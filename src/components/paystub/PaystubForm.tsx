@@ -333,9 +333,6 @@ export function PaystubForm({
 							/>
 							<div className="flex gap-2">
 								<div className="relative">
-									<span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-										$
-									</span>
 									<Input
 										type="number"
 										step="0.01"

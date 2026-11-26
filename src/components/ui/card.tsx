@@ -122,26 +122,33 @@ function Card(props: CardProps) {
 				className={cn(
 					cardVariants({ variant: 'glassLight', size: 'lg', hover: true }),
 					'group',
+					href &&
+						'relative hover:border-accent/40 has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-ring',
 					className
 				)}
 			>
 				<div className="space-y-comfortable">
 					{/* Icon and Title */}
 					<div className="flex items-center space-x-4">
+						{/* No lift of its own: the card owns the hover lift and glow. */}
 						<div
 							className={cn(
 								'p-3 rounded-xl border border-current/30',
-								'hover-lift transition-smooth',
 								gradient
 							)}
 						>
 							<Icon icon={icon} size="lg" className="text-foreground" />
 						</div>
 						<h3 className="text-h4 text-foreground">
+							{/* Stretched link: the ::after overlay spans the whole card
+							    (the nearest positioned ancestor), so a click anywhere on
+							    it follows this one link. The card, not the title text,
+							    carries the focus ring where :has() exists; without it the
+							    link keeps the base outline. */}
 							{href ? (
 								<Link
 									href={href}
-									className="hover:text-accent-text transition-colors"
+									className="transition-colors group-hover:text-accent-text focus-visible:text-accent-text supports-[selector(:has(*))]:focus-visible:outline-none after:absolute after:inset-0 after:rounded-xl"
 								>
 									{title}
 								</Link>

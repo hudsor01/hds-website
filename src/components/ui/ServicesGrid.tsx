@@ -29,7 +29,10 @@ export function ServicesGrid() {
 		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 			{SERVICES.map(service => (
 				// The `scroll-mt-24` carve-out keeps the in-page anchor jump
-				// from hiding the card behind the sticky nav.
+				// from hiding the card behind the sticky nav. The wrapper
+				// stretches to its grid row; `h-full` lets the card fill it so
+				// every card in a row is the same height (and the same
+				// stretched-link click area).
 				<div
 					key={service.anchorId}
 					id={service.anchorId}
@@ -37,6 +40,7 @@ export function ServicesGrid() {
 				>
 					<Card
 						variant="service"
+						className="h-full"
 						title={service.title}
 						description={service.description}
 						features={service.included.map(detail => detail.title)}

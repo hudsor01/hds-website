@@ -30,9 +30,6 @@ export function CurrencyInput({
 				{label} {required && <span className="text-destructive">*</span>}
 			</Label>
 			<div className="relative">
-				<span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-					$
-				</span>
 				<Input
 					id={id}
 					type="number"
