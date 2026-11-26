@@ -34,12 +34,6 @@ export function CalculatorInput({
 			<Label htmlFor={id}>{label}</Label>
 
 			<div className="relative">
-				{prefix && (
-					<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-						<span className="text-muted-foreground text-sm">{prefix}</span>
-					</div>
-				)}
-
 				<Input
 					id={id}
 					className={cn(prefix && 'pl-7', suffix && 'pr-12', className)}
@@ -49,6 +43,14 @@ export function CalculatorInput({
 					}
 					{...props}
 				/>
+
+				{/* Adornments come after the input so they paint above its
+				    background; drawn before it, the input covered the prefix. */}
+				{prefix && (
+					<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+						<span className="text-muted-foreground text-sm">{prefix}</span>
+					</div>
+				)}
 
 				{suffix && (
 					<div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
