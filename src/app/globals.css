@@ -507,6 +507,12 @@ button,
 @utility z-modal {
 	z-index: 70;
 }
+/* The skip link is the first Tab stop on every page, so it sits above
+ * the fixed navbar (z-modal) instead of opening underneath it
+ * (WCAG 2.4.11). */
+@utility z-skip-link {
+	z-index: 80;
+}
 
 /* Dialog */
 @layer components {
