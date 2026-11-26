@@ -21,12 +21,17 @@ export function AuthorCard({ author }: AuthorCardProps) {
 					/>
 				)}
 				<div className="flex-1">
-					<Link
-						href={`/blog/author/${author.slug}`}
-						className="hover:text-accent-text transition-colors"
-					>
-						<h3 className="text-xl font-bold text-foreground">{author.name}</h3>
-					</Link>
+					{/* The link sits inside the heading: an inline <a> around a
+					    block <h3> has no line box of its own, so its focus
+					    outline would not paint. */}
+					<h3 className="text-xl font-bold text-foreground">
+						<Link
+							href={`/blog/author/${author.slug}`}
+							className="hover:text-accent-text transition-colors"
+						>
+							{author.name}
+						</Link>
+					</h3>
 					{author.bio && (
 						<p className="text-muted-foreground mt-2">{author.bio}</p>
 					)}

@@ -337,8 +337,14 @@ function Card(props: CardProps) {
 				    externalLink was set - and every showcase row has one - so the
 				    list never linked to any detail page, orphaning them (and the
 				    followed richardwhudsonjr.com link they carry) from internal
-				    PageRank. Users reach the live site from the detail page. */}
-				<Link href={`/showcase/${slug}`} aria-label={`View project: ${title}`}>
+				    PageRank. Users reach the live site from the detail page.
+				    The link is a block with the card radius: an inline <a>
+				    around block content paints no focus outline. */}
+				<Link
+					href={`/showcase/${slug}`}
+					aria-label={`View project: ${title}`}
+					className="block h-full rounded-xl"
+				>
 					{cardContent}
 				</Link>
 			</div>
