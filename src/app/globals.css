@@ -417,7 +417,6 @@ button,
 		text-transform: uppercase;
 	}
 
-
 	/* The one treatment for every text input, select and textarea, native
 	 * or primitive. Focus comes from the base :focus-visible outline, so
 	 * there is no ring here. 16px text stops iOS zooming on focus, and the
