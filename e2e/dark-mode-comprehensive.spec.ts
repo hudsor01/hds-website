@@ -27,22 +27,27 @@ interface ElementColors {
 
 /** Computed color, background and border colors for every rendered element. */
 async function collectColors(page: Page): Promise<ElementColors[]> {
+	// nextjs-portal is the Next.js dev overlay. It only exists on the dev
+	// server the e2e suite runs, ships its own theme that follows the OS
+	// preference, and never reaches production, so it is not site CSS.
 	return page.evaluate(() =>
-		Array.from(document.querySelectorAll('body *')).map((el, index) => {
-			const style = getComputedStyle(el)
-			const id = el.id ? `#${el.id}` : ''
-			return {
-				selector: `${index}:${el.tagName.toLowerCase()}${id}`,
-				color: style.color,
-				backgroundColor: style.backgroundColor,
-				borderColor: [
-					style.borderTopColor,
-					style.borderRightColor,
-					style.borderBottomColor,
-					style.borderLeftColor
-				].join(' ')
+		Array.from(document.querySelectorAll('body *:not(nextjs-portal)')).map(
+			(el, index) => {
+				const style = getComputedStyle(el)
+				const id = el.id ? `#${el.id}` : ''
+				return {
+					selector: `${index}:${el.tagName.toLowerCase()}${id}`,
+					color: style.color,
+					backgroundColor: style.backgroundColor,
+					borderColor: [
+						style.borderTopColor,
+						style.borderRightColor,
+						style.borderBottomColor,
+						style.borderLeftColor
+					].join(' ')
+				}
 			}
-		})
+		)
 	)
 }
 
