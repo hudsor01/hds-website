@@ -35,7 +35,7 @@ export function Forbidden({ email, role }: ForbiddenProps) {
 					If you should have admin access, contact the site owner at{' '}
 					<a
 						href="mailto:hello@hudsondigitalsolutions.com"
-						className="font-medium text-accent-text hover:underline"
+						className="link-primary"
 					>
 						hello@hudsondigitalsolutions.com
 					</a>

@@ -229,7 +229,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 					</div>
 					<p className="text-sm text-muted-foreground text-center mt-8">
 						More answers on the{' '}
-						<Link href="/faq" className="text-accent-text hover:underline">
+						<Link href="/faq" className="link-primary">
 							FAQ page
 						</Link>
 						.

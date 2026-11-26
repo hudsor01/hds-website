@@ -136,10 +136,7 @@ export default async function TestimonialsPage() {
 							</div>
 							<p className="text-sm text-muted-foreground mt-6">
 								Worked with me?{' '}
-								<Link
-									href="/contact"
-									className="text-accent-text underline-offset-4 hover:underline"
-								>
+								<Link href="/contact" className="link-primary">
 									Ask me for a review link.
 								</Link>
 							</p>

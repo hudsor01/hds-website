@@ -229,7 +229,7 @@ export default function PrivacyPage() {
 									To exercise these rights, contact us at{' '}
 									<a
 										href="mailto:hello@hudsondigitalsolutions.com"
-										className="text-accent-text hover:underline underline-offset-4 transition-colors"
+										className="link-primary"
 									>
 										hello@hudsondigitalsolutions.com
 									</a>
@@ -293,7 +293,7 @@ export default function PrivacyPage() {
 										<strong className="text-foreground">Email:</strong>{' '}
 										<a
 											href="mailto:hello@hudsondigitalsolutions.com"
-											className="text-accent-text hover:underline underline-offset-4 transition-colors"
+											className="link-primary"
 										>
 											hello@hudsondigitalsolutions.com
 										</a>
@@ -302,7 +302,7 @@ export default function PrivacyPage() {
 										<strong className="text-foreground">Website:</strong>{' '}
 										<a
 											href="https://hudsondigitalsolutions.com"
-											className="text-accent-text hover:underline underline-offset-4 transition-colors"
+											className="link-primary"
 										>
 											hudsondigitalsolutions.com
 										</a>

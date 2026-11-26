@@ -121,7 +121,7 @@ export default function AboutPage() {
 										measurable results
 									</strong>{' '}
 									in months, not years. I do not launch a{' '}
-									<Link href="/services" className="link-primary font-semibold">
+									<Link href="/services" className="link-primary">
 										professional website
 									</Link>{' '}
 									and walk away. Every page gets measured against one question:{' '}

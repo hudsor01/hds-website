@@ -402,7 +402,7 @@ function CostEstimatorView({
 						href={CLUTCH_URL}
 						target="_blank"
 						rel="noopener noreferrer"
-						className="underline"
+						className="link-primary"
 					>
 						Clutch, How to Create a Budget for a New Website
 					</a>{' '}

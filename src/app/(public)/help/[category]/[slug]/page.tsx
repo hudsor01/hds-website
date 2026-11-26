@@ -179,80 +179,30 @@ export default async function HelpArticlePage({ params }: PageProps) {
 						<div className="typography">
 							<ReactMarkdown
 								components={{
-									// Custom link component to handle internal links
+									// .typography owns article prose: links, lists, code and
+									// tables. These overrides are behaviour only: internal links
+									// route through next/link, external ones open a new tab,
+									// wide tables scroll, header cells are column headers.
 									a: ({ href, children }) => {
-										const isInternal = href?.startsWith('/')
-										if (isInternal && href) {
-											return (
-												<Link
-													href={href}
-													className="text-accent-text hover:underline"
-												>
-													{children}
-												</Link>
-											)
+										if (href?.startsWith('/')) {
+											return <Link href={href}>{children}</Link>
 										}
 										return (
 											<a
 												href={href ?? '#'}
 												target="_blank"
 												rel="noopener noreferrer"
-												className="text-accent-text hover:underline"
 											>
 												{children}
 											</a>
 										)
 									},
-									// Custom list styles
-									ul: ({ children }) => (
-										<ul className="list-disc pl-6 space-y-tight my-4">
-											{children}
-										</ul>
-									),
-									ol: ({ children }) => (
-										<ol className="list-decimal pl-6 space-y-tight my-4">
-											{children}
-										</ol>
-									),
-									// Paragraph styles
-									p: ({ children }) => (
-										<p className="text-foreground/90 leading-relaxed mb-heading">
-											{children}
-										</p>
-									),
-									// Code styles
-									code: ({ children }) => (
-										<code className="bg-muted px-1.5 py-0.5 rounded-md text-sm font-mono">
-											{children}
-										</code>
-									),
-									// Strong/Bold styles
-									strong: ({ children }) => (
-										<strong className="font-semibold text-foreground">
-											{children}
-										</strong>
-									),
-									// Table styles
 									table: ({ children }) => (
-										<div className="overflow-x-auto my-6">
-											<table className="w-full border-collapse border border-border">
-												{children}
-											</table>
+										<div className="overflow-x-auto">
+											<table>{children}</table>
 										</div>
 									),
-									th: ({ children }) => (
-										<th
-											scope="col"
-											className="border border-border bg-muted px-4 py-2 text-left font-semibold"
-										>
-											{children}
-										</th>
-									),
-									td: ({ children }) => (
-										<td className="border border-border px-4 py-2">
-											{children}
-										</td>
-									)
+									th: ({ children }) => <th scope="col">{children}</th>
 								}}
 							>
 								{article.content}

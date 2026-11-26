@@ -390,15 +390,6 @@ button,
 		text-transform: uppercase;
 	}
 
-	.link-primary {
-		color: var(--color-primary);
-		text-decoration: underline;
-		text-decoration-color: color-mix(
-			in oklab,
-			var(--color-primary) 30%,
-			transparent
-		);
-	}
 
 	/* The one treatment for every text input, select and textarea, native
 	 * or primitive. Focus comes from the base :focus-visible outline, so
@@ -583,21 +574,28 @@ button,
 		font-weight: var(--font-weight-semibold);
 		color: var(--color-foreground);
 	}
+	/* The one in-text link (L5): a link inside a sentence, in prose or in
+	 * body copy, is always underlined (WCAG 1.4.1: colour is never the only
+	 * cue). .link-primary carries it outside .typography. Standalone links
+	 * (back links, "View all" arrows) are not in-text and keep their own
+	 * hover:underline treatment. Hover text uses accent-text: plain accent
+	 * is 2.49:1 on the page. */
+	.link-primary,
 	.typography a {
 		color: var(--color-primary);
-		text-decoration: underline;
+		text-decoration-line: underline;
 		text-decoration-color: color-mix(
 			in oklab,
 			var(--color-primary) 35%,
 			transparent
 		);
-		text-underline-offset: 3px;
 		text-decoration-thickness: 2px;
+		text-underline-offset: 3px;
 		transition-property: color, text-decoration-color;
 		transition-duration: var(--default-transition-duration);
 		transition-timing-function: var(--default-transition-timing-function);
 	}
-	/* Hover text uses accent-text: plain accent is 2.49:1 on the page. */
+	.link-primary:hover,
 	.typography a:hover {
 		color: var(--color-accent-text);
 		text-decoration-color: var(--color-accent);

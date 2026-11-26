@@ -402,7 +402,7 @@ export default function PerformanceCalculatorClient() {
 									href={DELOITTE_URL}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="underline"
+									className="link-primary"
 								>
 									Milliseconds Make Millions
 								</a>{' '}
@@ -418,7 +418,7 @@ export default function PerformanceCalculatorClient() {
 									href={PORTENT_URL}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="underline"
+									className="link-primary"
 								>
 									2022 site speed study
 								</a>{' '}

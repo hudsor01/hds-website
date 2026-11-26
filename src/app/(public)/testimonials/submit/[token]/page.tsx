@@ -113,10 +113,7 @@ function StatusPanel({ tone, title, children }: StatusPanelProps) {
 
 function ContactLink({ children }: { children: ReactNode }) {
 	return (
-		<Link
-			href="/contact"
-			className="text-accent-text underline-offset-4 hover:underline"
-		>
+		<Link href="/contact" className="link-primary">
 			{children}
 		</Link>
 	)
@@ -197,10 +194,7 @@ async function TokenContent({ token }: { token: string }) {
 								By submitting, you agree that your name, role, company and
 								testimonial may be published on hudsondigitalsolutions.com. Your
 								review stays unpublished until I approve it. See the{' '}
-								<Link
-									href="/privacy"
-									className="text-accent-text underline-offset-4 hover:underline"
-								>
+								<Link href="/privacy" className="link-primary">
 									privacy policy
 								</Link>{' '}
 								for how I handle your information.
@@ -209,7 +203,7 @@ async function TokenContent({ token }: { token: string }) {
 								Changed your mind later? Email{' '}
 								<a
 									href={`mailto:${BUSINESS_INFO.email}`}
-									className="text-accent-text underline-offset-4 hover:underline"
+									className="link-primary"
 								>
 									{BUSINESS_INFO.email}
 								</a>{' '}

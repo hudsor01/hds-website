@@ -78,7 +78,7 @@ export default function GlobalError({
 							If this issue persists, please contact{' '}
 							<a
 								href={`mailto:${BUSINESS_INFO.email}`}
-								className="text-primary underline"
+								className="link-primary"
 							>
 								support
 							</a>

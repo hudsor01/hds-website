@@ -745,7 +745,7 @@ export default function InvoiceGeneratorClient() {
 								href={IRS_RECORDS_URL}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="text-accent-text underline underline-offset-2 hover:decoration-2"
+								className="link-primary"
 							>
 								See how long the IRS says to keep records
 							</a>

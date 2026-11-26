@@ -202,10 +202,7 @@ export default function TermsPage() {
 							<div className="text-sm text-muted-foreground space-y-4 leading-relaxed">
 								<p>
 									Your use of this website is also governed by our{' '}
-									<a
-										href="/privacy"
-										className="text-accent-text hover:underline underline-offset-4 transition-colors"
-									>
+									<a href="/privacy" className="link-primary">
 										Privacy Policy
 									</a>
 									, which is incorporated into these Terms of Service by
@@ -254,7 +251,7 @@ export default function TermsPage() {
 										<strong className="text-foreground">Email:</strong>{' '}
 										<a
 											href="mailto:hello@hudsondigitalsolutions.com"
-											className="text-accent-text hover:underline underline-offset-4 transition-colors"
+											className="link-primary"
 										>
 											hello@hudsondigitalsolutions.com
 										</a>
@@ -263,7 +260,7 @@ export default function TermsPage() {
 										<strong className="text-foreground">Website:</strong>{' '}
 										<a
 											href="https://hudsondigitalsolutions.com"
-											className="text-accent-text hover:underline underline-offset-4 transition-colors"
+											className="link-primary"
 										>
 											hudsondigitalsolutions.com
 										</a>

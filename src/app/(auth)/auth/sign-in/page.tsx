@@ -28,10 +28,7 @@ export default function SignInPage() {
 			<SignInForm />
 			<p className="mt-6 text-sm text-muted-foreground text-center">
 				Need an account?{' '}
-				<Link
-					href="/auth/sign-up"
-					className="font-medium text-accent-text hover:underline"
-				>
+				<Link href="/auth/sign-up" className="link-primary">
 					Sign up.
 				</Link>
 			</p>
