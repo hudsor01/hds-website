@@ -265,7 +265,7 @@ export default function ContractGeneratorClient() {
 								onClick={() => handleTemplateChange(template.value)}
 								className={`p-4 rounded-xl border text-left transition-colors ${
 									selected
-										? 'border-accent bg-accent/10'
+										? 'border-accent-text bg-accent/10'
 										: 'border-border hover:border-accent hover:bg-muted/50'
 								}`}
 							>

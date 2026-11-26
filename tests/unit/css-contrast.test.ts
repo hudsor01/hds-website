@@ -11,6 +11,16 @@
  *     text floor. Accent-coloured text uses `text-accent-text` (6.03:1);
  *     `text-accent` stays on fills, borders and decorative icons.
  *   - `--color-warning` is 1.81:1. Warning text uses `text-warning-text`.
+ *
+ * Selected-state indicators (WCAG 1.4.11, 3:1 against adjacent colours):
+ * the border, ring or outline that marks a selected or current item (tab
+ * underline, chip edge, table-of-contents bar, picked card) uses
+ * `accent-text`, never the bright `accent` (2.49:1 on background, 2.27:1
+ * next to an `accent/10` tint). A selected branch of a ternary
+ * (`selected ? '...' : '...'`) with a bare `border-accent`, `ring-accent`
+ * or `outline-accent` is a violation unless the same literal is a solid
+ * `bg-accent` fill (the border is then the fill's own edge). Fills and
+ * decorative accents keep `accent`.
  * Checks:
  *   1. a state variant (`hover:`, `group-hover:`, `focus:` ...) on
  *      `text-accent` only ever recolours text, so it is always a violation;
@@ -56,6 +66,13 @@ const WARNING_TEXT = new RegExp(
 const ACCENT_TOKEN = new RegExp(
 	`${CLASS_START}(text-accent(?:/\\d+)?)${CLASS_END}`
 )
+// The selected branch of a ternary: `? '...'` (any quote style).
+const STATE_BRANCH = /\?\s*(["'`])([^"'`\n]*)\1/g
+// The bright accent as a border, ring or outline colour, no opacity.
+const BRIGHT_INDICATOR = new RegExp(
+	`${CLASS_START}((?:border(?:-[lrtbxyse])?|ring|outline)-accent)${CLASS_END}`
+)
+const SOLID_ACCENT_FILL = new RegExp(`${CLASS_START}bg-accent${CLASS_END}`)
 
 const TEXT_TAGS = new Set([
 	'a',
@@ -261,6 +278,39 @@ describe('contrast-safe palette', () => {
 		expect(failures).toEqual([])
 	})
 
+	test('selected-state indicators reach 3:1 on every adjacent surface', async () => {
+		// accent-text marks the selected tab, chip, card and TOC item. The
+		// chip and card also take an accent/10 tint inside the border, so
+		// the edge must clear 3:1 against the tint as well as the surface.
+		const colors = await themeColors()
+		const indicator = colors.get('accent-text')
+		const accent = colors.get('accent')
+		expect(indicator).toBeDefined()
+		expect(accent).toBeDefined()
+		if (!(indicator && accent)) {
+			return
+		}
+		const failures: string[] = []
+		for (const surface of ['background', 'card', 'muted']) {
+			const under = colors.get(surface)
+			if (!under) {
+				failures.push(`--color-${surface} is not an oklch token`)
+				continue
+			}
+			const adjacent: [string, string][] = [
+				[surface, under],
+				[`accent/10 on ${surface}`, blend(accent, under, 0.1)]
+			]
+			for (const [name, hex] of adjacent) {
+				const ratio = contrast(indicator, hex)
+				if (ratio < 3) {
+					failures.push(`accent-text next to ${name}: ${ratio.toFixed(2)} < 3`)
+				}
+			}
+		}
+		expect(failures).toEqual([])
+	})
+
 	test('filled buttons keep 4.5:1 when hovered and pressed', async () => {
 		const colors = await themeColors()
 		const source = await readFile(BUTTON_VARIANTS, 'utf8')
@@ -321,6 +371,26 @@ describe('contrast-safe colour utilities', () => {
 			expect(hits('"text-warning-text"')).toEqual([])
 		})
 
+		test('selected branches flag a bright accent edge, not a fill edge', () => {
+			const hits = (s: string) =>
+				[...s.matchAll(STATE_BRANCH)]
+					.map(m => m[2] ?? '')
+					.filter(cls => !SOLID_ACCENT_FILL.test(cls))
+					.map(cls => cls.match(BRIGHT_INDICATOR)?.[1])
+					.filter(Boolean)
+			expect(hits("selected ? 'border-accent text-accent-text' : 'x'")).toEqual(
+				['border-accent']
+			)
+			expect(hits("on ? 'border-l-accent font-medium' : 'x'")).toEqual([
+				'border-l-accent'
+			])
+			expect(hits("on ? 'ring-2 ring-accent' : 'x'")).toEqual(['ring-accent'])
+			expect(hits("on ? 'border-accent-text bg-accent/10' : 'x'")).toEqual([])
+			expect(hits("on ? 'border-accent/20 bg-accent/10' : 'x'")).toEqual([])
+			expect(hits("on ? 'bg-accent border-accent' : 'x'")).toEqual([])
+			expect(hits("on ? 'x' : 'hover:border-accent'")).toEqual([])
+		})
+
 		test('opening-tag scan reads className past `>` in arbitrary variants', () => {
 			const tag = '<div className="[&>span]:block text-accent">'
 			const m = [...tag.matchAll(OPENING_TAG)][0]
@@ -344,6 +414,35 @@ describe('contrast-safe colour utilities', () => {
 				`${violations.length} hover/focus text-accent utility(ies). ` +
 					'--color-accent is 2.49:1 on background; use ' +
 					'`hover:text-accent-text` or `hover:underline`.\n' +
+					format(violations)
+			)
+		}
+		expect(violations).toEqual([])
+	})
+
+	test('no selected state is marked with a bright accent edge', async () => {
+		const violations: Violation[] = []
+		for (const [file, content] of await sourceFiles(SRC_GLOB)) {
+			for (const m of content.matchAll(STATE_BRANCH)) {
+				const cls = m[2] ?? ''
+				if (SOLID_ACCENT_FILL.test(cls)) {
+					continue
+				}
+				const token = cls.match(BRIGHT_INDICATOR)?.[1]
+				if (token) {
+					violations.push({
+						file,
+						line: lineOf(content, m.index),
+						match: `'${cls.trim()}'`
+					})
+				}
+			}
+		}
+		if (violations.length > 0) {
+			throw new Error(
+				`${violations.length} selected state(s) use the bright accent ` +
+					'as the indicator (2.49:1, WCAG 1.4.11 needs 3:1). Use ' +
+					'`border-accent-text` (or `ring-accent-text`).\n' +
 					format(violations)
 			)
 		}

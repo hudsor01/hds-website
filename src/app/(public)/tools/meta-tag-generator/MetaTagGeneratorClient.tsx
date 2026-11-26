@@ -357,7 +357,7 @@ export default function MetaTagGeneratorClient() {
 							onKeyDown={handleTabKeyDown}
 							className={`flex items-center gap-tight px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
 								selected
-									? 'border-accent text-accent-text'
+									? 'border-accent-text text-accent-text'
 									: 'border-transparent text-muted-foreground hover:text-foreground'
 							}`}
 						>

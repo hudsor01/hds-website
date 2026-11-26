@@ -427,7 +427,7 @@ export default function SchemaGeneratorClient() {
 								key={day}
 								className={`cursor-pointer rounded-md border px-2.5 py-1 text-xs transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ring ${
 									checked
-										? 'border-accent bg-accent/10 text-accent-text'
+										? 'border-accent-text bg-accent/10 text-accent-text'
 										: 'border-border text-muted-foreground hover:text-foreground'
 								}`}
 							>
