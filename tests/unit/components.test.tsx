@@ -223,10 +223,10 @@ describe('Button Polish — COMP-01', () => {
 		expect(button?.className ?? '').toContain('shadow-sm')
 	})
 
-	it('default variant has active:bg-primary/70 class', () => {
+	it('default variant has active:bg-primary/85 class', () => {
 		const { container } = render(<Button variant="default">Test</Button>)
 		const button = container.querySelector('button')
-		expect(button?.className ?? '').toContain('active:bg-primary/70')
+		expect(button?.className ?? '').toContain('active:bg-primary/85')
 	})
 
 	it('accent variant has shadow-sm class', () => {
