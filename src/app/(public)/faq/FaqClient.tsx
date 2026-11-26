@@ -92,9 +92,12 @@ export default function FaqClient() {
 											<AccordionItem
 												key={qIndex}
 												value={`${catIndex}-${qIndex}`}
-												className="rounded-xl border border-border bg-card overflow-hidden border-none"
+												className="rounded-xl bg-card border-none"
 											>
-												<AccordionTrigger className="px-6 py-4 text-left hover:bg-muted/30 hover:no-underline">
+												{/* The item does not clip (no overflow-hidden), so the
+												    trigger's focus outline stays visible; the trigger
+												    takes the card radius so its hover fill fits. */}
+												<AccordionTrigger className="rounded-xl px-6 py-4 text-left hover:bg-muted/30 hover:no-underline data-[state=open]:rounded-b-none">
 													<span className="text-base font-semibold text-foreground pr-8">
 														{faq.question}
 													</span>
