@@ -295,6 +295,33 @@ select:user-invalid:not(:focus) {
 	box-shadow: 0 0 0 1px var(--color-destructive);
 }
 
+/* Sonner toasts themed from the tokens (L6). The site is light only, so
+ * the Toaster keeps Sonner's default light theme and these map its
+ * variables onto ours. Sonner appends its own unlayered <style> after
+ * this sheet; the leading :root (0,3,0) outranks its
+ * [data-sonner-toaster][data-sonner-theme] rules (0,2,0) whatever the
+ * order. Status pairs are the -light fill, -muted border and -text
+ * colour (text on fill 5.4:1 to 7.7:1). */
+:root [data-sonner-toaster][data-sonner-theme='light'] {
+	--normal-bg: var(--color-popover);
+	--normal-border: var(--color-border);
+	--normal-text: var(--color-popover-foreground);
+	--success-bg: var(--color-success-light);
+	--success-border: var(--color-success-muted);
+	--success-text: var(--color-success-text);
+	--info-bg: var(--color-info-light);
+	--info-border: var(--color-info-muted);
+	--info-text: var(--color-info-text);
+	--warning-bg: var(--color-warning-light);
+	--warning-border: var(--color-warning-muted);
+	--warning-text: var(--color-warning-text);
+	--error-bg: var(--color-destructive-light);
+	--error-border: var(--color-destructive-muted);
+	--error-text: var(--color-destructive-text);
+	--border-radius: var(--radius-xl);
+	font-family: var(--font-sans);
+}
+
 /* WCAG 2.5.8 minimum touch targets — scoped to standalone interactive
  * controls only. Inline anchors are excluded so footer text links and
  * legal links don't get inflated to 44px wide and break mobile layout
