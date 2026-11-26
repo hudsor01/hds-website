@@ -12,7 +12,7 @@ import { expect, test } from '@playwright/test'
  * Test Coverage:
  * - Color system and OKLCH rendering
  * - Tailwind utility classes (text-balance, explicit transitions)
- * - Layout utilities (flex-center, glass-card, gradient-text)
+ * - Layout utilities (glass-card, gradient-text)
  * - Responsive design breakpoints
  */
 
@@ -100,16 +100,6 @@ test.describe('Layout & Component Classes', () => {
 				expect(textContent?.trim()).toBeTruthy()
 			}
 		}
-	})
-
-	test('should render flex-center utilities', async ({ page }) => {
-		await page.goto('/')
-
-		const flexCenterElements = page.locator('.flex-center')
-		const count = await flexCenterElements.count()
-
-		// Verify flex-center elements exist and are properly centered
-		expect(count).toBeGreaterThanOrEqual(0)
 	})
 
 	test('should render glass morphism effects', async ({ page }) => {

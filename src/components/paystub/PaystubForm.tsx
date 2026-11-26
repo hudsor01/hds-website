@@ -383,7 +383,7 @@ export function PaystubForm({
 			</Card>
 
 			{/* Action Buttons */}
-			<div className="flex-center gap-content">
+			<div className="flex items-center justify-center gap-content">
 				<Button
 					onClick={onGenerate}
 					disabled={isGenerating}

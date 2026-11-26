@@ -106,7 +106,7 @@ export function DefaultErrorFallback({
 	}
 
 	return (
-		<div className="min-h-screen bg-background flex-center">
+		<div className="min-h-screen bg-background flex items-center justify-center">
 			<div className="max-w-md w-full text-center">
 				<Card
 					variant="glass"
@@ -126,7 +126,7 @@ export function DefaultErrorFallback({
 
 					{errorObj && (
 						<details className="text-left mb-content-block bg-overlay/30 rounded-xl border border-destructive/20">
-							<summary className="text-destructive-text cursor-pointer mb-subheading flex-between">
+							<summary className="text-destructive-text cursor-pointer mb-subheading flex items-center justify-between">
 								<span>Error Details</span>
 								<button
 									onClick={copyErrorDetails}
@@ -176,7 +176,7 @@ export function DefaultErrorFallback({
 						</details>
 					)}
 
-					<div className="flex-center">
+					<div className="flex items-center justify-center">
 						<Button
 							onClick={resetErrorBoundary}
 							variant="default"

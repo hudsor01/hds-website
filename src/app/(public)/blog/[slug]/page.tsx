@@ -230,7 +230,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 											<Link
 												key={tag.id}
 												href={`/blog/tag/${tag.slug}`}
-												className="flex flex-center gap-1 text-sm text-accent-text bg-accent/10 hover:bg-accent/20 px-3 py-1 rounded-full transition-colors"
+												className="flex items-center justify-center gap-1 text-sm text-accent-text bg-accent/10 hover:bg-accent/20 px-3 py-1 rounded-full transition-colors"
 											>
 												<Tag className="w-4 h-4" />
 												{tag.name}
@@ -253,18 +253,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
 								{/* Meta */}
 								<div className="flex flex-wrap gap-comfortable text-muted-foreground">
-									<div className="flex flex-center gap-tight">
+									<div className="flex items-center justify-center gap-tight">
 										<Calendar className="w-5 h-5" />
 										<time dateTime={post.published_at}>
 											{formatCalendarDate(post.published_at, 'long')}
 										</time>
 									</div>
-									<div className="flex flex-center gap-tight">
+									<div className="flex items-center justify-center gap-tight">
 										<Clock className="w-5 h-5" />
 										<span>{post.reading_time} min read</span>
 									</div>
 									{post.author && (
-										<div className="flex flex-center gap-tight">
+										<div className="flex items-center justify-center gap-tight">
 											{post.author.profile_image && (
 												<Image
 													src={post.author.profile_image}

@@ -238,13 +238,6 @@ describe('BackgroundPattern Component', () => {
 		expect(element).toHaveClass('animation-delay-2000')
 	})
 
-	it('should apply surface overlay backgrounds', () => {
-		const { container } = render(<div className="surface-overlay" />)
-
-		const element = container.firstChild
-		expect(element).toHaveClass('surface-overlay')
-	})
-
 	it('should apply blur effects correctly', () => {
 		const { container } = render(<div className="blur-3xl" />)
 
@@ -287,33 +280,6 @@ describe('Glass Morphism Components', () => {
 
 		const element = container.firstChild
 		expect(element).toHaveClass('blur-backdrop')
-	})
-})
-
-describe('Layout Utility Classes', () => {
-	it('should apply flex-center correctly', () => {
-		const { container } = render(
-			<div className="flex-center">
-				<span>Centered</span>
-			</div>
-		)
-
-		const element = container.firstChild as HTMLElement
-		expect(element).toHaveClass('flex-center')
-		// Computed styles aren't available in happy-dom, just verify class is applied
-	})
-
-	it('should apply flex-between correctly', () => {
-		const { container } = render(
-			<div className="flex-between">
-				<span>Left</span>
-				<span>Right</span>
-			</div>
-		)
-
-		const element = container.firstChild as HTMLElement
-		expect(element).toHaveClass('flex-between')
-		// Computed styles aren't available in happy-dom, just verify class is applied
 	})
 })
 

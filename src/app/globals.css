@@ -362,17 +362,6 @@ button,
 		);
 	}
 
-	.flex-center {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-	.flex-between {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-
 	/* Hover lift: one offset (--lift-offset), base duration, and only when
 	 * the user allows motion. card-hover-glow adds the glow shadow. */
 	.hover-lift {
@@ -412,14 +401,6 @@ button,
 		text-decoration-color: color-mix(
 			in oklab,
 			var(--color-primary) 30%,
-			transparent
-		);
-	}
-
-	.surface-overlay {
-		background-color: color-mix(
-			in oklab,
-			var(--color-foreground) 4%,
 			transparent
 		);
 	}

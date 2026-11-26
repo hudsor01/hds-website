@@ -4,11 +4,24 @@ import { extendTailwindMerge } from 'tailwind-merge'
 // The heading API, prose steps and .text-eyebrow are font sizes that
 // tailwind-merge does not know. Without this it files them as text colors
 // and drops them when a color follows: twMerge('text-h4 text-foreground')
-// returns 'text-foreground'. Keep in step with the --text-* roles in
-// globals.css.
+// returns 'text-foreground'. The spacing roles are the same problem in
+// reverse: unknown, so cn('gap-tight', 'gap-4') kept both. Keep both lists
+// in step with the --text-* and --spacing-* roles in globals.css.
 const twMerge = extendTailwindMerge({
 	extend: {
 		theme: {
+			spacing: [
+				'tight',
+				'subheading',
+				'content',
+				'heading',
+				'card-content',
+				'comfortable',
+				'content-block',
+				'sections',
+				'section-sm',
+				'section'
+			],
 			text: [
 				'page-title',
 				'h1',

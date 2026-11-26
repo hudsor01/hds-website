@@ -532,7 +532,7 @@ function Card(props: CardProps) {
 				{/* Client Info */}
 				<div className="border-t border-border pt-6 flex items-center gap-3">
 					<div
-						className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex-center shrink-0"
+						className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0"
 						aria-hidden="true"
 					>
 						<span className="text-accent-text font-bold text-sm">

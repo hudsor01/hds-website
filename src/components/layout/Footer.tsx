@@ -203,7 +203,7 @@ export default function Footer() {
 								    "…com" out of the rounded chip (audit #244). */}
 								<a
 									href={`mailto:${BUSINESS_INFO.email}`}
-									className="flex-center gap-tight w-full min-w-0 px-4 py-3 rounded-md border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth"
+									className="flex items-center justify-center gap-tight w-full min-w-0 px-4 py-3 rounded-md border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth"
 								>
 									<Mail className="h-4 w-4 shrink-0" />
 									<span
@@ -217,7 +217,7 @@ export default function Footer() {
 								{BUSINESS_INFO.phone && (
 									<a
 										href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}
-										className="flex-center gap-tight w-full min-w-0 px-4 py-3 rounded-md border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth"
+										className="flex items-center justify-center gap-tight w-full min-w-0 px-4 py-3 rounded-md border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth"
 									>
 										<Phone className="h-4 w-4 shrink-0" />
 										<span className="text-xs truncate">
