@@ -281,6 +281,16 @@ describe('hardcoded values (L2)', () => {
 		}
 	})
 
+	test('a border with no colour utility draws the border token', async () => {
+		// Preflight's default is currentColor (near-black), which made bare
+		// `border` / `border-t` dividers stand out against token borders.
+		const css = await globalsCss()
+		const base = css.slice(css.indexOf('@layer base {'))
+		expect(base).toMatch(
+			/\*,\s*::after,\s*::before,\s*::backdrop,\s*::file-selector-button\s*\{\s*border-color:\s*var\(--color-border\);/
+		)
+	})
+
 	test('prose spacing is on the spacing scale', async () => {
 		const css = await globalsCss()
 		const start = css.indexOf('.typography {')

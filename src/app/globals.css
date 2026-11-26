@@ -269,6 +269,18 @@ body {
 		font-family: var(--font-mono);
 	}
 
+	/* Tailwind v4 preflight draws a border with no colour utility in
+	 * currentColor (near-black here). Default every border to the
+	 * border token instead, so a bare `border` / `border-t` divider
+	 * matches the cards; a colour utility still overrides it. */
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-border);
+	}
+
 	/* The one keyboard focus treatment for every focusable element
 	 * (WCAG 2.4.7). Layered so it never beats a utility: composite
 	 * widgets (cmdk input and items, select items) that move a
