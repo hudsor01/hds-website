@@ -98,6 +98,26 @@ describe('one type scale', () => {
 		expect(missing).toEqual([])
 	})
 
+	test('no heading step is lighter than semibold', async () => {
+		// A text-h4 section heading sits over text-lg font-semibold item
+		// h3s (and .typography h3 reads text-h4), so a medium step made the
+		// parent heading lighter than its children.
+		const css = await readFile(GLOBALS_CSS, 'utf8')
+		const weights = [
+			...css.matchAll(/--text-(page-title|h[1-4])--font-weight:\s*([^;]+);/g)
+		]
+		expect(weights).toHaveLength(5)
+		const light = weights
+			.filter(
+				m =>
+					!/var\(--font-weight-(?:semibold|bold|extrabold|black)\)/.test(
+						m[2] ?? ''
+					)
+			)
+			.map(m => `--text-${m[1]}: ${m[2]}`)
+		expect(light).toEqual([])
+	})
+
 	test('globals.css has no parallel scale or hand-written heading rules', async () => {
 		const css = await readFile(GLOBALS_CSS, 'utf8')
 		const banned = [
