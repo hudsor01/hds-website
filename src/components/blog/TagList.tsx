@@ -28,7 +28,7 @@ export function TagList({ tags, activeSlug }: TagListProps) {
 						className={cn(
 							'flex items-center gap-1 text-sm px-3 py-1 border rounded-md transition-colors',
 							isActive
-								? 'text-accent-foreground bg-accent border-accent'
+								? 'text-accent-foreground bg-accent border-accent-text'
 								: 'text-accent-text border-accent/30 hover:text-accent-foreground hover:bg-accent'
 						)}
 					>

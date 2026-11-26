@@ -205,10 +205,10 @@ function ModeToggle({ label, options, active, onChange }: ModeToggleProps) {
 					aria-pressed={active === index}
 					aria-label={`${label} in ${option === '%' ? 'percent' : 'dollars'}`}
 					onClick={() => onChange(index as 0 | 1)}
-					className={`px-2 py-1 text-xs rounded-md ${
+					className={`px-2 py-1 text-xs rounded-md border ${
 						active === index
-							? 'bg-accent text-accent-foreground'
-							: 'bg-muted text-muted-foreground'
+							? 'bg-accent text-accent-foreground border-accent-text'
+							: 'bg-muted text-muted-foreground border-transparent'
 					}`}
 				>
 					{option}
