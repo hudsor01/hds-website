@@ -12,7 +12,6 @@ import {
 	generateOrganizationSchema,
 	generateWebsiteSchema
 } from '@/lib/seo-utils'
-import ClientProviders from '@/providers/ClientProviders'
 import { fontVariables } from './fonts'
 import './globals.css'
 
@@ -168,9 +167,8 @@ export default function RootLayout({
 				<JsonLd data={generateWebsiteSchema()} />
 				<JsonLd data={generateOrganizationSchema()} />
 				<NuqsAdapter>
-					<ClientProviders>
-						<ErrorBoundary>
-							{/* Marketing chrome (NavbarLight + Footer + ScrollToTop)
+					<ErrorBoundary>
+						{/* Marketing chrome (NavbarLight + Footer + ScrollToTop)
 							    and the <main id="main-content"> landmark now live in
 							    the route-group layouts under (public), (admin), and
 							    (auth) instead of here. This root layout is the
@@ -182,13 +180,12 @@ export default function RootLayout({
 							    its own <main> landmark; the skip-link target still
 							    resolves via #main-content because every group's
 							    layout emits a <main id="main-content">. */}
-							{children}
-							<Analytics />
-							<SpeedInsights />
-							<WebVitalsReporting />
-						</ErrorBoundary>
-						<Toaster position="top-right" richColors theme="light" />
-					</ClientProviders>
+						{children}
+						<Analytics />
+						<SpeedInsights />
+						<WebVitalsReporting />
+					</ErrorBoundary>
+					<Toaster position="top-right" richColors theme="light" />
 				</NuqsAdapter>
 			</body>
 		</html>

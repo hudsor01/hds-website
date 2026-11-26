@@ -481,11 +481,6 @@ button,
 	padding: 2rem;
 }
 
-/* Padding */
-@utility p-button {
-	padding: 0.625rem 1rem;
-}
-
 /* Z-index scale */
 @utility z-modal {
 	z-index: 70;

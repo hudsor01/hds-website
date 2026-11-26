@@ -1,13 +1,12 @@
 'use client'
 
 import { cva } from 'class-variance-authority'
-import { ArrowRight, MessageCircle, Star, X } from 'lucide-react'
+import { ArrowRight, MessageCircle, Star } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ComponentType, HTMLAttributes, Ref, SVGProps } from 'react'
 import { Icon } from '@/components/utilities/Icon'
 import { cn } from '@/lib/utils'
-import { Button } from './button'
 
 const cardVariants = cva(
 	'rounded-xl border bg-card text-card-foreground transition-smooth',
@@ -64,20 +63,6 @@ interface ServiceCardProps extends Omit<BaseCardProps, 'variant'> {
 	href?: string
 }
 
-// Pricing Card props
-interface PricingCardProps extends Omit<BaseCardProps, 'variant'> {
-	variant: 'pricing'
-	name: string
-	price: string
-	description: string
-	features: string[]
-	notIncluded?: string[]
-	popular?: boolean
-	cta: string
-	href: string
-	roi?: string
-}
-
 // Project Card props
 interface ProjectCardProps extends Omit<BaseCardProps, 'variant'> {
 	variant: 'project'
@@ -113,7 +98,6 @@ interface TestimonialCardProps extends Omit<BaseCardProps, 'variant' | 'id'> {
 type CardProps =
 	| BaseCardProps
 	| ServiceCardProps
-	| PricingCardProps
 	| ProjectCardProps
 	| TestimonialCardProps
 
@@ -190,116 +174,6 @@ function Card(props: CardProps) {
 							</li>
 						))}
 					</ul>
-				</div>
-			</div>
-		)
-	}
-
-	// Pricing Card
-	if ('variant' in props && props.variant === 'pricing') {
-		const {
-			name,
-			price,
-			description,
-			features,
-			notIncluded = [],
-			popular = false,
-			cta,
-			href,
-			roi
-		} = props as PricingCardProps
-
-		return (
-			<div ref={ref} className={cn('relative', className)}>
-				{/* Popular Label */}
-				{popular && (
-					<div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-						<div className="px-3 py-1 text-xs font-bold text-accent-foreground bg-accent rounded-md shadow-lg">
-							MOST POPULAR
-						</div>
-					</div>
-				)}
-
-				{/* Card Container */}
-				<div
-					className={cn(
-						cardVariants({ variant: 'glassLight', size: 'lg', hover: true }),
-						'group h-full flex flex-col',
-						popular && 'border-accent/50 shadow-xl'
-					)}
-				>
-					{/* Header Section */}
-					<div className="text-center mb-comfortable">
-						<h3 className="text-h4 text-foreground mb-subheading text-balance group-hover:text-accent-text transition-colors">
-							{name}
-						</h3>
-						<div className="text-h1 text-accent-text mb-subheading">
-							{price}
-						</div>
-						<div className="typography">
-							<p className="text-muted-foreground leading-relaxed text-pretty">
-								{description}
-							</p>
-						</div>
-					</div>
-
-					{/* ROI Badge */}
-					{roi && (
-						<div className="mb-card-content p-button bg-success-text/10 border border-success-text/30 rounded-xl">
-							<p className="text-xs font-bold text-success-text text-center">
-								{roi}
-							</p>
-						</div>
-					)}
-
-					{/* Features & Exclusions */}
-					<div className="space-y-content mb-comfortable flex-grow">
-						{/* Included Features */}
-						<div>
-							<h4 className="text-eyebrow text-muted-foreground mb-subheading">
-								What&apos;s Included
-							</h4>
-							<ul className="space-y-tight">
-								{features.map((feature, idx) => (
-									<li key={idx} className="flex items-start gap-content">
-										<div className="w-2 h-2 rounded-full bg-muted mt-2 shrink-0" />
-										<span className="text-xs text-muted-foreground">
-											{feature}
-										</span>
-									</li>
-								))}
-							</ul>
-						</div>
-
-						{/* Not Included */}
-						{notIncluded.length > 0 && (
-							<div>
-								<h4 className="text-eyebrow text-muted-foreground mb-subheading mt-card-content">
-									Not Included
-								</h4>
-								<ul className="space-y-tight">
-									{notIncluded.map((item, idx) => (
-										<li key={idx} className="flex items-start gap-content">
-											<X className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-											<span className="text-sm text-muted-foreground">
-												{item}
-											</span>
-										</li>
-									))}
-								</ul>
-							</div>
-						)}
-					</div>
-
-					{/* CTA Button */}
-					<Button
-						asChild
-						variant={popular ? 'default' : 'secondary'}
-						size="lg"
-						className="w-full"
-					>
-						<Link href={href}>{cta}</Link>
-					</Button>
 				</div>
 			</div>
 		)
