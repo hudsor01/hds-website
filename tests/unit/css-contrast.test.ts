@@ -96,7 +96,6 @@ const TOKEN_PAIRS: [string, string, number][] = [
 	['info-text', 'background', 4.5],
 	['success-text', 'background', 4.5],
 	['success-foreground', 'success', 4.5],
-	['info-foreground', 'info', 4.5],
 	['destructive-foreground', 'destructive', 4.5],
 	['primary-foreground', 'primary', 4.5],
 	['input', 'background', 3],

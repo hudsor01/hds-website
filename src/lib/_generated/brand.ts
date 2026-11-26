@@ -3,7 +3,7 @@
 //
 // Source: src/app/globals.css @theme {}
 // Conversion: OKLCH -> sRGB hex (Bjorn Ottosson formulas, hand-rolled, no deps)
-// Last generated: 2026-11-26T01:08:59.688Z
+// Last generated: 2026-11-26T01:09:30.970Z
 
 export const BRAND = {
 	background: '#fafaf9', // --color-background
@@ -33,12 +33,10 @@ export const BRAND = {
 	successMuted: '#b9eec2', // --color-success-muted
 	successText: '#005820', // --color-success-text
 	warning: '#edb345', // --color-warning
-	warningForeground: '#161107', // --color-warning-foreground
 	warningLight: '#ffefcd', // --color-warning-light
 	warningMuted: '#ffdfa8', // --color-warning-muted
 	warningText: '#865900', // --color-warning-text
 	info: '#0f68a2', // --color-info
-	infoForeground: '#f7fafd', // --color-info-foreground
 	infoLight: '#e2f5ff', // --color-info-light
 	infoMuted: '#c4eaff', // --color-info-muted
 	infoText: '#005993', // --color-info-text
