@@ -515,13 +515,17 @@ button,
 	padding: --spacing(8);
 }
 
-/* Z-index scale */
+/* Z-index scale, three steps. z-nav: fixed page chrome (navbar,
+ * reading progress, scroll-to-top). z-modal: everything that must cover
+ * the chrome (dialogs and their scrim, the TTL share sheet, popovers).
+ * z-skip-link: the first Tab stop on every page, above all of it
+ * (WCAG 2.4.11). Equal steps stack in DOM order. */
+@utility z-nav {
+	z-index: 60;
+}
 @utility z-modal {
 	z-index: 70;
 }
-/* The skip link is the first Tab stop on every page, so it sits above
- * the fixed navbar (z-modal) instead of opening underneath it
- * (WCAG 2.4.11). */
 @utility z-skip-link {
 	z-index: 80;
 }
@@ -532,7 +536,6 @@ button,
 		background-color: var(--color-overlay);
 		position: fixed;
 		inset: 0;
-		z-index: 50;
 	}
 	.dialog-content {
 		background-color: var(--color-popover);
@@ -550,7 +553,6 @@ button,
 		transform: translate(-50%, -50%);
 		width: 90vw;
 		max-width: var(--container-md);
-		z-index: 51;
 	}
 	.dialog-close-button {
 		position: absolute;

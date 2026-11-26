@@ -276,7 +276,7 @@ export function Calculator() {
 			{/* Share Modal */}
 			{showShareModal && (
 				<div
-					className="fixed inset-0 bg-overlay flex items-center justify-center z-50 print:hidden"
+					className="fixed inset-0 bg-overlay flex items-center justify-center z-modal print:hidden"
 					onClick={() => setShowShareModal(false)}
 				>
 					<div

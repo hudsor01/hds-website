@@ -64,7 +64,7 @@ export default function ScrollToTop() {
 					onClick={scrollToTop}
 					variant="default"
 					size="icon-lg"
-					className="fixed bottom-8 right-8 z-modal rounded-full shadow-lg hover:shadow-xl motion-safe:hover:scale-110 transition-smooth"
+					className="fixed bottom-8 right-8 z-nav rounded-full shadow-lg hover:shadow-xl motion-safe:hover:scale-110 transition-smooth"
 					aria-label="Scroll to top"
 				>
 					<ArrowUp className="w-6 h-6" />

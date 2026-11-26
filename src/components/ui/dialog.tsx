@@ -25,7 +25,7 @@ function DialogOverlay({
 	return (
 		<DialogPrimitive.Overlay
 			data-slot="dialog-overlay"
-			className={cn('dialog-overlay', className)}
+			className={cn('dialog-overlay z-modal', className)}
 			{...props}
 		/>
 	)
@@ -44,7 +44,7 @@ function DialogContent({
 			<DialogOverlay />
 			<DialogPrimitive.Content
 				data-slot="dialog-content"
-				className={cn('dialog-content', className)}
+				className={cn('dialog-content z-modal', className)}
 				{...props}
 			>
 				{children}

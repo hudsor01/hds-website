@@ -28,7 +28,7 @@ export function ReadingProgress() {
 
 	return (
 		<div
-			className="fixed inset-x-0 top-0 z-50 h-1 bg-transparent"
+			className="fixed inset-x-0 top-0 z-nav h-1 bg-transparent"
 			role="progressbar"
 			aria-label="Reading progress"
 			aria-valuenow={progress}

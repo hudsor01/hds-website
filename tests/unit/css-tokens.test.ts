@@ -227,7 +227,6 @@ describe('dead CSS stays deleted (L1, L4)', () => {
 			'section-spacing',
 			'z-sticky',
 			'z-fixed',
-			'z-nav',
 			'p-button',
 			'surface-overlay',
 			'flex-center',
@@ -239,6 +238,28 @@ describe('dead CSS stays deleted (L1, L4)', () => {
 		)
 		expect(found).toEqual([])
 		expect(css).not.toMatch(/@keyframes\s+(?:blob|blink)\b/)
+	})
+
+	test('the z-index scale is z-nav < z-modal < z-skip-link', async () => {
+		// The navbar sat on the modal step above the dialog scrim (z-50),
+		// so it stayed lit over every open dialog and hid the reading
+		// progress bar; the skip link opened underneath it.
+		const css = await globalsCss()
+		const z = (name: string) =>
+			Number(
+				css.match(
+					new RegExp(`@utility ${name}\\s*\\{\\s*z-index:\\s*(\\d+);`)
+				)?.[1]
+			)
+		expect(z('z-nav')).toBeLessThan(z('z-modal'))
+		expect(z('z-modal')).toBeLessThan(z('z-skip-link'))
+		// Page-level layers use the named steps; z-0 / z-10 stay for local
+		// stacking inside a component.
+		const files = await sourceFiles()
+		expect(
+			findAll(files, /(?<![\w-])z-(?:[2-9]\d|\d{3,}|\[[^\]]+\])(?![\w-])/g)
+		).toEqual([])
+		expect(css).not.toMatch(/\.dialog-(?:overlay|content)\s*\{[^}]*z-index/)
 	})
 
 	test('no unlayered .sr-only copy (it beat focus:not-sr-only)', async () => {
