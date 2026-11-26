@@ -36,6 +36,8 @@ describe('ServicesGrid cards', () => {
 			expect(link).toHaveAttribute('href', `/services/${service.slug}`)
 
 			expect(card).toHaveClass('relative')
+			// Fills the grid row so sibling cards share one height
+			expect(card).toHaveClass('h-full')
 			expect(link).toHaveClass('after:absolute', 'after:inset-0')
 			// The link itself must not be the containing block, or the
 			// overlay would only cover the title text.

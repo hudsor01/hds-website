@@ -132,3 +132,17 @@ test('a blog post shows a breadcrumb and links its related service', async ({
 		/^\/services\/(web-design|local-seo|booking-payments)$/
 	)
 })
+
+// At lg the three cards share one grid row. Each card fills its cell, so a
+// shorter card never shows a gap under its hover border.
+test('/services cards in one row share one height', async ({ page }) => {
+	await page.setViewportSize({ width: 1280, height: 900 })
+	await page.goto('/services')
+	const cards = page.locator('#design-build > div, #seo > div, #booking > div')
+	await expect(cards.first()).toBeVisible()
+	const heights = await cards.evaluateAll(els =>
+		els.map(el => Math.round(el.getBoundingClientRect().height))
+	)
+	expect(heights).toHaveLength(3)
+	expect(new Set(heights).size).toBe(1)
+})
