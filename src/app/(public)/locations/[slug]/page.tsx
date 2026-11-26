@@ -128,7 +128,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 						{location.features.map(feature => (
 							<div
 								key={feature.title}
-								className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors"
+								className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors"
 							>
 								<h3 className="text-h3 text-foreground mb-3">
 									{feature.title}
@@ -143,7 +143,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			</section>
 
 			{/* Areas Served */}
-			<section className="py-section-sm bg-surface-sunken">
+			<section className="py-section-sm bg-muted">
 				<div className="container-content">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
@@ -173,7 +173,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			{/* CTA */}
 			<section className="py-section">
 				<div className="container-content">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"

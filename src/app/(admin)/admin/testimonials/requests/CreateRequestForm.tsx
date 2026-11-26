@@ -167,7 +167,7 @@ export function CreateRequestForm() {
 
 			{created && (
 				<div
-					className="rounded-md border border-border bg-surface-base p-4 text-sm"
+					className="rounded-md border border-border bg-background p-4 text-sm"
 					role="status"
 				>
 					<p className="text-foreground">

@@ -175,7 +175,7 @@ export default function TimeCardCalculatorClient() {
 					return (
 						<div
 							key={row.id}
-							className="rounded-lg border border-border bg-surface-raised p-3"
+							className="rounded-lg border border-border bg-card p-3"
 						>
 							<div className="flex items-center justify-between mb-2">
 								<span className="text-xs font-medium text-muted-foreground">
@@ -317,7 +317,7 @@ export default function TimeCardCalculatorClient() {
 
 	const resultSlot =
 		hasResult && result ? (
-			<div className="rounded-xl border border-border bg-surface-raised p-6 space-y-3">
+			<div className="rounded-xl border border-border bg-card p-6 space-y-3">
 				<div>
 					<div className="text-xs text-muted-foreground">Total hours</div>
 					<div className="text-3xl font-bold text-accent-text tabular-nums">

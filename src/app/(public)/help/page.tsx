@@ -98,7 +98,7 @@ export default async function HelpCenterPage() {
 								href={`/help/${category.slug}`}
 								className="group"
 							>
-								<div className="h-full rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+								<div className="h-full rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 									<div className="flex items-start gap-4">
 										<div
 											aria-hidden="true"
@@ -132,7 +132,7 @@ export default async function HelpCenterPage() {
 			{/* Contact Section */}
 			<section className="py-section-sm">
 				<div className="container-content">
-					<div className="rounded-xl border border-border bg-surface-raised p-10 text-center hover:border-border-strong transition-colors">
+					<div className="rounded-xl border border-border bg-card p-10 text-center hover:border-border-strong transition-colors">
 						<h2 className="text-h3 text-foreground mb-3 text-balance">
 							Can&apos;t find what you&apos;re looking for?
 						</h2>

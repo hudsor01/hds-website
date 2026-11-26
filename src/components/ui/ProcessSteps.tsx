@@ -47,7 +47,7 @@ export function ProcessSteps() {
 			{PROCESS_STEPS.map((step, index) => (
 				<div
 					key={index}
-					className="group rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors text-center"
+					className="group rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors text-center"
 				>
 					<div className="mb-4 flex justify-center">
 						<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">

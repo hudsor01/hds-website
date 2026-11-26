@@ -218,7 +218,7 @@ export default function WebsiteMigrationPage() {
 						{risks.map(risk => (
 							<div
 								key={risk.title}
-								className="p-8 rounded-xl border border-border bg-surface-raised"
+								className="p-8 rounded-xl border border-border bg-card"
 							>
 								<div className="w-12 h-12 rounded-lg bg-destructive/10 border border-destructive/20 flex items-center justify-center mb-6">
 									<risk.Icon className="w-5 h-5 text-destructive" />
@@ -247,7 +247,7 @@ export default function WebsiteMigrationPage() {
 
 					<div className="rounded-xl border border-border overflow-hidden">
 						{/* Header */}
-						<div className="grid grid-cols-3 bg-surface-raised border-b border-border">
+						<div className="grid grid-cols-3 bg-card border-b border-border">
 							<div className="px-6 py-4 text-sm font-semibold text-muted-foreground">
 								Feature
 							</div>
@@ -264,7 +264,7 @@ export default function WebsiteMigrationPage() {
 							<div
 								key={row.feature}
 								className={`grid grid-cols-3 border-b border-border last:border-0 ${
-									index % 2 === 0 ? 'bg-background' : 'bg-surface-raised/50'
+									index % 2 === 0 ? 'bg-background' : 'bg-card/50'
 								}`}
 							>
 								<div className="px-6 py-4 text-sm font-medium text-foreground">
@@ -301,7 +301,7 @@ export default function WebsiteMigrationPage() {
 						{migrationSteps.map(step => (
 							<div
 								key={step.step}
-								className="flex gap-6 p-6 rounded-xl border border-border bg-surface-raised hover:border-border-strong transition-colors"
+								className="flex gap-6 p-6 rounded-xl border border-border bg-card hover:border-border-strong transition-colors"
 							>
 								<div
 									aria-hidden="true"
@@ -402,7 +402,7 @@ export default function WebsiteMigrationPage() {
 			{/* CTA */}
 			<section className="py-section">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"

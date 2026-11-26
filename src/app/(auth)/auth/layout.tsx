@@ -15,7 +15,7 @@ import type { ReactNode } from 'react'
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
 	return (
-		<div className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center bg-surface-base p-6">
+		<div className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center bg-background p-6">
 			<div className="w-full max-w-md">{children}</div>
 		</div>
 	)

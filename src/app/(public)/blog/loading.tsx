@@ -18,7 +18,7 @@ export default function BlogLoading() {
 					{[...Array(6)].map((_, i) => (
 						<div
 							key={i}
-							className="rounded-xl border border-border bg-surface-raised overflow-hidden animate-pulse"
+							className="rounded-xl border border-border bg-card overflow-hidden animate-pulse"
 						>
 							<div className="h-48 bg-muted" />
 							<div className="p-6 space-y-content">

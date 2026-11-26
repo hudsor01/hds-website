@@ -163,7 +163,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 										<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 											The Challenge
 										</h2>
-										<div className="rounded-xl border border-border bg-surface-raised p-8">
+										<div className="rounded-xl border border-border bg-card p-8">
 											<p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
 												{item.challenge}
 											</p>
@@ -176,7 +176,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 										<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 											The Solution
 										</h2>
-										<div className="rounded-xl border border-border bg-surface-raised p-8">
+										<div className="rounded-xl border border-border bg-card p-8">
 											<p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
 												{item.solution}
 											</p>
@@ -207,7 +207,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 										<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 											The Results
 										</h2>
-										<div className="rounded-xl border border-border bg-surface-raised p-8">
+										<div className="rounded-xl border border-border bg-card p-8">
 											<p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
 												{item.results}
 											</p>
@@ -237,7 +237,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 										<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 											About This Project
 										</h2>
-										<div className="rounded-xl border border-border bg-surface-raised p-8">
+										<div className="rounded-xl border border-border bg-card p-8">
 											<p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
 												{item.longDescription}
 											</p>
@@ -250,7 +250,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 										<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 											Tech Stack
 										</h2>
-										<div className="rounded-xl border border-border bg-surface-raised p-8">
+										<div className="rounded-xl border border-border bg-card p-8">
 											<div className="flex flex-wrap gap-tight">
 												{item.technologies.map((tech, i) => (
 													<span
@@ -270,7 +270,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 										<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 											Links
 										</h2>
-										<div className="rounded-xl border border-border bg-surface-raised p-8">
+										<div className="rounded-xl border border-border bg-card p-8">
 											<div className="flex flex-wrap gap-content">
 												<a
 													href={item.externalLink}
@@ -305,7 +305,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 								<h2 className="text-h1 text-foreground mb-comfortable text-balance">
 									Client Testimonial
 								</h2>
-								<div className="rounded-xl border border-border bg-surface-raised p-8">
+								<div className="rounded-xl border border-border bg-card p-8">
 									{item.testimonialVideoUrl && (
 										<div className="mb-content-block">
 											<div className="aspect-video rounded-lg overflow-hidden bg-muted">

@@ -319,7 +319,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 				{/* Related service */}
 				<div className="container-wide py-8">
 					<div className="mx-auto max-w-5xl">
-						<aside className="max-w-3xl rounded-xl border border-border bg-surface-raised p-8">
+						<aside className="max-w-3xl rounded-xl border border-border bg-card p-8">
 							<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-2">
 								Related Service
 							</p>
@@ -358,7 +358,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 			{/* CTA Section */}
 			<section className="py-section">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"

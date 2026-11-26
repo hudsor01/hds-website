@@ -69,8 +69,6 @@ export function AdminErrorState({
 	}
 
 	return (
-		<div className="rounded-xl border border-border bg-surface-raised p-8">
-			{alert}
-		</div>
+		<div className="rounded-xl border border-border bg-card p-8">{alert}</div>
 	)
 }

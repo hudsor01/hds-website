@@ -161,7 +161,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 			{/* Article Content */}
 			<section className="py-section-sm">
 				<div className="container-content">
-					<div className="rounded-xl border border-border bg-surface-raised p-8 md:p-10">
+					<div className="rounded-xl border border-border bg-card p-8 md:p-10">
 						{/* Article Header */}
 						<header className="mb-comfortable">
 							<h1 className="text-page-title text-foreground text-balance mb-3">
@@ -265,7 +265,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
 							{prev ? (
 								<Link href={`/help/${category}/${prev.slug}`} className="group">
-									<div className="h-full rounded-xl border border-border bg-surface-raised p-5 hover:border-border-strong transition-colors">
+									<div className="h-full rounded-xl border border-border bg-card p-5 hover:border-border-strong transition-colors">
 										<div className="flex items-center gap-tight text-sm text-muted-foreground mb-1">
 											<ChevronLeft className="size-4" />
 											Previous
@@ -280,7 +280,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 							)}
 							{next && (
 								<Link href={`/help/${category}/${next.slug}`} className="group">
-									<div className="h-full rounded-xl border border-border bg-surface-raised p-5 hover:border-border-strong transition-colors text-right">
+									<div className="h-full rounded-xl border border-border bg-card p-5 hover:border-border-strong transition-colors text-right">
 										<div className="flex items-center justify-end gap-tight text-sm text-muted-foreground mb-1">
 											Next
 											<ChevronRight className="size-4" />
@@ -295,7 +295,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 					)}
 
 					{/* Help CTA */}
-					<div className="mt-6 rounded-xl border border-border bg-surface-raised p-8 text-center hover:border-border-strong transition-colors">
+					<div className="mt-6 rounded-xl border border-border bg-card p-8 text-center hover:border-border-strong transition-colors">
 						<p className="text-sm text-muted-foreground mb-4">
 							Was this article helpful? Need more assistance?
 						</p>

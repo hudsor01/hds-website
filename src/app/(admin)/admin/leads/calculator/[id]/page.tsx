@@ -171,7 +171,7 @@ async function CalculatorLeadDetail({
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Lead</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					{leadEntries.length === 0 ? (
 						<p className="text-sm text-muted-foreground">No extra lead info.</p>
 					) : (
@@ -188,7 +188,7 @@ async function CalculatorLeadDetail({
 				<h2 className="text-lg font-semibold text-foreground">
 					Calculator inputs
 				</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					<pre className="text-xs overflow-x-auto text-foreground">
 						{JSON.stringify(row.inputs, null, 2)}
 					</pre>
@@ -199,7 +199,7 @@ async function CalculatorLeadDetail({
 				<h2 className="text-lg font-semibold text-foreground">
 					Calculator results
 				</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					<pre className="text-xs overflow-x-auto text-foreground">
 						{JSON.stringify(row.results, null, 2)}
 					</pre>
@@ -208,7 +208,7 @@ async function CalculatorLeadDetail({
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Conversion</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2 space-y-4">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2 space-y-4">
 					<dl>
 						<DefinitionRow
 							label="Contacted"
@@ -265,7 +265,7 @@ async function CalculatorLeadDetail({
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Attribution</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					{attributionEntries.length === 0 ? (
 						<p className="text-sm text-muted-foreground">
 							No attribution captured.
@@ -282,7 +282,7 @@ async function CalculatorLeadDetail({
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Danger</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					<DeleteButton
 						action={deleteCalculatorLeadAction}
 						id={row.id}

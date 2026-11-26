@@ -45,13 +45,13 @@ export const metadata: Metadata = {
 function DashboardSkeleton() {
 	return (
 		<div className="space-y-6" aria-hidden="true">
-			<div className="rounded-xl border border-border bg-surface-raised h-[332px]" />
-			<div className="rounded-xl border border-border bg-surface-raised h-[220px]" />
+			<div className="rounded-xl border border-border bg-card h-[332px]" />
+			<div className="rounded-xl border border-border bg-card h-[220px]" />
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-				<div className="rounded-xl border border-border bg-surface-raised h-[400px]" />
+				<div className="rounded-xl border border-border bg-card h-[400px]" />
 				<div className="space-y-6">
-					<div className="rounded-xl border border-border bg-surface-raised h-[292px]" />
-					<div className="rounded-xl border border-border bg-surface-raised h-[400px]" />
+					<div className="rounded-xl border border-border bg-card h-[292px]" />
+					<div className="rounded-xl border border-border bg-card h-[400px]" />
 				</div>
 			</div>
 		</div>

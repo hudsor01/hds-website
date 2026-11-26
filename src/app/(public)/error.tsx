@@ -58,7 +58,7 @@ export default function Error({
 					</Button>
 				</div>
 
-				<div className="rounded-xl border border-border bg-surface-raised p-4">
+				<div className="rounded-xl border border-border bg-card p-4">
 					<p className="text-sm text-muted-foreground">
 						Need immediate assistance?{' '}
 						<a href={`mailto:${BUSINESS_INFO.email}`} className="link-primary">

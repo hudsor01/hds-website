@@ -78,23 +78,9 @@
 	--color-sidebar-accent: oklch(0.92 0.03 65);
 	--color-sidebar-accent-foreground: oklch(0.3 0.04 65);
 	--color-sidebar-border: oklch(0.9 0.01 255);
-	--color-sidebar-ring: oklch(0.45 0.1 255);
 
-	/* Text hierarchy */
-	--color-text-inverted: oklch(0.98 0.002 90);
-	--color-text-primary: oklch(0.145 0.015 260);
-	--color-text-secondary: oklch(0.4 0.025 260);
-	--color-text-muted: oklch(0.5 0.02 260);
-
-	/* Overlays */
-	--color-bg-overlay: oklch(0.15 0.02 260 / 0.85);
-
-	/* Surface elevation */
-	--color-surface-base: oklch(0.985 0.002 90);
-	--color-surface-raised: oklch(0.995 0.001 90);
-	--color-surface-elevated: oklch(1 0 0);
-	--color-surface-overlay: oklch(0.97 0.005 255);
-	--color-surface-sunken: oklch(0.955 0.008 90);
+	/* Modal scrim behind dialogs and the calculator share sheet. */
+	--color-overlay: oklch(0.15 0.02 260 / 0.85);
 
 	/* Semantic border tokens */
 	--color-border-subtle: oklch(0.93 0.01 255);
@@ -572,13 +558,13 @@ button,
 /* Dialog */
 @layer components {
 	.dialog-overlay {
-		background-color: var(--color-bg-overlay);
+		background-color: var(--color-overlay);
 		position: fixed;
 		inset: 0;
 		z-index: 50;
 	}
 	.dialog-content {
-		background-color: var(--color-surface-elevated);
+		background-color: var(--color-popover);
 		color: var(--color-foreground);
 		border: 1px solid var(--color-border);
 		border-radius: 0.75rem;
@@ -742,7 +728,7 @@ button,
 	.typography pre {
 		margin-block: 1.5rem;
 		padding: 1.25rem 1.5rem;
-		background: var(--color-surface-sunken);
+		background: var(--color-muted);
 		border: 1px solid var(--color-border-subtle);
 		border-radius: 0.75rem;
 		overflow-x: auto;
@@ -778,7 +764,7 @@ button,
 		font-size: var(--text-sm);
 	}
 	.typography thead {
-		background: var(--color-surface-sunken);
+		background: var(--color-muted);
 	}
 	.typography th,
 	.typography td {

@@ -193,7 +193,7 @@ export default function InvoiceLateFeeCalculatorClient() {
 				: null
 
 	const resultSlot = hasResult ? (
-		<div className="rounded-xl border border-border bg-surface-raised p-6 space-y-3">
+		<div className="rounded-xl border border-border bg-card p-6 space-y-3">
 			{prompt ? (
 				<p className="text-sm text-muted-foreground">{prompt}</p>
 			) : (

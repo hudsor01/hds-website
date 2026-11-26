@@ -155,7 +155,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 					</Link>
 
 					{articles.length === 0 ? (
-						<div className="rounded-xl border border-border bg-surface-raised p-10 text-center">
+						<div className="rounded-xl border border-border bg-card p-10 text-center">
 							<HelpCircle className="size-12 mx-auto text-muted-foreground mb-heading" />
 							<h2 className="text-h4 text-foreground mb-subheading">
 								No articles yet
@@ -173,7 +173,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 									href={`/help/${category}/${article.slug}`}
 									className="block group"
 								>
-									<div className="rounded-xl border border-border bg-surface-raised p-6 hover:border-border-strong transition-colors">
+									<div className="rounded-xl border border-border bg-card p-6 hover:border-border-strong transition-colors">
 										<div className="flex items-start gap-4">
 											<div
 												aria-hidden="true"
@@ -200,7 +200,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 					)}
 
 					{/* Contact CTA */}
-					<div className="mt-10 rounded-xl border border-border bg-surface-raised p-8 text-center hover:border-border-strong transition-colors">
+					<div className="mt-10 rounded-xl border border-border bg-card p-8 text-center hover:border-border-strong transition-colors">
 						<p className="text-sm text-muted-foreground mb-4">
 							Need more help with {categoryInfo.name.toLowerCase()}?
 						</p>

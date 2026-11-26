@@ -73,7 +73,7 @@ export default function ToolsCatalog() {
 			</div>
 
 			{noResults ? (
-				<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+				<div className="rounded-xl border border-border bg-card p-8 text-center">
 					<p className="text-sm text-muted-foreground">
 						No tools match &ldquo;{trimmed}&rdquo;. Try a broader keyword like
 						&ldquo;invoice&rdquo;, &ldquo;ROI&rdquo;, or &ldquo;JSON&rdquo;.

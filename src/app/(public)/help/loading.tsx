@@ -18,7 +18,7 @@ export default function HelpLoading() {
 					{[...Array(6)].map((_, i) => (
 						<div
 							key={i}
-							className="rounded-xl border border-border bg-surface-raised p-8 animate-pulse"
+							className="rounded-xl border border-border bg-card p-8 animate-pulse"
 						>
 							<div className="space-y-content">
 								<div className="h-10 w-10 bg-muted rounded-lg" />

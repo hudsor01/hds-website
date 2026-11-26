@@ -14,7 +14,7 @@ const cardVariants = cva(
 	{
 		variants: {
 			variant: {
-				default: 'border-border-subtle bg-surface-raised shadow-sm',
+				default: 'border-border-subtle shadow-sm',
 				glass: 'glass-card',
 				glassLight: 'glass-card-light',
 				glassSection: 'glass-card-light',

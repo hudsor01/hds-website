@@ -97,7 +97,7 @@ export default function AboutPage() {
 
 					<div className="grid lg:grid-cols-2 gap-12 items-start">
 						{/* Story Content */}
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<h3 className="text-h3 text-foreground mb-4">
 								Nearly a Decade in Revenue Operations First
 							</h3>
@@ -147,7 +147,7 @@ export default function AboutPage() {
 
 						{/* Mission & Vision Cards */}
 						<div className="space-y-6">
-							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+							<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 								<div className="flex items-center gap-4 mb-4">
 									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
 										<Rocket className="w-5 h-5 text-accent" />
@@ -162,7 +162,7 @@ export default function AboutPage() {
 								</p>
 							</div>
 
-							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+							<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 								<div className="flex items-center gap-4 mb-4">
 									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
 										<Eye className="w-5 h-5 text-accent" />
@@ -201,7 +201,7 @@ export default function AboutPage() {
 					</div>
 
 					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<Code2 className="w-5 h-5 text-accent" />
 							</div>
@@ -214,7 +214,7 @@ export default function AboutPage() {
 							</ul>
 						</div>
 
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<BarChart3 className="w-5 h-5 text-accent" />
 							</div>
@@ -227,7 +227,7 @@ export default function AboutPage() {
 							</ul>
 						</div>
 
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<Zap className="w-5 h-5 text-accent" />
 							</div>
@@ -242,7 +242,7 @@ export default function AboutPage() {
 							</ul>
 						</div>
 
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<ShieldCheck className="w-5 h-5 text-accent" />
 							</div>
@@ -275,7 +275,7 @@ export default function AboutPage() {
 						</p>
 					</div>
 
-					<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+					<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 						<div className="flex flex-col items-center mb-8">
 							<Image
 								src="/images/founder.jpg"
@@ -378,7 +378,7 @@ export default function AboutPage() {
 					</div>
 
 					<div className="grid md:grid-cols-3 gap-6">
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<Lightbulb className="w-5 h-5 text-accent" />
 							</div>
@@ -391,7 +391,7 @@ export default function AboutPage() {
 							</p>
 						</div>
 
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<BarChart3 className="w-5 h-5 text-accent" />
 							</div>
@@ -403,7 +403,7 @@ export default function AboutPage() {
 							</p>
 						</div>
 
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<Settings className="w-5 h-5 text-accent" />
 							</div>
@@ -423,7 +423,7 @@ export default function AboutPage() {
 			{/* Call to Action */}
 			<section className="py-section">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"

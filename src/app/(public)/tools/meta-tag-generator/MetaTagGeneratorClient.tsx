@@ -416,7 +416,7 @@ export default function MetaTagGeneratorClient() {
 								<img
 									src={result.imageUrl}
 									alt={inputs.imageAlt.trim() || 'Share image preview'}
-									className="h-48 w-full object-cover bg-surface-raised"
+									className="h-48 w-full object-cover bg-card"
 									onError={() => setImageFailed(true)}
 								/>
 							) : (
@@ -428,7 +428,7 @@ export default function MetaTagGeneratorClient() {
 									</span>
 								</div>
 							)}
-							<Card size="sm" className="bg-surface-raised">
+							<Card size="sm" className="bg-card">
 								<p className="text-xs text-muted-foreground uppercase mb-1">
 									{inputs.siteName.trim() ||
 										previewHostname(inputs.pageUrl, 'example.com')}

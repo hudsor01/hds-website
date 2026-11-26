@@ -29,7 +29,7 @@ export async function BlogArchive({ page }: BlogArchiveProps) {
 			</div>
 
 			{posts.length === 0 ? (
-				<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+				<div className="rounded-xl border border-border bg-card p-8 text-center">
 					<p className="text-sm text-muted-foreground leading-relaxed">
 						No articles found. Check back soon for new content!
 					</p>

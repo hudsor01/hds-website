@@ -187,7 +187,7 @@ async function TokenContent({ token }: { token: string }) {
 			<section className="py-section-sm">
 				<div className="container-wide">
 					<div className="max-w-2xl mx-auto">
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<TestimonialForm
 								token={token}
 								defaultName={request.client_name}

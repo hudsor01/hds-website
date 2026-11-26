@@ -106,7 +106,7 @@ async function RevenueSummary() {
 			{cards.map(c => (
 				<div
 					key={c.label}
-					className="rounded-xl border border-border bg-surface-raised p-4"
+					className="rounded-xl border border-border bg-card p-4"
 				>
 					<dt className="text-xs uppercase tracking-wider text-muted-foreground">
 						{c.label}
@@ -156,7 +156,7 @@ async function LeadsList({ searchParams }: AdminLeadsPageProps) {
 			<SearchInput placeholder="Search leads" />
 			{rows.length === 0 ? (
 				q ? (
-					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+					<div className="rounded-xl border border-border bg-card p-8 text-center">
 						<p className="text-sm text-muted-foreground">
 							No leads matching <span className="font-mono">{q}</span>.
 						</p>
@@ -168,7 +168,7 @@ async function LeadsList({ searchParams }: AdminLeadsPageProps) {
 						</Link>
 					</div>
 				) : (
-					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+					<div className="rounded-xl border border-border bg-card p-8 text-center">
 						<p className="text-sm text-muted-foreground">No leads yet.</p>
 					</div>
 				)

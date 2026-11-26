@@ -194,7 +194,7 @@ async function TestimonialsList({ searchParams }: AdminTestimonialsPageProps) {
 
 function RequestLinksCallout() {
 	return (
-		<div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-surface-raised px-4 py-3 text-sm">
+		<div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-card px-4 py-3 text-sm">
 			<p className="text-muted-foreground">
 				Clients submit reviews through private, single-use links. New reviews
 				stay unpublished until you publish them here.

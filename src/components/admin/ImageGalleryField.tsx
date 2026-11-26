@@ -195,7 +195,7 @@ export function ImageGalleryField({
 									key={url}
 									className="flex flex-col gap-2 rounded-md border border-border p-2"
 								>
-									<div className="relative h-24 w-full overflow-hidden rounded bg-surface-base">
+									<div className="relative h-24 w-full overflow-hidden rounded bg-background">
 										<Image
 											src={url}
 											alt={`${label} ${index + 1}`}
@@ -230,7 +230,7 @@ export function ImageGalleryField({
 									aria-busy="true"
 									className="flex flex-col gap-2 rounded-md border border-dashed border-accent-text/60 p-2"
 								>
-									<div className="relative h-24 w-full overflow-hidden rounded bg-surface-base">
+									<div className="relative h-24 w-full overflow-hidden rounded bg-background">
 										<Image
 											src={localPreview}
 											alt={`${label} uploading`}

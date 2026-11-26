@@ -23,7 +23,7 @@ const variantConfig = {
 	inline: { size: 'md' as const, className: '' },
 	sidebar: {
 		size: 'md' as const,
-		className: 'bg-surface-raised'
+		className: 'bg-card'
 	},
 	modal: { size: 'lg' as const, className: 'shadow-xl' },
 	section: { size: 'md' as const, className: '' },

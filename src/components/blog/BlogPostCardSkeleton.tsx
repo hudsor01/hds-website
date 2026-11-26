@@ -7,7 +7,7 @@
 export function BlogPostCardSkeleton() {
 	return (
 		<article
-			className="flex flex-col overflow-hidden rounded-xl border border-border bg-surface-raised"
+			className="flex flex-col overflow-hidden rounded-xl border border-border bg-card"
 			aria-hidden="true"
 		>
 			{/* Image */}

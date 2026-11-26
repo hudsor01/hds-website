@@ -110,7 +110,7 @@ async function EmailDetailLoader({ params }: EmailDetailPageProps) {
 				</div>
 			</div>
 
-			<section className="rounded-xl border border-border bg-surface-raised p-6 space-y-4">
+			<section className="rounded-xl border border-border bg-card p-6 space-y-4">
 				<h2 className="text-sm font-semibold text-foreground">Email</h2>
 				<dl className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
 					<div>
@@ -137,14 +137,14 @@ async function EmailDetailLoader({ params }: EmailDetailPageProps) {
 						<dt className="text-xs uppercase tracking-wider text-muted-foreground">
 							Variables
 						</dt>
-						<pre className="text-xs overflow-x-auto rounded-md border border-border bg-surface-base p-3 mt-1 text-foreground">
+						<pre className="text-xs overflow-x-auto rounded-md border border-border bg-background p-3 mt-1 text-foreground">
 							{JSON.stringify(row.variables, null, 2)}
 						</pre>
 					</div>
 				) : null}
 			</section>
 
-			<section className="rounded-xl border border-border bg-surface-raised p-6 space-y-4">
+			<section className="rounded-xl border border-border bg-card p-6 space-y-4">
 				<h2 className="text-sm font-semibold text-foreground">Delivery</h2>
 				<dl className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
 					<div>
@@ -184,7 +184,7 @@ async function EmailDetailLoader({ params }: EmailDetailPageProps) {
 				) : null}
 			</section>
 
-			<section className="rounded-xl border border-border bg-surface-raised p-6 space-y-4">
+			<section className="rounded-xl border border-border bg-card p-6 space-y-4">
 				<h2 className="text-sm font-semibold text-foreground">Actions</h2>
 				{showRetry ? (
 					<div className="flex flex-wrap items-center gap-3">
@@ -222,7 +222,7 @@ async function EmailDetailLoader({ params }: EmailDetailPageProps) {
 				)}
 			</section>
 
-			<section className="rounded-xl border border-destructive/40 bg-surface-raised p-6 space-y-4">
+			<section className="rounded-xl border border-destructive/40 bg-card p-6 space-y-4">
 				<h2 className="text-sm font-semibold text-foreground">Danger</h2>
 				<DeleteButton
 					action={deleteScheduledEmailAction}

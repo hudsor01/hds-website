@@ -178,10 +178,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			</section>
 
 			{/* Included */}
-			<section
-				id="included"
-				className="py-section-sm bg-surface-sunken scroll-mt-24"
-			>
+			<section id="included" className="py-section-sm bg-muted scroll-mt-24">
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
@@ -195,7 +192,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 						{service.included.map(detail => (
 							<li
 								key={detail.title}
-								className="rounded-xl border border-border bg-surface-raised p-8"
+								className="rounded-xl border border-border bg-card p-8"
 							>
 								<div className="flex items-start gap-3 mb-3">
 									<CheckCircle
@@ -248,7 +245,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
 			{/* Related posts */}
 			{relatedPosts.length > 0 && (
-				<section className="py-section-sm bg-surface-sunken">
+				<section className="py-section-sm bg-muted">
 					<div className="container-wide">
 						<div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-comfortable">
 							<h2 className="text-h1 text-foreground text-balance">
@@ -282,7 +279,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 							<Link
 								key={other.slug}
 								href={`/services/${other.slug}`}
-								className="group rounded-xl border border-border bg-surface-raised p-8 hover:border-accent transition-colors"
+								className="group rounded-xl border border-border bg-card p-8 hover:border-accent transition-colors"
 							>
 								<h3 className="text-h4 text-foreground mb-2 group-hover:text-accent-text transition-colors">
 									{other.title}
@@ -299,7 +296,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 			{/* CTA */}
 			<section className="py-section">
 				<div className="container-content">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"

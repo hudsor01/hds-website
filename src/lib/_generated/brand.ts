@@ -3,7 +3,7 @@
 //
 // Source: src/app/globals.css @theme {}
 // Conversion: OKLCH -> sRGB hex (Bjorn Ottosson formulas, hand-rolled, no deps)
-// Last generated: 2026-11-25T23:28:27.038Z
+// Last generated: 2026-11-26T00:03:17.264Z
 
 export const BRAND = {
 	background: '#fafaf9', // --color-background
@@ -52,16 +52,6 @@ export const BRAND = {
 	sidebarAccent: '#f3e1d0', // --color-sidebar-accent
 	sidebarAccentForeground: '#3c2a18', // --color-sidebar-accent-foreground
 	sidebarBorder: '#dadee5', // --color-sidebar-border
-	sidebarRing: '#2b568b', // --color-sidebar-ring
-	textInverted: '#f9f8f7', // --color-text-inverted
-	textPrimary: '#070a10', // --color-text-primary
-	textSecondary: '#404855', // --color-text-secondary
-	textMuted: '#5d646f', // --color-text-muted
-	surfaceBase: '#fafaf9', // --color-surface-base
-	surfaceRaised: '#fefdfd', // --color-surface-raised
-	surfaceElevated: '#ffffff', // --color-surface-elevated
-	surfaceOverlay: '#f3f5f8', // --color-surface-overlay
-	surfaceSunken: '#f2f0ea', // --color-surface-sunken
 	borderSubtle: '#e3e8ef', // --color-border-subtle
 	borderStrong: '#a6afbb', // --color-border-strong
 } as const

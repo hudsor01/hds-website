@@ -66,7 +66,7 @@ function ratingClass(rating: Rating): string {
 export function WebVitalsCards({ result }: WebVitalsCardsProps) {
 	if (!result.ok) {
 		return (
-			<div className="rounded-xl border border-border bg-surface-raised p-6">
+			<div className="rounded-xl border border-border bg-card p-6">
 				<h2 className="text-sm font-semibold text-foreground mb-4">
 					Web Vitals (last 7 days)
 				</h2>
@@ -78,7 +78,7 @@ export function WebVitalsCards({ result }: WebVitalsCardsProps) {
 	const rows = result.data
 
 	return (
-		<div className="rounded-xl border border-border bg-surface-raised p-6">
+		<div className="rounded-xl border border-border bg-card p-6">
 			<h2 className="text-sm font-semibold text-foreground mb-4">
 				Web Vitals (last 7 days)
 			</h2>
@@ -89,7 +89,7 @@ export function WebVitalsCards({ result }: WebVitalsCardsProps) {
 					return (
 						<div
 							key={name}
-							className="rounded-lg border border-border-subtle bg-surface-base p-4"
+							className="rounded-lg border border-border-subtle bg-background p-4"
 						>
 							<p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
 								{name}

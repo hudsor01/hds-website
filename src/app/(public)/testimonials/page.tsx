@@ -87,7 +87,7 @@ export default async function TestimonialsPage() {
 							{testimonials.map(testimonial => (
 								<li
 									key={testimonial.id}
-									className="rounded-xl border border-border bg-surface-raised p-8 flex flex-col"
+									className="rounded-xl border border-border bg-card p-8 flex flex-col"
 								>
 									{testimonial.rating !== null && (
 										<div className="mb-4">
@@ -119,7 +119,7 @@ export default async function TestimonialsPage() {
 							))}
 						</ul>
 					) : (
-						<div className="max-w-2xl mx-auto rounded-xl border border-border bg-surface-raised p-10 text-center">
+						<div className="max-w-2xl mx-auto rounded-xl border border-border bg-card p-10 text-center">
 							<h2 className="text-h3 text-foreground mb-3">
 								Reviews Are On the Way
 							</h2>
@@ -153,7 +153,7 @@ export default async function TestimonialsPage() {
 			{/* CTA Section */}
 			<section className="py-section">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"

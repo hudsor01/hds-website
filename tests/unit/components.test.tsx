@@ -445,10 +445,10 @@ describe('Input Polish — COMP-02', () => {
 })
 
 describe('Card Surface — COMP-03', () => {
-	it('default card variant has bg-surface-raised class', () => {
+	it('default card variant has bg-card class', () => {
 		const { container } = render(<Card>Content</Card>)
 		const card = container.firstChild as HTMLElement
-		expect(card?.className ?? '').toContain('bg-surface-raised')
+		expect(card?.className ?? '').toContain('bg-card')
 	})
 
 	it('default card variant has shadow-sm (not shadow-xs)', () => {
@@ -469,6 +469,6 @@ describe('Card Surface — COMP-03', () => {
 		const { container } = render(<Card variant="glass">Content</Card>)
 		const card = container.firstChild as HTMLElement
 		expect(card?.className ?? '').toContain('glass-card')
-		expect(card?.className ?? '').not.toContain('bg-surface-raised')
+		expect(card?.className ?? '').not.toContain('border-border-subtle')
 	})
 })

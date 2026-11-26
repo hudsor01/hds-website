@@ -13,7 +13,7 @@ interface TopbarProps {
 
 export function Topbar({ email }: TopbarProps) {
 	return (
-		<header className="flex items-center justify-between h-14 px-6 border-b border-border bg-surface-raised">
+		<header className="flex items-center justify-between h-14 px-6 border-b border-border bg-card">
 			<div className="flex items-center">
 				<span className="text-sm font-semibold text-foreground">
 					Hudson Digital

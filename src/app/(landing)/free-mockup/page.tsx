@@ -146,7 +146,7 @@ export default function FreeMockupPage() {
 						</div>
 
 						{/* RIGHT: the form (sticky on desktop so it stays in view) */}
-						<div className="rounded-xl border border-border bg-surface-raised p-6 sm:p-8 lg:sticky lg:top-8">
+						<div className="rounded-xl border border-border bg-card p-6 sm:p-8 lg:sticky lg:top-8">
 							<h2 className="text-h3 text-foreground">
 								Request your free mockup
 							</h2>

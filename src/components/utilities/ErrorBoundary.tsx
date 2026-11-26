@@ -125,7 +125,7 @@ export function DefaultErrorFallback({
 					</p>
 
 					{errorObj && (
-						<details className="text-left mb-content-block bg-bg-overlay/30 rounded-lg border border-destructive/20">
+						<details className="text-left mb-content-block bg-overlay/30 rounded-lg border border-destructive/20">
 							<summary className="text-destructive-text cursor-pointer mb-subheading flex-between">
 								<span>Error Details</span>
 								<button

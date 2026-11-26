@@ -107,7 +107,7 @@ async function SubscriberLoader({ params }: SubscriberDetailPageProps) {
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Subscription</h2>
-				<dl className="rounded-xl border border-border bg-surface-raised p-4 mt-2 grid grid-cols-[max-content_1fr] gap-x-6 gap-y-2 text-sm">
+				<dl className="rounded-xl border border-border bg-card p-4 mt-2 grid grid-cols-[max-content_1fr] gap-x-6 gap-y-2 text-sm">
 					<dt className="text-muted-foreground">Source</dt>
 					<dd className="text-foreground">{row.source ?? '-'}</dd>
 
@@ -141,7 +141,7 @@ async function SubscriberLoader({ params }: SubscriberDetailPageProps) {
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Actions</h2>
-				<div className="rounded-xl border border-border bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-border bg-card p-4 mt-2">
 					{row.status === 'active' ? (
 						<form action={unsubscribeForm}>
 							<input type="hidden" name="id" value={row.id} />
@@ -166,7 +166,7 @@ async function SubscriberLoader({ params }: SubscriberDetailPageProps) {
 
 			<section>
 				<h2 className="text-lg font-semibold text-foreground">Danger</h2>
-				<div className="rounded-xl border border-destructive/40 bg-surface-raised p-4 mt-2">
+				<div className="rounded-xl border border-destructive/40 bg-card p-4 mt-2">
 					<DeleteButton
 						action={deleteSubscriberAction}
 						id={row.id}

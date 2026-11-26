@@ -87,7 +87,7 @@ export default function ContactPage() {
 				<div className="relative z-10 container-wide pt-28 pb-16 sm:pt-32 sm:pb-20">
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 						{/* LEFT: Form */}
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors">
 							<div className="mb-8">
 								<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 									Free Website Plan
@@ -108,7 +108,7 @@ export default function ContactPage() {
 						{/* RIGHT: Contact Info + What Happens Next */}
 						<div className="space-y-8">
 							{/* What Happens Next card */}
-							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors space-y-6">
+							<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors space-y-6">
 								<h2 className="text-h3 text-foreground">What Happens Next?</h2>
 
 								<div className="flex items-start gap-4">
@@ -163,7 +163,7 @@ export default function ContactPage() {
 							</div>
 
 							{/* Contact Info */}
-							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors space-y-6">
+							<div className="rounded-xl border border-border bg-card p-8 hover:border-border-strong transition-colors space-y-6">
 								<h2 className="text-h3 text-foreground">Get in Touch</h2>
 								<div className="space-y-4">
 									<div className="flex items-start gap-4">
@@ -233,7 +233,7 @@ export default function ContactPage() {
 			</section>
 
 			{/* Service Area Section */}
-			<section className="py-section-sm bg-surface-raised">
+			<section className="py-section-sm bg-card">
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">

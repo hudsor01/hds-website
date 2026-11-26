@@ -19,7 +19,7 @@ type TopPagesTableProps = {
 
 export function TopPagesTable({ result }: TopPagesTableProps) {
 	return (
-		<div className="rounded-xl border border-border bg-surface-raised p-6">
+		<div className="rounded-xl border border-border bg-card p-6">
 			<h2 className="text-sm font-semibold text-foreground mb-4">
 				Top pages (last 30 days)
 			</h2>

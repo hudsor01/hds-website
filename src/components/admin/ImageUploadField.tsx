@@ -216,7 +216,7 @@ export function ImageUploadField({
 				<div className="space-y-2">
 					{previewSrc && (
 						<div className="flex items-start gap-3">
-							<div className="relative h-20 w-20 overflow-hidden rounded-md border border-border bg-surface-base">
+							<div className="relative h-20 w-20 overflow-hidden rounded-md border border-border bg-background">
 								<Image
 									src={previewSrc}
 									alt={`${label} preview`}

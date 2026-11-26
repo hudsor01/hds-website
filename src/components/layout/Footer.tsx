@@ -70,7 +70,7 @@ const socialLinks = [
 export default function Footer() {
 	return (
 		<footer
-			className="relative mt-auto bg-surface-sunken"
+			className="relative mt-auto bg-muted"
 			role="contentinfo"
 			aria-label="Site footer"
 		>
@@ -271,7 +271,7 @@ export default function Footer() {
 								>
 									Privacy Policy
 								</Link>
-								<span className="text-muted-foreground/50">/</span>
+								<span aria-hidden="true">/</span>
 								<Link
 									href={ROUTES.TERMS}
 									className="hover:text-foreground transition-smooth rounded px-1"

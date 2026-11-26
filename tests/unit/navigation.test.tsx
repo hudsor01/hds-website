@@ -322,9 +322,9 @@ describe('Navbar Polish — COMP-04', () => {
 		const footer = container.querySelector('footer')
 		expect(footer).toBeInTheDocument()
 		// Inline style hack must be removed — footer uses design token class
-		// bg-surface-sunken is correct for light-first design (bg-background-dark was too harsh)
+		// bg-muted (the sunken surface) is correct for light-first design (bg-background-dark was too harsh)
 		const cls = footer?.className ?? ''
-		expect(cls).toContain('bg-surface-sunken')
+		expect(cls).toContain('bg-muted')
 		// Confirm no inline style override
 		expect(footer?.getAttribute('style')).toBeNull()
 	})

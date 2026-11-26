@@ -118,7 +118,7 @@ async function CalculatorLeadsList({
 			<SearchInput placeholder="Search calculator leads" />
 			{rows.length === 0 ? (
 				q ? (
-					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+					<div className="rounded-xl border border-border bg-card p-8 text-center">
 						<p className="text-sm text-muted-foreground">
 							No calculator leads matching{' '}
 							<span className="font-mono">{q}</span>.
@@ -131,7 +131,7 @@ async function CalculatorLeadsList({
 						</Link>
 					</div>
 				) : (
-					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+					<div className="rounded-xl border border-border bg-card p-8 text-center">
 						<p className="text-sm text-muted-foreground">
 							No calculator submissions yet.
 						</p>

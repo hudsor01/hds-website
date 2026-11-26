@@ -162,7 +162,7 @@ export default function HomePage() {
 
 						{/* Right — what your website does */}
 						<div className="lg:col-span-2">
-							<div className="rounded-2xl border border-border/60 bg-surface-raised/40 backdrop-blur-sm overflow-hidden">
+							<div className="rounded-2xl border border-border/60 bg-card/40 backdrop-blur-sm overflow-hidden">
 								{/* Header */}
 								<div className="px-5 py-4 border-b border-border/60">
 									<div className="flex items-center gap-2 mb-1">
@@ -187,7 +187,12 @@ export default function HomePage() {
 											<span className="text-muted-foreground">
 												{item.trigger}
 											</span>
-											<span className="text-muted-foreground/40 mx-1.5">→</span>
+											<span
+												className="text-muted-foreground mx-1.5"
+												aria-hidden="true"
+											>
+												→
+											</span>
 											<span className="text-foreground font-medium">
 												{item.outcome}
 											</span>
@@ -216,7 +221,7 @@ export default function HomePage() {
 						{solutions.map(solution => (
 							<div
 								key={solution.title}
-								className="group flex flex-col p-8 rounded-xl bg-surface-raised border border-border hover:border-border-strong transition-colors"
+								className="group flex flex-col p-8 rounded-xl bg-card border border-border hover:border-border-strong transition-colors"
 							>
 								{/* Icon + stat row */}
 								<div className="flex items-start justify-between mb-6">
@@ -353,7 +358,7 @@ export default function HomePage() {
 			</section>
 
 			{/* ── CLOSING CTA ────────────────────────────────────── */}
-			<section className="relative py-section bg-surface-raised overflow-hidden">
+			<section className="relative py-section bg-card overflow-hidden">
 				{/* Soft radial accent for depth — pure CSS, no extra DOM weight */}
 				<div
 					aria-hidden="true"

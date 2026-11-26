@@ -41,7 +41,7 @@ export default function PrivacyPage() {
 			{/* Content */}
 			<section className="py-section-sm">
 				<div className="container-content">
-					<div className="rounded-xl border border-border bg-surface-raised p-8 sm:p-12 space-y-10">
+					<div className="rounded-xl border border-border bg-card p-8 sm:p-12 space-y-10">
 						<section>
 							<h2 className="text-h3 text-foreground mb-4">
 								Information We Collect

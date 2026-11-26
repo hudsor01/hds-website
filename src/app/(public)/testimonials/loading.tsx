@@ -22,7 +22,7 @@ export default function TestimonialsLoading() {
 						{[...Array(6)].map((_, i) => (
 							<div
 								key={i}
-								className="rounded-xl border border-border bg-surface-raised p-8 animate-pulse"
+								className="rounded-xl border border-border bg-card p-8 animate-pulse"
 							>
 								<div className="space-y-4">
 									<div className="flex gap-1">

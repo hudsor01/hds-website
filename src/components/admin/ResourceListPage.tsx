@@ -47,7 +47,7 @@ export function ResourceListPage({
 				</Button>
 			</div>
 			{isEmpty ? (
-				<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+				<div className="rounded-xl border border-border bg-card p-8 text-center">
 					<p className="text-sm text-muted-foreground">{emptyMessage}</p>
 					<Link
 						href={newHref}

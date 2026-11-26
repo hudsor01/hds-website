@@ -94,7 +94,7 @@ export default function FaqClient() {
 											<AccordionItem
 												key={qIndex}
 												value={`${catIndex}-${qIndex}`}
-												className="rounded-xl border border-border bg-surface-raised overflow-hidden border-none"
+												className="rounded-xl border border-border bg-card overflow-hidden border-none"
 											>
 												<AccordionTrigger className="px-6 py-4 text-left hover:bg-muted/30 hover:no-underline">
 													<span className="text-base font-semibold text-foreground pr-8">
@@ -119,7 +119,7 @@ export default function FaqClient() {
 			{/* CTA */}
 			<section className="py-section">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 md:p-16 text-center">
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
 							aria-hidden="true"
