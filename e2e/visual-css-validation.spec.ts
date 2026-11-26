@@ -174,9 +174,12 @@ test.describe('Form Component Styling', () => {
 			.first()
 
 		if ((await input.count()) > 0) {
-			// Focus the input
+			// The contact form renders hidden until it hydrates, and focus()
+			// on a hidden input is a silent no-op: wait until it is visible,
+			// then confirm it really has focus before reading styles.
+			await expect(input).toBeVisible()
 			await input.focus()
-			await page.waitForTimeout(200)
+			await expect(input).toBeFocused()
 
 			// Fields use the same focus treatment as every other control: the
 			// global 2px solid outline. Read the longhands, since the
