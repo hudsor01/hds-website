@@ -173,8 +173,9 @@ export default function WebsiteMigrationPage() {
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
 						Paying hundreds a month for a website you don&apos;t even own? I
-						move everything to a faster site that is 100% yours, with zero
-						downtime and a redirect for every old page to protect your rankings.
+						move everything to a faster site that is 100% yours while it stays
+						up during the switch, with a redirect for every old page to protect
+						your rankings.
 					</p>
 					<div className="flex flex-col sm:flex-row gap-3 justify-center">
 						<Button asChild variant="accent" size="xl">
