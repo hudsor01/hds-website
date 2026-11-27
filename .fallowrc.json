@@ -28,7 +28,7 @@
 		"e2e/**/*.spec.ts"
 	],
 	"ignorePatterns": ["src/lib/_generated/**"],
-	"ignoreDependencies": ["tailwindcss"],
+	"ignoreDependencies": ["tailwindcss", "@sentry/bun"],
 	"ignoreExports": [
 		{
 			"file": "src/lib/schemas/content.ts",
@@ -41,6 +41,38 @@
 		{
 			"file": "src/app/(public)/blog/**/page.tsx",
 			"exports": ["unstable_paramMatching"]
+		},
+		{
+			"file": "src/app/(public)/locations/\\[slug\\]/page.tsx",
+			"exports": ["unstable_paramMatching"]
+		},
+		{
+			"file": "src/app/(public)/services/\\[slug\\]/page.tsx",
+			"exports": ["unstable_paramMatching"]
+		},
+		{
+			"file": "src/app/(public)/showcase/\\[slug\\]/page.tsx",
+			"exports": ["unstable_paramMatching"]
+		},
+		{
+			"file": "src/app/not-found.tsx",
+			"exports": ["metadata"]
+		},
+		{
+			"file": "src/app/(public)/not-found.tsx",
+			"exports": ["metadata"]
+		},
+		{
+			"file": "src/app/(public)/blog/\\[slug\\]/twitter-image.tsx",
+			"exports": ["generateStaticParams"]
+		},
+		{
+			"file": "src/lib/csrf.ts",
+			"exports": ["getCsrfTokenFromRequest"]
+		},
+		{
+			"file": "src/lib/ad-conversions.ts",
+			"exports": ["isGoogleAdsConfigured"]
 		}
 	],
 	"rules": {
