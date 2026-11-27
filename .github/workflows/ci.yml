@@ -44,8 +44,24 @@ jobs:
       # Dependabot security updates cannot rewrite bun.lock, so advisories
       # against locked versions would otherwise go unnoticed. Fails on high
       # or critical only; low/moderate are left to routine dependency bumps.
+      # The audit queries the registry's advisory endpoint, and bun exits 1
+      # for both a found advisory and a failed request. Retry only the failed
+      # request (a registry or network blip) so an outage does not read as a
+      # code problem; an advisory still fails on the first attempt.
       - name: Audit dependencies
-        run: bun audit --audit-level=high
+        run: |
+          log="$RUNNER_TEMP/bun-audit.log"
+          for attempt in 1 2 3; do
+            status=0
+            bun audit --audit-level=high > "$log" 2>&1 || status=$?
+            cat "$log"
+            if [ "$status" -eq 0 ]; then exit 0; fi
+            if ! grep -q 'audit request failed' "$log"; then exit "$status"; fi
+            echo "::warning::bun audit could not reach the registry (attempt $attempt of 3)"
+            if [ "$attempt" -lt 3 ]; then sleep 20; fi
+          done
+          echo "::error::bun audit could not reach the registry after 3 attempts; re-run the job once the registry is back"
+          exit 1
 
       - name: Check test mock leaks
         run: bun scripts/check-test-mock-leaks.ts
