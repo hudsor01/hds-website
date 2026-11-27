@@ -58,7 +58,7 @@ const migrationSteps: MigrationStep[] = [
 		step: '01',
 		title: 'Free Migration Audit',
 		description:
-			'I go through your current setup. Website, domain ownership, Google Business Profile, your customer data. Then I map out a plan to switch you over with zero downtime.'
+			'I go through your current setup. Website, domain ownership, Google Business Profile, your customer data. Then I map out a plan to switch you over while your site stays up.'
 	},
 	{
 		step: '02',
@@ -129,7 +129,7 @@ export default function WebsiteMigrationPage() {
 				name: 'How long does a website migration take?',
 				acceptedAnswer: {
 					'@type': 'Answer',
-					text: 'Most migrations take 1 to 4 weeks. Your new site goes live before I touch anything on the old platform, so there is zero downtime.'
+					text: 'Most migrations take 1 to 4 weeks. Your new site is built and tested before I touch anything on the old platform, so your site stays up during the switch.'
 				}
 			},
 			{
@@ -370,7 +370,7 @@ export default function WebsiteMigrationPage() {
 								1-4 wks
 							</div>
 							<div className="text-sm text-muted-foreground">
-								Typical time to move you over with zero downtime
+								Typical time to move you over
 							</div>
 						</div>
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">

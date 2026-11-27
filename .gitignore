@@ -93,12 +93,10 @@ playwright-report/
 
 # Manual guides
 *.md
-!CLAUDE.md
 !README.md
 !SECURITY.md
 !master_todo.md
 !docs/plans/*.md
-!.planning/**/*.md
 !.github/**/*.md
 # Blog posts (the only source of truth for the blog) and the fixed posts the
 # @visual suite renders instead of them.
@@ -180,3 +178,8 @@ coverage/
 .cache/
 report/
 .superpowers/
+
+# Local only: GSD planning notes and agent instructions are not published
+# (the repo is public). They stay on disk; git does not track them.
+.planning/
+CLAUDE.md
