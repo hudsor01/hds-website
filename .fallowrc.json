@@ -73,6 +73,14 @@
 		{
 			"file": "src/lib/ad-conversions.ts",
 			"exports": ["isGoogleAdsConfigured"]
+		},
+		{
+			"file": "src/lib/schemas/error-report.ts",
+			"exports": ["ErrorReport"]
+		},
+		{
+			"file": "src/lib/schemas/query-params.ts",
+			"exports": ["TestimonialSubmitInput"]
 		}
 	],
 	"rules": {
