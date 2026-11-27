@@ -41,6 +41,12 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      # Dependabot security updates cannot rewrite bun.lock, so advisories
+      # against locked versions would otherwise go unnoticed. Fails on high
+      # or critical only; low/moderate are left to routine dependency bumps.
+      - name: Audit dependencies
+        run: bun audit --audit-level=high
+
       - name: Check test mock leaks
         run: bun scripts/check-test-mock-leaks.ts
 
