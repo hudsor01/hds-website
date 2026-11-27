@@ -42,7 +42,7 @@
 - `src/components/ui/` - Base primitives (accordion, alert, breadcrumb, button, card, checkbox, command, dialog, field, input, label, pagination, select, table, textarea)
 - `src/components/utilities/` - Cross-cutting components (`Icon`, `Analytics`, `WebVitalsReporting`, `AttributionTracker`, `JsonLd`, `ErrorBoundary`, `ScrollToTop`, `BackLink`, `CTASection`, `ExitIntentModal`). Blog reading bar is `src/components/blog/ReadingProgress.tsx`
 - `src/lib/` - Core utilities (partial: `db`, `logger`, `error-tracking`, `analytics`, `seo-utils`, `seo-config`, `csrf`, `rate-limiter`, `resend-client`, `contact-service`, `scheduled-emails`, `email-utils`, `notifications`, `request`, `security-headers`, `attribution`, plus `api/` (route guards, rate limiting, responses, CSRF fetch), `auth/`, `admin/` (admin queries and session gate), and per-domain modules `blog`, `showcase`, `testimonials`, `help-articles`, `paystub-calculator/`, `pdf/`, `ttl-calculator/`)
-- Server-only modules (`resend-client`, `contact-service`, `scheduled-emails`, `testimonials`, `blog`, `unsubscribe-token`, `ad-conversions`, `auth/index`, `auth/get-session`, everything in `admin/`) import `'server-only'` to fail-fast on accidental client imports. `db` deliberately does not: `logger` dynamically imports it from a client-reachable path
+- Server-only modules (`resend-client`, `contact-service`, `scheduled-emails`, `testimonials`, `blog`, `unsubscribe-token`, `ad-conversions`, `auth/index`, `auth/get-session`, and in `admin/` only `auth`, `list-cursor` and the `*-queries` files) import `'server-only'` to fail-fast on accidental client imports. `db` deliberately does not: `logger` dynamically imports it from a client-reachable path
 - `src/lib/auth/admin.ts` - Bearer-token guard for admin/cron API endpoints (user sessions are Better Auth; see Auth under INTEGRATIONS)
 - `src/lib/schemas/` - Drizzle table schemas + Zod schemas; barrel at `schema.ts`
 - `content/blog/` - Blog posts (one Markdown file per post). The ONLY source of truth for the blog; see Blog under INTEGRATIONS
@@ -109,7 +109,7 @@
 
 **Zod:**
 - Location `src/lib/schemas/`. `common.ts` holds reusable validators (email, phone, name); feature files own form/API schemas
-- Export schema and inferred type. Always `safeParse`, never `parse`
+- Export the schema. Export its inferred type only when another module uses it (Fallow's `unused-types` rule flags the rest). Always `safeParse`, never `parse`
 
 **Drizzle:**
 - Schema files per-table in `src/lib/schemas/`, barrel at `schema.ts`
@@ -120,7 +120,7 @@
 ## TESTING
 
 **Unit (`bun:test`):**
-- Files in `tests/unit/`, plus a few suites at the `tests/` root and in `tests/pdf/`. `bunfig.toml` preloads `tests/happydom.ts` and `tests/setup.ts`; setup auto-mocks `@/env` and `@/lib/logger`.
+- Files in `tests/unit/`, plus a few suites at the `tests/` root. `tests/pdf/render-document-pdfs.tsx` is not a suite: `tests/unit/document-pdfs.test.ts` runs it in a separate bun process. `bunfig.toml` preloads `tests/happydom.ts` and `tests/setup.ts`; setup auto-mocks `@/env` and `@/lib/logger`.
 - Run: `bun run test:unit` (runs `scripts/check-test-mock-leaks.ts`, `blog:build`, then `bun test tests/`). Random order: `bun run test:unit:random`
 - Coverage: `bun run test:unit:coverage`
 
@@ -199,7 +199,8 @@
 
 **Resend (Email):**
 - Client `src/lib/resend-client.ts`; key `RESEND_API_KEY`
-- From: `noreply@hudsondigitalsolutions.com` for admin notifications and system mail; mail a lead reads (contact welcome, scheduled follow-up, TTL results) comes from `BUSINESS_INFO.email` (`hello@...`) in `src/lib/constants/business.ts`
+- From `BUSINESS_INFO.email` (`hello@...`, `src/lib/constants/business.ts`): the contact welcome, the scheduled follow-up and the TTL results email
+- From `noreply@hudsondigitalsolutions.com`: every admin notification, plus two lead-facing emails, the calculator results email (`src/app/api/calculators/submit/route.tsx`) and the newsletter welcome (`src/app/api/newsletter/subscribe/route.tsx`)
 - Senders: `src/lib/contact-service.tsx`, `src/lib/scheduled-emails.tsx` (sent by the `/api/process-emails` cron, daily at 00:00 UTC per `vercel.json`), `api/newsletter/subscribe`, `api/calculators/submit`, `api/testimonials/submit`, `(public)/actions/ttl-calculator.tsx`. Templates in `src/emails/` (react-email)
 
 **Env vars:**
@@ -208,7 +209,12 @@
 - Always defined (have defaults): `BASE_URL` (default `http://localhost:3000`), `NEXT_PUBLIC_BASE_URL` (default `http://localhost:3000`), `NODE_ENV` (default `development`)
 - Truly optional / feature-gated: `RESEND_API_KEY`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `DISCORD_WEBHOOK_URL`, `SLACK_WEBHOOK_URL`, `GOOGLE_SITE_VERIFICATION`, `DATABASE_URL_UNPOOLED`, `BETTER_AUTH_URL`, `BETTER_AUTH_TRUSTED_ORIGINS`, `BLOB_READ_WRITE_TOKEN` (admin image upload; 503 when unset), `PAGESPEED_API_KEY`, `SENTRY_DSN`, `SENTRY_AUTH_TOKEN`, `NEXT_PUBLIC_SENTRY_DSN`, `NEXT_PUBLIC_SITE_URL`, `VERCEL_REGION`, `npm_package_version`, `STIRLING_PDF_URL` (declared, read by no code)
 - Google Ads conversion upload (all optional; `src/lib/ad-conversions.ts` no-ops until set): `GOOGLE_ADS_CUSTOMER_ID`, `GOOGLE_ADS_CONVERSION_ACTION_ID`, `GOOGLE_ADS_SALE_CONVERSION_ACTION_ID`, `GOOGLE_ADS_LOGIN_CUSTOMER_ID`, `GOOGLE_ADS_SA_JSON`
-- Outside `src/env.ts`: `VERCEL_ENV` (production refines), `SKIP_ENV_VALIDATION`, and the build-time `SENTRY_ORG` / `SENTRY_PROJECT` / `CI` read by `next.config.ts`
+- Read straight from `process.env` instead of through the `env` object (every such read in `src/` and `next.config.ts`):
+  - `src/env.ts` itself, not declared in its schema: `VERCEL_ENV` (production refines), `SKIP_ENV_VALIDATION`
+  - `next.config.ts` (build time): `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `CI`
+  - `src/instrumentation.ts`: `SENTRY_DSN`, `NEXT_RUNTIME`, `VERCEL_ENV`, `NODE_ENV`
+  - `src/instrumentation-client.ts`: `NEXT_PUBLIC_SENTRY_DSN`, `NEXT_PUBLIC_VERCEL_ENV`, `NODE_ENV`
+  - `src/lib/logger.ts`: `NODE_ENV`
 
 ## DEVELOPMENT COMMANDS
 
