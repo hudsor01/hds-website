@@ -51,28 +51,28 @@ Start with **Website Type**. The estimator offers five: Landing Page, Business W
 
 Next is **Number of Pages**. The first five pages are part of the base. Every page past five adds to the range. A company with a page per city plus its service pages lands well past five, so this input matters more than owners expect.
 
-Then **Additional Features**. There are ten to choose from: Blog/News Section, Advanced Contact Forms, Payment Processing, User Authentication, Booking System, Membership Area, Advanced Analytics, Multi-language Support, Third-party API Integration and Custom Dashboard. Each one you check adds its own amount to the range and one week to the typical timeline. The HVAC company checks Booking System and Blog/News Section. Watch this section closely. It's where budgets move most.
+Then **Additional Features**. There are ten to choose from: Blog/News Section, Advanced Contact Forms, Payment Processing, User Authentication, Booking System, Membership Area, Advanced Analytics, Multi-language Support, Third-party API Integration and Custom Dashboard. Each one you check adds its own amount to the range and one week to the planning timeline. The HVAC company checks Booking System and Blog/News Section. Watch this section closely. It's where budgets move most.
 
-**Design Complexity** works as a multiplier on everything above it. In this tool, Basic Template takes 20% off the range, Standard Custom Design leaves it as is, Fully Custom Design adds 30% and Premium/Luxury Design adds 60%. Those percentages are how this estimator adjusts its range. They aren't an industry rule and they aren't how I price a project.
+**Design Complexity** works as a multiplier on everything above it. In this tool, Basic template takes 20% off the range, Standard custom design (the default) leaves it as is, Fully custom design adds 30% and Premium or luxury design adds 60%. Those percentages are how this estimator adjusts its range. They aren't an industry rule and they aren't how I price a project.
 
-**Project Timeline** has three settings. The estimator adds 25% to its range for Urgent and shortens the typical timeline by about 30%. Normal assumes 4 to 12 weeks. Flexible doesn't lower the number in this tool. It runs the same math as Normal.
+**Project Timeline** has two settings. Standard pace is the default and runs the base math. Rush adds 25% to the range and shortens the planning timeline by about 30%.
 
-Last is **Include Maintenance Package**. Check the box and the results add a typical monthly maintenance figure. Leave it empty and maintenance shows as not included.
+Last is the **Include ongoing maintenance** checkbox. Check it and the results add a monthly maintenance figure with the yearly total under it. The tool assumes 15% of the build figure per year, before any rush adjustment. Leave it empty and maintenance shows as not included.
 
-The results come back in four parts:
+The results appear once you pick a website type and the page count is a whole number from 1 to 100. They come back in four parts:
 
-- **Typical Market Range:** a band that runs 20% below and 20% above the midpoint.
-- **Market Midpoint:** the center of that band.
-- **Typical Timeline:** in weeks. It starts at 4 weeks for a landing page or business website, 8 for an online store, 12 for a web application and 16 for a custom platform, then adds a week per feature.
-- **Typical Maintenance:** a monthly figure, shown only when you checked the box.
+- **Planning model range:** a band that runs from 20% below to 20% above the midpoint. The tool labels it as the output of its own formula, not market data and not a quote.
+- **Planning model midpoint:** the center of that band.
+- **Planning timeline:** in weeks. It starts at 4 weeks for a landing page or business website, 8 for an online store, 12 for a web application and 16 for a custom platform, then adds a week per feature. Rush cuts that by about 30%. The tool calls it an assumption for the scope, not a schedule.
+- **Maintenance:** a monthly figure when you check the box. Otherwise it reads Not included.
 
-Two details make the tool more useful. Your inputs live in the page URL, so you can bookmark the exact scope or send it to a business partner. The Copy Range button copies the results as plain text you can paste into an email or a brief.
+A few details make the tool more useful. Your inputs live in the page URL, so you can bookmark the exact scope or send it to a business partner. The Copy Range button copies the results as plain text you can paste into an email or a brief. Start over resets every input to its default when you want to try a different scope.
 
-Read the output as what the tool says it is: a typical market range for planning, not a quote. It can't see your content, your existing systems or the quirks of your business. What it does show is which choices move the number. Turn booking off, hit Calculate Estimate again and watch the range drop. Switch from Fully Custom to Standard, recalculate and see what the design ambition is adding.
+Read the output as what the tool says it is: an illustrative planning model built on its own assumptions. It isn't market data and it isn't a quote. It can't see your content, your existing systems or the quirks of your business. What it does show is which choices move the number. The range updates as you change any input, so there's nothing to recalculate. Uncheck Booking System and watch the range drop. Switch from Fully custom design to Standard custom design and see what the design ambition is adding.
 
 ## What the Market Range Looks Like
 
-An estimator gives you one view of the market. Published cost guides give you more. They disagree with each other by a wide margin, because each one draws on different shops and different project sizes.
+The estimator shows how your choices move a planning range. It doesn't tell you what the market charges. For that, look at published cost guides. They disagree with each other by a wide margin, because each one draws on different shops and different project sizes.
 
 [Clutch's website budget guide](https://clutch.co/resources/how-to-create-a-budget-for-a-new-website) says most websites built from scratch cost under $10,000. The same guide puts a basic 5 to 10 page site from a freelancer at $500 to $5,000, DIY site builders at $10 to $50 per month and larger projects such as online stores or membership portals past $100,000.
 
@@ -103,7 +103,7 @@ Start with what the estimator already asked you:
 
 Then add what no estimator can see. Who writes the copy? What do you already own, like the domain, the logo and good photos? Which tools does the site need to talk to, such as your CRM or booking software? What counts as success: calls, form fills, booked jobs?
 
-Paste the estimator's copied range and the URL with your inputs at the bottom. Now every shop you talk to sees the same scope and the same market context.
+Paste the estimator's copied range and the URL with your inputs at the bottom. Now every shop you talk to sees the same scope and the same planning range.
 
 I go deeper on writing the scope in [planning the project as a blueprint](/blog/your-website-needs-a-blueprint-how-to-plan-a-project-that-pays-off). Once you have a range, check it against [setting a website budget](/blog/how-to-budget-for-a-website-project) so you know your ceiling before the first call. And remember that [who you hire changes the number](/blog/agency-vs-freelancer-vs-diy-website-cost): the same brief will price very differently with a freelancer, an agency or a DIY builder.
 

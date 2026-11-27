@@ -11,7 +11,7 @@ import type { InvoiceData, InvoiceLineItem } from '@/types/pdf-templates'
 import { isDateBefore, isDateInputValue } from './dates'
 import { dollarsToCents, isNonNegativeNumber, roundHalfUp } from './money'
 
-export const UNTITLED_ITEM = 'Untitled item'
+const UNTITLED_ITEM = 'Untitled item'
 
 export interface InvoiceLineTotal {
 	id: string

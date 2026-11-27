@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-**NO EMOJIS** - Never use emojis unless explicitly requested. Use Heroicons/Lucide React for UI icons.
+**NO EMOJIS** - Never use emojis unless explicitly requested. Use Lucide React (`lucide-react`) for UI icons.
 **NO EM/EN DASHES IN USER-FACING TEXT** - Never use em-dash (—, U+2014) or en-dash (–, U+2013) in any string that ships to the browser: JSX text nodes, JSX attribute values that render (alt, title, aria-label, placeholder), `metadata` exports, JSON-LD / structured-data text, error messages shown to users, email templates, and structured DB content (showcase descriptions, etc.). Replace with: comma, period, hyphen (-), "to" (ranges), or rephrase. **Code comments and developer-only strings (test fixture names, log messages) are exempt** — they never reach a user. Applies project-wide.
 **SEARCH FIRST** - This project uses standard patterns. Find an existing example in the codebase before adding new code.
 
@@ -21,7 +21,7 @@
 
 - **Framework**: Next.js 16 (App Router) + React 19
 - **Runtime / PM**: Bun 1.3.x
-- **Lint / Format**: Biome 2.5.15 (`biome.json`)
+- **Lint / Format**: Biome 2.6.8 (`biome.json`)
 - **DB**: Neon Postgres + Drizzle ORM 0.45 — client `src/lib/db.ts`, schema barrel `src/lib/schemas/schema.ts`
 - **Forms**: `@tanstack/react-form` via factory in `src/hooks/form-hook.tsx`
 - **Validation**: Zod 4
@@ -34,16 +34,16 @@
 
 - `src/proxy.ts` - Proxy (Next.js 16 rename of middleware.ts; Node.js runtime). Must live in `src/`, not the project root: Next only loads `proxy.ts` and `instrumentation*.ts` from the directory that holds `app/`, and the app is in `src/app`. Owns security headers (CSP built in `src/lib/security-headers.ts`), UA blocklist, CORS, and the `/admin` session-cookie gate. Does NOT set Cache-Control (cacheComponents and route handlers own caching) or redirect to HTTPS (Vercel does that at its edge). NOT CSRF or rate-limit — those moved to `src/lib/api/guards.ts::withMutationGuards` for per-route control. Its matcher skips static assets, metadata routes, prefetches and the Sentry tunnel (`/monitoring`) to limit Vercel function invocations. Don't recreate `middleware.ts`.
 - `src/instrumentation.ts` / `src/instrumentation-client.ts` - Sentry server and browser init (same `src/` rule as the proxy). Both no-op without a DSN. Set `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN` together: `next.config.ts` adds the `/monitoring` tunnel when either is present at build, and the CSP does not allow direct Sentry ingest.
-- `src/app/` - App Router pages, layouts, API route handlers
-- `src/app/actions/` - Server Actions (currently: `ttl-calculator.tsx`)
-- `src/app/api/` - API routes (calculators, contact, csp-reports, health, newsletter, pagespeed, process-emails, rss, testimonials, web-vitals)
-- `src/components/layout/` - `Navbar.tsx` (exported as `NavbarLight`), `Footer.tsx`
-- `src/components/forms/` - `ContactForm`, `NewsletterSignup`, `FormField`, `FormSuccessMessage`
-- `src/components/ui/` - Base primitives (button, card, input, label)
-- `src/components/utilities/` - Cross-cutting components (`Icon`/`IconButton`, `Analytics`, `JsonLd`, `ScrollProgress`)
-- `src/lib/` - Core utilities (partial: `db`, `logger`, `errors`, `analytics`, `seo-utils`, `seo-config`, `csrf`, `rate-limiter`, `resend-client`, `contact-service`, `scheduled-emails`, `email-utils`, `notifications`, `request`, `security-headers`, `attribution`, plus per-domain modules `blog`, `showcase`, `testimonials`, `help-articles`, `paystub-calculator/`, `pdf/`, `ttl-calculator/`)
-- Server-only modules (`db`, `resend-client`, `contact-service`, `scheduled-emails`, `testimonials`) import `'server-only'` to fail-fast on accidental client imports
-- `src/lib/auth/admin.ts` - Bearer-token guard for admin/cron endpoints (no user auth in this app)
+- `src/app/` - App Router pages, layouts, API route handlers. Route groups: `(public)` (marketing site, tools, blog), `(landing)` (`/free-mockup`), `(auth)` (`/auth/sign-in`, `/auth/sign-up`), `(admin)` (`/admin`). Sitemaps (`sitemap.xml` index + `sitemap-{core,services,locations,blog}.xml`) and `llms.txt` are route handlers at the app root
+- Server Actions: `src/app/(public)/actions/ttl-calculator.tsx`; admin mutations in `src/app/(admin)/admin/*/actions.ts` (emails, leads, leads/calculator, newsletter, showcase, testimonials)
+- `src/app/api/` - API routes: `admin/images/upload`, `auth/[...all]` (Better Auth), `calculators/submit`, `contact`, `csp-reports`, `csrf`, `error-report`, `health`, `newsletter/{subscribe,unsubscribe}`, `pagespeed`, `process-emails` (cron), `rss/feed`, `testimonials` (+ `[id]`, `requests`, `requests/[id]`, `submit`), `web-vitals`
+- `src/components/layout/` - `Navbar.tsx` (default export, imported as `NavbarLight`), `Footer.tsx`, `ToolPageLayout.tsx`
+- `src/components/forms/` - `ContactForm`, `FreeMockupForm`, `NewsletterSignup`, `FormField`, `FormSuccessMessage`, `CurrencyInput`
+- `src/components/ui/` - Base primitives (accordion, alert, breadcrumb, button, card, checkbox, command, dialog, field, input, label, pagination, select, table, textarea)
+- `src/components/utilities/` - Cross-cutting components (`Icon`, `Analytics`, `WebVitalsReporting`, `AttributionTracker`, `JsonLd`, `ErrorBoundary`, `ScrollToTop`, `BackLink`, `CTASection`, `ExitIntentModal`). Blog reading bar is `src/components/blog/ReadingProgress.tsx`
+- `src/lib/` - Core utilities (partial: `db`, `logger`, `error-tracking`, `analytics`, `seo-utils`, `seo-config`, `csrf`, `rate-limiter`, `resend-client`, `contact-service`, `scheduled-emails`, `email-utils`, `notifications`, `request`, `security-headers`, `attribution`, plus `api/` (route guards, rate limiting, responses, CSRF fetch), `auth/`, `admin/` (admin queries and session gate), and per-domain modules `blog`, `showcase`, `testimonials`, `help-articles`, `paystub-calculator/`, `pdf/`, `ttl-calculator/`)
+- Server-only modules (`resend-client`, `contact-service`, `scheduled-emails`, `testimonials`, `blog`, `unsubscribe-token`, `ad-conversions`, `auth/index`, `auth/get-session`, and in `admin/` only `auth`, `list-cursor` and the `*-queries` files) import `'server-only'` to fail-fast on accidental client imports. `db` deliberately does not: `logger` dynamically imports it from a client-reachable path
+- `src/lib/auth/admin.ts` - Bearer-token guard for admin/cron API endpoints (user sessions are Better Auth; see Auth under INTEGRATIONS)
 - `src/lib/schemas/` - Drizzle table schemas + Zod schemas; barrel at `schema.ts`
 - `content/blog/` - Blog posts (one Markdown file per post). The ONLY source of truth for the blog; see Blog under INTEGRATIONS
 - `src/lib/constants/` - Domain constants (`business.ts` etc.)
@@ -67,9 +67,9 @@
 
 **Forms (`@tanstack/react-form`):**
 - Build typed forms with the factory in `src/hooks/form-hook.tsx`; shared context in `src/hooks/form-context.ts`
-- Validate with Zod (`zodSchema` adapter) using schemas from `src/lib/schemas/`
+- Validate with Zod schemas from `src/lib/schemas/`, passed straight to `validators` (Standard Schema, no adapter), e.g. `validators: { onDynamic: contactFormClientSchema }` in `ContactForm`
 - Submit via API route (e.g., `/api/contact`) or Server Action
-- `useActionState`/`useFormStatus` is used in `src/app/unsubscribe/UnsubscribeForm.tsx`; not the default for new forms
+- `useActionState`/`useFormStatus` is used in `src/app/(public)/unsubscribe/UnsubscribeForm.tsx`; not the default for new forms
 
 **Toasts (Sonner):**
 - Mount `<Toaster />` from `sonner` once near the root
@@ -109,7 +109,7 @@
 
 **Zod:**
 - Location `src/lib/schemas/`. `common.ts` holds reusable validators (email, phone, name); feature files own form/API schemas
-- Export schema and inferred type. Always `safeParse`, never `parse`
+- Export the schema. Export its inferred type only when another module uses it (Fallow's `unused-types` rule flags the rest). Always `safeParse`, never `parse`
 
 **Drizzle:**
 - Schema files per-table in `src/lib/schemas/`, barrel at `schema.ts`
@@ -120,8 +120,8 @@
 ## TESTING
 
 **Unit (`bun:test`):**
-- Files in `tests/unit/`. Setup `tests/setup.ts` auto-mocks `@/env` and `@/lib/logger`.
-- Run: `bun run test:unit` (alias for `bun test tests/`)
+- Files in `tests/unit/`, plus a few suites at the `tests/` root. `tests/pdf/render-document-pdfs.tsx` is not a suite: `tests/unit/document-pdfs.test.ts` runs it in a separate bun process. `bunfig.toml` preloads `tests/happydom.ts` and `tests/setup.ts`; setup auto-mocks `@/env` and `@/lib/logger`.
+- Run: `bun run test:unit` (runs `scripts/check-test-mock-leaks.ts`, `blog:build`, then `bun test tests/`). Random order: `bun run test:unit:random`
 - Coverage: `bun run test:unit:coverage`
 
 **E2E (Playwright):**
@@ -141,7 +141,7 @@
 - Specify width/height. `priority` for above-fold; lazy by default below
 
 **Bundle:**
-- `optimizePackageImports` (Next.js 16 experimental) is enabled in `next.config.ts` for Heroicons, Radix UI, Lucide, TanStack
+- `optimizePackageImports` (Next.js 16 experimental) is enabled in `next.config.ts` for Lucide, Radix UI, TanStack, `@vercel/analytics` and `react-markdown`
 - Aim for first-load JS under 180kB per page (aspirational; not enforced in CI)
 - Dynamic-import heavy/client-only components via `next/dynamic`
 
@@ -152,21 +152,21 @@
 - Never use `console.*` directly
 
 **Analytics:**
-- `@vercel/analytics` + `@vercel/speed-insights` mounted in `src/components/utilities/Analytics.tsx`
+- `@vercel/analytics` via `src/components/utilities/Analytics.tsx`, `@vercel/speed-insights` and `WebVitalsReporting` (POSTs to `/api/web-vitals` in production), all mounted in `src/app/layout.tsx`
 - Domain events: emit via `logger.info` with metadata
 
 ## ACCESSIBILITY
 
 **Semantic HTML:**
 - Landmarks: `main`, `nav`, `section`, `article`
-- Skip-link target is `<div id="main-content">` in `src/app/layout.tsx` — note: a `<main>` landmark is not currently emitted; prefer adding one when touching the layout
+- The skip link in `src/app/layout.tsx` targets `#main-content`. `<main id="main-content">` is emitted by `src/app/(public)/layout.tsx`, `src/app/(landing)/layout.tsx` and `src/app/not-found.tsx`. The `(admin)` layout's `<main>` has no id and the `(auth)` layout emits no `<main>`
 - Heading hierarchy without skips
 
 **ARIA:**
 - `aria-label` on icon-only buttons
 - `aria-hidden="true"` on decorative icons
 - `aria-live` on dynamic content (`assertive` for errors, `polite` for info)
-- `role="alert"` for errors; `role="progressbar"` + `aria-valuenow` (used in `ScrollProgress`)
+- `role="alert"` for errors; `role="progressbar"` + `aria-valuenow` (used in `src/components/blog/ReadingProgress.tsx`)
 
 **Keyboard:**
 - All interactives keyboard-accessible
@@ -180,7 +180,7 @@
 - Schema barrel `src/lib/schemas/schema.ts`
 - Drizzle config `drizzle.config.ts` (dialect `postgresql`, `schemaFilter: ['public']`)
 - `DATABASE_URL_UNPOOLED` is used by drizzle-kit for migrations
-- pg_cron runs weekly VACUUM ANALYZE; see `.planning/` for details
+- pg_cron (database `neondb`) has five jobs, `VACUUM ANALYZE` at `0 3 * * 0` (Sundays 03:00 UTC) on `blog_posts` (legacy), `scheduled_emails`, `newsletter_subscribers`, `testimonials` and `calculator_leads`. They run only while the Neon compute is awake; a suspended compute skips the run
 
 **Blog (files, not the database):**
 - Posts live in `content/blog/*.md`; authors and the tag taxonomy live in `src/lib/constants/blog.ts`
@@ -194,18 +194,27 @@
 
 **Auth:**
 - User auth: Better Auth, session cookies, see src/lib/auth/. Admin promotion is currently SQL-only - first signup gets it; later admins via UPDATE users SET role='admin' WHERE email='...'.
-- Admin/cron endpoints guarded by Bearer token (`src/lib/auth/admin.ts`) using `ADMIN_SECRET` / `CRON_SECRET`
+- `/admin` pages: the proxy checks the session cookie is present, `src/app/(admin)/admin/layout.tsx` checks `role === 'admin'`, and every admin Server Action calls `requireAdminSession()` (`src/lib/admin/auth.ts`) first
+- Admin/cron API endpoints guarded by Bearer token (`src/lib/auth/admin.ts`) using `ADMIN_SECRET` / `CRON_SECRET`
 
 **Resend (Email):**
 - Client `src/lib/resend-client.ts`; key `RESEND_API_KEY`
-- From: `noreply@hudsondigitalsolutions.com` for system mail; `hello@...` is the user-facing contact address in `src/lib/constants/business.ts`
-- Senders: `src/lib/contact-service.ts`, `src/lib/scheduled-emails.ts`
+- From `BUSINESS_INFO.email` (`hello@...`, `src/lib/constants/business.ts`): the contact welcome, the scheduled follow-up and the TTL results email
+- From `noreply@hudsondigitalsolutions.com`: every admin notification, plus two lead-facing emails, the calculator results email (`src/app/api/calculators/submit/route.tsx`) and the newsletter welcome (`src/app/api/newsletter/subscribe/route.tsx`)
+- Senders: `src/lib/contact-service.tsx`, `src/lib/scheduled-emails.tsx` (sent by the `/api/process-emails` cron, daily at 00:00 UTC per `vercel.json`), `api/newsletter/subscribe`, `api/calculators/submit`, `api/testimonials/submit`, `(public)/actions/ttl-calculator.tsx`. Templates in `src/emails/` (react-email)
 
 **Env vars:**
 - All env access goes through `src/env.ts` (T3 env). Never read `process.env.X` directly.
 - Schema-required when `VERCEL_ENV === 'production'` (enforced by a `.optional().refine(...)` pair; unset elsewhere): `POSTGRES_URL`, `CSRF_SECRET`, `ADMIN_SECRET`, `CRON_SECRET`, `BETTER_AUTH_SECRET`
 - Always defined (have defaults): `BASE_URL` (default `http://localhost:3000`), `NEXT_PUBLIC_BASE_URL` (default `http://localhost:3000`), `NODE_ENV` (default `development`)
-- Truly optional / feature-gated: `RESEND_API_KEY`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `STIRLING_PDF_URL`, `DISCORD_WEBHOOK_URL`, `SLACK_WEBHOOK_URL`, `GOOGLE_SITE_VERIFICATION`, `DATABASE_URL_UNPOOLED`, `NEXT_PUBLIC_SITE_URL`
+- Truly optional / feature-gated: `RESEND_API_KEY`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `DISCORD_WEBHOOK_URL`, `SLACK_WEBHOOK_URL`, `GOOGLE_SITE_VERIFICATION`, `DATABASE_URL_UNPOOLED`, `BETTER_AUTH_URL`, `BETTER_AUTH_TRUSTED_ORIGINS`, `BLOB_READ_WRITE_TOKEN` (admin image upload; 503 when unset), `PAGESPEED_API_KEY`, `SENTRY_DSN`, `SENTRY_AUTH_TOKEN`, `NEXT_PUBLIC_SENTRY_DSN`, `NEXT_PUBLIC_SITE_URL`, `VERCEL_REGION`, `npm_package_version`, `STIRLING_PDF_URL` (declared, read by no code)
+- Google Ads conversion upload (all optional; `src/lib/ad-conversions.ts` no-ops until set): `GOOGLE_ADS_CUSTOMER_ID`, `GOOGLE_ADS_CONVERSION_ACTION_ID`, `GOOGLE_ADS_SALE_CONVERSION_ACTION_ID`, `GOOGLE_ADS_LOGIN_CUSTOMER_ID`, `GOOGLE_ADS_SA_JSON`
+- Read straight from `process.env` instead of through the `env` object (every such read in `src/` and `next.config.ts`):
+  - `src/env.ts` itself, not declared in its schema: `VERCEL_ENV` (production refines), `SKIP_ENV_VALIDATION`
+  - `next.config.ts` (build time): `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `CI`
+  - `src/instrumentation.ts`: `SENTRY_DSN`, `NEXT_RUNTIME`, `VERCEL_ENV`, `NODE_ENV`
+  - `src/instrumentation-client.ts`: `NEXT_PUBLIC_SENTRY_DSN`, `NEXT_PUBLIC_VERCEL_ENV`, `NODE_ENV`
+  - `src/lib/logger.ts`: `NODE_ENV`
 
 ## DEVELOPMENT COMMANDS
 
@@ -225,7 +234,7 @@ The aggregate scripts (`test:all`, `test:ci`, `test:unit`) invoke nested bun via
 
 **Before commit:**
 - `bun run lint && bun run typecheck` must pass
-- Lefthook is installed via the `prepare` script — its pre-commit hooks must pass
+- Lefthook is installed via the `prepare` script — its pre-commit hooks (brand tokens, Biome on staged files, typecheck) must pass; pre-push runs `test:unit` and `build`
 
 **Commit format:**
 - First line `type: description` (`feat:`, `fix:`, `refactor:`, `docs:`, `chore:`); under 50 chars

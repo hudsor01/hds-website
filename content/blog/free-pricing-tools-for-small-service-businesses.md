@@ -73,9 +73,9 @@ None of these tools sends anything for you. You email the PDF, you track the due
 
 One tool on the list prices something different. The [website cost estimator](/tools/cost-estimator) is for budgeting a website project, not for pricing your own jobs.
 
-You pick a site type, the number of pages, any features, a design level and a timeline. You can also tick a box for a maintenance package. It returns a typical market range, a midpoint, a typical timeline and a monthly maintenance figure when that box is checked.
+You pick a site type, the number of pages, any features, a design level and a timeline: Standard pace or Rush. You can also tick a box to include ongoing maintenance. It returns a planning model range, a midpoint, a planning timeline in weeks and a monthly maintenance figure when that box is checked.
 
-It's a planning range, not a quote. If you want to know what moves that range before you talk to anyone, read [how to estimate website cost](/blog/how-to-estimate-website-cost).
+It's an illustrative planning model built on the tool's own assumptions, not market data and not a quote. If you want to know what moves that range before you talk to anyone, read [how to estimate website cost](/blog/how-to-estimate-website-cost).
 
 ## What These Tools Will Not Do
 

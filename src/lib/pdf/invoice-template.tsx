@@ -10,10 +10,7 @@ import { formatDocumentDate } from '@/lib/documents/dates'
 import { cityStateZip, joinNonBlank } from '@/lib/documents/format'
 import { computeInvoiceTotals } from '@/lib/documents/invoice'
 import { formatCents } from '@/lib/documents/money'
-import type { InvoiceData, InvoiceLineItem } from '@/types/pdf-templates'
-
-// Re-export types for convenience
-export type { InvoiceData, InvoiceLineItem }
+import type { InvoiceData } from '@/types/pdf-templates'
 
 // Styles for the PDF document
 const styles = StyleSheet.create({

@@ -10,14 +10,7 @@ import { formatDocumentDate } from '@/lib/documents/dates'
 import { cityStateZip, joinNonBlank } from '@/lib/documents/format'
 import { formatCents } from '@/lib/documents/money'
 import { computeProposalPricing } from '@/lib/documents/proposal'
-import type {
-	ProposalData,
-	ProposalMilestone,
-	ProposalPricingItem
-} from '@/types/pdf-templates'
-
-// Re-export types for convenience
-export type { ProposalData, ProposalMilestone, ProposalPricingItem }
+import type { ProposalData } from '@/types/pdf-templates'
 
 const styles = StyleSheet.create({
 	page: {

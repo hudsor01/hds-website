@@ -60,7 +60,7 @@ I stopped counting page views years ago. Page views do not pay payroll. I track 
 
 You need to audit your pages quarterly. I pull a report from Power BI that shows traffic volume, conversion rate, average time on page and revenue attribution per URL. I sort by bottom performers and look for patterns. Are you targeting keywords that attract tire kickers? Is your form asking for too many fields? Are you sending traffic to a cold page instead of a sales-ready landing page? The fixes are usually small. Shortening a form from eight fields to four removes friction at the exact moment someone is ready to act. Moving your primary call to action above the fold puts the next step in front of every visitor, not only the ones who scroll. Changing a generic submit button to "Book Your Free Audit" shifts the tone from transactional to consultative.
 
-You can price a build by page count and features with my [cost estimator](/tools/cost-estimator). Run it before you approve any new design sprint. It shows estimated monthly maintenance too, which helps you decide if a page earns its keep.
+Pick a website type in my [cost estimator](/tools/cost-estimator) and you can see how page count and features move an illustrative planning range. It's a planning model, not a quote. Run it before you approve any new design sprint. Check Include ongoing maintenance and it adds a monthly maintenance figure too, which helps you decide if a page earns its keep.
 
 ### 5. When to Scale and When to Consolidate
 

@@ -59,7 +59,7 @@ This is where most small businesses fail. They treat navigation as static HTML a
 
 I also use dynamic navigation rules based on referral source. Traffic from local SEO pages sees Same Day Service highlighted in the primary bar. Paid search traffic gets Get a Quote pushed to the top right with contrasting color. Retargeting visitors see their previously clicked service category pinned to the left side of the menu. Personalization is not a luxury, it is attribution hygiene.
 
-I run cost comparisons across implementations. A basic WordPress menu costs nothing beyond theme licensing. Adding event tracking, dynamic rules and CRM sync usually adds two to four hours of engineering time plus tool subscriptions. The return hits immediately because you stop paying for unqualified traffic and start routing buyers to the right rep. I use my internal [cost estimator](/tools/cost-estimator) to model these numbers before I write a single line of code.
+I run cost comparisons across implementations. A basic WordPress menu costs nothing beyond theme licensing. Adding event tracking, dynamic rules and CRM sync usually adds two to four hours of engineering time plus tool subscriptions. The return hits immediately because you stop paying for unqualified traffic and start routing buyers to the right rep. For the site build itself, my free [cost estimator](/tools/cost-estimator) gives you an illustrative planning range, not a quote, before anyone writes a line of code.
 
 ### Optimize for thumb reach and local search behavior
 

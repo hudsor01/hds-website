@@ -56,7 +56,7 @@ Search algorithms also reward fresh, structured content. Google prioritizes site
 
 Stop comparing quotes on template layouts and start comparing technical specifications. Ask about page speed targets, CRM integration depth and mobile optimization standards. That comparison is easier with [an eight-step project blueprint you send to every developer](/blog/your-website-needs-a-blueprint-how-to-plan-a-project-that-pays-off). A legitimate build has to pay for development, testing, analytics setup and initial content population. A quote that leaves any of those out usually hides compromises in tracking or performance optimization.
 
-Use my free cost estimator to map out your requirements and see realistic pricing tiers for your specific scope. [Try my free tool](/tools/cost-estimator) before you sign any contract with a developer. It strips away the guesswork and shows you exactly where your budget should go to protect your conversion pipeline.
+Use my free cost estimator to map out your requirements and see an illustrative planning range for your specific scope. [Try my free tool](/tools/cost-estimator) before you sign any contract with a developer. It's a planning model, not a quote, but it shows you which features move the number so you can see where your budget should go to protect your conversion pipeline.
 
 Factor in ongoing maintenance as a line item, not an afterthought. Security patches, plugin updates and tracking audits require consistent attention. Set aside money for that maintenance layer every year. It keeps your site secure and ensures your attribution models stay accurate as browsers change their cookie policies each year.
 
@@ -79,6 +79,6 @@ I handle both incremental fixes and full platform migrations. I audit your exist
 
 A cheap website promises low upfront costs but charges you in lost opportunities, wasted ad spend and operational friction. The businesses that win in DFW treat their web presence as a revenue engine. They measure every interaction, automate routine tasks and align their digital storefront with actual sales outcomes. You can do the same without overcomplicating your tech stack or hiring an enterprise agency.
 
-Review your current setup against the performance benchmarks we discussed. If your tracking is broken or your mobile experience drags, you are leaving money on the table every single day. [Try my free tool](/tools/cost-estimator) to benchmark your build costs and plan a proper architecture before you commit another dollar.
+Review your current setup against the performance benchmarks we discussed. If your tracking is broken or your mobile experience drags, you are leaving money on the table every single day. [Try my free tool](/tools/cost-estimator) to get a planning range for your build and plan a proper architecture before you commit another dollar.
 
 If you want to stop guessing where your leads disappear and start building a site that actually books appointments, let’s talk. [Get in touch through my contact page](/contact) to schedule a technical audit of your current setup. I will show you exactly what is leaking revenue and how to fix it without disrupting your daily operations.

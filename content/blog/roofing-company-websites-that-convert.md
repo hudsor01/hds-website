@@ -67,6 +67,6 @@ I enforce strict UTM parameter discipline across all ads and social posts. This 
 
 ## The Real Cost of Waiting.
 
-Building a revenue-focused roofing company website requires an upfront investment, but the return is clear. Every month your current site leaks leads or fails to capture intent, you are losing revenue that compounds over time. I structure projects with clear milestones and measurable KPIs so you see progress from day one. My [cost estimator](/tools/cost-estimator) gives you a ballpark for the build before we talk. I do not guess. I test, I optimize and I scale what works.
+Building a revenue-focused roofing company website requires an upfront investment, but the return is clear. Every month your current site leaks leads or fails to capture intent, you are losing revenue that compounds over time. I structure projects with clear milestones and measurable KPIs so you see progress from day one. My [cost estimator](/tools/cost-estimator) gives you an illustrative planning range for the build before we talk. It's a planning model, not a quote. I do not guess. I test, I optimize and I scale what works.
 
 If you are ready to turn your website into a profit center, let's talk numbers. I can review your current setup and show you exactly where the leaks are. Book a call at [contact](/contact) to get a straight assessment of your digital pipeline and how I can fix it.

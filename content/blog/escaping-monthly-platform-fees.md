@@ -52,7 +52,7 @@ Say you run a mid-sized logistics coordination business in Irving and switch fro
 
 Or picture a dental practice near DFW Airport paying GoDaddy plan and app fees every month. Drop those and build a booking system that automates confirmation texts, cuts no-shows and captures patient intake data directly into the practice management software. Every recovered appointment chips away at the cost of the build. Track it all in Power BI and the practice can see exactly which pages drive consultations and which ones just burn server resources.
 
-You can model your own scenario before committing to a redesign. [Check your numbers with my cost estimator tool](/tools/cost-estimator) before signing another monthly renewal. Pick your pages and features and it gives you a price range and timeline for a custom build. Put that next to three years of your current platform fees and the break-even point is easy to see.
+You can model your own scenario before committing to a redesign. [Check your numbers with my cost estimator tool](/tools/cost-estimator) before signing another monthly renewal. Pick a website type, your pages and your features and it gives you an illustrative planning range and timeline. It's a planning model built on the tool's own assumptions, not market data and not a quote. Put that range next to three years of your current platform fees and you get a rough sense of where the break-even point sits.
 
 ### Why systems beat templates every time
 Templates look polished until you need to scale. They force uniform spacing, rigid grids and generic copy structures that kill differentiation. I treat your site like a revenue dashboard. Each section answers a buyer question, removes friction and pushes the visitor toward a measurable action.

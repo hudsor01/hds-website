@@ -6,8 +6,8 @@
  * cents once at the boundary (`toCents`) and never rounded separately.
  */
 
-export const MIN_TIP_PERCENT = 0
-export const MAX_TIP_PERCENT = 100
+const MIN_TIP_PERCENT = 0
+const MAX_TIP_PERCENT = 100
 export const MIN_SPLIT = 1
 export const MAX_SPLIT = 20
 

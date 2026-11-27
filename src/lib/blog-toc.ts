@@ -17,7 +17,7 @@ export interface TocItem {
 // Bun on Vercel. The previous isomorphic-dompurify dep pulled in jsdom
 // which references the Node `MIMEType` global, not exposed in Vercel's
 // build runtime, breaking /blog/[slug] page collection.
-export const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
+const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
 	allowedTags: [
 		'p',
 		'h1',

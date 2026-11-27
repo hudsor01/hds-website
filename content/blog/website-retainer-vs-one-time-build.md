@@ -123,6 +123,6 @@ Who handles a 2 a.m. outage? If the honest answer is nobody, a retainer buys tha
 
 Is the site part of how you make money? If leads, bookings or payments run through it, then uptime, working forms and tracking are revenue, not overhead. That's when ongoing care pays for itself.
 
-Get the build cost right first. The [cost estimator](/tools/cost-estimator) gives you a realistic range for the initial project. [What goes into a website quote](/blog/what-goes-into-a-website-quote) shows you how to read the line items before you compare offers.
+Get a handle on the build cost first. The [cost estimator](/tools/cost-estimator) gives you an illustrative planning range for the initial project. It isn't a quote. [What goes into a website quote](/blog/what-goes-into-a-website-quote) shows you how to read the line items before you compare offers.
 
 If you want a straight answer for your own site, with no pressure toward the option that pays me more, [reach out through the contact page](/contact). I'll tell you whether a website retainer makes sense for you or whether you're better off paying once and keeping the keys.

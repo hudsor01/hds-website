@@ -15,8 +15,8 @@
  */
 
 export const MAX_WORKWEEK_DAYS = 7
-export const DEFAULT_OVERTIME_THRESHOLD_HOURS = 40
-export const DEFAULT_OVERTIME_MULTIPLIER = 1.5
+const DEFAULT_OVERTIME_THRESHOLD_HOURS = 40
+const DEFAULT_OVERTIME_MULTIPLIER = 1.5
 
 export interface TimeEntry {
 	clockIn: string

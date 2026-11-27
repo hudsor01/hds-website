@@ -53,7 +53,7 @@ Booking flows and payment integrations are where most local sites fail under loa
 
 I build around these standards so your site stays fast as you add new services or hire sales reps. I document every change in a version control system and run regression tests before deployment. You get predictable performance instead of surprise slowdowns after a plugin update.
 
-If you want to see exactly how much speed is costing your business right now, run your metrics through the [performance calculator](/tools/performance-calculator). It translates load time data into projected revenue loss based on your current traffic and conversion rates.
+If you want to see what speed could be worth to your business, run your site through the [performance calculator](/tools/performance-calculator). It runs a real PageSpeed test, then shows what a conversion lift you choose would be worth based on your traffic, conversion rate and order value. It's a scenario, not a prediction.
 
 ### Speed, Attribution and Local Search Reality
 
@@ -73,7 +73,7 @@ Most DFW business owners assume speed improvements are a one time fix. They trea
 
 The return on investment compounds quickly. When a local service business cuts its mobile load time in half, more of the visitors it already pays for stay long enough to book. That translates directly into higher gross revenue without increasing ad spend. You keep the same marketing budget, capture more leads and let your team sell instead of chasing bounced visitors.
 
-I run a cost estimate for every client using my [cost estimator](/tools/cost-estimator). It breaks down infrastructure, development hours and ongoing maintenance so you know exactly where your money goes. There are no hidden fees or scope creep surprises. You see the exact investment required to hit your performance targets and projected revenue lift.
+My [cost estimator](/tools/cost-estimator) gives you an illustrative planning range for a build, a planning timeline and an optional maintenance figure. It's a planning model, not a quote. I price every project after a free website plan call, once I know what it will take, so there are no hidden fees or scope creep surprises.
 
 ### Stop Leaving Revenue on the Table
 

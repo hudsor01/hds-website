@@ -30,7 +30,7 @@ export interface CommaSeparateOptions {
 	delimiter?: Delimiter
 }
 
-export const DELIMITER_TEXT: Record<Delimiter, string> = {
+const DELIMITER_TEXT: Record<Delimiter, string> = {
 	comma: ', ',
 	semicolon: '; ',
 	pipe: ' | ',

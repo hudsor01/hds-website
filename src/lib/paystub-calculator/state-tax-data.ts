@@ -16,7 +16,7 @@ import { row, type ScheduleRow } from './schedule'
  * - MA: Circular M (Rev. 12/25) percentage method: 5%, plus 4% surtax over
  *   $1,107,750. PFML employee share 0.46% up to the Social Security wage base.
  */
-export const INCOME_TAX_STATE_CODES = ['CA', 'IL', 'MA', 'NY', 'PA'] as const
+const INCOME_TAX_STATE_CODES = ['CA', 'IL', 'MA', 'NY', 'PA'] as const
 
 export const NO_INCOME_TAX_STATE_CODES = [
 	'AK',

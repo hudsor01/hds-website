@@ -110,7 +110,7 @@ function run(input: string, indent: string | null): JsonResult {
 }
 
 /** Turn an offset into a 1-based line and column. CRLF counts as one break. */
-export function locate(
+function locate(
 	input: string,
 	message: string,
 	offset: number
