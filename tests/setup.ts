@@ -64,6 +64,15 @@ require('@/lib/auth/admin')
 ).__REAL_APPLY_SECURITY_HEADERS__ =
 	require('@/lib/security-headers').applySecurityHeaders
 
+// Same reason again: setupApiMocks() swaps `@/lib/api/guards` for a
+// passthrough so route suites skip origin / CSRF / rate-limit, so
+// api-guards.test.ts reads the genuine wrapper captured here. Its calls into
+// the rate limiter and logger stay live bindings, so per-test mocks of those
+// modules still apply.
+;(
+	globalThis as { __REAL_WITH_MUTATION_GUARDS__?: unknown }
+).__REAL_WITH_MUTATION_GUARDS__ = require('@/lib/api/guards').withMutationGuards
+
 // Fix next/navigation's export list at preload. This ESM import is its first
 // evaluation, so every name (notFound, redirect, permanentRedirect, ...) is
 // fixed before any test file can register a partial factory; a CommonJS

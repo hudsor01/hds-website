@@ -68,5 +68,6 @@ async function handleWebVitals(request: NextRequest) {
 // Browser beacons can't carry a CSRF token; fall back to same-origin only.
 export const POST = withMutationGuards(handleWebVitals, {
 	rateLimit: 'api',
-	csrf: false
+	csrf: false,
+	rateLimitLogLevel: 'debug'
 })

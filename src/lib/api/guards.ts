@@ -10,8 +10,11 @@
  *     compromised subdomain) still cannot submit on the user's behalf
  *  3. Rate limit — caps abuse from a single IP regardless of intent
  *
- * Browser-initiated beacons (web-vitals, csp-reports) cannot embed a CSRF
- * token; they pass `{ csrf: false }` to require origin + rate-limit only.
+ * Browser-initiated beacons (web-vitals, csp-reports, error-report) cannot
+ * embed a CSRF token; they pass `{ csrf: false }` to require origin +
+ * rate-limit only. They also pass `{ rateLimitLogLevel: 'debug' }`: bot and
+ * QA bursts trip their limit constantly, so a 429 there is expected noise,
+ * while a 429 on a form endpoint stays a warning worth reading.
  *
  * Routes that authenticate via Bearer admin token (n8n/cron) skip this
  * wrapper entirely — the admin token IS the trust mechanism.
@@ -38,6 +41,8 @@ interface GuardOptions {
 	rateLimit?: RateLimitKey
 	/** Require a CSRF token on mutating methods. Defaults to true. */
 	csrf?: boolean
+	/** Log level for a rate-limited (429) request. Defaults to 'warn'. */
+	rateLimitLogLevel?: 'warn' | 'debug'
 }
 
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS'])
@@ -46,7 +51,7 @@ export function withMutationGuards(
 	handler: (request: NextRequest) => Promise<Response>,
 	options: GuardOptions = {}
 ) {
-	const { rateLimit = 'api', csrf = true } = options
+	const { rateLimit = 'api', csrf = true, rateLimitLogLevel = 'warn' } = options
 	const logger = createServerLogger('mutation-guards')
 
 	return async (request: NextRequest): Promise<Response> => {
@@ -77,7 +82,7 @@ export function withMutationGuards(
 			rateLimit
 		)
 		if (!isAllowed) {
-			logger.warn(`Rate limit exceeded for ${rateLimit}`, {
+			logger[rateLimitLogLevel](`Rate limit exceeded for ${rateLimit}`, {
 				ip: clientIp,
 				path: request.nextUrl.pathname
 			})

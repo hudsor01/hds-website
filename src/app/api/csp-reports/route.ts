@@ -82,5 +82,6 @@ async function handleCspReport(request: NextRequest) {
 // only — same-origin enforcement keeps cross-site report-floods at bay.
 export const POST = withMutationGuards(handleCspReport, {
 	rateLimit: 'api',
-	csrf: false
+	csrf: false,
+	rateLimitLogLevel: 'debug'
 })
