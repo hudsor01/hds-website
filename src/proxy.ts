@@ -13,7 +13,7 @@
  *    admin layout server component is the source of truth)
  *
  * Does NOT redirect HTTP to HTTPS. Vercel upgrades at its edge, and in
- * front of `next start` / the standalone server Next reports
+ * front of `next start` Next reports
  * x-forwarded-proto as `http` for every plain request, so a redirect here
  * would loop any deploy without a TLS terminator. HSTS covers repeat visits.
  *
