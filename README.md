@@ -121,7 +121,7 @@ The form posts to `/api/contact`, which runs CSRF and rate-limit guards, validat
 
 ## Deployment
 
-The site deploys on Vercel from GitHub. `vercel.json` sets the Bun install and build commands, RSS rewrites (`/rss`, `/feed`, `/rss.xml` and others to `/api/rss/feed`), two permanent redirects, the daily email cron and the `iad1` region. GitHub Actions CI (`.github/workflows/ci.yml`) runs the test mock-leak check, lint, typecheck, blog validation, a brand-token check, fallow, unit tests and a production build.
+The site deploys on Vercel from GitHub. `vercel.json` sets the Bun install and build commands, RSS rewrites (`/rss`, `/feed`, `/rss.xml` and others to `/api/rss/feed`), two permanent redirects, the daily email cron and the `iad1` region. GitHub Actions CI (`.github/workflows/ci.yml`) runs on pushes and pull requests to `main` and `develop`. Its jobs run the test mock-leak check, lint, typecheck, blog validation, a brand-token check, fallow, unit tests, a production build, the Chromium Playwright functional suite (`test:e2e:ci`, `@visual` excluded) and the visual regression suite (`test:e2e:visual`).
 
 ## License
 
