@@ -57,7 +57,7 @@ const labMetricSchema = z.object({
 
 export type LabMetric = z.infer<typeof labMetricSchema>
 
-export const pagespeedMetricsSchema = z.object({
+const pagespeedMetricsSchema = z.object({
 	performanceScore: z.number().int().min(0).max(100),
 	lcp: labMetricSchema,
 	cls: labMetricSchema,

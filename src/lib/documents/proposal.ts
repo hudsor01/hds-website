@@ -8,7 +8,7 @@ import type { ProposalData, ProposalPricingItem } from '@/types/pdf-templates'
 import { isDateBefore, isDateInputValue } from './dates'
 import { dollarsToCents, isNonNegativeNumber } from './money'
 
-export const UNTITLED_PRICING_ITEM = 'Untitled item'
+const UNTITLED_PRICING_ITEM = 'Untitled item'
 
 export interface ProposalPricingRow {
 	id: string

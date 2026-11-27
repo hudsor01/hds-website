@@ -66,7 +66,7 @@ const NEW_VEHICLE_INSPECTION_FEE = 16.75 // One-time, covers the 24 months
 const NEW_VEHICLE_REGISTRATION_YEARS = 2
 // Every dealer sale pays the $10 buyer plate fee (HB 718, July 1, 2025;
 // TxDMV Motor Vehicle Dealer Manual 2026)
-export const BUYER_PLATE_FEE = 10
+const BUYER_PLATE_FEE = 10
 const EV_FEE_ANNUAL = 200
 const EV_FEE_NEW_TWO_YEAR = 400
 

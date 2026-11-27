@@ -17,10 +17,7 @@ import {
 } from '@/lib/documents/contract'
 import { formatDocumentDate } from '@/lib/documents/dates'
 import { cityStateZip, joinNonBlank } from '@/lib/documents/format'
-import type { ContractData, ContractTemplate } from '@/types/pdf-templates'
-
-// Re-export types for convenience
-export type { ContractData, ContractTemplate }
+import type { ContractData } from '@/types/pdf-templates'
 
 const BLANK_LINE = '______________________________'
 

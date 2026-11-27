@@ -85,5 +85,3 @@ export const testimonialSubmitSchema = z.object({
 		),
 	video_url: optionalHttpUrl()
 })
-
-export type TestimonialSubmitInput = z.infer<typeof testimonialSubmitSchema>

@@ -148,10 +148,10 @@ function normalizeUrl(value: string | undefined | null): string | undefined {
 const COORDINATE_RE = /^([+-]?)(\d+)(?:\.(\d+))?$/
 
 /** Google: "The precision must be at least 5 decimal places." */
-export const MIN_COORDINATE_DECIMALS = 5
+const MIN_COORDINATE_DECIMALS = 5
 
 /** Google: priceRange "must be shorter than 100 characters". */
-export const PRICE_RANGE_MAX_LENGTH = 99
+const PRICE_RANGE_MAX_LENGTH = 99
 
 const COUNTRY_RE = /^[A-Za-z]{2}$/
 
@@ -160,7 +160,7 @@ const COUNTRY_RE = /^[A-Za-z]{2}$/
  * drop trailing zeros (32.77670 would otherwise print as 32.7767, below
  * Google's 5-decimal minimum). `literal` is a valid JSON number.
  */
-export class CoordinateLiteral {
+class CoordinateLiteral {
 	readonly literal: string
 
 	constructor(literal: string) {

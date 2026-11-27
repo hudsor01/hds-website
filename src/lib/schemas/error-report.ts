@@ -22,5 +22,3 @@ export const errorReportSchema = z.object({
 	platform: z.string().max(200).optional(),
 	language: z.string().max(50).optional()
 })
-
-export type ErrorReport = z.infer<typeof errorReportSchema>
