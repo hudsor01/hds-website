@@ -3,7 +3,6 @@ import type { NextConfig } from 'next'
 import { RETIRED_LOCATION_SLUGS } from './src/lib/locations/retired'
 
 const nextConfig: NextConfig = {
-	output: 'standalone',
 	compress: true,
 	poweredByHeader: false,
 	trailingSlash: false,
@@ -18,8 +17,8 @@ const nextConfig: NextConfig = {
 	},
 
 	// Retired duplicate blog post (its file is an unpublished draft). Mirrors
-	// the vercel.json redirect so `next start` and the standalone Docker image
-	// keep the 308 too, now that unknown blog slugs simply 404.
+	// the vercel.json redirect so `next start` keeps the 308 too, now that
+	// unknown blog slugs simply 404.
 	async redirects() {
 		return [
 			{
