@@ -30,7 +30,7 @@ Most quotes you'll get fall into one of these buckets.
 
 - **DIY builder (Wix, Squarespace and similar):** no build fee, a monthly plan in the tens of dollars, plus every hour you spend building and fixing it yourself. Cheapest on paper. Most expensive in time.
 - **Freelancer template build:** usually low thousands. You get a theme with your logo and copy dropped in. Quality varies wildly from person to person.
-- **Small studio custom build:** this is where I sit. My [cost estimator](/tools/cost-estimator) gives an illustrative planning range for a landing page, a full business website or an e-commerce store, before features. It's a planning model, not market data. I give you a real price on a call once I know what you need.
+- **Small studio custom build:** this is where I sit. My [cost estimator](/tools/cost-estimator) gives an illustrative planning range for a landing page, a full business website or an e-commerce store, before features. It's a planning model, not market data and not my price. I give you a real price on a call once I know what you need.
 - **Full-service agency:** often well into five figures, sometimes more. You're paying for strategy sessions, account managers and layers of review.
 
 If you want the side-by-side on who you hire rather than what you buy, I broke that down in [agency vs freelancer vs DIY](/blog/agency-vs-freelancer-vs-diy-website-cost).

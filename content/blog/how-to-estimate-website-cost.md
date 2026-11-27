@@ -59,14 +59,14 @@ Then **Additional Features**. There are ten to choose from: Blog/News Section, A
 
 Last is the **Include ongoing maintenance** checkbox. Check it and the results add a monthly maintenance figure with the yearly total under it. The tool assumes 15% of the build figure per year, before any rush adjustment. Leave it empty and maintenance shows as not included.
 
-The results appear as soon as you pick a website type and come back in four parts:
+The results appear once you pick a website type and the page count is a whole number from 1 to 100. They come back in four parts:
 
 - **Planning model range:** a band that runs from 20% below to 20% above the midpoint. The tool labels it as the output of its own formula, not market data and not a quote.
 - **Planning model midpoint:** the center of that band.
 - **Planning timeline:** in weeks. It starts at 4 weeks for a landing page or business website, 8 for an online store, 12 for a web application and 16 for a custom platform, then adds a week per feature. Rush cuts that by about 30%. The tool calls it an assumption for the scope, not a schedule.
-- **Maintenance:** a monthly figure when you checked the box. Otherwise it reads Not included.
+- **Maintenance:** a monthly figure when you check the box. Otherwise it reads Not included.
 
-A few details make the tool more useful. Your inputs live in the page URL, so you can bookmark the exact scope or send it to a business partner. The Copy Range button copies the results as plain text you can paste into an email or a brief. Start over clears every input when you want to try a different scope.
+A few details make the tool more useful. Your inputs live in the page URL, so you can bookmark the exact scope or send it to a business partner. The Copy Range button copies the results as plain text you can paste into an email or a brief. Start over resets every input to its default when you want to try a different scope.
 
 Read the output as what the tool says it is: an illustrative planning model built on its own assumptions. It isn't market data and it isn't a quote. It can't see your content, your existing systems or the quirks of your business. What it does show is which choices move the number. The range updates as you change any input, so there's nothing to recalculate. Uncheck Booking System and watch the range drop. Switch from Fully custom design to Standard custom design and see what the design ambition is adding.
 

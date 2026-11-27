@@ -53,7 +53,7 @@ Booking flows and payment integrations are where most local sites fail under loa
 
 I build around these standards so your site stays fast as you add new services or hire sales reps. I document every change in a version control system and run regression tests before deployment. You get predictable performance instead of surprise slowdowns after a plugin update.
 
-If you want to see exactly how much speed is costing your business right now, run your metrics through the [performance calculator](/tools/performance-calculator). It translates load time data into projected revenue loss based on your current traffic and conversion rates.
+If you want to see what speed could be worth to your business, run your site through the [performance calculator](/tools/performance-calculator). It runs a real PageSpeed test, then shows what a conversion lift you choose would be worth based on your traffic, conversion rate and order value. It's a scenario, not a prediction.
 
 ### Speed, Attribution and Local Search Reality
 
