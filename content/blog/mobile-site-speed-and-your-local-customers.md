@@ -73,7 +73,7 @@ Most DFW business owners assume speed improvements are a one time fix. They trea
 
 The return on investment compounds quickly. When a local service business cuts its mobile load time in half, more of the visitors it already pays for stay long enough to book. That translates directly into higher gross revenue without increasing ad spend. You keep the same marketing budget, capture more leads and let your team sell instead of chasing bounced visitors.
 
-I run a cost estimate for every client using my [cost estimator](/tools/cost-estimator). It breaks down infrastructure, development hours and ongoing maintenance so you know exactly where your money goes. There are no hidden fees or scope creep surprises. You see the exact investment required to hit your performance targets and projected revenue lift.
+My [cost estimator](/tools/cost-estimator) gives you an illustrative planning range for a build, a planning timeline and an optional maintenance figure. It's a planning model, not a quote. I price every project after a free website plan call, once I know what it will take, so there are no hidden fees or scope creep surprises.
 
 ### Stop Leaving Revenue on the Table
 
