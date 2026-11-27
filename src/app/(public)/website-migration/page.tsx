@@ -114,7 +114,7 @@ const comparisons = [
 	{
 		feature: 'Cancel anytime',
 		managed: 'Site deleted after cancellation',
-		hudson: 'Your site stays live forever'
+		hudson: 'You keep your site and domain'
 	}
 ]
 
