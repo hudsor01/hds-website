@@ -2,9 +2,8 @@
 title: How to Transfer Your Domain Safely
 slug: how-to-transfer-your-domain-safely
 excerpt: >-
-  Stop losing traffic and revenue during domain migrations. Learn the exact
-  steps to transfer your domain safely with zero downtime and full attribution
-  tracking.
+  Stop losing traffic during domain migrations. Learn the steps to transfer
+  your domain safely while keeping your site, email and tracking working.
 targetKeyword: transfer your domain
 pillar: 6
 tags:
