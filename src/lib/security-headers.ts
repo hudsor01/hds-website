@@ -84,9 +84,10 @@ const STATIC_SECURITY_HEADERS = {
 	// includeSubDomains is safe as of 2026-11-27: the wildcard
 	// *.hudsondigitalsolutions.com CNAME (which pointed unknown subdomains at
 	// an expired Vercel wildcard cert) was removed, so random subdomains are
-	// NXDOMAIN; www has its own CNAME to Vercel with a valid cert; mail is a
-	// CNAME to a target that does not resolve, so nothing is served there;
-	// the rest are email-only records (MX/TXT/DKIM/DMARC). Before adding any
+	// NXDOMAIN; www has its own CNAME to Vercel with a valid cert; mail is
+	// Resend's return-path domain (CNAME to send.forge.rmta.net, which only
+	// publishes MX and SPF, no address), so browsers never load it; the rest
+	// are email-only records (MX/TXT/DKIM/DMARC). Before adding any
 	// new web subdomain, give it a valid cert first. No preload: the preload
 	// list is hard to leave and this domain does not need it.
 	'Strict-Transport-Security': 'max-age=63072000; includeSubDomains',
