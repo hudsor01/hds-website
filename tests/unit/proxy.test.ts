@@ -224,9 +224,9 @@ describe('applySecurityHeaders()', () => {
 		expect(headers.get('cross-origin-opener-policy')).toBe('same-origin')
 	})
 
-	it('sends HSTS without includeSubDomains or preload', () => {
+	it('sends HSTS with includeSubDomains, without preload', () => {
 		expect(headersFor(false).get('strict-transport-security')).toBe(
-			'max-age=63072000'
+			'max-age=63072000; includeSubDomains'
 		)
 	})
 

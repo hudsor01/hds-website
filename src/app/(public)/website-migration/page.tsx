@@ -11,7 +11,6 @@ import {
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { JsonLd } from '@/components/utilities/JsonLd'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { ROUTES } from '@/lib/constants/routes'
 import { buildMetadata } from '@/lib/seo-config'
@@ -115,46 +114,13 @@ const comparisons = [
 	{
 		feature: 'Cancel anytime',
 		managed: 'Site deleted after cancellation',
-		hudson: 'Your site stays live forever'
+		hudson: 'You keep your site and domain'
 	}
 ]
 
 export default function WebsiteMigrationPage() {
-	const faqSchema = {
-		'@context': 'https://schema.org',
-		'@type': 'FAQPage',
-		mainEntity: [
-			{
-				'@type': 'Question',
-				name: 'How long does a website migration take?',
-				acceptedAnswer: {
-					'@type': 'Answer',
-					text: 'Most migrations take 1 to 4 weeks. Your new site is built and tested before I touch anything on the old platform, so your site stays up during the switch.'
-				}
-			},
-			{
-				'@type': 'Question',
-				name: 'Will I lose my Google rankings?',
-				acceptedAnswer: {
-					'@type': 'Answer',
-					text: 'A short dip while Google recrawls the new site is normal. Nobody can honestly guarantee rankings. What I can do is protect them: I map every old URL to a 301 redirect, update your Google Business Profile, submit fresh sitemaps and watch Search Console after launch so Google can carry your rankings over.'
-				}
-			},
-			{
-				'@type': 'Question',
-				name: "What if my provider won't release my domain?",
-				acceptedAnswer: {
-					'@type': 'Answer',
-					text: 'I run the domain transfer directly with your provider. If they stall, I know the ICANN dispute process and will use it to get your domain back.'
-				}
-			}
-		]
-	}
-
 	return (
 		<div className="min-h-screen bg-background">
-			<JsonLd data={faqSchema} />
-
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
 				<div

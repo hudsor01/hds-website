@@ -7,6 +7,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { NextRequest } from 'next/server'
+import type * as GuardsTypes from '@/lib/api/guards'
 import * as actualRateLimiter from '@/lib/rate-limiter'
 import { cleanupMocks } from '../test-utils'
 
@@ -100,8 +101,64 @@ describe('isSameOriginRequest', () => {
 
 // withMutationGuards is exercised end-to-end by the per-route tests
 // (newsletter-unsubscribe-route.test.ts asserts 403 on missing CSRF;
-// api-routes.test.ts covers the happy path). We don't duplicate those
-// here because setupApiMocks installs a persistent module-level
-// passthrough mock for @/lib/api/guards (so handler-level tests can
-// bypass guards), and bun:test's mock.module is sticky across files.
-// The same-origin primitive is the new addition — covered above.
+// api-routes.test.ts covers the happy path). setupApiMocks installs a
+// persistent passthrough mock for @/lib/api/guards (bun:test's
+// mock.module is sticky across files), so the rate-limit logging tests
+// below use the genuine wrapper captured in tests/setup.ts.
+const withMutationGuards = (
+	globalThis as unknown as {
+		__REAL_WITH_MUTATION_GUARDS__: typeof GuardsTypes.withMutationGuards
+	}
+).__REAL_WITH_MUTATION_GUARDS__
+
+describe('withMutationGuards rate-limit logging', () => {
+	beforeEach(() => {
+		mock.module('@/lib/rate-limiter', () => ({
+			...RATE_LIMITER_EXPORTS,
+			getUnifiedRateLimiter: () => ({
+				checkLimit: mock().mockResolvedValue(false)
+			})
+		}))
+	})
+
+	const handler = mock(async () => new Response(null, { status: 204 }))
+
+	function beacon(): NextRequest {
+		return makeRequest('POST', { origin: ALLOWED_BASE })
+	}
+
+	it('warns on a 429 from a mutation endpoint by default', async () => {
+		const { createServerLogger } = await import('@/lib/logger')
+		const log = createServerLogger()
+		const guarded = withMutationGuards(handler, { csrf: false })
+
+		const res = await guarded(beacon())
+
+		expect(res.status).toBe(429)
+		expect(handler).not.toHaveBeenCalled()
+		expect(log.warn).toHaveBeenCalledWith(
+			'Rate limit exceeded for api',
+			expect.objectContaining({ path: '/api/protected' })
+		)
+		expect(log.debug).not.toHaveBeenCalled()
+	})
+
+	it("logs a telemetry 429 at debug when rateLimitLogLevel is 'debug'", async () => {
+		const { createServerLogger } = await import('@/lib/logger')
+		const log = createServerLogger()
+		const guarded = withMutationGuards(handler, {
+			csrf: false,
+			rateLimitLogLevel: 'debug'
+		})
+
+		const res = await guarded(beacon())
+
+		expect(res.status).toBe(429)
+		expect(handler).not.toHaveBeenCalled()
+		expect(log.debug).toHaveBeenCalledWith(
+			'Rate limit exceeded for api',
+			expect.objectContaining({ path: '/api/protected' })
+		)
+		expect(log.warn).not.toHaveBeenCalled()
+	})
+})

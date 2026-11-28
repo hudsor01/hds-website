@@ -80,14 +80,17 @@ const STATIC_SECURITY_HEADERS = {
 	// Control referrer information
 	'Referrer-Policy': 'strict-origin-when-cross-origin',
 
-	// Enforce HTTPS (HSTS). Matches Vercel's platform default. No
-	// includeSubDomains / preload: that would lock every subdomain to HTTPS
-	// for the full max-age, including any that are not served over TLS.
-	// Checked 2026-11-25: a wildcard *.hudsondigitalsolutions.com CNAME points
-	// every subdomain at Vercel, which serves an expired wildcard cert there
-	// (only www has a valid cert). Add includeSubDomains once that wildcard
-	// record is gone and every remaining web subdomain has a valid cert.
-	'Strict-Transport-Security': 'max-age=63072000',
+	// Enforce HTTPS (HSTS) for two years on this host and every subdomain.
+	// includeSubDomains is safe as of 2026-11-27: the wildcard
+	// *.hudsondigitalsolutions.com CNAME (which pointed unknown subdomains at
+	// an expired Vercel wildcard cert) was removed, so random subdomains are
+	// NXDOMAIN; www has its own CNAME to Vercel with a valid cert; mail is
+	// Resend's return-path domain (CNAME to send.forge.rmta.net, which only
+	// publishes MX and SPF, no address), so browsers never load it; the rest
+	// are email-only records (MX/TXT/DKIM/DMARC). Before adding any
+	// new web subdomain, give it a valid cert first. No preload: the preload
+	// list is hard to leave and this domain does not need it.
+	'Strict-Transport-Security': 'max-age=63072000; includeSubDomains',
 
 	// Cross-origin policies. No Cross-Origin-Embedder-Policy: nothing here
 	// needs cross-origin isolation, and COEP blocks the YouTube/Loom

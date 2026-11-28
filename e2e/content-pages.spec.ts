@@ -220,7 +220,9 @@ test.describe('Proxy security layer', () => {
 			expect(headers['x-content-type-options']).toBe('nosniff')
 			expect(headers['x-frame-options']).toBe('DENY')
 			expect(headers['referrer-policy']).toBe('strict-origin-when-cross-origin')
-			expect(headers['strict-transport-security']).toBe('max-age=63072000')
+			expect(headers['strict-transport-security']).toBe(
+				'max-age=63072000; includeSubDomains'
+			)
 			expect(headers['cross-origin-embedder-policy']).toBeUndefined()
 		}
 	})

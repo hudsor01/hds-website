@@ -41,5 +41,6 @@ async function handleErrorReport(request: NextRequest) {
 // telemetry POST (matches csp-reports / web-vitals).
 export const POST = withMutationGuards(handleErrorReport, {
 	rateLimit: 'api',
-	csrf: false
+	csrf: false,
+	rateLimitLogLevel: 'debug'
 })
